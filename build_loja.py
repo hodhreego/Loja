@@ -42,6 +42,8 @@ HTML = r'''<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Loja de Matemática — Apostilas e Simulados</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='80' font-size='84' text-anchor='middle'%3E🏛️%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#1B3A6B">
 <meta name="description" content="Apostilas e simulados para PSS SEED-PR 2027, CISOP Cascavel, Prefeitura de Cascavel e outros concursos. Veja as páginas antes de comprar.">
 <meta property="og:title" content="Loja de Matemática — Apostilas e Simulados">
 <meta property="og:description" content="Apostilas e simulados para PSS SEED-PR 2027, CISOP Cascavel, Prefeitura de Cascavel e mais.">
@@ -161,7 +163,7 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 </head>
 <body>
 <header class="hero"><div class="wrap">
-  <div class="eyebrow">Prof. Rodrigo Gonçalves Pereira</div>
+  <div class="eyebrow"><span style="font-size:22px;vertical-align:-3px;margin-right:6px">🏛️</span>Prof. Rodrigo Gonçalves Pereira</div>
   <h1>Loja de <em>Matemática</em><br>Apostilas &amp; Simulados</h1>
   <p>Material de estudo organizado, direto ao ponto e atualizado com os editais. Confira capa, índice e páginas internas antes de comprar.</p>
   <div class="perks"><span class="perk">📄 Entrega digital em PDF</span><span class="perk">🔎 Veja as páginas antes</span><span class="perk">🔠 Versão JUMBO (letra grande)</span><span class="perk">⚡ Pagamento seguro pela Eduzz</span></div>
