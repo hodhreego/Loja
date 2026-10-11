@@ -326,16 +326,16 @@ function curl(p){
   const fl=document.createElement("i");fl.className="fl";
   fl.style.cssText="width:"+W+"px;height:"+H+"px;z-index:"+((+p.style.zIndex||0)+1);
   bk.appendChild(fl);p._fl=fl;
-  const R=[[0,0],[W,0],[W,H],[0,H]],t0=performance.now(),D=1400;
+  const R=[[0,0],[W,0],[W,H],[0,H]],t0=performance.now(),D=3800;
   const step=now=>{
-    const x=Math.min(1,(now-t0)/D),e=x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,s=Math.max(e*1.7,1e-3);
-    const a=1.25*s*W,b=.2*s*H,len=Math.hypot(a,b),u=[a/len,b/len],M=[W-a/2,H-b/2];
+    const x=Math.min(1,(now-t0)/D),e=x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,s=Math.max(e*2.3,1e-3);
+    const a=1.25*s*W,b=.5*s*H,len=Math.hypot(a,b),u=[a/len,b/len],M=[W-a/2,H-b/2];
     p.style.clipPath=polyCss(cortaPoly(R,u,M,1));
     fl.style.clipPath=polyCss(cortaPoly(R,u,M,-1));
     const k=2*(M[0]*u[0]+M[1]*u[1]);
     fl.style.transform="matrix("+[1-2*u[0]*u[0],-2*u[0]*u[1],-2*u[0]*u[1],1-2*u[1]*u[1],k*u[0],k*u[1]].join(",")+")";
     const ang=Math.atan2(u[0],-u[1])*180/Math.PI,L=Math.abs(W*u[0])+Math.abs(H*u[1]),pos=L/2+((M[0]-W/2)*u[0]+(M[1]-H/2)*u[1]);
-    fl.style.background="linear-gradient("+ang+"deg,rgba(0,0,0,.32) "+pos+"px,rgba(0,0,0,0) "+(pos+W*.4)+"px),#f7f2e6";
+    fl.style.background="linear-gradient("+ang+"deg,rgba(0,0,0,.38) "+pos+"px,rgba(255,255,255,.55) "+(pos+W*.12)+"px,rgba(0,0,0,.08) "+(pos+W*.45)+"px),#f3eee0";
     sh.style.opacity=1;sh.style.background="linear-gradient("+ang+"deg,rgba(0,0,0,0) "+(pos-W*.35)+"px,rgba(0,0,0,.4) "+pos+"px)";
     if(x<1)p._raf=requestAnimationFrame(step);
     else{fl.remove();p._fl=null;p.style.clipPath="polygon(0 0,0 0,0 0)"}
@@ -384,11 +384,11 @@ function anima(){
     const bk=cv.querySelector(".book"),pgs=[...bk.querySelectorAll(".pg:not(.base)")],ds=cv.querySelectorAll(".dots i");
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
     if(matchMedia("(hover:hover)").matches){cv.onmouseenter=()=>cv._p=1;cv.onmouseleave=()=>cv._p=0}
-    cv._reset=()=>{clearTimeout(cv._t);cv._t=null;if(k||bk.querySelector(".flip3")){bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt")}k=0;dot(0)};
+    cv._reset=()=>{clearTimeout(cv._t);cv._t=null;if(k||bk.querySelector(".flip")){bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt")}k=0;dot(0)};
     const passo=()=>{cv._t=null;
       if(rolando||!cv._vis)return;
       if(cv._p){cv._t=setTimeout(passo,300);return}
-      if(k<n){pgs[k].classList.add("flip3");k++;dot(k);
+      if(k<n){curl(pgs[k]);k++;dot(k);
         if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA+Math.random()*4000)},4200);return}}
       cv._t=setTimeout(passo,PAG+Math.random()*1800)};
     cv._start=d=>{clearTimeout(cv._t);cv._t=setTimeout(passo,d)};
