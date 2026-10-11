@@ -233,6 +233,7 @@ header.hero:after{display:none}
 .vitrine{position:relative;height:440px;margin:0}
 .folha{position:absolute;width:250px;aspect-ratio:210/297;background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3)}
 .folha .mh{border-radius:4px}
+.folha img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
 .folha.f1{left:58%;top:34px;transform:rotate(7deg)}
 .folha.f2{left:32%;top:14px;transform:rotate(-1deg);z-index:1}
 .folha.f3{left:6%;top:30px;transform:rotate(-8deg);z-index:2}
@@ -302,6 +303,12 @@ footer .warn{display:flex;gap:8px;align-items:flex-start;margin-top:24px;backgro
  .faixa{padding:54px 0}.passos,.recursos{grid-template-columns:1fr;gap:18px}.passos{gap:24px}
  .rodape{grid-template-columns:1fr}
 }
+
+/* WhatsApp sempre em verde, para ser fácil de achar */
+.topo-wa,.btn-s{background:#1f9d57;border:1.5px solid #1f9d57;color:#fff}
+.topo-wa:hover,.btn-s:hover{background:#188047;border-color:#188047}
+.btn-s{box-shadow:0 10px 24px rgba(31,157,87,.3)}
+.rodape a,.faq a{color:#3ccf7f}.faq a{color:#1f9d57}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" media="print" onload="this.media='all'">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
@@ -332,7 +339,7 @@ footer .warn{display:flex;gap:8px;align-items:flex-start;margin-top:24px;backgro
   <figure class="vitrine" aria-label="Páginas reais da apostila de Matemática">
     <div class="folha f1"><div class="mh" data-s="matematica" data-k="3"></div></div>
     <div class="folha f2"><div class="mh" data-s="matematica" data-k="1"></div></div>
-    <div class="folha f3"><div class="mh" data-s="matematica" data-k="0"></div></div>
+    <div class="folha f3"><img src="img/matematica-1.webp" alt="Capa da apostila de Matemática"></div>
     <figcaption>Páginas reais da apostila de Matemática</figcaption>
   </figure>
 </div>
@@ -422,8 +429,8 @@ function card(it){
   const act=soon?`<button class="btn wa" onclick="wabre('${it.slug}',5)">Avisar-me</button>`
                  :`<a class="btn buy" target="_blank" rel="noopener" href="${it.link}">Comprar</a>`;
   const n=it.imgs.length;
-  const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i>${MINI.has(it.slug)?`<div class="mh" data-s="${it.slug}" data-k="${k}"></div>`:""}</div>`;
-  const strip=it.imgs.map(leaf).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt="">${MINI.has(it.slug)?`<div class="mh" data-s="${it.slug}" data-k="0"></div>`:""}</div>`;
+  const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i>${k&&MINI.has(it.slug)?`<div class="mh" data-s="${it.slug}" data-k="${k}"></div>`:""}</div>`;
+  const strip=it.imgs.map(leaf).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt=""></div>`;
   const dots=it.imgs.length>1?`<div class="dots">${it.imgs.map((_,k)=>`<i class="${k?'':'on'}"></i>`).join("")}</div>`:"";
   return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><span class="peek"><svg class="ic sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg> ver páginas</span></div>
   <div class="info"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
@@ -483,13 +490,13 @@ function cortaPoly(P,u,M,sg){const o=[],d=q=>sg*((q[0]-M[0])*u[0]+(q[1]-M[1])*u[
     if((da<0&&db>0)||(da>0&&db<0)){const t=da/(da-db);o.push([A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t])}}
   return o}
 const polyCss=P=>P.length<3?"polygon(0 0,0 0,0 0)":"polygon("+P.map(q=>q[0].toFixed(1)+"px "+q[1].toFixed(1)+"px").join(",")+")";
-function curl(p){
+function curl(p,D=3800){
   const bk=p.parentNode,W=p.offsetWidth,H=p.offsetHeight,sh=p.querySelector(".sh");
   p.classList.add("flip");
   const fl=document.createElement("i");fl.className="fl";
   fl.style.cssText="width:"+W+"px;height:"+H+"px;z-index:"+((+p.style.zIndex||0)+1);
   bk.appendChild(fl);p._fl=fl;
-  const R=[[0,0],[W,0],[W,H],[0,H]],t0=performance.now(),D=3800;
+  const R=[[0,0],[W,0],[W,H],[0,H]],t0=performance.now();
   const step=now=>{
     const x=Math.min(1,(now-t0)/D),e=x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,s=Math.max(e*2.3,1e-3);
     const a=1.25*s*W,b=.5*s*H,len=Math.hypot(a,b),u=[a/len,b/len],M=[W-a/2,H-b/2];
@@ -546,7 +553,7 @@ function anima(){
   if(io)io.disconnect();
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   const CAPA=5000,PAG=5200;
-  todas().forEach(cv=>{const ok=cv.closest(".card").dataset.s==="matematica";cv.classList.toggle("anim",ok);const n=+cv.dataset.n;if(n<2||!ok)return;let k=0;
+  todas().forEach(cv=>{const lenta=cv.closest(".card").dataset.s==="matematica";cv.classList.add("anim");const n=+cv.dataset.n;if(n<2)return;let k=0;
     const bk=cv.querySelector(".book"),pgs=[...bk.querySelectorAll(".pg:not(.base)")],ds=cv.querySelectorAll(".dots i");
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
     if(matchMedia("(hover:hover)").matches){cv.onmouseenter=()=>cv._p=1;cv.onmouseleave=()=>cv._p=0}
@@ -554,7 +561,7 @@ function anima(){
     const passo=()=>{cv._t=null;
       if(rolando||!cv._vis)return;
       if(cv._p){cv._t=setTimeout(passo,300);return}
-      if(k<n){curl(pgs[k]);k++;dot(k);
+      if(k<n){curl(pgs[k],lenta?3800:2000);k++;dot(k);
         if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA+Math.random()*4000)},4200);return}}
       cv._t=setTimeout(passo,PAG+Math.random()*1800)};
     cv._start=d=>{clearTimeout(cv._t);cv._t=setTimeout(passo,d)};
