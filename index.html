@@ -302,6 +302,12 @@ footer .warn{display:flex;gap:8px;align-items:flex-start;margin-top:24px;backgro
  .faixa{padding:54px 0}.passos,.recursos{grid-template-columns:1fr;gap:18px}.passos{gap:24px}
  .rodape{grid-template-columns:1fr}
 }
+
+/* WhatsApp sempre em verde, para ser fácil de achar */
+.topo-wa,.btn-s{background:#1f9d57;border:1.5px solid #1f9d57;color:#fff}
+.topo-wa:hover,.btn-s:hover{background:#188047;border-color:#188047}
+.btn-s{box-shadow:0 10px 24px rgba(31,157,87,.3)}
+.rodape a,.faq a{color:#3ccf7f}.faq a{color:#1f9d57}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" media="print" onload="this.media='all'">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
@@ -483,13 +489,13 @@ function cortaPoly(P,u,M,sg){const o=[],d=q=>sg*((q[0]-M[0])*u[0]+(q[1]-M[1])*u[
     if((da<0&&db>0)||(da>0&&db<0)){const t=da/(da-db);o.push([A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t])}}
   return o}
 const polyCss=P=>P.length<3?"polygon(0 0,0 0,0 0)":"polygon("+P.map(q=>q[0].toFixed(1)+"px "+q[1].toFixed(1)+"px").join(",")+")";
-function curl(p){
+function curl(p,D=3800){
   const bk=p.parentNode,W=p.offsetWidth,H=p.offsetHeight,sh=p.querySelector(".sh");
   p.classList.add("flip");
   const fl=document.createElement("i");fl.className="fl";
   fl.style.cssText="width:"+W+"px;height:"+H+"px;z-index:"+((+p.style.zIndex||0)+1);
   bk.appendChild(fl);p._fl=fl;
-  const R=[[0,0],[W,0],[W,H],[0,H]],t0=performance.now(),D=3800;
+  const R=[[0,0],[W,0],[W,H],[0,H]],t0=performance.now();
   const step=now=>{
     const x=Math.min(1,(now-t0)/D),e=x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,s=Math.max(e*2.3,1e-3);
     const a=1.25*s*W,b=.5*s*H,len=Math.hypot(a,b),u=[a/len,b/len],M=[W-a/2,H-b/2];
@@ -546,7 +552,7 @@ function anima(){
   if(io)io.disconnect();
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   const CAPA=5000,PAG=5200;
-  todas().forEach(cv=>{const ok=cv.closest(".card").dataset.s==="matematica";cv.classList.toggle("anim",ok);const n=+cv.dataset.n;if(n<2||!ok)return;let k=0;
+  todas().forEach(cv=>{const lenta=cv.closest(".card").dataset.s==="matematica";cv.classList.add("anim");const n=+cv.dataset.n;if(n<2)return;let k=0;
     const bk=cv.querySelector(".book"),pgs=[...bk.querySelectorAll(".pg:not(.base)")],ds=cv.querySelectorAll(".dots i");
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
     if(matchMedia("(hover:hover)").matches){cv.onmouseenter=()=>cv._p=1;cv.onmouseleave=()=>cv._p=0}
@@ -554,7 +560,7 @@ function anima(){
     const passo=()=>{cv._t=null;
       if(rolando||!cv._vis)return;
       if(cv._p){cv._t=setTimeout(passo,300);return}
-      if(k<n){curl(pgs[k]);k++;dot(k);
+      if(k<n){curl(pgs[k],lenta?3800:2000);k++;dot(k);
         if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA+Math.random()*4000)},4200);return}}
       cv._t=setTimeout(passo,PAG+Math.random()*1800)};
     cv._start=d=>{clearTimeout(cv._t);cv._t=setTimeout(passo,d)};
