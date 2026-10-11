@@ -233,6 +233,7 @@ header.hero:after{display:none}
 .vitrine{position:relative;height:440px;margin:0}
 .folha{position:absolute;width:250px;aspect-ratio:210/297;background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3)}
 .folha .mh{border-radius:4px}
+.folha img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
 .folha.f1{left:58%;top:34px;transform:rotate(7deg)}
 .folha.f2{left:32%;top:14px;transform:rotate(-1deg);z-index:1}
 .folha.f3{left:6%;top:30px;transform:rotate(-8deg);z-index:2}
@@ -338,7 +339,7 @@ footer .warn{display:flex;gap:8px;align-items:flex-start;margin-top:24px;backgro
   <figure class="vitrine" aria-label="Páginas reais da apostila de Matemática">
     <div class="folha f1"><div class="mh" data-s="matematica" data-k="3"></div></div>
     <div class="folha f2"><div class="mh" data-s="matematica" data-k="1"></div></div>
-    <div class="folha f3"><div class="mh" data-s="matematica" data-k="0"></div></div>
+    <div class="folha f3"><img src="img/matematica-1.webp" alt="Capa da apostila de Matemática"></div>
     <figcaption>Páginas reais da apostila de Matemática</figcaption>
   </figure>
 </div>
@@ -428,8 +429,8 @@ function card(it){
   const act=soon?`<button class="btn wa" onclick="wabre('${it.slug}',5)">Avisar-me</button>`
                  :`<a class="btn buy" target="_blank" rel="noopener" href="${it.link}">Comprar</a>`;
   const n=it.imgs.length;
-  const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i>${MINI.has(it.slug)?`<div class="mh" data-s="${it.slug}" data-k="${k}"></div>`:""}</div>`;
-  const strip=it.imgs.map(leaf).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt="">${MINI.has(it.slug)?`<div class="mh" data-s="${it.slug}" data-k="0"></div>`:""}</div>`;
+  const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i>${k&&MINI.has(it.slug)?`<div class="mh" data-s="${it.slug}" data-k="${k}"></div>`:""}</div>`;
+  const strip=it.imgs.map(leaf).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt=""></div>`;
   const dots=it.imgs.length>1?`<div class="dots">${it.imgs.map((_,k)=>`<i class="${k?'':'on'}"></i>`).join("")}</div>`:"";
   return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><span class="peek"><svg class="ic sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg> ver páginas</span></div>
   <div class="info"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
