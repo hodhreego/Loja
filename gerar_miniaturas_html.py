@@ -7,6 +7,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "mini")
 os.makedirs(OUT, exist_ok=True)
 
+# Trocas manuais: slug -> {posição na miniatura (1 a 4): índice da .page no HTML-fonte (0 = primeira)}
+TROCAS = {
+    "matematica": {2: 8, 3: 5},   # Geometria Espacial (sólidos 3D) e Funções (gráficos) no lugar do índice e de Sistemas Lineares
+}
+
 def texto(t): return re.sub(r"\s+", " ", t.get_text(" ")).strip()
 
 def escolhe(pages):
@@ -26,6 +31,7 @@ for arg in sys.argv[1:]:
     pages = soup.select(".page")
     try: sel = escolhe(pages)
     except ValueError as e: print("PULOU", slug, e); continue
+    for pos, i in TROCAS.get(slug, {}).items(): sel[pos - 1] = pages[i]
     for p in sel:
         for s in p.find_all("script"): s.decompose()
         for a in p.find_all("a"): a.attrs.pop("href", None)

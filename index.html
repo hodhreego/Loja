@@ -203,7 +203,7 @@ footer p+p{margin-top:8px}
  100%{transform:rotateY(-180deg) rotateX(0) rotateZ(0);box-shadow:0 0 0 rgba(0,0,0,0)}}
 @media(prefers-reduced-motion:reduce){.pg.flip3{animation:none;transform:rotateY(-180deg)}}
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" media="print" onload="this.media='all'">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
@@ -354,14 +354,17 @@ const MINI_CSS=`:host{position:absolute;inset:0;overflow:hidden;background:#fff;
 .mw .page:not(.cover-page):not(.divider-page){padding:20mm 15mm!important;min-height:1123px}
 .mw .cover-page{min-height:1123px}`;
 function miniDados(slug){return miniCache[slug]||(miniCache[slug]=fetch("mini/"+slug+".json").then(r=>r.json()).catch(()=>null))}
+/* o KaTeX vem com defer: espera ele carregar (ou falhar) antes de renderizar as fórmulas das miniaturas */
+const katexOk=new Promise(res=>{const v=()=>res(!!window.renderMathInElement);
+  if(window.renderMathInElement||document.readyState==="complete")v();else addEventListener("load",v,{once:true})});
 async function montaMini(h){
   if(h._ok)return;h._ok=1;
   const d=await miniDados(h.dataset.s);if(!d||!d.pages[h.dataset.k])return;
   const r=h.shadowRoot||h.attachShadow({mode:"open"});
-  r.innerHTML=`<style>${d.css}\n${MINI_CSS}</style><div class="mw">${d.pages[h.dataset.k]}</div>`;
+  r.innerHTML=`<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"><style>${d.css}\n${MINI_CSS}</style><div class="mw">${d.pages[h.dataset.k]}</div>`;
   const mw=r.querySelector(".mw"),fit=()=>{const w=h.clientWidth;if(w)mw.style.transform="scale("+(w/794)+")"};
   fit();new ResizeObserver(fit).observe(h);
-  if(window.renderMathInElement)try{renderMathInElement(mw,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}catch(e){}
+  if(/\$/.test(d.pages[h.dataset.k])&&await katexOk)try{renderMathInElement(mw,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}catch(e){}
 }
 let ioMini=null;
 function minis(){
@@ -402,6 +405,7 @@ function anima(){
   clearInterval(window._wd);window._wd=setInterval(()=>{if(rolando)return;todas().forEach(cv=>{if(cv._vis&&cv._start&&!cv._t&&!cv._p)cv._start(Math.random()*2500)})},1500);
 }
 const NOMES=["Capa","Índice","Página interna","Página interna"];
+const ROT={matematica:["Capa","Página interna","Página interna","Página interna"]};
 let cur=null;
 function abre(s){cur=ITENS.find(i=>i.slug===s);
   $("#th").innerHTML=cur.imgs.map((u,k)=>`<img src="${u}" onclick="foto(${k})" alt="">`).join("");
@@ -410,7 +414,7 @@ function abre(s){cur=ITENS.find(i=>i.slug===s);
    <p style="font-size:14px;color:var(--mut)">${cur.paginas?cur.paginas+' páginas · ':''}PDF digital${cur.slug.startsWith('cisop')||cur.grupo==='pss'||cur.grupo==='prefeitura'?' · inclui versão JUMBO (letra grande) quando disponível':''}</p>
    <div class="row"><div class="price"><span>R$</span>${brl(cur.preco)}</div>${soon?`<button class="btn wa" onclick="fecha();wabre('${cur.slug}')">Falar no WhatsApp</button>`:`<a class="btn buy" target="_blank" rel="noopener" href="${cur.link}">Comprar agora</a>`}</div>`;
   foto(0);$("#modal").classList.add("open");document.body.style.overflow="hidden";}
-function foto(k){$("#big").src=cur.imgs[k];$("#lab").textContent=(cur.imgs.length>2?NOMES[k]:(k?"Índice":"Capa"))+" · "+(k+1)+"/"+cur.imgs.length;
+function foto(k){$("#big").src=cur.imgs[k];$("#lab").textContent=(cur.imgs.length>2?(ROT[cur.slug]||NOMES)[k]:(k?"Índice":"Capa"))+" · "+(k+1)+"/"+cur.imgs.length;
   [...$("#th").children].forEach((e,i)=>e.classList.toggle("on",i===k));}
 function fecha(){$("#modal").classList.remove("open");document.body.style.overflow=""}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")fecha();
