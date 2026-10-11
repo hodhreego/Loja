@@ -186,6 +186,9 @@ footer p+p{margin-top:8px}
  .info h3{min-height:0}
  .fab{padding:11px 16px;font-size:14px}
 }
+
+.pg.flip{animation:none!important}.pg.flip .f+.sh{animation:none!important}
+.fl{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;background:#f7f2e6}
 </style>
 </head>
 <body>
@@ -294,12 +297,43 @@ function chips(){
   $("#chips").innerHTML=[["todos","Todos os certames"],...GR].map(([k,n])=>`<button class="cert ${filtro===k?'on':''}" onclick="filtro='${k}';chips();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'nearest'})"><b>${n}</b><small>${c(k)} ${c(k)===1?'material':'materiais'}</small></button>`).join("");
 }
 /* miniaturas animadas: as páginas sobem (scroll vertical) enquanto o card está visível */
+/* virada de página puxada pelo canto inferior direito (dobra em 3D simulada: frente recortada + verso refletido) */
+function cortaPoly(P,u,M,sg){const o=[],d=q=>sg*((q[0]-M[0])*u[0]+(q[1]-M[1])*u[1]);
+  for(let i=0;i<P.length;i++){const A=P[i],B=P[(i+1)%P.length],da=d(A),db=d(B);
+    if(da<=0)o.push(A);
+    if((da<0&&db>0)||(da>0&&db<0)){const t=da/(da-db);o.push([A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t])}}
+  return o}
+const polyCss=P=>P.length<3?"polygon(0 0,0 0,0 0)":"polygon("+P.map(q=>q[0].toFixed(1)+"px "+q[1].toFixed(1)+"px").join(",")+")";
+function curl(p){
+  const bk=p.parentNode,W=p.offsetWidth,H=p.offsetHeight,sh=p.querySelector(".sh");
+  p.classList.add("flip");
+  const fl=document.createElement("i");fl.className="fl";
+  fl.style.cssText="width:"+W+"px;height:"+H+"px;z-index:"+((+p.style.zIndex||0)+1);
+  bk.appendChild(fl);p._fl=fl;
+  const R=[[0,0],[W,0],[W,H],[0,H]],t0=performance.now(),D=1400;
+  const step=now=>{
+    const x=Math.min(1,(now-t0)/D),e=x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,s=Math.max(e*1.7,1e-3);
+    const a=1.25*s*W,b=.2*s*H,len=Math.hypot(a,b),u=[a/len,b/len],M=[W-a/2,H-b/2];
+    p.style.clipPath=polyCss(cortaPoly(R,u,M,1));
+    fl.style.clipPath=polyCss(cortaPoly(R,u,M,-1));
+    const k=2*(M[0]*u[0]+M[1]*u[1]);
+    fl.style.transform="matrix("+[1-2*u[0]*u[0],-2*u[0]*u[1],-2*u[0]*u[1],1-2*u[1]*u[1],k*u[0],k*u[1]].join(",")+")";
+    const ang=Math.atan2(u[0],-u[1])*180/Math.PI,L=Math.abs(W*u[0])+Math.abs(H*u[1]),pos=L/2+((M[0]-W/2)*u[0]+(M[1]-H/2)*u[1]);
+    fl.style.background="linear-gradient("+ang+"deg,rgba(0,0,0,.32) "+pos+"px,rgba(0,0,0,0) "+(pos+W*.4)+"px),#f7f2e6";
+    sh.style.opacity=1;sh.style.background="linear-gradient("+ang+"deg,rgba(0,0,0,0) "+(pos-W*.35)+"px,rgba(0,0,0,.4) "+pos+"px)";
+    if(x<1)p._raf=requestAnimationFrame(step);
+    else{fl.remove();p._fl=null;p.style.clipPath="polygon(0 0,0 0,0 0)"}
+  };
+  p._raf=requestAnimationFrame(step);
+}
+function uncurl(p){cancelAnimationFrame(p._raf);if(p._fl){p._fl.remove();p._fl=null}
+  p.style.clipPath="";const sh=p.querySelector(".sh");if(sh)sh.removeAttribute("style");p.classList.remove("flip")}
 let io=null,rolando=false,tRol=null;
 const todas=()=>[...document.querySelectorAll(".cover")];
 addEventListener("scroll",()=>{
   rolando=true;clearTimeout(tRol);
   todas().forEach(cv=>{if(cv._reset)cv._reset()});          /* rolando: só a capa aparece */
-  tRol=setTimeout(()=>{rolando=false;todas().forEach(cv=>{if(cv._vis&&cv._start)cv._start(250+Math.random()*500)})},140);   /* parou: anima já */
+  tRol=setTimeout(()=>{rolando=false;todas().forEach(cv=>{if(cv._vis&&cv._start)cv._start(Math.random()*3500)})},140);   /* parou: anima já */
 },{passive:true});
 function anima(){
   if(io)io.disconnect();
@@ -309,22 +343,22 @@ function anima(){
     const bk=cv.querySelector(".book"),pgs=[...bk.querySelectorAll(".pg:not(.base)")],ds=cv.querySelectorAll(".dots i");
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
     if(matchMedia("(hover:hover)").matches){cv.onmouseenter=()=>cv._p=1;cv.onmouseleave=()=>cv._p=0}
-    cv._reset=()=>{clearTimeout(cv._t);cv._t=null;if(k||bk.querySelector(".flip")){bk.classList.add("nt");pgs.forEach(p=>p.classList.remove("flip"));void bk.offsetHeight;bk.classList.remove("nt")}k=0;dot(0)};
+    cv._reset=()=>{clearTimeout(cv._t);cv._t=null;if(k||bk.querySelector(".flip")){bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt")}k=0;dot(0)};
     const passo=()=>{cv._t=null;
       if(rolando||!cv._vis)return;
       if(cv._p){cv._t=setTimeout(passo,300);return}
-      if(k<n){pgs[k].classList.add("flip");k++;dot(k);
-        if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(p=>p.classList.remove("flip"));void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA)},1500);return}}
-      cv._t=setTimeout(passo,PAG)};
+      if(k<n){curl(pgs[k]);k++;dot(k);
+        if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA+Math.random()*4000)},1500+Math.random()*600);return}}
+      cv._t=setTimeout(passo,PAG+Math.random()*1800)};
     cv._start=d=>{clearTimeout(cv._t);cv._t=setTimeout(passo,d)};
     cv._reset();
   });
   io=new IntersectionObserver(es=>es.forEach(e=>{const cv=e.target;cv._vis=e.isIntersecting;
     if(!cv._start)return;
-    if(e.isIntersecting){if(!rolando)cv._start(400+Math.random()*600)}else cv._reset()}),{threshold:.4});
+    if(e.isIntersecting){if(!rolando)cv._start(Math.random()*4000)}else cv._reset()}),{threshold:.4});
   todas().forEach(cv=>io.observe(cv));
   /* loop: se a página está parada e a miniatura visível sem timer, retoma sozinha */
-  clearInterval(window._wd);window._wd=setInterval(()=>{if(rolando)return;todas().forEach(cv=>{if(cv._vis&&cv._start&&!cv._t&&!cv._p)cv._start(300)})},1500);
+  clearInterval(window._wd);window._wd=setInterval(()=>{if(rolando)return;todas().forEach(cv=>{if(cv._vis&&cv._start&&!cv._t&&!cv._p)cv._start(Math.random()*2500)})},1500);
 }
 const NOMES=["Capa","Índice","Página interna","Página interna"];
 let cur=null;
