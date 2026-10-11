@@ -11,7 +11,7 @@
 <meta property="og:description" content="Apostilas e simulados para PSS SEED-PR 2027, CISOP Cascavel, Prefeitura de Cascavel e mais.">
 <meta property="og:image" content="https://hodhreego.github.io/Loja/img/matematica-1.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#1B3A6B;--navy-deep:#0F2547;--gold:#C9A227;--gold-light:#E9D48E;--bg:#EEF3FB;--ink:#1B2733;--mut:#5b6b80;--card:#fff;--ok:#1f7a4d;--line:#d9e2f1}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -145,15 +145,203 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .badge,.peek{z-index:2}
 @media(prefers-reduced-motion:reduce){.pg.flip{animation:none;transform:rotateY(-180deg)}}
 @media(max-width:720px){.certs{display:grid;grid-template-columns:1fr 1fr;overflow:visible;gap:8px}.cert{min-width:0;max-width:none;min-height:56px;padding:12px;display:flex;flex-direction:column;justify-content:center}.cert:first-child{grid-column:1/-1}.cert b{font-size:15px}.box{grid-template-columns:1fr}.stage img.big{max-height:52vh}.grid{grid-template-columns:repeat(2,1fr);gap:12px}.info h3{font-size:15px}.price{font-size:20px}.row{flex-direction:column;align-items:stretch;gap:6px}.row .btn{text-align:center}.info{padding:12px}#q{width:100%}.fab{padding:11px 16px}}
+
+/* ===== refinamento de layout ===== */
+header.hero{padding:64px 0 76px}
+.hero p{font-size:17px;margin-bottom:4px}
+.perks{max-width:720px;gap:10px!important}
+.perks .perk{font-size:14px;min-height:46px;border-radius:14px;background:rgba(255,255,255,.08)}
+.perks .pdfbtn,.perks .hero-wa{font-size:20px;min-height:68px;border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.perks .pdfbtn{letter-spacing:.06em;padding:10px 18px}
+.perks .hero-wa .wai,.perks .pdfbtn .wai{width:32px;height:32px}
+.bar{padding:16px;gap:14px}
+.certs{flex:1 1 100%}
+#q{flex:1 1 100%;min-width:0;padding:12px 18px 12px 44px;font-size:16px;background:#f6f9ff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b6b80' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") no-repeat 16px center/18px}
+section.grupo{margin-top:44px}
+section.grupo h2{font-size:28px}
+.grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px;margin-top:18px}
+.card{border:1px solid var(--line);box-shadow:0 2px 10px rgba(15,37,71,.07)}
+.info{padding:16px 16px 18px;gap:7px}
+.info h3{font-size:17px;min-height:2.4em}
+.info p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.row{margin-top:10px;padding-top:12px;border-top:1px solid var(--line)}
+.btn{padding:11px 18px;border-radius:10px}
+.btn.buy{box-shadow:0 3px 8px rgba(201,162,39,.35)}
+.cover{border-bottom:1px solid var(--line)}
+.info-cert{box-shadow:0 6px 20px rgba(15,37,71,.08)}
+footer{margin-top:70px;padding:40px 0 90px}
+footer p+p{margin-top:8px}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+@media(max-width:720px){
+ header.hero{padding:56px 0 64px}
+ h1{font-size:30px}
+ .hero p{font-size:16px}
+ .perks .pdfbtn,.perks .hero-wa{font-size:17px;min-height:60px;padding:8px 10px;gap:8px}
+ .perks .hero-wa .wai,.perks .pdfbtn .wai{width:28px;height:28px}
+ .perks .perk{font-size:13px;min-height:44px;padding:6px 8px}
+ .bar{padding:12px}
+ .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+ section.grupo h2{font-size:22px}
+ .info{padding:12px}
+ .info h3{min-height:0}
+ .fab{padding:11px 16px;font-size:14px}
+}
+
+.pg.flip{animation:none!important}.pg.flip .f+.sh{animation:none!important}
+.fl{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;background:#f7f2e6}
+.mh{position:absolute;inset:0;overflow:hidden;background:#fff;pointer-events:none}
+.pg>.mh:empty{background:transparent}
+
+/* só a 1ª miniatura anima: virada de página em 3D real, com o canto inferior à frente */
+.cover:not(.anim) .dots{display:none}
+.pg.flip3{animation:turn3d 3.8s cubic-bezier(.5,.05,.35,1) forwards}
+.pg.flip3 .f+.sh{animation:shf 3.8s ease-in forwards}
+@keyframes turn3d{
+ 0%{transform:rotateY(0) rotateX(0) rotateZ(0);box-shadow:0 0 0 rgba(0,0,0,0)}
+ 30%{transform:rotateY(-38deg) rotateX(14deg) rotateZ(-3deg);box-shadow:16px 10px 28px rgba(0,0,0,.3)}
+ 60%{transform:rotateY(-105deg) rotateX(8deg) rotateZ(-2deg);box-shadow:26px 8px 38px rgba(0,0,0,.36)}
+ 100%{transform:rotateY(-180deg) rotateX(0) rotateZ(0);box-shadow:0 0 0 rgba(0,0,0,0)}}
+@media(prefers-reduced-motion:reduce){.pg.flip3{animation:none;transform:rotateY(-180deg)}}
+
+/* ===================== visual profissional ===================== */
+:root{--bg:#F6F4EE;--line:#E4DFD3;--ink:#18222F;--mut:#5E6878;--paper:#FFFDF8}
+body{background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.ic{width:22px;height:22px;flex:none}.ic.sm{width:15px;height:15px;vertical-align:-2px}
+/* topo */
+.topo{position:sticky;top:0;z-index:30;background:rgba(15,37,71,.92);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid rgba(233,212,142,.18)}
+.topo-in{display:flex;align-items:center;gap:20px;height:64px}
+.marca{display:flex;align-items:center;gap:11px;color:#fff;text-decoration:none}
+.selo{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font:700 15px 'Playfair Display',serif;letter-spacing:.04em;color:var(--navy-deep);background:linear-gradient(145deg,#F3E2A4,var(--gold));box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)}
+.marca-t{display:flex;flex-direction:column;line-height:1.15}.marca-t b{font:700 17px 'Playfair Display',serif}.marca-t small{font-size:12px;color:var(--gold-light);letter-spacing:.04em}
+.topo-links{display:flex;gap:26px;margin-left:auto}.topo-links a{color:#d9e2f2;text-decoration:none;font-weight:600;font-size:15px}.topo-links a:hover{color:#fff}
+.topo-wa{display:inline-flex;align-items:center;gap:7px;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35);border-radius:99px;padding:8px 15px;font:700 14px 'Source Sans 3';cursor:pointer}.topo-wa:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+/* hero */
+header.hero{padding:56px 0 0;background:radial-gradient(1200px 500px at 85% 10%,rgba(201,162,39,.16),transparent 60%),linear-gradient(160deg,#0B1E3B,#13305B 55%,#1B3A6B)}
+header.hero:after{display:none}
+.hero-in{display:grid;grid-template-columns:1.08fr .92fr;gap:48px;align-items:center}
+.hero .eyebrow{display:inline-block;color:var(--gold-light);letter-spacing:.2em;font-size:12.5px;font-weight:700;text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid rgba(233,212,142,.35)}
+.hero h1{font-size:clamp(32px,4.6vw,54px);line-height:1.08;margin:18px 0 16px;letter-spacing:-.01em}
+.hero h1 em{color:var(--gold-light);font-style:italic}
+.hero-txt>p{font-size:18px;color:#cfdaee;max-width:560px;line-height:1.6}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn-p,.btn-s{display:inline-flex;align-items:center;gap:10px;border-radius:12px;padding:14px 22px;font:700 16px 'Source Sans 3';text-decoration:none;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s}
+.btn-p{background:linear-gradient(180deg,#D8B53E,var(--gold));color:#231b00;border:0;box-shadow:0 10px 24px rgba(201,162,39,.32)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(201,162,39,.42)}
+.btn-s{background:rgba(255,255,255,.06);color:#fff;border:1.5px solid rgba(255,255,255,.3)}.btn-s:hover{background:rgba(255,255,255,.12);border-color:#fff}
+.selos{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px 22px;margin-top:30px;max-width:560px}
+.selos li{display:flex;align-items:center;gap:10px;color:#e3eaf6;font-size:15px;font-weight:600}.selos .ic{color:var(--gold-light)}
+.vitrine{position:relative;height:440px;margin:0}
+.folha{position:absolute;width:250px;aspect-ratio:210/297;background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3)}
+.folha .mh{border-radius:4px}
+.folha.f1{left:58%;top:34px;transform:rotate(7deg)}
+.folha.f2{left:32%;top:14px;transform:rotate(-1deg);z-index:1}
+.folha.f3{left:6%;top:30px;transform:rotate(-8deg);z-index:2}
+.vitrine figcaption{position:absolute;left:0;right:0;bottom:-6px;text-align:center;color:#b9c7e0;font-size:13px;font-style:italic}
+.numeros{display:grid;grid-template-columns:repeat(4,1fr);margin:48px 0 0;border-top:1px solid rgba(255,255,255,.12)}
+.numeros div{padding:22px 10px 64px;text-align:center;border-left:1px solid rgba(255,255,255,.08)}.numeros div:first-child{border-left:0}
+.numeros dt{font:700 30px 'Playfair Display',serif;color:#fff}.numeros dd{color:#aebcd6;font-size:14px;margin-top:2px}
+.tools{margin-top:-44px}
+.bar{border:1px solid var(--line);box-shadow:0 18px 40px rgba(15,37,71,.14)}
+#q{background-color:#FBFAF6;border-color:var(--line)}
+.cert{border-color:var(--line)}
+/* catálogo */
+section.grupo h2{font-size:30px;letter-spacing:-.01em}
+.card{border-color:var(--line);border-radius:14px;box-shadow:0 1px 2px rgba(15,37,71,.05),0 8px 24px rgba(15,37,71,.06)}
+.card:hover{box-shadow:0 2px 4px rgba(15,37,71,.06),0 18px 40px rgba(15,37,71,.14)}
+.info small{color:#8a6d12;letter-spacing:.08em}
+.peek{display:inline-flex;align-items:center;gap:5px}
+.badge{background:#1f7a4d;letter-spacing:.02em}
+.info-cert{background:var(--paper);border-color:var(--line)}
+/* seções */
+.faixa{padding:76px 0}.faixa.clara{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.faixa+.faixa{padding-top:76px}
+main+.empty+.faixa,#empty+.faixa{margin-top:40px}
+.tit{text-align:center;margin-bottom:38px}.tit .eyebrow{color:#8a6d12;font-size:12.5px}
+.tit h2{font:700 clamp(28px,3.4vw,38px) 'Playfair Display',serif;color:var(--navy-deep);margin-top:8px}
+.passos{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;counter-reset:p}
+.passos li{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 20px 22px}
+.passos li>span{position:absolute;top:-14px;left:20px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font:700 14px 'Source Sans 3'}
+.passos .ic,.recursos .ic{width:30px;height:30px;color:var(--gold);margin-bottom:10px}
+.passos b,.recursos b{display:block;font-size:18px;color:var(--navy-deep);margin-bottom:4px}
+.passos p,.recursos p{color:var(--mut);font-size:15px;line-height:1.5}
+.recursos{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+.recursos>div{padding:6px 4px;border-top:2px solid var(--gold);padding-top:22px}
+.estreito{max-width:780px}
+.faq details{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.faq summary{cursor:pointer;list-style:none;padding:18px 22px;font-weight:700;font-size:17px;color:var(--navy-deep);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";font:400 26px/1 'Source Sans 3';color:var(--gold);transition:transform .2s}
+.faq details[open] summary:after{transform:rotate(45deg)}
+.faq details p{padding:0 22px 18px;color:var(--mut);line-height:1.6}.faq a{color:var(--navy);font-weight:700}
+/* rodapé */
+footer{margin-top:0;background:#0B1E3B;color:#b8c5dc;padding:56px 0 100px}
+.rodape{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px;padding-bottom:30px;border-bottom:1px solid rgba(255,255,255,.1)}
+.rodape h4{color:#fff;font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.rodape p{margin-top:6px}.rodape a{color:var(--gold-light);text-decoration:none}
+.rod-marca p{margin-top:14px;max-width:340px}
+footer .warn{display:flex;gap:8px;align-items:flex-start;margin-top:24px;background:rgba(161,38,42,.16);border:1px solid rgba(220,90,90,.35);color:#f3c9c9;font-weight:600;font-size:13.5px}
+.copy{margin-top:14px;font-size:13px;color:#8496b4}
+@media(max-width:960px){
+ .hero-in{grid-template-columns:1fr;gap:20px}
+ .vitrine{height:300px;max-width:440px;width:100%;margin:0 auto}
+ .folha{width:170px}.folha.f1{left:54%;top:22px}.folha.f2{left:30%;top:8px}.folha.f3{left:6%;top:20px}
+ .passos,.recursos{grid-template-columns:1fr 1fr}
+ .rodape{grid-template-columns:1fr 1fr}.rod-marca{grid-column:1/-1}
+}
+@media(max-width:720px){
+ .topo-links{display:none}.topo-wa{margin-left:auto;padding:7px 12px}
+ .topo-in{height:58px}.marca-t b{font-size:15px}.marca-t small{font-size:11px}.selo{width:36px;height:36px;font-size:13px}
+ header.hero{padding-top:34px}
+ .hero h1{font-size:31px}.hero-txt>p{font-size:16px}
+ .cta{flex-direction:column}.btn-p,.btn-s{justify-content:center}
+ .selos{grid-template-columns:1fr;gap:10px}
+ .vitrine{height:250px}.folha{width:140px}
+ .numeros{grid-template-columns:1fr 1fr;margin-top:26px}.numeros div{padding:16px 6px 18px}.numeros div:nth-child(3){border-left:0}
+ .numeros div:nth-child(n+3){border-top:1px solid rgba(255,255,255,.08)}.numeros div:nth-child(n+3){padding-bottom:58px}
+ .numeros dt{font-size:24px}
+ .faixa{padding:54px 0}.passos,.recursos{grid-template-columns:1fr;gap:18px}.passos{gap:24px}
+ .rodape{grid-template-columns:1fr}
+}
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" media="print" onload="this.media='all'">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
-<header class="hero"><div class="wrap">
-  <div class="eyebrow"><span style="font-size:22px;vertical-align:-3px;margin-right:6px">🏛️</span>Prof. Rodrigo Gonçalves Pereira</div>
-  <h1>Loja de <em>Matemática</em><br>Apostilas &amp; Simulados</h1>
-  <p>Material de estudo organizado, direto ao ponto e atualizado com os editais. Confira capa, índice e páginas internas antes de comprar.</p>
-  <div class="perks"><a class="perk pdfbtn" href="#main" onclick="event.preventDefault();var g=document.querySelector('.grupo .card')||document.getElementById('main');g.scrollIntoView({behavior:'smooth',block:'center'})"><img class="wai" src="img/pdf.png" alt="" width="40" height="40">PDF</a><button class="hero-wa" onclick="wtoggle(true)"><img class="wai" src="img/whatsapp.png" alt="" width="26" height="26"> Falar no WhatsApp <small>tire dúvidas · peça seu material</small></button><a class="perk" href="#main" onclick="event.preventDefault();var g=document.querySelector('.grupo .card')||document.getElementById('main');g.scrollIntoView({behavior:'smooth',block:'center'})">🔎 Veja as páginas antes</a><a class="perk" href="#main" onclick="event.preventDefault();var g=document.querySelector('.grupo .card')||document.getElementById('main');g.scrollIntoView({behavior:'smooth',block:'center'})">🔠 Versão JUMBO (letra grande)</a><a class="perk" href="#main" onclick="event.preventDefault();var g=document.querySelector('.grupo .card')||document.getElementById('main');g.scrollIntoView({behavior:'smooth',block:'center'})">⚡ Pagamento seguro pela Eduzz</a><a class="perk" href="#main" onclick="event.preventDefault();var g=document.querySelector('.grupo .card')||document.getElementById('main');g.scrollIntoView({behavior:'smooth',block:'center'})">📄 Versão para encadernar, JUMBO para ler no celular e simulados</a></div>
-</div></header>
+<nav class="topo" aria-label="Principal"><div class="wrap topo-in">
+  <a class="marca" href="#" aria-label="Loja de Matemática — início"><span class="selo">RG</span><span class="marca-t"><b>Loja de Matemática</b><small>Prof. Rodrigo Gonçalves Pereira</small></span></a>
+  <div class="topo-links"><a href="#main" onclick="event.preventDefault();document.getElementById('main').scrollIntoView({behavior:'smooth'})">Materiais</a><a href="#como">Como funciona</a><a href="#duvidas">Dúvidas</a></div>
+  <button class="topo-wa" onclick="wtoggle(true)"><img src="img/whatsapp.png" alt="" width="18" height="18">WhatsApp</button>
+</div></nav>
+<header class="hero"><div class="wrap hero-in">
+  <div class="hero-txt">
+    <div class="eyebrow">Apostilas e simulados em PDF</div>
+    <h1>Material de estudo <em>organizado pelo seu edital</em></h1>
+    <p>Conteúdo direto ao ponto, com teoria, ilustrações, exemplos e exercícios resolvidos. Veja capa e páginas internas de cada apostila antes de comprar.</p>
+    <div class="cta">
+      <a class="btn-p" href="#main" onclick="event.preventDefault();document.getElementById('main').scrollIntoView({behavior:'smooth'})"><img src="img/pdf.png" alt="" width="22" height="22">Ver apostilas em PDF</a>
+      <button class="btn-s" onclick="wtoggle(true)"><img src="img/whatsapp.png" alt="" width="20" height="20">Falar com o professor</button>
+    </div>
+    <ul class="selos">
+      <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Veja as páginas antes</li>
+      <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>Pagamento seguro pela Eduzz</li>
+      <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V5h10v2M9 5v14M7 19h4M14 12v-1h6v1M17 11v8M15.5 19h3"/></svg>Versão JUMBO (letra grande)</li>
+      <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 016.5 3H20v15H6.5A2.5 2.5 0 004 20.5v-15z"/><path d="M4 20.5A2.5 2.5 0 016.5 18H20v3H6.5"/></svg>Para encadernar ou ler no celular</li>
+    </ul>
+  </div>
+  <figure class="vitrine" aria-label="Páginas reais da apostila de Matemática">
+    <div class="folha f1"><div class="mh" data-s="matematica" data-k="3"></div></div>
+    <div class="folha f2"><div class="mh" data-s="matematica" data-k="1"></div></div>
+    <div class="folha f3"><div class="mh" data-s="matematica" data-k="0"></div></div>
+    <figcaption>Páginas reais da apostila de Matemática</figcaption>
+  </figure>
+</div>
+<div class="wrap"><dl class="numeros">
+  <div><dt id="nMat">21</dt><dd>materiais</dd></div>
+  <div><dt id="nCert">4</dt><dd>certames</dd></div>
+  <div><dt>PDF</dt><dd>+ versão JUMBO</dd></div>
+  <div><dt>1:1</dt><dd>atendimento com o professor</dd></div>
+</dl></div></header>
 
 <div class="wrap tools"><div class="bar">
   <div class="certs" id="chips"></div>
@@ -164,10 +352,45 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 <main class="wrap" id="main"></main>
 <div class="wrap empty" id="empty">Nenhum material encontrado.</div>
 
-<footer><div class="wrap">
-  <p><b>Loja de Matemática</b> — Prof. Rodrigo Gonçalves Pereira. Dúvidas ou pedidos de novos materiais: <a style="color:var(--gold-light)" href="#" onclick="wtoggle(true);return false">WhatsApp (+55 45 99969-9444)</a>.</p>
-  <p class="warn">Proibido o compartilhamento. Cópia não autorizada. Violação sujeita à pena de detenção e multa (Lei 9.610/98 e Art. 184 do Código Penal).</p>
-</div></footer>
+<section class="faixa" id="como"><div class="wrap">
+  <div class="tit"><span class="eyebrow">Simples e seguro</span><h2>Como funciona</h2></div>
+  <ol class="passos">
+    <li><span>1</span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><b>Escolha o certame</b><p>Filtre pelo seu concurso ou busque pelo cargo.</p></li>
+    <li><span>2</span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><b>Veja as páginas</b><p>Abra a capa e as páginas internas antes de decidir.</p></li>
+    <li><span>3</span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><b>Compre pela Eduzz</b><p>Pagamento processado pela Eduzz, plataforma segura.</p></li>
+    <li><span>4</span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 20h14"/></svg><b>Receba o PDF</b><p>Material digital, para estudar na tela ou imprimir.</p></li>
+  </ol>
+</div></section>
+
+<section class="faixa clara"><div class="wrap">
+  <div class="tit"><span class="eyebrow">Qualidade que você vê antes</span><h2>O que você encontra no material</h2></div>
+  <div class="recursos">
+    <div><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg><b>Conteúdo do edital</b><p>Organizado a partir do conteúdo programático de cada certame.</p></div>
+    <div><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><b>Ilustrações e esquemas</b><p>Gráficos, diagramas e quadros que facilitam a revisão.</p></div>
+    <div><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg><b>Exercícios resolvidos</b><p>Exemplos passo a passo e gabarito para conferir.</p></div>
+    <div><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V5h10v2M9 5v14M7 19h4M14 12v-1h6v1M17 11v8M15.5 19h3"/></svg><b>Versão JUMBO</b><p>Letra grande para ler com conforto no celular.</p></div>
+  </div>
+</div></section>
+
+<section class="faixa" id="duvidas"><div class="wrap estreito">
+  <div class="tit"><span class="eyebrow">Tire suas dúvidas</span><h2>Perguntas frequentes</h2></div>
+  <div class="faq">
+    <details><summary>Como recebo o material?</summary><p>A compra é feita pela Eduzz. Depois da confirmação do pagamento, você recebe o acesso ao material digital em PDF.</p></details>
+    <details><summary>Posso ver o conteúdo antes de comprar?</summary><p>Sim. Em cada apostila, toque em <b>ver páginas</b> para ver a capa e páginas internas.</p></details>
+    <details><summary>O que é a versão JUMBO?</summary><p>É uma versão com letra grande, pensada para ler com conforto no celular. A versão normal é ideal para imprimir e encadernar.</p></details>
+    <details><summary>Posso compartilhar o arquivo?</summary><p>Não. O material é de uso pessoal e protegido pela Lei 9.610/98 (direitos autorais).</p></details>
+    <details><summary>Ficou alguma dúvida?</summary><p>Fale direto com o Prof. Rodrigo pelo <a href="#" onclick="wtoggle(true);return false">WhatsApp</a>.</p></details>
+  </div>
+</div></section>
+
+<footer><div class="wrap rodape">
+  <div class="rod-marca"><a class="marca" href="#"><span class="selo">RG</span><span class="marca-t"><b>Loja de Matemática</b><small>Prof. Rodrigo Gonçalves Pereira</small></span></a>
+    <p>Apostilas e simulados em PDF para concursos e processos seletivos.</p></div>
+  <div><h4>Atendimento</h4><p><a href="#" onclick="wtoggle(true);return false">WhatsApp (+55 45 99969-9444)</a></p><p>Dúvidas e pedidos de novos materiais.</p></div>
+  <div><h4>Pagamento</h4><p><svg class="ic sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg> Compra segura pela Eduzz</p><p>Entrega digital em PDF</p></div>
+</div>
+<div class="wrap"><p class="warn"><svg class="ic sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg> Proibido o compartilhamento. Cópia não autorizada. Violação sujeita à pena de detenção e multa (Lei 9.610/98 e Art. 184 do Código Penal).</p>
+<p class="copy">© <span id="ano">2026</span> Loja de Matemática · Prof. Rodrigo Gonçalves Pereira</p></div></footer>
 
 
 <button class="fab" id="fab" onclick="wtoggle()"><img class="wai" src="img/whatsapp.png" alt="" width="26" height="26"> Falar no WhatsApp</button>
@@ -199,10 +422,10 @@ function card(it){
   const act=soon?`<button class="btn wa" onclick="wabre('${it.slug}',5)">Avisar-me</button>`
                  :`<a class="btn buy" target="_blank" rel="noopener" href="${it.link}">Comprar</a>`;
   const n=it.imgs.length;
-  const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i></div>`;
-  const strip=it.imgs.map(leaf).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt=""></div>`;
+  const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i>${MINI.has(it.slug)?`<div class="mh" data-s="${it.slug}" data-k="${k}"></div>`:""}</div>`;
+  const strip=it.imgs.map(leaf).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt="">${MINI.has(it.slug)?`<div class="mh" data-s="${it.slug}" data-k="0"></div>`:""}</div>`;
   const dots=it.imgs.length>1?`<div class="dots">${it.imgs.map((_,k)=>`<i class="${k?'':'on'}"></i>`).join("")}</div>`:"";
-  return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><span class="peek">👁 ver páginas</span></div>
+  return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><span class="peek"><svg class="ic sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg> ver páginas</span></div>
   <div class="info"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
   <div class="row"><div class="price"><span>R$</span>${brl(it.preco)}</div>${act}</div></div></article>`;
 }
@@ -245,7 +468,7 @@ function render(){
     total+=l.length;if(!l.length)return "";
     return `<section class="grupo"><h2>${nome}</h2><div class="grid">${l.map(card).join("")}</div></section>`;}).join("");
   $("#empty").style.display=total?"none":"block";
-  infoCert();anima();
+  infoCert();anima();minis();try{$("#nMat").textContent=ITENS.length;$("#nCert").textContent=GR.length;$("#ano").textContent=new Date().getFullYear()}catch(e){}
   try{history.replaceState(null,"",filtro==="todos"?location.pathname:"#"+filtro)}catch(e){}
 }
 function chips(){
@@ -253,39 +476,99 @@ function chips(){
   $("#chips").innerHTML=[["todos","Todos os certames"],...GR].map(([k,n])=>`<button class="cert ${filtro===k?'on':''}" onclick="filtro='${k}';chips();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'nearest'})"><b>${n}</b><small>${c(k)} ${c(k)===1?'material':'materiais'}</small></button>`).join("");
 }
 /* miniaturas animadas: as páginas sobem (scroll vertical) enquanto o card está visível */
+/* virada de página puxada pelo canto inferior direito (dobra em 3D simulada: frente recortada + verso refletido) */
+function cortaPoly(P,u,M,sg){const o=[],d=q=>sg*((q[0]-M[0])*u[0]+(q[1]-M[1])*u[1]);
+  for(let i=0;i<P.length;i++){const A=P[i],B=P[(i+1)%P.length],da=d(A),db=d(B);
+    if(da<=0)o.push(A);
+    if((da<0&&db>0)||(da>0&&db<0)){const t=da/(da-db);o.push([A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t])}}
+  return o}
+const polyCss=P=>P.length<3?"polygon(0 0,0 0,0 0)":"polygon("+P.map(q=>q[0].toFixed(1)+"px "+q[1].toFixed(1)+"px").join(",")+")";
+function curl(p){
+  const bk=p.parentNode,W=p.offsetWidth,H=p.offsetHeight,sh=p.querySelector(".sh");
+  p.classList.add("flip");
+  const fl=document.createElement("i");fl.className="fl";
+  fl.style.cssText="width:"+W+"px;height:"+H+"px;z-index:"+((+p.style.zIndex||0)+1);
+  bk.appendChild(fl);p._fl=fl;
+  const R=[[0,0],[W,0],[W,H],[0,H]],t0=performance.now(),D=3800;
+  const step=now=>{
+    const x=Math.min(1,(now-t0)/D),e=x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,s=Math.max(e*2.3,1e-3);
+    const a=1.25*s*W,b=.5*s*H,len=Math.hypot(a,b),u=[a/len,b/len],M=[W-a/2,H-b/2];
+    p.style.clipPath=polyCss(cortaPoly(R,u,M,1));
+    fl.style.clipPath=polyCss(cortaPoly(R,u,M,-1));
+    const k=2*(M[0]*u[0]+M[1]*u[1]);
+    fl.style.transform="matrix("+[1-2*u[0]*u[0],-2*u[0]*u[1],-2*u[0]*u[1],1-2*u[1]*u[1],k*u[0],k*u[1]].join(",")+")";
+    const ang=Math.atan2(u[0],-u[1])*180/Math.PI,L=Math.abs(W*u[0])+Math.abs(H*u[1]),pos=L/2+((M[0]-W/2)*u[0]+(M[1]-H/2)*u[1]);
+    fl.style.background="linear-gradient("+ang+"deg,rgba(0,0,0,.38) "+pos+"px,rgba(255,255,255,.55) "+(pos+W*.12)+"px,rgba(0,0,0,.08) "+(pos+W*.45)+"px),#f3eee0";
+    sh.style.opacity=1;sh.style.background="linear-gradient("+ang+"deg,rgba(0,0,0,0) "+(pos-W*.35)+"px,rgba(0,0,0,.4) "+pos+"px)";
+    if(x<1)p._raf=requestAnimationFrame(step);
+    else{fl.remove();p._fl=null;p.style.clipPath="polygon(0 0,0 0,0 0)"}
+  };
+  p._raf=requestAnimationFrame(step);
+}
+function uncurl(p){cancelAnimationFrame(p._raf);if(p._fl){p._fl.remove();p._fl=null}
+  p.style.clipPath="";const sh=p.querySelector(".sh");if(sh)sh.removeAttribute("style");p.classList.remove("flip","flip3")}
+
+/* miniaturas em HTML: páginas reais da apostila, em Shadow DOM, escaladas para caber no card */
+const MINI=new Set(["artes", "conhecimentos-basicos", "educacao-especial", "educacao-fisica", "geografia", "gestao-negocios", "lingua-portuguesa", "matematica", "pedagogo", "quimica"]);
+const miniCache={};
+const MINI_CSS=`:host{position:absolute;inset:0;overflow:hidden;background:#fff;display:block;pointer-events:none}
+.mw{width:794px;transform-origin:0 0;font-family:'Noto Sans',Arial,sans-serif;color:#222;text-align:left}
+.mw .page{width:794px!important;max-width:none!important;margin:0!important;box-shadow:none!important;animation:none!important}
+.mw .page:not(.cover-page):not(.divider-page){padding:20mm 15mm!important;min-height:1123px}
+.mw .cover-page{min-height:1123px}`;
+function miniDados(slug){return miniCache[slug]||(miniCache[slug]=fetch("mini/"+slug+".json").then(r=>r.json()).catch(()=>null))}
+/* o KaTeX vem com defer: espera ele carregar (ou falhar) antes de renderizar as fórmulas das miniaturas */
+const katexOk=new Promise(res=>{const v=()=>res(!!window.renderMathInElement);
+  if(window.renderMathInElement||document.readyState==="complete")v();else addEventListener("load",v,{once:true})});
+async function montaMini(h){
+  if(h._ok)return;h._ok=1;
+  const d=await miniDados(h.dataset.s);if(!d||!d.pages[h.dataset.k])return;
+  const r=h.shadowRoot||h.attachShadow({mode:"open"});
+  r.innerHTML=`<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"><style>${d.css}\n${MINI_CSS}</style><div class="mw">${d.pages[h.dataset.k]}</div>`;
+  const mw=r.querySelector(".mw"),fit=()=>{const w=h.clientWidth;if(w)mw.style.transform="scale("+(w/794)+")"};
+  fit();new ResizeObserver(fit).observe(h);
+  if(/\$/.test(d.pages[h.dataset.k])&&await katexOk)try{renderMathInElement(mw,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}catch(e){}
+}
+let ioMini=null;
+function minis(){
+  if(ioMini)ioMini.disconnect();
+  ioMini=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){ioMini.unobserve(e.target);montaMini(e.target)}}),{rootMargin:"300px"});
+  document.querySelectorAll(".mh").forEach(h=>ioMini.observe(h));
+}
 let io=null,rolando=false,tRol=null;
 const todas=()=>[...document.querySelectorAll(".cover")];
 addEventListener("scroll",()=>{
   rolando=true;clearTimeout(tRol);
   todas().forEach(cv=>{if(cv._reset)cv._reset()});          /* rolando: só a capa aparece */
-  tRol=setTimeout(()=>{rolando=false;todas().forEach(cv=>{if(cv._vis&&cv._start)cv._start(250+Math.random()*500)})},140);   /* parou: anima já */
+  tRol=setTimeout(()=>{rolando=false;todas().forEach(cv=>{if(cv._vis&&cv._start)cv._start(Math.random()*3500)})},140);   /* parou: anima já */
 },{passive:true});
 function anima(){
   if(io)io.disconnect();
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-  const CAPA=5000,PAG=2200;
-  todas().forEach(cv=>{const n=+cv.dataset.n;if(n<2)return;let k=0;
+  const CAPA=5000,PAG=5200;
+  todas().forEach(cv=>{const ok=cv.closest(".card").dataset.s==="matematica";cv.classList.toggle("anim",ok);const n=+cv.dataset.n;if(n<2||!ok)return;let k=0;
     const bk=cv.querySelector(".book"),pgs=[...bk.querySelectorAll(".pg:not(.base)")],ds=cv.querySelectorAll(".dots i");
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
     if(matchMedia("(hover:hover)").matches){cv.onmouseenter=()=>cv._p=1;cv.onmouseleave=()=>cv._p=0}
-    cv._reset=()=>{clearTimeout(cv._t);cv._t=null;if(k||bk.querySelector(".flip")){bk.classList.add("nt");pgs.forEach(p=>p.classList.remove("flip"));void bk.offsetHeight;bk.classList.remove("nt")}k=0;dot(0)};
+    cv._reset=()=>{clearTimeout(cv._t);cv._t=null;if(k||bk.querySelector(".flip")){bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt")}k=0;dot(0)};
     const passo=()=>{cv._t=null;
       if(rolando||!cv._vis)return;
       if(cv._p){cv._t=setTimeout(passo,300);return}
-      if(k<n){pgs[k].classList.add("flip");k++;dot(k);
-        if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(p=>p.classList.remove("flip"));void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA)},1500);return}}
-      cv._t=setTimeout(passo,PAG)};
+      if(k<n){curl(pgs[k]);k++;dot(k);
+        if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA+Math.random()*4000)},4200);return}}
+      cv._t=setTimeout(passo,PAG+Math.random()*1800)};
     cv._start=d=>{clearTimeout(cv._t);cv._t=setTimeout(passo,d)};
     cv._reset();
   });
   io=new IntersectionObserver(es=>es.forEach(e=>{const cv=e.target;cv._vis=e.isIntersecting;
     if(!cv._start)return;
-    if(e.isIntersecting){if(!rolando)cv._start(400+Math.random()*600)}else cv._reset()}),{threshold:.4});
+    if(e.isIntersecting){if(!rolando)cv._start(Math.random()*4000)}else cv._reset()}),{threshold:.4});
   todas().forEach(cv=>io.observe(cv));
   /* loop: se a página está parada e a miniatura visível sem timer, retoma sozinha */
-  clearInterval(window._wd);window._wd=setInterval(()=>{if(rolando)return;todas().forEach(cv=>{if(cv._vis&&cv._start&&!cv._t&&!cv._p)cv._start(300)})},1500);
+  clearInterval(window._wd);window._wd=setInterval(()=>{if(rolando)return;todas().forEach(cv=>{if(cv._vis&&cv._start&&!cv._t&&!cv._p)cv._start(Math.random()*2500)})},1500);
 }
 const NOMES=["Capa","Índice","Página interna","Página interna"];
+const ROT={matematica:["Capa","Página interna","Página interna","Página interna"]};
 let cur=null;
 function abre(s){cur=ITENS.find(i=>i.slug===s);
   $("#th").innerHTML=cur.imgs.map((u,k)=>`<img src="${u}" onclick="foto(${k})" alt="">`).join("");
@@ -294,7 +577,7 @@ function abre(s){cur=ITENS.find(i=>i.slug===s);
    <p style="font-size:14px;color:var(--mut)">${cur.paginas?cur.paginas+' páginas · ':''}PDF digital${cur.slug.startsWith('cisop')||cur.grupo==='pss'||cur.grupo==='prefeitura'?' · inclui versão JUMBO (letra grande) quando disponível':''}</p>
    <div class="row"><div class="price"><span>R$</span>${brl(cur.preco)}</div>${soon?`<button class="btn wa" onclick="fecha();wabre('${cur.slug}')">Falar no WhatsApp</button>`:`<a class="btn buy" target="_blank" rel="noopener" href="${cur.link}">Comprar agora</a>`}</div>`;
   foto(0);$("#modal").classList.add("open");document.body.style.overflow="hidden";}
-function foto(k){$("#big").src=cur.imgs[k];$("#lab").textContent=(cur.imgs.length>2?NOMES[k]:(k?"Índice":"Capa"))+" · "+(k+1)+"/"+cur.imgs.length;
+function foto(k){$("#big").src=cur.imgs[k];$("#lab").textContent=(cur.imgs.length>2?(ROT[cur.slug]||NOMES)[k]:(k?"Índice":"Capa"))+" · "+(k+1)+"/"+cur.imgs.length;
   [...$("#th").children].forEach((e,i)=>e.classList.toggle("on",i===k));}
 function fecha(){$("#modal").classList.remove("open");document.body.style.overflow=""}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")fecha();
