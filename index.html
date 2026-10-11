@@ -191,6 +191,17 @@ footer p+p{margin-top:8px}
 .fl{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;background:#f7f2e6}
 .mh{position:absolute;inset:0;overflow:hidden;background:#fff;pointer-events:none}
 .pg>.mh:empty{background:transparent}
+
+/* só a 1ª miniatura anima: virada de página em 3D real, com o canto inferior à frente */
+.cover:not(.anim) .dots{display:none}
+.pg.flip3{animation:turn3d 1.9s cubic-bezier(.45,.05,.3,1) forwards}
+.pg.flip3 .f+.sh{animation:shf 1.9s ease-in forwards}
+@keyframes turn3d{
+ 0%{transform:rotateY(0) rotateX(0) rotateZ(0);box-shadow:0 0 0 rgba(0,0,0,0)}
+ 30%{transform:rotateY(-38deg) rotateX(14deg) rotateZ(-3deg);box-shadow:16px 10px 28px rgba(0,0,0,.3)}
+ 60%{transform:rotateY(-105deg) rotateX(8deg) rotateZ(-2deg);box-shadow:26px 8px 38px rgba(0,0,0,.36)}
+ 100%{transform:rotateY(-180deg) rotateX(0) rotateZ(0);box-shadow:0 0 0 rgba(0,0,0,0)}}
+@media(prefers-reduced-motion:reduce){.pg.flip3{animation:none;transform:rotateY(-180deg)}}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
@@ -332,7 +343,7 @@ function curl(p){
   p._raf=requestAnimationFrame(step);
 }
 function uncurl(p){cancelAnimationFrame(p._raf);if(p._fl){p._fl.remove();p._fl=null}
-  p.style.clipPath="";const sh=p.querySelector(".sh");if(sh)sh.removeAttribute("style");p.classList.remove("flip")}
+  p.style.clipPath="";const sh=p.querySelector(".sh");if(sh)sh.removeAttribute("style");p.classList.remove("flip","flip3")}
 
 /* miniaturas em HTML: páginas reais da apostila, em Shadow DOM, escaladas para caber no card */
 const MINI=new Set(["artes", "conhecimentos-basicos", "educacao-especial", "educacao-fisica", "geografia", "gestao-negocios", "lingua-portuguesa", "matematica", "pedagogo", "quimica"]);
@@ -369,15 +380,15 @@ function anima(){
   if(io)io.disconnect();
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   const CAPA=5000,PAG=2200;
-  todas().forEach(cv=>{const n=+cv.dataset.n;if(n<2)return;let k=0;
+  todas().forEach((cv,ci)=>{cv.classList.toggle("anim",ci===0);const n=+cv.dataset.n;if(n<2||ci>0)return;let k=0;
     const bk=cv.querySelector(".book"),pgs=[...bk.querySelectorAll(".pg:not(.base)")],ds=cv.querySelectorAll(".dots i");
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
     if(matchMedia("(hover:hover)").matches){cv.onmouseenter=()=>cv._p=1;cv.onmouseleave=()=>cv._p=0}
-    cv._reset=()=>{clearTimeout(cv._t);cv._t=null;if(k||bk.querySelector(".flip")){bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt")}k=0;dot(0)};
+    cv._reset=()=>{clearTimeout(cv._t);cv._t=null;if(k||bk.querySelector(".flip3")){bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt")}k=0;dot(0)};
     const passo=()=>{cv._t=null;
       if(rolando||!cv._vis)return;
       if(cv._p){cv._t=setTimeout(passo,300);return}
-      if(k<n){curl(pgs[k]);k++;dot(k);
+      if(k<n){pgs[k].classList.add("flip3");k++;dot(k);
         if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA+Math.random()*4000)},1500+Math.random()*600);return}}
       cv._t=setTimeout(passo,PAG+Math.random()*1800)};
     cv._start=d=>{clearTimeout(cv._t);cv._t=setTimeout(passo,d)};
