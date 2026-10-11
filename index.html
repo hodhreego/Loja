@@ -11,7 +11,7 @@
 <meta property="og:description" content="Apostilas e simulados para PSS SEED-PR 2027, CISOP Cascavel, Prefeitura de Cascavel e mais.">
 <meta property="og:image" content="https://hodhreego.github.io/Loja/img/matematica-1.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#1B3A6B;--navy-deep:#0F2547;--gold:#C9A227;--gold-light:#E9D48E;--bg:#EEF3FB;--ink:#1B2733;--mut:#5b6b80;--card:#fff;--ok:#1f7a4d;--line:#d9e2f1}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -189,7 +189,12 @@ footer p+p{margin-top:8px}
 
 .pg.flip{animation:none!important}.pg.flip .f+.sh{animation:none!important}
 .fl{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;background:#f7f2e6}
+.mh{position:absolute;inset:0;overflow:hidden;background:#fff;pointer-events:none}
+.pg>.mh:empty{background:transparent}
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 <header class="hero"><div class="wrap">
@@ -243,8 +248,8 @@ function card(it){
   const act=soon?`<button class="btn wa" onclick="wabre('${it.slug}',5)">Avisar-me</button>`
                  :`<a class="btn buy" target="_blank" rel="noopener" href="${it.link}">Comprar</a>`;
   const n=it.imgs.length;
-  const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i></div>`;
-  const strip=it.imgs.map(leaf).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt=""></div>`;
+  const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i>${MINI.has(it.slug)?`<div class="mh" data-s="${it.slug}" data-k="${k}"></div>`:""}</div>`;
+  const strip=it.imgs.map(leaf).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt="">${MINI.has(it.slug)?`<div class="mh" data-s="${it.slug}" data-k="0"></div>`:""}</div>`;
   const dots=it.imgs.length>1?`<div class="dots">${it.imgs.map((_,k)=>`<i class="${k?'':'on'}"></i>`).join("")}</div>`:"";
   return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><span class="peek">👁 ver páginas</span></div>
   <div class="info"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
@@ -289,7 +294,7 @@ function render(){
     total+=l.length;if(!l.length)return "";
     return `<section class="grupo"><h2>${nome}</h2><div class="grid">${l.map(card).join("")}</div></section>`;}).join("");
   $("#empty").style.display=total?"none":"block";
-  infoCert();anima();
+  infoCert();anima();minis();
   try{history.replaceState(null,"",filtro==="todos"?location.pathname:"#"+filtro)}catch(e){}
 }
 function chips(){
@@ -328,6 +333,31 @@ function curl(p){
 }
 function uncurl(p){cancelAnimationFrame(p._raf);if(p._fl){p._fl.remove();p._fl=null}
   p.style.clipPath="";const sh=p.querySelector(".sh");if(sh)sh.removeAttribute("style");p.classList.remove("flip")}
+
+/* miniaturas em HTML: páginas reais da apostila, em Shadow DOM, escaladas para caber no card */
+const MINI=new Set(["artes", "conhecimentos-basicos", "educacao-especial", "educacao-fisica", "geografia", "gestao-negocios", "lingua-portuguesa", "matematica", "pedagogo", "quimica"]);
+const miniCache={};
+const MINI_CSS=`:host{position:absolute;inset:0;overflow:hidden;background:#fff;display:block;pointer-events:none}
+.mw{width:794px;transform-origin:0 0;font-family:'Noto Sans',Arial,sans-serif;color:#222;text-align:left}
+.mw .page{width:794px!important;max-width:none!important;margin:0!important;box-shadow:none!important;animation:none!important}
+.mw .page:not(.cover-page):not(.divider-page){padding:20mm 15mm!important;min-height:1123px}
+.mw .cover-page{min-height:1123px}`;
+function miniDados(slug){return miniCache[slug]||(miniCache[slug]=fetch("mini/"+slug+".json").then(r=>r.json()).catch(()=>null))}
+async function montaMini(h){
+  if(h._ok)return;h._ok=1;
+  const d=await miniDados(h.dataset.s);if(!d||!d.pages[h.dataset.k])return;
+  const r=h.shadowRoot||h.attachShadow({mode:"open"});
+  r.innerHTML=`<style>${d.css}\n${MINI_CSS}</style><div class="mw">${d.pages[h.dataset.k]}</div>`;
+  const mw=r.querySelector(".mw"),fit=()=>{const w=h.clientWidth;if(w)mw.style.transform="scale("+(w/794)+")"};
+  fit();new ResizeObserver(fit).observe(h);
+  if(window.renderMathInElement)try{renderMathInElement(mw,{delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false})}catch(e){}
+}
+let ioMini=null;
+function minis(){
+  if(ioMini)ioMini.disconnect();
+  ioMini=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){ioMini.unobserve(e.target);montaMini(e.target)}}),{rootMargin:"300px"});
+  document.querySelectorAll(".mh").forEach(h=>ioMini.observe(h));
+}
 let io=null,rolando=false,tRol=null;
 const todas=()=>[...document.querySelectorAll(".cover")];
 addEventListener("scroll",()=>{
