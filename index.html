@@ -202,18 +202,146 @@ footer p+p{margin-top:8px}
  60%{transform:rotateY(-105deg) rotateX(8deg) rotateZ(-2deg);box-shadow:26px 8px 38px rgba(0,0,0,.36)}
  100%{transform:rotateY(-180deg) rotateX(0) rotateZ(0);box-shadow:0 0 0 rgba(0,0,0,0)}}
 @media(prefers-reduced-motion:reduce){.pg.flip3{animation:none;transform:rotateY(-180deg)}}
+
+/* ===================== visual profissional ===================== */
+:root{--bg:#F6F4EE;--line:#E4DFD3;--ink:#18222F;--mut:#5E6878;--paper:#FFFDF8}
+body{background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.ic{width:22px;height:22px;flex:none}.ic.sm{width:15px;height:15px;vertical-align:-2px}
+/* topo */
+.topo{position:sticky;top:0;z-index:30;background:rgba(15,37,71,.92);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid rgba(233,212,142,.18)}
+.topo-in{display:flex;align-items:center;gap:20px;height:64px}
+.marca{display:flex;align-items:center;gap:11px;color:#fff;text-decoration:none}
+.selo{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font:700 15px 'Playfair Display',serif;letter-spacing:.04em;color:var(--navy-deep);background:linear-gradient(145deg,#F3E2A4,var(--gold));box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)}
+.marca-t{display:flex;flex-direction:column;line-height:1.15}.marca-t b{font:700 17px 'Playfair Display',serif}.marca-t small{font-size:12px;color:var(--gold-light);letter-spacing:.04em}
+.topo-links{display:flex;gap:26px;margin-left:auto}.topo-links a{color:#d9e2f2;text-decoration:none;font-weight:600;font-size:15px}.topo-links a:hover{color:#fff}
+.topo-wa{display:inline-flex;align-items:center;gap:7px;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35);border-radius:99px;padding:8px 15px;font:700 14px 'Source Sans 3';cursor:pointer}.topo-wa:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+/* hero */
+header.hero{padding:56px 0 0;background:radial-gradient(1200px 500px at 85% 10%,rgba(201,162,39,.16),transparent 60%),linear-gradient(160deg,#0B1E3B,#13305B 55%,#1B3A6B)}
+header.hero:after{display:none}
+.hero-in{display:grid;grid-template-columns:1.08fr .92fr;gap:48px;align-items:center}
+.hero .eyebrow{display:inline-block;color:var(--gold-light);letter-spacing:.2em;font-size:12.5px;font-weight:700;text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid rgba(233,212,142,.35)}
+.hero h1{font-size:clamp(32px,4.6vw,54px);line-height:1.08;margin:18px 0 16px;letter-spacing:-.01em}
+.hero h1 em{color:var(--gold-light);font-style:italic}
+.hero-txt>p{font-size:18px;color:#cfdaee;max-width:560px;line-height:1.6}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn-p,.btn-s{display:inline-flex;align-items:center;gap:10px;border-radius:12px;padding:14px 22px;font:700 16px 'Source Sans 3';text-decoration:none;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s}
+.btn-p{background:linear-gradient(180deg,#D8B53E,var(--gold));color:#231b00;border:0;box-shadow:0 10px 24px rgba(201,162,39,.32)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(201,162,39,.42)}
+.btn-s{background:rgba(255,255,255,.06);color:#fff;border:1.5px solid rgba(255,255,255,.3)}.btn-s:hover{background:rgba(255,255,255,.12);border-color:#fff}
+.selos{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px 22px;margin-top:30px;max-width:560px}
+.selos li{display:flex;align-items:center;gap:10px;color:#e3eaf6;font-size:15px;font-weight:600}.selos .ic{color:var(--gold-light)}
+.vitrine{position:relative;height:440px;margin:0}
+.folha{position:absolute;width:250px;aspect-ratio:210/297;background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3)}
+.folha .mh{border-radius:4px}
+.folha.f1{left:58%;top:34px;transform:rotate(7deg)}
+.folha.f2{left:32%;top:14px;transform:rotate(-1deg);z-index:1}
+.folha.f3{left:6%;top:30px;transform:rotate(-8deg);z-index:2}
+.vitrine figcaption{position:absolute;left:0;right:0;bottom:-6px;text-align:center;color:#b9c7e0;font-size:13px;font-style:italic}
+.numeros{display:grid;grid-template-columns:repeat(4,1fr);margin:48px 0 0;border-top:1px solid rgba(255,255,255,.12)}
+.numeros div{padding:22px 10px 64px;text-align:center;border-left:1px solid rgba(255,255,255,.08)}.numeros div:first-child{border-left:0}
+.numeros dt{font:700 30px 'Playfair Display',serif;color:#fff}.numeros dd{color:#aebcd6;font-size:14px;margin-top:2px}
+.tools{margin-top:-44px}
+.bar{border:1px solid var(--line);box-shadow:0 18px 40px rgba(15,37,71,.14)}
+#q{background-color:#FBFAF6;border-color:var(--line)}
+.cert{border-color:var(--line)}
+/* catálogo */
+section.grupo h2{font-size:30px;letter-spacing:-.01em}
+.card{border-color:var(--line);border-radius:14px;box-shadow:0 1px 2px rgba(15,37,71,.05),0 8px 24px rgba(15,37,71,.06)}
+.card:hover{box-shadow:0 2px 4px rgba(15,37,71,.06),0 18px 40px rgba(15,37,71,.14)}
+.info small{color:#8a6d12;letter-spacing:.08em}
+.peek{display:inline-flex;align-items:center;gap:5px}
+.badge{background:#1f7a4d;letter-spacing:.02em}
+.info-cert{background:var(--paper);border-color:var(--line)}
+/* seções */
+.faixa{padding:76px 0}.faixa.clara{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.faixa+.faixa{padding-top:76px}
+main+.empty+.faixa,#empty+.faixa{margin-top:40px}
+.tit{text-align:center;margin-bottom:38px}.tit .eyebrow{color:#8a6d12;font-size:12.5px}
+.tit h2{font:700 clamp(28px,3.4vw,38px) 'Playfair Display',serif;color:var(--navy-deep);margin-top:8px}
+.passos{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;counter-reset:p}
+.passos li{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 20px 22px}
+.passos li>span{position:absolute;top:-14px;left:20px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font:700 14px 'Source Sans 3'}
+.passos .ic,.recursos .ic{width:30px;height:30px;color:var(--gold);margin-bottom:10px}
+.passos b,.recursos b{display:block;font-size:18px;color:var(--navy-deep);margin-bottom:4px}
+.passos p,.recursos p{color:var(--mut);font-size:15px;line-height:1.5}
+.recursos{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+.recursos>div{padding:6px 4px;border-top:2px solid var(--gold);padding-top:22px}
+.estreito{max-width:780px}
+.faq details{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.faq summary{cursor:pointer;list-style:none;padding:18px 22px;font-weight:700;font-size:17px;color:var(--navy-deep);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";font:400 26px/1 'Source Sans 3';color:var(--gold);transition:transform .2s}
+.faq details[open] summary:after{transform:rotate(45deg)}
+.faq details p{padding:0 22px 18px;color:var(--mut);line-height:1.6}.faq a{color:var(--navy);font-weight:700}
+/* rodapé */
+footer{margin-top:0;background:#0B1E3B;color:#b8c5dc;padding:56px 0 100px}
+.rodape{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px;padding-bottom:30px;border-bottom:1px solid rgba(255,255,255,.1)}
+.rodape h4{color:#fff;font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.rodape p{margin-top:6px}.rodape a{color:var(--gold-light);text-decoration:none}
+.rod-marca p{margin-top:14px;max-width:340px}
+footer .warn{display:flex;gap:8px;align-items:flex-start;margin-top:24px;background:rgba(161,38,42,.16);border:1px solid rgba(220,90,90,.35);color:#f3c9c9;font-weight:600;font-size:13.5px}
+.copy{margin-top:14px;font-size:13px;color:#8496b4}
+@media(max-width:960px){
+ .hero-in{grid-template-columns:1fr;gap:20px}
+ .vitrine{height:300px;max-width:440px;width:100%;margin:0 auto}
+ .folha{width:170px}.folha.f1{left:54%;top:22px}.folha.f2{left:30%;top:8px}.folha.f3{left:6%;top:20px}
+ .passos,.recursos{grid-template-columns:1fr 1fr}
+ .rodape{grid-template-columns:1fr 1fr}.rod-marca{grid-column:1/-1}
+}
+@media(max-width:720px){
+ .topo-links{display:none}.topo-wa{margin-left:auto;padding:7px 12px}
+ .topo-in{height:58px}.marca-t b{font-size:15px}.marca-t small{font-size:11px}.selo{width:36px;height:36px;font-size:13px}
+ header.hero{padding-top:34px}
+ .hero h1{font-size:31px}.hero-txt>p{font-size:16px}
+ .cta{flex-direction:column}.btn-p,.btn-s{justify-content:center}
+ .selos{grid-template-columns:1fr;gap:10px}
+ .vitrine{height:250px}.folha{width:140px}
+ .numeros{grid-template-columns:1fr 1fr;margin-top:26px}.numeros div{padding:16px 6px 18px}.numeros div:nth-child(3){border-left:0}
+ .numeros div:nth-child(n+3){border-top:1px solid rgba(255,255,255,.08)}.numeros div:nth-child(n+3){padding-bottom:58px}
+ .numeros dt{font-size:24px}
+ .faixa{padding:54px 0}.passos,.recursos{grid-template-columns:1fr;gap:18px}.passos{gap:24px}
+ .rodape{grid-template-columns:1fr}
+}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" media="print" onload="this.media='all'">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
-<header class="hero"><div class="wrap">
-  <div class="eyebrow"><span style="font-size:22px;vertical-align:-3px;margin-right:6px">🏛️</span>Prof. Rodrigo Gonçalves Pereira</div>
-  <h1>Loja de <em>Matemática</em><br>Apostilas &amp; Simulados</h1>
-  <p>Material de estudo organizado, direto ao ponto e atualizado com os editais. Confira capa, índice e páginas internas antes de comprar.</p>
-  <div class="perks"><a class="perk pdfbtn" href="#main" onclick="event.preventDefault();var g=document.querySelector('.grupo .card')||document.getElementById('main');g.scrollIntoView({behavior:'smooth',block:'center'})"><img class="wai" src="img/pdf.png" alt="" width="40" height="40">PDF</a><button class="hero-wa" onclick="wtoggle(true)"><img class="wai" src="img/whatsapp.png" alt="" width="26" height="26"> Falar no WhatsApp <small>tire dúvidas · peça seu material</small></button><a class="perk" href="#main" onclick="event.preventDefault();var g=document.querySelector('.grupo .card')||document.getElementById('main');g.scrollIntoView({behavior:'smooth',block:'center'})">🔎 Veja as páginas antes</a><a class="perk" href="#main" onclick="event.preventDefault();var g=document.querySelector('.grupo .card')||document.getElementById('main');g.scrollIntoView({behavior:'smooth',block:'center'})">🔠 Versão JUMBO (letra grande)</a><a class="perk" href="#main" onclick="event.preventDefault();var g=document.querySelector('.grupo .card')||document.getElementById('main');g.scrollIntoView({behavior:'smooth',block:'center'})">⚡ Pagamento seguro pela Eduzz</a><a class="perk" href="#main" onclick="event.preventDefault();var g=document.querySelector('.grupo .card')||document.getElementById('main');g.scrollIntoView({behavior:'smooth',block:'center'})">📄 Versão para encadernar, JUMBO para ler no celular e simulados</a></div>
-</div></header>
+<nav class="topo" aria-label="Principal"><div class="wrap topo-in">
+  <a class="marca" href="#" aria-label="Loja de Matemática — início"><span class="selo">RG</span><span class="marca-t"><b>Loja de Matemática</b><small>Prof. Rodrigo Gonçalves Pereira</small></span></a>
+  <div class="topo-links"><a href="#main" onclick="event.preventDefault();document.getElementById('main').scrollIntoView({behavior:'smooth'})">Materiais</a><a href="#como">Como funciona</a><a href="#duvidas">Dúvidas</a></div>
+  <button class="topo-wa" onclick="wtoggle(true)"><img src="img/whatsapp.png" alt="" width="18" height="18">WhatsApp</button>
+</div></nav>
+<header class="hero"><div class="wrap hero-in">
+  <div class="hero-txt">
+    <div class="eyebrow">Apostilas e simulados em PDF</div>
+    <h1>Material de estudo <em>organizado pelo seu edital</em></h1>
+    <p>Conteúdo direto ao ponto, com teoria, ilustrações, exemplos e exercícios resolvidos. Veja capa e páginas internas de cada apostila antes de comprar.</p>
+    <div class="cta">
+      <a class="btn-p" href="#main" onclick="event.preventDefault();document.getElementById('main').scrollIntoView({behavior:'smooth'})"><img src="img/pdf.png" alt="" width="22" height="22">Ver apostilas em PDF</a>
+      <button class="btn-s" onclick="wtoggle(true)"><img src="img/whatsapp.png" alt="" width="20" height="20">Falar com o professor</button>
+    </div>
+    <ul class="selos">
+      <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Veja as páginas antes</li>
+      <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>Pagamento seguro pela Eduzz</li>
+      <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V5h10v2M9 5v14M7 19h4M14 12v-1h6v1M17 11v8M15.5 19h3"/></svg>Versão JUMBO (letra grande)</li>
+      <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 016.5 3H20v15H6.5A2.5 2.5 0 004 20.5v-15z"/><path d="M4 20.5A2.5 2.5 0 016.5 18H20v3H6.5"/></svg>Para encadernar ou ler no celular</li>
+    </ul>
+  </div>
+  <figure class="vitrine" aria-label="Páginas reais da apostila de Matemática">
+    <div class="folha f1"><div class="mh" data-s="matematica" data-k="3"></div></div>
+    <div class="folha f2"><div class="mh" data-s="matematica" data-k="1"></div></div>
+    <div class="folha f3"><div class="mh" data-s="matematica" data-k="0"></div></div>
+    <figcaption>Páginas reais da apostila de Matemática</figcaption>
+  </figure>
+</div>
+<div class="wrap"><dl class="numeros">
+  <div><dt id="nMat">21</dt><dd>materiais</dd></div>
+  <div><dt id="nCert">4</dt><dd>certames</dd></div>
+  <div><dt>PDF</dt><dd>+ versão JUMBO</dd></div>
+  <div><dt>1:1</dt><dd>atendimento com o professor</dd></div>
+</dl></div></header>
 
 <div class="wrap tools"><div class="bar">
   <div class="certs" id="chips"></div>
@@ -224,10 +352,45 @@ footer p+p{margin-top:8px}
 <main class="wrap" id="main"></main>
 <div class="wrap empty" id="empty">Nenhum material encontrado.</div>
 
-<footer><div class="wrap">
-  <p><b>Loja de Matemática</b> — Prof. Rodrigo Gonçalves Pereira. Dúvidas ou pedidos de novos materiais: <a style="color:var(--gold-light)" href="#" onclick="wtoggle(true);return false">WhatsApp (+55 45 99969-9444)</a>.</p>
-  <p class="warn">Proibido o compartilhamento. Cópia não autorizada. Violação sujeita à pena de detenção e multa (Lei 9.610/98 e Art. 184 do Código Penal).</p>
-</div></footer>
+<section class="faixa" id="como"><div class="wrap">
+  <div class="tit"><span class="eyebrow">Simples e seguro</span><h2>Como funciona</h2></div>
+  <ol class="passos">
+    <li><span>1</span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><b>Escolha o certame</b><p>Filtre pelo seu concurso ou busque pelo cargo.</p></li>
+    <li><span>2</span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><b>Veja as páginas</b><p>Abra a capa e as páginas internas antes de decidir.</p></li>
+    <li><span>3</span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><b>Compre pela Eduzz</b><p>Pagamento processado pela Eduzz, plataforma segura.</p></li>
+    <li><span>4</span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 20h14"/></svg><b>Receba o PDF</b><p>Material digital, para estudar na tela ou imprimir.</p></li>
+  </ol>
+</div></section>
+
+<section class="faixa clara"><div class="wrap">
+  <div class="tit"><span class="eyebrow">Qualidade que você vê antes</span><h2>O que você encontra no material</h2></div>
+  <div class="recursos">
+    <div><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg><b>Conteúdo do edital</b><p>Organizado a partir do conteúdo programático de cada certame.</p></div>
+    <div><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><b>Ilustrações e esquemas</b><p>Gráficos, diagramas e quadros que facilitam a revisão.</p></div>
+    <div><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg><b>Exercícios resolvidos</b><p>Exemplos passo a passo e gabarito para conferir.</p></div>
+    <div><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V5h10v2M9 5v14M7 19h4M14 12v-1h6v1M17 11v8M15.5 19h3"/></svg><b>Versão JUMBO</b><p>Letra grande para ler com conforto no celular.</p></div>
+  </div>
+</div></section>
+
+<section class="faixa" id="duvidas"><div class="wrap estreito">
+  <div class="tit"><span class="eyebrow">Tire suas dúvidas</span><h2>Perguntas frequentes</h2></div>
+  <div class="faq">
+    <details><summary>Como recebo o material?</summary><p>A compra é feita pela Eduzz. Depois da confirmação do pagamento, você recebe o acesso ao material digital em PDF.</p></details>
+    <details><summary>Posso ver o conteúdo antes de comprar?</summary><p>Sim. Em cada apostila, toque em <b>ver páginas</b> para ver a capa e páginas internas.</p></details>
+    <details><summary>O que é a versão JUMBO?</summary><p>É uma versão com letra grande, pensada para ler com conforto no celular. A versão normal é ideal para imprimir e encadernar.</p></details>
+    <details><summary>Posso compartilhar o arquivo?</summary><p>Não. O material é de uso pessoal e protegido pela Lei 9.610/98 (direitos autorais).</p></details>
+    <details><summary>Ficou alguma dúvida?</summary><p>Fale direto com o Prof. Rodrigo pelo <a href="#" onclick="wtoggle(true);return false">WhatsApp</a>.</p></details>
+  </div>
+</div></section>
+
+<footer><div class="wrap rodape">
+  <div class="rod-marca"><a class="marca" href="#"><span class="selo">RG</span><span class="marca-t"><b>Loja de Matemática</b><small>Prof. Rodrigo Gonçalves Pereira</small></span></a>
+    <p>Apostilas e simulados em PDF para concursos e processos seletivos.</p></div>
+  <div><h4>Atendimento</h4><p><a href="#" onclick="wtoggle(true);return false">WhatsApp (+55 45 99969-9444)</a></p><p>Dúvidas e pedidos de novos materiais.</p></div>
+  <div><h4>Pagamento</h4><p><svg class="ic sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg> Compra segura pela Eduzz</p><p>Entrega digital em PDF</p></div>
+</div>
+<div class="wrap"><p class="warn"><svg class="ic sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg> Proibido o compartilhamento. Cópia não autorizada. Violação sujeita à pena de detenção e multa (Lei 9.610/98 e Art. 184 do Código Penal).</p>
+<p class="copy">© <span id="ano">2026</span> Loja de Matemática · Prof. Rodrigo Gonçalves Pereira</p></div></footer>
 
 
 <button class="fab" id="fab" onclick="wtoggle()"><img class="wai" src="img/whatsapp.png" alt="" width="26" height="26"> Falar no WhatsApp</button>
@@ -262,7 +425,7 @@ function card(it){
   const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i>${MINI.has(it.slug)?`<div class="mh" data-s="${it.slug}" data-k="${k}"></div>`:""}</div>`;
   const strip=it.imgs.map(leaf).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt="">${MINI.has(it.slug)?`<div class="mh" data-s="${it.slug}" data-k="0"></div>`:""}</div>`;
   const dots=it.imgs.length>1?`<div class="dots">${it.imgs.map((_,k)=>`<i class="${k?'':'on'}"></i>`).join("")}</div>`:"";
-  return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><span class="peek">👁 ver páginas</span></div>
+  return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><span class="peek"><svg class="ic sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg> ver páginas</span></div>
   <div class="info"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
   <div class="row"><div class="price"><span>R$</span>${brl(it.preco)}</div>${act}</div></div></article>`;
 }
@@ -305,7 +468,7 @@ function render(){
     total+=l.length;if(!l.length)return "";
     return `<section class="grupo"><h2>${nome}</h2><div class="grid">${l.map(card).join("")}</div></section>`;}).join("");
   $("#empty").style.display=total?"none":"block";
-  infoCert();anima();minis();
+  infoCert();anima();minis();try{$("#nMat").textContent=ITENS.length;$("#nCert").textContent=GR.length;$("#ano").textContent=new Date().getFullYear()}catch(e){}
   try{history.replaceState(null,"",filtro==="todos"?location.pathname:"#"+filtro)}catch(e){}
 }
 function chips(){
