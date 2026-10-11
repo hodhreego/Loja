@@ -380,7 +380,7 @@ function anima(){
   if(io)io.disconnect();
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   const CAPA=5000,PAG=2200;
-  todas().forEach((cv,ci)=>{cv.classList.toggle("anim",ci===0);const n=+cv.dataset.n;if(n<2||ci>0)return;let k=0;
+  todas().forEach(cv=>{const ok=cv.closest(".card").dataset.s==="matematica";cv.classList.toggle("anim",ok);const n=+cv.dataset.n;if(n<2||!ok)return;let k=0;
     const bk=cv.querySelector(".book"),pgs=[...bk.querySelectorAll(".pg:not(.base)")],ds=cv.querySelectorAll(".dots i");
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
     if(matchMedia("(hover:hover)").matches){cv.onmouseenter=()=>cv._p=1;cv.onmouseleave=()=>cv._p=0}
