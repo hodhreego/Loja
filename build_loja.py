@@ -111,7 +111,7 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .side{padding:24px;display:flex;flex-direction:column;gap:10px}
 .side h3{font-family:'Playfair Display',serif;font-size:26px;color:var(--navy-deep);line-height:1.15}
 .side .row{margin-top:auto}
-.x{position:absolute;top:14px;right:18px;color:#fff;font-size:34px;cursor:pointer;background:none;border:0}
+.x{position:absolute;top:12px;right:14px;width:44px;height:36px;display:flex;align-items:center;justify-content:center;color:#000;font:400 30px/1 Arial,sans-serif;cursor:pointer;background:#fff;border:1px solid #000;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.4);z-index:5}.x:hover{background:#e81123;color:#fff;border-color:#e81123}
 .lab{font-size:12px;color:var(--mut);text-align:center}
 
 /* whatsapp */
