@@ -194,8 +194,8 @@ footer p+p{margin-top:8px}
 
 /* só a 1ª miniatura anima: virada de página em 3D real, com o canto inferior à frente */
 .cover:not(.anim) .dots{display:none}
-.pg.flip3{animation:turn3d 3.8s cubic-bezier(.5,.05,.35,1) forwards}
-.pg.flip3 .f+.sh{animation:shf 3.8s ease-in forwards}
+.pg.flip3{animation:turn3d 1.27s cubic-bezier(.5,.05,.35,1) forwards}
+.pg.flip3 .f+.sh{animation:shf 1.27s ease-in forwards}
 @keyframes turn3d{
  0%{transform:rotateY(0) rotateX(0) rotateZ(0);box-shadow:0 0 0 rgba(0,0,0,0)}
  30%{transform:rotateY(-38deg) rotateX(14deg) rotateZ(-3deg);box-shadow:16px 10px 28px rgba(0,0,0,.3)}
@@ -490,7 +490,7 @@ function cortaPoly(P,u,M,sg){const o=[],d=q=>sg*((q[0]-M[0])*u[0]+(q[1]-M[1])*u[
     if((da<0&&db>0)||(da>0&&db<0)){const t=da/(da-db);o.push([A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t])}}
   return o}
 const polyCss=P=>P.length<3?"polygon(0 0,0 0,0 0)":"polygon("+P.map(q=>q[0].toFixed(1)+"px "+q[1].toFixed(1)+"px").join(",")+")";
-function curl(p,D=3800){
+function curl(p,D=1267){
   const bk=p.parentNode,W=p.offsetWidth,H=p.offsetHeight,sh=p.querySelector(".sh");
   p.classList.add("flip");
   const fl=document.createElement("i");fl.className="fl";
@@ -552,7 +552,7 @@ addEventListener("scroll",()=>{
 function anima(){
   if(io)io.disconnect();
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-  const CAPA=5000,PAG=5200;
+  const CAPA=1667,PAG=1733;
   todas().forEach(cv=>{const lenta=cv.closest(".card").dataset.s==="matematica";cv.classList.add("anim");const n=+cv.dataset.n;if(n<2)return;let k=0;
     const bk=cv.querySelector(".book"),pgs=[...bk.querySelectorAll(".pg:not(.base)")],ds=cv.querySelectorAll(".dots i");
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
@@ -561,15 +561,15 @@ function anima(){
     const passo=()=>{cv._t=null;
       if(rolando||!cv._vis)return;
       if(cv._p){cv._t=setTimeout(passo,300);return}
-      if(k<n){curl(pgs[k],lenta?3800:2000);k++;dot(k);
-        if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA+Math.random()*4000)},4200);return}}
-      cv._t=setTimeout(passo,PAG+Math.random()*1800)};
+      if(k<n){curl(pgs[k],lenta?1267:667);k++;dot(k);
+        if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA+Math.random()*1333)},1400);return}}
+      cv._t=setTimeout(passo,PAG+Math.random()*600)};
     cv._start=d=>{clearTimeout(cv._t);cv._t=setTimeout(passo,d)};
     cv._reset();
   });
   io=new IntersectionObserver(es=>es.forEach(e=>{const cv=e.target;cv._vis=e.isIntersecting;
     if(!cv._start)return;
-    if(e.isIntersecting){if(!rolando)cv._start(Math.random()*4000)}else cv._reset()}),{threshold:.4});
+    if(e.isIntersecting){if(!rolando)cv._start(Math.random()*1333)}else cv._reset()}),{threshold:.4});
   todas().forEach(cv=>io.observe(cv));
   /* loop: se a página está parada e a miniatura visível sem timer, retoma sozinha */
   clearInterval(window._wd);window._wd=setInterval(()=>{if(rolando)return;todas().forEach(cv=>{if(cv._vis&&cv._start&&!cv._t&&!cv._p)cv._start(Math.random()*2500)})},1500);
