@@ -695,18 +695,18 @@ function vitrine(){
     const pool=rows[ri][1],fs=[...row.querySelectorAll(".folha")];
     row.querySelectorAll(".livro").forEach(L=>{
       const sl=t=>new Promise(r=>setTimeout(r,t)),ok=()=>gen===vitGen;
-      (async()=>{await sl(1800);
+      (async()=>{await sl(1800+ri*7500);
         while(ok()){
-          L.classList.add("aberto");await sl(2700);
-          for(const s of L.querySelectorAll(".fo")){if(!ok())return;s.classList.add("v");await sl(1900)}
-          await sl(1500);if(!ok())return;
+          L.classList.add("aberto");await sl(2700+Math.random()*900);
+          for(const s of L.querySelectorAll(".fo")){if(!ok())return;s.classList.add("v");await sl(1900+Math.random()*1400)}
+          await sl(1500+Math.random()*2200);if(!ok())return;
           L.querySelectorAll(".fo").forEach(s=>s.classList.remove("v"));await sl(500);
-          L.classList.remove("aberto");await sl(2500);if(!ok())return;
+          L.classList.remove("aberto");await sl(2500+Math.random()*1500);if(!ok())return;
           const used=fs.flatMap(x=>[x.dataset.s,x.dataset.pend]),livres=pool.filter(i=>!used.includes(i.slug));
           if(livres.length){const it=livres[Math.floor(Math.random()*livres.length)];
             await Promise.all([it.imgs[0],...it.imgs.slice(1,4)].map(u=>new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src=u})));
             const ci=L.querySelector(".cf img");ci.style.opacity=0;await sl(380);if(!ok())return;livroSet(L,it);ci.style.opacity=1;await sl(500)}
-          await sl(1500)}})()});
+          await sl(1500+Math.random()*4500)}})()});
     if(pool.length<=fs.length)return;
     const gira=()=>{
       if(gen!==vitGen)return;
