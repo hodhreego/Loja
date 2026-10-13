@@ -81,7 +81,7 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .side{padding:24px;display:flex;flex-direction:column;gap:10px}
 .side h3{font-family:'Playfair Display',serif;font-size:26px;color:var(--navy-deep);line-height:1.15}
 .side .row{margin-top:auto}
-.x{position:absolute;top:14px;right:18px;color:#fff;font-size:34px;cursor:pointer;background:none;border:0}
+.x{position:absolute;top:12px;right:14px;width:44px;height:36px;display:flex;align-items:center;justify-content:center;color:#000;font:400 30px/1 Arial,sans-serif;cursor:pointer;background:#fff;border:1px solid #000;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.4);z-index:5}.x:hover{background:#e81123;color:#fff;border-color:#e81123}
 .lab{font-size:12px;color:var(--mut);text-align:center}
 
 
@@ -239,20 +239,28 @@ body{background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
 .topo-links{display:flex;gap:26px;margin-left:auto}.topo-links a{color:#d9e2f2;text-decoration:none;font-weight:600;font-size:15px}.topo-links a:hover{color:#fff}
 .topo-wa{display:inline-flex;align-items:center;gap:7px;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35);border-radius:99px;padding:8px 15px;font:700 14px 'Source Sans 3';cursor:pointer}.topo-wa:hover{border-color:#fff;background:rgba(255,255,255,.08)}
 /* hero */
-header.hero{padding:56px 0 0;background:radial-gradient(1200px 500px at 85% 10%,rgba(201,162,39,.16),transparent 60%),linear-gradient(160deg,#0B1E3B,#13305B 55%,#1B3A6B)}
+header.hero{padding:30px 0 0;background:radial-gradient(1200px 500px at 85% 10%,rgba(201,162,39,.16),transparent 60%),linear-gradient(160deg,#0B1E3B,#13305B 55%,#1B3A6B)}
 header.hero:after{display:none}
-.hero-in{display:grid;grid-template-columns:1.08fr .92fr;gap:48px;align-items:center}
-.hero .eyebrow{display:inline-block;color:var(--gold-light);letter-spacing:.2em;font-size:12.5px;font-weight:700;text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid rgba(233,212,142,.35)}
-.hero h1{font-size:clamp(32px,4.6vw,54px);line-height:1.08;margin:18px 0 16px;letter-spacing:-.01em}
+.hero-in{display:grid;grid-template-columns:1.08fr .92fr;gap:28px;align-items:center}
+.hero .eyebrow{display:inline-block;color:var(--gold-light);letter-spacing:.2em;font-size:12.5px;font-weight:700;text-transform:uppercase;padding-bottom:6px;border-bottom:1px solid rgba(233,212,142,.35)}
+.hero h1{font-size:clamp(32px,4.6vw,54px);line-height:1.05;margin:12px 0 10px;letter-spacing:-.01em}
 .hero h1 em{color:var(--gold-light);font-style:italic}
-.hero-txt>p{font-size:18px;color:#cfdaee;max-width:560px;line-height:1.6}
-.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.hero-txt>p{font-size:18px;color:#cfdaee;max-width:560px;line-height:1.4;margin:0}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
 .btn-p,.btn-s{display:inline-flex;align-items:center;gap:10px;border-radius:12px;padding:14px 22px;font:700 16px 'Source Sans 3';text-decoration:none;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s}
-.btn-p{background:linear-gradient(180deg,#D8B53E,var(--gold));color:#231b00;border:0;box-shadow:0 10px 24px rgba(201,162,39,.32)}
-.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(201,162,39,.42)}
+.btn-p{background:linear-gradient(180deg,#e0303a,#c4161f);color:#fff;border:0;box-shadow:0 10px 24px rgba(196,22,31,.35)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(196,22,31,.45)}
 .btn-s{background:rgba(255,255,255,.06);color:#fff;border:1.5px solid rgba(255,255,255,.3)}.btn-s:hover{background:rgba(255,255,255,.12);border-color:#fff}
-.selos{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px 22px;margin-top:30px;max-width:560px}
+.selos{width:100%;max-width:100%;min-width:0;contain:inline-size;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px 22px;margin-top:30px;max-width:560px}
 .selos li{display:flex;align-items:center;gap:10px;color:#e3eaf6;font-size:15px;font-weight:600}.selos .ic{color:var(--gold-light)}
+.selos{width:100%;max-width:100%;min-width:0;contain:inline-size;list-style:none;margin:16px 0 0;padding:0;overflow:hidden;border-top:1px solid rgba(255,255,255,.18);border-bottom:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.22);border-radius:8px;position:relative;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.selos .trilho{display:flex;width:max-content;animation:tarja 26s linear infinite}
+.selos:hover .trilho{animation-play-state:paused}
+.selos li{flex:none;padding:11px 0;margin-right:38px;white-space:nowrap}
+.selos li::after{content:"◆";color:var(--gold);font-size:10px;margin-left:38px}
+@keyframes tarja{to{transform:translateX(-50%)}}
+.hero-txt{min-width:0}.selos{display:block;grid-template-columns:none;gap:0;max-width:none}
+@media(prefers-reduced-motion:reduce){.selos .trilho{animation:none}}
 .vitrine{position:relative;margin:0}
 .vrow{position:relative;height:300px}
 .vlab{margin:22px 0 4px;text-align:center;color:var(--gold-light);font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
@@ -355,7 +363,7 @@ footer .warn{display:flex;gap:8px;align-items:flex-start;margin-top:24px;backgro
 @media(max-width:720px){
  .topo-links{display:none}.topo-wa{margin-left:auto;padding:7px 12px}
  .topo-in{height:58px}.marca-t b{font-size:15px}.marca-t small{font-size:11px}.selo{width:36px;height:44px}
- header.hero{padding-top:34px}
+ header.hero{padding-top:18px}
  .hero h1{font-size:31px}.hero-txt>p{font-size:16px}
  .cta{flex-direction:column}.btn-p,.btn-s{justify-content:center}
  .selos{grid-template-columns:1fr;gap:10px}
@@ -390,14 +398,14 @@ footer .warn{display:flex;gap:8px;align-items:flex-start;margin-top:24px;backgro
     <p>Conteúdo direto ao ponto, com teoria, ilustrações, exemplos e exercícios resolvidos. Veja capa e páginas internas de cada apostila antes de comprar.</p>
     <div class="cta">
       <a class="btn-p" href="#main" onclick="event.preventDefault();document.getElementById('main').scrollIntoView({behavior:'smooth'})"><img src="img/pdf.png" alt="" width="22" height="22">Ver apostilas em PDF</a>
-      <button class="btn-s" onclick="wtoggle(true)"><img src="img/whatsapp.png" alt="" width="20" height="20">Falar com o professor</button>
     </div>
-    <ul class="selos">
-      <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Veja as páginas antes</li>
+    <ul class="selos" aria-label="Diferenciais"><div class="trilho"><li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Veja as páginas antes</li>
       <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>Pagamento seguro pela Eduzz</li>
       <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V5h10v2M9 5v14M7 19h4M14 12v-1h6v1M17 11v8M15.5 19h3"/></svg>Versão JUMBO (letra grande)</li>
-      <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 016.5 3H20v15H6.5A2.5 2.5 0 004 20.5v-15z"/><path d="M4 20.5A2.5 2.5 0 016.5 18H20v3H6.5"/></svg>Para encadernar ou ler no celular</li>
-    </ul>
+      <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 016.5 3H20v15H6.5A2.5 2.5 0 004 20.5v-15z"/><path d="M4 20.5A2.5 2.5 0 016.5 18H20v3H6.5"/></svg>Para encadernar ou ler no celular</li><li aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Veja as páginas antes</li>
+      <li aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>Pagamento seguro pela Eduzz</li>
+      <li aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V5h10v2M9 5v14M7 19h4M14 12v-1h6v1M17 11v8M15.5 19h3"/></svg>Versão JUMBO (letra grande)</li>
+      <li aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 016.5 3H20v15H6.5A2.5 2.5 0 004 20.5v-15z"/><path d="M4 20.5A2.5 2.5 0 016.5 18H20v3H6.5"/></svg>Para encadernar ou ler no celular</li></div></ul>
   </div>
   <figure class="vitrine" id="vit" aria-label="Capas das apostilas"></figure>
 </div>
