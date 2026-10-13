@@ -549,13 +549,13 @@ const todas=()=>[...document.querySelectorAll(".cover")];
 addEventListener("scroll",()=>{
   rolando=true;clearTimeout(tRol);
   todas().forEach(cv=>{if(cv._reset)cv._reset()});          /* rolando: só a capa aparece */
-  tRol=setTimeout(()=>{rolando=false;todas().forEach(cv=>{if(cv._vis&&cv._start)cv._start(Math.random()*3500)})},140);   /* parou: anima já */
+  tRol=setTimeout(()=>{rolando=false;todas().forEach(cv=>{if(cv._vis&&cv._start)cv._start(Math.random()*7000)})},140);   /* parou: anima já */
 },{passive:true});
 function anima(){
   if(io)io.disconnect();
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   const CAPA=1667,PAG=1733;
-  todas().forEach(cv=>{const lenta=cv.closest(".card").dataset.s==="matematica";cv.classList.add("anim");const n=+cv.dataset.n;if(n<2)return;let k=0;
+  todas().forEach(cv=>{const lenta=cv.closest(".card").dataset.s==="matematica";const F=.7+Math.random()*.9;cv.classList.add("anim");const n=+cv.dataset.n;if(n<2)return;let k=0;
     const bk=cv.querySelector(".book"),pgs=[...bk.querySelectorAll(".pg:not(.base)")],ds=cv.querySelectorAll(".dots i");
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
     if(matchMedia("(hover:hover)").matches){cv.onmouseenter=()=>cv._p=1;cv.onmouseleave=()=>cv._p=0}
@@ -563,9 +563,9 @@ function anima(){
     const passo=()=>{cv._t=null;
       if(rolando||!cv._vis)return;
       if(cv._p){cv._t=setTimeout(passo,300);return}
-      if(k<n){curl(pgs[k],lenta?1267:667);k++;dot(k);
-        if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA+Math.random()*1333)},1400);return}}
-      cv._t=setTimeout(passo,PAG+Math.random()*600)};
+      if(k<n){curl(pgs[k],(lenta?1267:667));k++;dot(k);
+        if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(uncurl);void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,(CAPA+Math.random()*4000)*F)},1400);return}}
+      cv._t=setTimeout(passo,(PAG+Math.random()*2200)*F)};
     cv._start=d=>{clearTimeout(cv._t);cv._t=setTimeout(passo,d)};
     cv._reset();
   });
@@ -574,7 +574,7 @@ function anima(){
     if(e.isIntersecting){if(!rolando)cv._start(Math.random()*1333)}else cv._reset()}),{threshold:.4});
   todas().forEach(cv=>io.observe(cv));
   /* loop: se a página está parada e a miniatura visível sem timer, retoma sozinha */
-  clearInterval(window._wd);window._wd=setInterval(()=>{if(rolando)return;todas().forEach(cv=>{if(cv._vis&&cv._start&&!cv._t&&!cv._p)cv._start(Math.random()*2500)})},1500);
+  clearInterval(window._wd);window._wd=setInterval(()=>{if(rolando)return;todas().forEach(cv=>{if(cv._vis&&cv._start&&!cv._t&&!cv._p)cv._start(Math.random()*6000)})},1500);
 }
 const NOMES=["Capa","Índice","Página interna","Página interna"];
 const ROT={matematica:["Capa","Página interna","Página interna","Página interna"]};
