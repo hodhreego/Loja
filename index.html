@@ -233,7 +233,8 @@ body{background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
 .topo{position:sticky;top:0;z-index:30;background:rgba(15,37,71,.92);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid rgba(233,212,142,.18)}
 .topo-in{display:flex;align-items:center;gap:20px;height:64px}
 .marca{display:flex;align-items:center;gap:11px;color:#fff;text-decoration:none}
-.selo{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font:700 15px 'Playfair Display',serif;letter-spacing:.04em;color:var(--navy-deep);background:linear-gradient(145deg,#F3E2A4,var(--gold));box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)}
+.selo img{width:100%;height:100%;object-fit:cover;object-position:50% 35%;display:block;border-radius:inherit}
+.selo{width:42px;height:50px;border-radius:9px;overflow:hidden;flex:none;display:grid;place-items:center;font:700 15px 'Playfair Display',serif;letter-spacing:.04em;color:var(--navy-deep);background:linear-gradient(145deg,#F3E2A4,var(--gold));box-shadow:0 0 0 2px var(--gold-light),0 4px 10px rgba(0,0,0,.3)}
 .marca-t{display:flex;flex-direction:column;line-height:1.15}.marca-t b{font:700 17px 'Playfair Display',serif}.marca-t small{font-size:12px;color:var(--gold-light);letter-spacing:.04em}
 .topo-links{display:flex;gap:26px;margin-left:auto}.topo-links a{color:#d9e2f2;text-decoration:none;font-weight:600;font-size:15px}.topo-links a:hover{color:#fff}
 .topo-wa{display:inline-flex;align-items:center;gap:7px;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35);border-radius:99px;padding:8px 15px;font:700 14px 'Source Sans 3';cursor:pointer}.topo-wa:hover{border-color:#fff;background:rgba(255,255,255,.08)}
@@ -327,7 +328,7 @@ footer .warn{display:flex;gap:8px;align-items:flex-start;margin-top:24px;backgro
 }
 @media(max-width:720px){
  .topo-links{display:none}.topo-wa{margin-left:auto;padding:7px 12px}
- .topo-in{height:58px}.marca-t b{font-size:15px}.marca-t small{font-size:11px}.selo{width:36px;height:36px;font-size:13px}
+ .topo-in{height:58px}.marca-t b{font-size:15px}.marca-t small{font-size:11px}.selo{width:36px;height:44px}
  header.hero{padding-top:34px}
  .hero h1{font-size:31px}.hero-txt>p{font-size:16px}
  .cta{flex-direction:column}.btn-p,.btn-s{justify-content:center}
@@ -352,7 +353,7 @@ footer .warn{display:flex;gap:8px;align-items:flex-start;margin-top:24px;backgro
 </head>
 <body>
 <nav class="topo" aria-label="Principal"><div class="wrap topo-in">
-  <a class="marca" href="#" aria-label="Loja de Matemática — início"><span class="selo">RG</span><span class="marca-t"><b>Loja de Matemática</b><small>Prof. Rodrigo Gonçalves Pereira</small></span></a>
+  <a class="marca" href="#" aria-label="Loja de Matemática — início"><span class="selo"><img src="img/prof.webp" alt="Prof. Rodrigo Gonçalves Pereira"></span><span class="marca-t"><b>Loja de Matemática</b><small>Prof. Rodrigo Gonçalves Pereira</small></span></a>
   <div class="topo-links"><a href="#main" onclick="event.preventDefault();document.getElementById('main').scrollIntoView({behavior:'smooth'})">Materiais</a><a href="#como">Como funciona</a><a href="#duvidas">Dúvidas</a></div>
   <button class="topo-wa" onclick="wtoggle(true)"><img src="img/whatsapp.png" alt="" width="18" height="18">WhatsApp</button>
 </div></nav>
@@ -422,7 +423,7 @@ footer .warn{display:flex;gap:8px;align-items:flex-start;margin-top:24px;backgro
 </div></section>
 
 <footer><div class="wrap rodape">
-  <div class="rod-marca"><a class="marca" href="#"><span class="selo">RG</span><span class="marca-t"><b>Loja de Matemática</b><small>Prof. Rodrigo Gonçalves Pereira</small></span></a>
+  <div class="rod-marca"><a class="marca" href="#"><span class="selo"><img src="img/prof.webp" alt="Prof. Rodrigo Gonçalves Pereira"></span><span class="marca-t"><b>Loja de Matemática</b><small>Prof. Rodrigo Gonçalves Pereira</small></span></a>
     <p>Apostilas e simulados em PDF para concursos e processos seletivos.</p></div>
   <div><h4>Atendimento</h4><p><a href="#" onclick="wtoggle(true);return false">WhatsApp (+55 45 99969-9444)</a></p><p>Dúvidas e pedidos de novos materiais.</p></div>
   <div><h4>Pagamento</h4><p><svg class="ic sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg> Compra segura pela Eduzz</p><p>Entrega digital em PDF</p></div>
