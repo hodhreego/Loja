@@ -260,18 +260,14 @@ header.hero:after{display:none}
 .folha img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
 .folha{width:178px;cursor:pointer;transition:filter .2s;animation:onda 5.5s ease-in-out infinite}
 .folha:hover{filter:brightness(1.08);z-index:9!important}
-.folha{width:160px;perspective:900px;background:transparent;overflow:visible;box-shadow:none}
-.folha .fc{border-radius:4px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3)}
-.folha .fl{position:absolute;inset:0;transform-style:preserve-3d;transition:transform 1.1s cubic-bezier(.45,.05,.25,1)}
-.folha .fc{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fff}
-.folha .fc.bk{transform:rotateY(180deg)}
-.folha.w1{left:0;top:62px;--r:-10deg;z-index:1}
-.folha.w2{left:16%;top:14px;--r:-5deg;z-index:2;animation-delay:-1.1s}
-.folha.w3{left:32%;top:62px;--r:0deg;z-index:3;animation-delay:-2.2s}
-.folha.w4{left:48%;top:14px;--r:5deg;z-index:4;animation-delay:-3.3s}
-.folha.w5{left:64%;top:62px;--r:10deg;z-index:5;animation-delay:-4.4s}
+.folha{width:160px;background:transparent;overflow:visible;box-shadow:none;transform:rotate(var(--r,0deg))}
+.folha .fl{position:absolute;inset:0}
+.folha .fl.gira{animation:gira 1.3s cubic-bezier(.45,.05,.25,1)}
+@keyframes gira{0%{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(.82)}100%{transform:rotate(360deg) scale(1)}}
+.folha .fc{position:absolute;inset:0;background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3)}
+.folha.t0{top:62px}.folha.t1{top:14px}
 @keyframes onda{0%,100%{transform:translateY(0) rotate(var(--r))}50%{transform:translateY(-14px) rotate(var(--r))}}
-@media (prefers-reduced-motion:reduce){.folha .fl{transition:none}.folha{animation:none;transform:rotate(var(--r))}}
+@media (prefers-reduced-motion:reduce){.folha .fl.gira{animation:none}.folha{animation:none}}
 .vitrine figcaption{position:static;margin-top:6px;text-align:center;color:#b9c7e0;font-size:13px;font-style:italic}
 .numeros{display:grid;grid-template-columns:repeat(4,1fr);margin:48px 0 0;border-top:1px solid rgba(255,255,255,.12)}
 .numeros div{padding:22px 10px 64px;text-align:center;border-left:1px solid rgba(255,255,255,.08)}.numeros div:first-child{border-left:0}
@@ -320,7 +316,7 @@ footer .warn{display:flex;gap:8px;align-items:flex-start;margin-top:24px;backgro
 @media(max-width:960px){
  .hero-in{grid-template-columns:1fr;gap:20px}
  .vitrine{max-width:440px;width:100%;margin:0 auto}.vrow{height:215px}
- .folha{width:116px}.folha.w1,.folha.w3,.folha.w5{top:44px}.folha.w2,.folha.w4{top:8px}
+ .folha{width:116px}.folha.t0{top:44px}.folha.t1{top:8px}
  .passos,.recursos{grid-template-columns:1fr 1fr}
  .rodape{grid-template-columns:1fr 1fr}.rod-marca{grid-column:1/-1}
 }
@@ -331,7 +327,7 @@ footer .warn{display:flex;gap:8px;align-items:flex-start;margin-top:24px;backgro
  .hero h1{font-size:31px}.hero-txt>p{font-size:16px}
  .cta{flex-direction:column}.btn-p,.btn-s{justify-content:center}
  .selos{grid-template-columns:1fr;gap:10px}
- .vrow{height:170px}.folha{width:88px}.folha.w1,.folha.w3,.folha.w5{top:36px}
+ .vrow{height:170px}.folha{width:88px}.folha.t0{top:36px}
  .numeros{grid-template-columns:1fr 1fr;margin-top:26px}.numeros div{padding:16px 6px 18px}.numeros div:nth-child(3){border-left:0}
  .numeros div:nth-child(n+3){border-top:1px solid rgba(255,255,255,.08)}.numeros div:nth-child(n+3){padding-bottom:58px}
  .numeros dt{font-size:24px}
@@ -371,24 +367,7 @@ footer .warn{display:flex;gap:8px;align-items:flex-start;margin-top:24px;backgro
       <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 016.5 3H20v15H6.5A2.5 2.5 0 004 20.5v-15z"/><path d="M4 20.5A2.5 2.5 0 016.5 18H20v3H6.5"/></svg>Para encadernar ou ler no celular</li>
     </ul>
   </div>
-  <figure class="vitrine" aria-label="Capas das apostilas por cargo">
-  <div class="vrow" data-pool="pss">
-<div class="folha w1" data-s="matematica" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc fr"><img src="img/matematica-1.webp" alt="Capa da apostila"></div><div class="fc bk"><img alt="Capa da apostila"></div></div></div>
-<div class="folha w2" data-s="lingua-inglesa" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc fr"><img src="img/lingua-inglesa-1.webp" alt="Capa da apostila"></div><div class="fc bk"><img alt="Capa da apostila"></div></div></div>
-<div class="folha w3" data-s="pedagogo" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc fr"><img src="img/pedagogo-1.webp" alt="Capa da apostila"></div><div class="fc bk"><img alt="Capa da apostila"></div></div></div>
-<div class="folha w4" data-s="educacao-especial" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc fr"><img src="img/educacao-especial-1.webp" alt="Capa da apostila"></div><div class="fc bk"><img alt="Capa da apostila"></div></div></div>
-<div class="folha w5" data-s="geografia" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc fr"><img src="img/geografia-1.webp" alt="Capa da apostila"></div><div class="fc bk"><img alt="Capa da apostila"></div></div></div>
-  </div>
-  <div class="vlab">CISOP Cascavel · Prefeitura de Cascavel</div>
-  <div class="vrow" data-pool="conc">
-    <div class="folha w1" data-s="cisop-artesao" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc fr"><img src="img/cisop-artesao-1.webp" alt="Capa da apostila"></div><div class="fc bk"><img alt="Capa da apostila"></div></div></div>
-    <div class="folha w2" data-s="cisop-agente-administrativo" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc fr"><img src="img/cisop-agente-administrativo-1.webp" alt="Capa da apostila"></div><div class="fc bk"><img alt="Capa da apostila"></div></div></div>
-    <div class="folha w3" data-s="cisop-monitor-biblioteca" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc fr"><img src="img/cisop-monitor-biblioteca-1.webp" alt="Capa da apostila"></div><div class="fc bk"><img alt="Capa da apostila"></div></div></div>
-    <div class="folha w4" data-s="cisop-tecnico-enfermagem" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc fr"><img src="img/cisop-tecnico-enfermagem-1.webp" alt="Capa da apostila"></div><div class="fc bk"><img alt="Capa da apostila"></div></div></div>
-    <div class="folha w5" data-s="cisop-professor-ed-infantil" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc fr"><img src="img/cisop-professor-ed-infantil-1.webp" alt="Capa da apostila"></div><div class="fc bk"><img alt="Capa da apostila"></div></div></div>
-  </div>
-  <figcaption>Apostilas por cargo — toque na capa para ver as páginas</figcaption>
-  </figure>
+  <figure class="vitrine" id="vit" aria-label="Capas das apostilas"></figure>
 </div>
 <div class="wrap"><dl class="numeros">
   <div><dt id="nMat">21</dt><dd>materiais</dd></div>
@@ -530,7 +509,7 @@ function render(){
     total+=l.length;if(!l.length)return "";
     return `<section class="grupo"><h2>${nome}</h2><div class="grid">${l.map(card).join("")}</div></section>`;}).join("");
   $("#empty").style.display=total?"none":"block";
-  infoCert();anima();minis();try{$("#nMat").textContent=ITENS.length;$("#nCert").textContent=GR.length;$("#ano").textContent=new Date().getFullYear()}catch(e){}
+  infoCert();anima();minis();vitrine();try{$("#nMat").textContent=ITENS.length;$("#nCert").textContent=GR.length;$("#ano").textContent=new Date().getFullYear()}catch(e){}
   try{history.replaceState(null,"",filtro==="todos"?location.pathname:"#"+filtro)}catch(e){}
 }
 function chips(){
@@ -654,26 +633,40 @@ function fechaC(){$("#cmodal").classList.remove("open");document.body.style.over
 function cAll(o){document.querySelectorAll("#cbody details").forEach(d=>d.open=o)}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")fechaC()});
 
-/* vitrine: capas que viram e mostram outra apostila */
-(function(){
+/* vitrine: capas que giram e trocam de apostila (segue o certame escolhido) */
+let vitKey="",vitGen=0;
+function vitrine(){
+  const key=filtro;if(key===vitKey)return;vitKey=key;const gen=++vitGen;
+  const ok=i=>i.imgs&&i.imgs.length;
+  const G=g=>ITENS.filter(i=>ok(i)&&i.grupo===g);
+  let rows;
+  if(filtro==="todos")rows=[["PSS SEED-PR 2027",G("pss")],["CISOP Cascavel · Prefeitura de Cascavel",[...G("cisop"),...G("prefeitura")]]];
+  else rows=[[(GR.find(x=>x[0]===filtro)||[0,""])[1],G(filtro)]];
+  rows=rows.filter(r=>r[1].length);
+  const vit=$("#vit");if(!vit)return;
+  vit.innerHTML=rows.map(([lab,pool],ri)=>{
+    const n=Math.min(5,pool.length),span=Math.min(63,(n-1)*16),off=(63-span)/2;
+    return (rows.length>1||true?`<div class="vlab">${lab}</div>`:"")+`<div class="vrow" data-r="${ri}">`+pool.slice(0,n).map((it,k)=>{
+      const r=n>1?-10+20*k/(n-1):0,l=n>1?off+span*k/(n-1):32;
+      return `<div class="folha t${k%2?1:0}" data-s="${it.slug}" style="left:${l}%;z-index:${k+1};--r:${r}deg;animation-delay:-${(k*1.1).toFixed(1)}s" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc"><img src="${it.imgs[0]}" alt="Capa da apostila ${it.nome}"></div></div></div>`}).join("")+`</div>`}).join("")+`<figcaption>Toque na capa para ver as páginas</figcaption>`;
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-  const POOLS={pss:["matematica","lingua-inglesa","pedagogo","educacao-especial","geografia","artes","historia","quimica","lingua-portuguesa","educacao-fisica","gestao-negocios","turismo","conhecimentos-basicos","informacao-comunicacao"],
-    conc:["cisop-artesao","cisop-agente-administrativo","cisop-tecnico-enfermagem","cisop-monitor-biblioteca","cisop-professor-ed-infantil","cisop-professor-temporario"]};
-  document.querySelectorAll(".vitrine .vrow").forEach((row,ri)=>{
-    const pool=POOLS[row.dataset.pool].filter(s=>ITENS.some(i=>i.slug===s));
-    const fs=[...row.querySelectorAll(".folha")];let nxt=0;
-    fs.forEach((f,k)=>{let rot=0;const fl=f.querySelector(".fl"),fr=f.querySelector(".fr img"),bk=f.querySelector(".bk img");
-      const vira=()=>{
-        if(document.hidden||f.matches(":hover")){setTimeout(vira,1500);return}
-        const used=fs.flatMap(x=>[x.dataset.s,x.dataset.pend]);let s=null;
-        for(let j=0;j<pool.length;j++){const c=pool[(nxt+j)%pool.length];if(!used.includes(c)){s=c;nxt=(nxt+j+1)%pool.length;break}}
-        if(!s){setTimeout(vira,4000);return}
-        const alvo=rot%360===0?bk:fr,im=new Image();
-        f.dataset.pend=s;im.onload=()=>{alvo.src=im.src;const it=ITENS.find(i=>i.slug===s);alvo.alt="Capa da apostila "+(it?it.nome:"");rot+=180;fl.style.transform="rotateY("+rot+"deg)";setTimeout(()=>{f.dataset.s=s;f.dataset.pend=""},550)};
-        im.src="img/"+s+"-1.webp";
-        setTimeout(vira,5200+Math.random()*4800)};
-      setTimeout(vira,2500+k*1700+ri*900+Math.random()*1500)})})
-})();
+  vit.querySelectorAll(".vrow").forEach((row,ri)=>{
+    const pool=rows[ri][1],fs=[...row.querySelectorAll(".folha")];if(pool.length<=fs.length)return;
+    fs.forEach((f,k)=>{
+      const gira=()=>{
+        if(gen!==vitGen)return;
+        if(document.hidden||f.matches(":hover")){setTimeout(gira,1500);return}
+        const used=fs.flatMap(x=>[x.dataset.s,x.dataset.pend]);
+        const livres=pool.filter(i=>!used.includes(i.slug));
+        if(!livres.length){setTimeout(gira,4000);return}
+        const it=livres[Math.floor(Math.random()*livres.length)];f.dataset.pend=it.slug;
+        const im=new Image();im.onload=()=>{if(gen!==vitGen)return;const fl=f.querySelector(".fl"),img=f.querySelector("img");
+          fl.classList.remove("gira");void fl.offsetWidth;fl.classList.add("gira");
+          setTimeout(()=>{if(gen!==vitGen)return;img.src=im.src;img.alt="Capa da apostila "+it.nome;f.dataset.s=it.slug;f.dataset.pend=""},650)};
+        im.onerror=()=>{f.dataset.pend=""};im.src=it.imgs[0];
+        setTimeout(gira,5200+Math.random()*4800)};
+      setTimeout(gira,2500+k*1700+ri*900+Math.random()*1500)})})
+}
 function fecha(){$("#modal").classList.remove("open");document.body.style.overflow=""}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")fecha();
   if($("#modal").classList.contains("open")&&cur){const on=[...$("#th").children].findIndex(x=>x.classList.contains("on"));
