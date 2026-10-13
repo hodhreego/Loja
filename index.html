@@ -86,7 +86,7 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 
 
 /* conteúdo da prova */
-.cbtn{display:inline-flex;align-items:center;gap:6px;margin:8px 0 0;padding:8px 12px;font-size:13px;align-self:flex-start}
+.cbtn{display:inline-flex;align-items:center;gap:5px;margin:6px 0 0;padding:5px 10px;font-size:12px;align-self:flex-start;border-radius:8px}
 .cmodal{position:fixed;inset:0;background:rgba(10,20,40,.82);display:none;align-items:center;justify-content:center;z-index:60;padding:14px}
 .cmodal.open{display:flex}
 .cbox{background:#fff;border-radius:18px;width:min(560px,100%);max-height:86vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.4)}
@@ -467,7 +467,7 @@ function card(it){
   const dots=it.imgs.length>1?`<div class="dots">${it.imgs.map((_,k)=>`<i class="${k?'':'on'}"></i>`).join("")}</div>`:"";
   return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><span class="peek"><svg class="ic sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg> ver páginas</span></div>
   <div class="info"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
-  ${CONT[it.slug]?`<button class="btn ghost cbtn" onclick="conteudo('${it.slug}')">📋 Conteúdo da prova</button>`:''}
+  ${CONT[it.slug]?`<button class="btn ghost cbtn" onclick="conteudo('${it.slug}')">📋 Ver conteúdos</button>`:''}
   <div class="row">${precoH(it)}${act}</div></div></article>`;
 }
 const CERT={
@@ -616,7 +616,7 @@ function abre(s){cur=ITENS.find(i=>i.slug===s);
   const soon=!cur.link;
   $("#side").innerHTML=`<small style="color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.06em">${cur.grupoNome}</small><h3>${cur.nome}</h3><p>${cur.sub}</p>
    <p style="font-size:14px;color:var(--mut)">${cur.paginas?cur.paginas+' páginas · ':''}PDF digital${cur.slug.startsWith('cisop')||cur.grupo==='pss'||cur.grupo==='prefeitura'?' · inclui versão JUMBO (letra grande) quando disponível':''}</p>
-   ${CONT[cur.slug]?`<button class="btn ghost cbtn" onclick="fecha();conteudo('${cur.slug}')">📋 Conteúdo da prova</button>`:''}
+   ${CONT[cur.slug]?`<button class="btn ghost cbtn" onclick="fecha();conteudo('${cur.slug}')">📋 Ver conteúdos</button>`:''}
    <div class="row">${precoH(cur)}${soon?`<button class="btn wa" onclick="fecha();wabre('${cur.slug}')">Falar no WhatsApp</button>`:`<a class="btn buy" target="_blank" rel="noopener" href="${cur.link}">Comprar agora</a>`}</div>`;
   foto(0);$("#modal").classList.add("open");document.body.style.overflow="hidden";}
 function foto(k){$("#big").src=cur.imgs[k];$("#lab").textContent=(cur.imgs.length>2?(ROT[cur.slug]||NOMES)[k]:(k?"Índice":"Capa"))+" · "+(k+1)+"/"+cur.imgs.length;
