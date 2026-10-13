@@ -256,18 +256,23 @@ header.hero:after{display:none}
 .vrow{position:relative;height:300px}
 .vlab{margin:22px 0 4px;text-align:center;color:var(--gold-light);font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
 .folha{position:absolute;width:250px;aspect-ratio:210/297;background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3)}
-.folha .mh{border-radius:4px}
+.folha .mh{border-radius:0}
 .folha img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
 .folha{width:178px;cursor:pointer;transition:filter .2s;animation:onda 5.5s ease-in-out infinite}
 .folha:hover{filter:brightness(1.08);z-index:9!important}
 .folha{width:160px;background:transparent;overflow:visible;box-shadow:none;transform:rotate(var(--r,0deg))}
-.folha .fl{position:absolute;inset:0}
-.folha .fl.gira{animation:gira 1.3s cubic-bezier(.45,.05,.25,1)}
-@keyframes gira{0%{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(.82)}100%{transform:rotate(360deg) scale(1)}}
-.folha .fc{position:absolute;inset:0;background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3)}
+.folha{perspective:1100px}
+.folha .fl{position:absolute;inset:0;transform-style:preserve-3d;transition:transform 1.9s cubic-bezier(.45,.05,.25,1)}
+.folha .fc{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:transparent;border-radius:0;box-shadow:0 24px 50px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3)}
+.folha .fc.bk{transform:rotateY(180deg)}
+.folha .fc img{border-radius:0;display:block}
+.folha .esp{position:absolute;left:-7px;top:3%;bottom:3%;width:18px;z-index:2;pointer-events:none;
+ background:radial-gradient(circle at 12px 6px,#14181f 0 2.3px,transparent 2.8px) 0 0/18px 12px repeat-y,
+  linear-gradient(to bottom,transparent 0 3px,#6f7681 3px 4px,#f1f4f8 4px 6px,#8a919c 6px 8px,transparent 8px 12px) 0 0/18px 12px repeat-y;
+ border-radius:2px;filter:drop-shadow(1px 1px 1px rgba(0,0,0,.45))}
 .folha.t0{top:62px}.folha.t1{top:14px}
 @keyframes onda{0%,100%{transform:translateY(0) rotate(var(--r))}50%{transform:translateY(-14px) rotate(var(--r))}}
-@media (prefers-reduced-motion:reduce){.folha .fl.gira{animation:none}.folha{animation:none}}
+@media (prefers-reduced-motion:reduce){.folha .fl{transition:none}.folha{animation:none}}
 .vitrine figcaption{position:static;margin-top:6px;text-align:center;color:#b9c7e0;font-size:13px;font-style:italic}
 .numeros{display:grid;grid-template-columns:repeat(4,1fr);margin:48px 0 0;border-top:1px solid rgba(255,255,255,.12)}
 .numeros div{padding:22px 10px 64px;text-align:center;border-left:1px solid rgba(255,255,255,.08)}.numeros div:first-child{border-left:0}
@@ -648,7 +653,7 @@ function vitrine(){
     const n=Math.min(5,pool.length),span=Math.min(63,(n-1)*16),off=(63-span)/2;
     return (rows.length>1||true?`<div class="vlab">${lab}</div>`:"")+`<div class="vrow" data-r="${ri}">`+pool.slice(0,n).map((it,k)=>{
       const r=n>1?-10+20*k/(n-1):0,l=n>1?off+span*k/(n-1):32;
-      return `<div class="folha t${k%2?1:0}" data-s="${it.slug}" style="left:${l}%;z-index:${k+1};--r:${r}deg;animation-delay:-${(k*1.1).toFixed(1)}s" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc"><img src="${it.imgs[0]}" alt="Capa da apostila ${it.nome}"></div></div></div>`}).join("")+`</div>`}).join("")+`<figcaption>Toque na capa para ver as páginas</figcaption>`;
+      return `<div class="folha t${k%2?1:0}" data-s="${it.slug}" style="left:${l}%;z-index:${k+1};--r:${r}deg;animation-delay:-${(k*1.1).toFixed(1)}s" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc fr"><i class="esp"></i><img src="${it.imgs[0]}" alt="Capa da apostila ${it.nome}"></div><div class="fc bk"><i class="esp"></i><img alt=""></div></div></div>`}).join("")+`</div>`}).join("")+`<figcaption>Toque na capa para ver as páginas</figcaption>`;
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   vit.querySelectorAll(".vrow").forEach((row,ri)=>{
     const pool=rows[ri][1],fs=[...row.querySelectorAll(".folha")];if(pool.length<=fs.length)return;
@@ -660,9 +665,10 @@ function vitrine(){
         const livres=pool.filter(i=>!used.includes(i.slug));
         if(!livres.length){setTimeout(gira,4000);return}
         const it=livres[Math.floor(Math.random()*livres.length)];f.dataset.pend=it.slug;
-        const im=new Image();im.onload=()=>{if(gen!==vitGen)return;const fl=f.querySelector(".fl"),img=f.querySelector("img");
-          fl.classList.remove("gira");void fl.offsetWidth;fl.classList.add("gira");
-          setTimeout(()=>{if(gen!==vitGen)return;img.src=im.src;img.alt="Capa da apostila "+it.nome;f.dataset.s=it.slug;f.dataset.pend=""},650)};
+        const im=new Image();im.onload=()=>{if(gen!==vitGen)return;const fl=f.querySelector(".fl"),fi=f.querySelector(".fr img"),bi=f.querySelector(".bk img");
+          bi.src=im.src;bi.alt="Capa da apostila "+it.nome;fl.style.transform="rotateY(540deg)";
+          setTimeout(()=>{if(gen!==vitGen)return;fi.src=im.src;fi.alt=bi.alt;f.dataset.s=it.slug;f.dataset.pend="";
+            fl.style.transition="none";fl.style.transform="rotateY(0deg)";void fl.offsetWidth;fl.style.transition=""},2000)};
         im.onerror=()=>{f.dataset.pend=""};im.src=it.imgs[0];
         setTimeout(gira,5200+Math.random()*4800)};
       setTimeout(gira,2500+k*1700+ri*900+Math.random()*1500)})})
