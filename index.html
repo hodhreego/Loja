@@ -262,8 +262,8 @@ header.hero:after{display:none}
 .folha{width:178px;cursor:pointer;transition:filter .2s;animation:onda 5.5s ease-in-out infinite}
 .folha:hover{filter:brightness(1.08);z-index:9!important}
 .folha{width:160px;background:transparent;overflow:visible;box-shadow:none;transform:rotate(var(--r,0deg))}
-.folha{perspective:1100px}
-.folha .fl{position:absolute;inset:0;transform-style:preserve-3d;transition:transform 1.9s cubic-bezier(.45,.05,.25,1)}
+.folha{perspective:2600px;perspective-origin:50% 50%}
+.folha .fl{position:absolute;inset:0;transform-origin:50% 50%;transform-style:preserve-3d;transition:transform 1.9s cubic-bezier(.45,.05,.25,1)}
 .folha .fc{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:transparent;border-radius:0;box-shadow:0 24px 50px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3)}
 .folha .fc.bk{transform:rotateY(180deg)}
 .folha .fc img{border-radius:0;display:block}
