@@ -267,10 +267,10 @@ header.hero:after{display:none}
 .folha .fc{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:transparent;border-radius:0;box-shadow:0 24px 50px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3)}
 .folha .fc.bk{transform:rotateY(180deg)}
 .folha .fc img{border-radius:0;display:block}
-.folha .esp{position:absolute;left:-4px;top:2.5%;bottom:2.5%;width:12px;z-index:2;pointer-events:none;
- background:radial-gradient(circle at 8px 4.5px,#0a0d12 0 1.5px,rgba(0,0,0,.35) 1.5px 2.2px,transparent 2.6px) 0 0/12px 9px repeat-y,
-  linear-gradient(to bottom,transparent 0 3px,rgba(255,255,255,.95) 3px 3.6px,#b3bac4 3.6px 4.5px,#707782 4.5px 5.3px,#3f454e 5.3px 5.8px,transparent 5.8px 9px) 0 0/12px 9px repeat-y;
- filter:drop-shadow(0 1px .6px rgba(0,0,0,.5))}
+.folha .esp{position:absolute;left:-5px;top:2%;bottom:2%;width:15px;z-index:2;pointer-events:none;display:flex;flex-direction:column}
+.folha .esp b{flex:1;position:relative;display:block}
+.folha .esp b:before{content:"";position:absolute;left:5px;top:50%;width:3.4px;height:max(1.6px,52%);transform:translateY(-50%);border-radius:50%;background:#05070a;box-shadow:0 0 0 .6px rgba(0,0,0,.35)}
+.folha .esp b:after{content:"";position:absolute;left:0;top:50%;width:11px;height:max(1.5px,48%);transform:translateY(-52%) rotate(-9deg);border-radius:2px;background:linear-gradient(to bottom,#fff 0,#dfe4ea 28%,#9aa2ae 62%,#4a515b 100%);box-shadow:0 .7px .8px rgba(0,0,0,.55)}
 .folha .fc:before{content:"";position:absolute;left:0;top:0;bottom:0;width:9px;background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(0,0,0,.08) 55%,transparent);z-index:1;pointer-events:none}
 .folha.t0{top:62px}.folha.t1{top:14px}
 @keyframes onda{0%,100%{transform:translateY(0) rotate(var(--r))}50%{transform:translateY(-14px) rotate(var(--r))}}
@@ -655,7 +655,7 @@ function vitrine(){
     const n=Math.min(5,pool.length),span=Math.min(63,(n-1)*16),off=(63-span)/2;
     return (rows.length>1||true?`<div class="vlab">${lab}</div>`:"")+`<div class="vrow" data-r="${ri}">`+pool.slice(0,n).map((it,k)=>{
       const r=n>1?-10+20*k/(n-1):0,l=n>1?off+span*k/(n-1):32;
-      return `<div class="folha t${k%2?1:0}" data-s="${it.slug}" style="left:${l}%;z-index:${k+1};--r:${r}deg;animation-delay:-${(k*1.1).toFixed(1)}s" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc fr"><i class="esp"></i><img src="${it.imgs[0]}" alt="Capa da apostila ${it.nome}"></div><div class="fc bk"><i class="esp"></i><img alt=""></div></div></div>`}).join("")+`</div>`}).join("")+`<figcaption>Toque na capa para ver as páginas</figcaption>`;
+      return `<div class="folha t${k%2?1:0}" data-s="${it.slug}" style="left:${l}%;z-index:${k+1};--r:${r}deg;animation-delay:-${(k*1.1).toFixed(1)}s" onclick="abre(this.dataset.s)"><div class="fl"><div class="fc fr"><i class="esp">${"<b></b>".repeat(34)}</i><img src="${it.imgs[0]}" alt="Capa da apostila ${it.nome}"></div><div class="fc bk"><i class="esp">${"<b></b>".repeat(34)}</i><img alt=""></div></div></div>`}).join("")+`</div>`}).join("")+`<figcaption>Toque na capa para ver as páginas</figcaption>`;
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   vit.querySelectorAll(".vrow").forEach((row,ri)=>{
     const pool=rows[ri][1],fs=[...row.querySelectorAll(".folha")];if(pool.length<=fs.length)return;
