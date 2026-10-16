@@ -113,6 +113,25 @@
   .vivo::before{content:"";width:8px;height:8px;border-radius:50%;background:#5eead4;box-shadow:0 0 0 0 #5eead4aa;animation:pulso 1.6s infinite}
   @keyframes pulso{70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
 
+  /* ---------- Interruptor e filtros de alfinetes ---------- */
+  .interruptor{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin:2px 0 0;padding:12px 14px;border-radius:14px;
+    background:rgba(255,255,255,.07);border:1px solid var(--linha);text-align:left}
+  .interruptor b{display:block;font-size:.98rem}
+  .interruptor span.sub{display:block;color:var(--suave);font-size:.78rem;margin-top:1px}
+  .chave{flex:0 0 auto;width:48px;height:28px;border-radius:14px;position:relative;background:rgba(255,255,255,.14);border:1px solid var(--linha);transition:background .2s}
+  .chave::after{content:"";position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;
+    background:linear-gradient(180deg,#fff,#dfe6f5);box-shadow:0 2px 6px rgba(0,0,0,.4);transition:transform .2s}
+  .interruptor[aria-pressed="true"] .chave{background:rgba(233,212,142,.7);border-color:var(--gold-light)}
+  .interruptor[aria-pressed="true"] .chave::after{transform:translateX(20px)}
+  .filtros{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+  .filtro{display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:0 11px 0 8px;border-radius:10px;font-size:.82rem;font-weight:600;
+    background:rgba(255,255,255,.06);border:1px solid var(--linha);color:var(--suave)}
+  .filtro .pino{width:20px;height:20px;border-radius:6px;font-size:.66rem;opacity:.45}
+  .filtro[aria-pressed="true"]{color:#fff;border-color:rgba(233,212,142,.6);background:rgba(233,212,142,.14)}
+  .filtro[aria-pressed="true"] .pino{opacity:1}
+  .filtros[hidden]{display:none}
+  .painel .topo{padding:0 12px}
+
   /* ---------- Controles do mapa (vidro redondo) ---------- */
   #controles{position:fixed;z-index:25;right:12px;top:calc(76px + env(safe-area-inset-top));display:flex;flex-direction:column;gap:10px}
 
@@ -180,6 +199,7 @@
 </section>
 
 <div id="controles">
+  <button id="btnPinos" class="btn vidro redondo" aria-pressed="false" aria-label="Mostrar alfinetes de referência" title="Alfinetes de referência (desligados)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg></button>
   <button id="zmMais" class="btn vidro redondo" aria-label="Aproximar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
   <button id="zmMenos" class="btn vidro redondo" aria-label="Afastar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
   <button id="voltar" class="btn vidro redondo" aria-label="Voltar à vista geral" title="Voltar à vista geral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
@@ -193,6 +213,12 @@
 
 <aside id="lista" class="painel vidro" hidden aria-label="Lista de lugares">
   <header><h3 id="listaTitulo">Lugares</h3></header>
+  <div class="topo">
+    <button id="chavePinos" class="interruptor" aria-pressed="false">
+      <span><b>Alfinetes no mapa</b><span class="sub" id="pinosSub">Desligados. Toque num lugar da lista para ver só ele.</span></span>
+      <span class="chave" aria-hidden="true"></span></button>
+    <div class="filtros" id="filtros" hidden></div>
+  </div>
   <div class="corpo" id="listaCorpo"></div>
 </aside>
 
@@ -485,6 +511,8 @@ const ASTROS = [
    ESTADO
    ===================================================================== */
 const $ = id => document.getElementById(id);
+let pinosOn = false;                  // alfinetes de referência começam DESLIGADOS
+const tiposOn = new Set(Object.keys(TIPOS));  // tipos visíveis quando ligados
 let viewer = null, astro = null, entidadeSel = null, seq = 0, issEnt = null, issTimer = null, issRastro = [];
 const elipsoideDe = a => a.raios[0] === a.raios[1] && a.raios[1] === a.raios[2]
   ? (a.moon && Cesium.Ellipsoid.MOON ? Cesium.Ellipsoid.MOON : new Cesium.Ellipsoid(...a.raios))
@@ -661,8 +689,9 @@ function criarMarcadores(){
         outlineColor: Cesium.Color.BLACK, outlineWidth: 4, style: Cesium.LabelStyle.FILL_AND_OUTLINE,
         verticalOrigin: Cesium.VerticalOrigin.TOP, pixelOffset: new Cesium.Cartesian2(0, 4),
         distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, R * 1.9) } });
-    l.entidade._lugar = l;
+    l.entidade._lugar = l; l.entidade.show = false;
   }
+  aplicarPinos();
 }
 function linhasInfo(l){
   const L = [];
@@ -686,12 +715,34 @@ function abrirInfo(l){
   }
   $("info").hidden = false; fecharPaineis();
 }
+/* Mostra/oculta os alfinetes conforme o interruptor e os filtros; o lugar selecionado sempre aparece */
+function aplicarPinos(){
+  if (!viewer || !astro) return;
+  for (const l of astro.lugares) if (l.entidade) l.entidade.show = (pinosOn && tiposOn.has(l.tipo)) || l.entidade === entidadeSel;
+  const b = $("btnPinos"); b.setAttribute("aria-pressed", String(pinosOn)); b.classList.toggle("ativo", pinosOn);
+  b.title = "Alfinetes de referência (" + (pinosOn ? "ligados" : "desligados") + ")";
+  $("chavePinos").setAttribute("aria-pressed", String(pinosOn));
+  $("pinosSub").textContent = pinosOn ? "Ligados. Use os filtros para escolher os tipos." : "Desligados. Toque num lugar da lista para ver só ele.";
+  montarFiltros(); viewer.scene.requestRender();
+}
+function montarFiltros(){
+  const box = $("filtros"); box.innerHTML = ""; box.hidden = !pinosOn || !astro.lugares.length;
+  for (const [k, t] of Object.entries(TIPOS)){
+    if (!astro.lugares.some(l => l.tipo === k)) continue;
+    const b = document.createElement("button"); b.className = "filtro"; b.setAttribute("aria-pressed", String(tiposOn.has(k)));
+    b.innerHTML = `<span class="pino" style="background:${t.cor}">${t.letra}</span><span></span>`; b.lastChild.textContent = t.rotulo;
+    b.onclick = () => { tiposOn.has(k) ? tiposOn.delete(k) : tiposOn.add(k); aplicarPinos(); };
+    box.appendChild(b);
+  }
+}
+function alternarPinos(){ pinosOn = !pinosOn; aplicarPinos(); }
+
 function selecionar(l){
   if (entidadeSel && entidadeSel.billboard && entidadeSel._lugar && !entidadeSel._lugar.vivo) entidadeSel.billboard.image = imagemPino(entidadeSel._lugar.tipo, false);
   entidadeSel = l ? l.entidade : null;
   if (l){ if (!l.vivo) l.entidade.billboard.image = imagemPino(l.tipo, true); abrirInfo(l); }
   else $("info").hidden = true;
-  if (viewer) viewer.scene.requestRender();
+  aplicarPinos();
 }
 function irPara(l){ selecionar(l); if (l.vivo) voarISS(); else voarPara(l); fecharPaineis(); }
 
@@ -900,6 +951,7 @@ function iniciar(){
     $("carregando").innerHTML = "<div><b>Não foi possível carregar o mapa 3D.</b>Verifique a internet e recarregue a página.</div>"; return; }
   $("btnCatalogo").onclick = () => alternar("catalogo", "btnCatalogo");
   $("btnLista").onclick = () => alternar("lista", "btnLista");
+  $("btnPinos").onclick = alternarPinos; $("chavePinos").onclick = alternarPinos;
   $("voltar").onclick = () => { selecionar(null); if (viewer){ viewer.trackedEntity = undefined; visaoInicial(true); } };
   $("fechar").onclick = () => selecionar(null);
   $("zmMais").onclick = () => zoom(0.5); $("zmMenos").onclick = () => zoom(2);
