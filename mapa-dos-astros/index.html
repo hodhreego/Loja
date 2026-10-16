@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0e14">
+<title>Mapa dos Astros</title>
+<meta name="description" content="Explore a Lua, Marte, Mercúrio e Ceres em 3D com imagens de satélite da NASA.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='80' font-size='84' text-anchor='middle'%3E🌙%3C/text%3E%3C/svg%3E">
+
+<!-- CesiumJS (versão fixa) via jsDelivr. Nenhum recurso do Cesium Ion é usado. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cesium@1.120.0/Build/Cesium/Widgets/widgets.css">
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.120.0/Build/Cesium/Cesium.js"></script>
+
+<style>
+  /* ===== Tema escuro, pensado primeiro para celular ===== */
+  :root{
+    --fundo:#0b0e14; --painel:#141926; --painel2:#1c2333; --borda:#2a3350;
+    --texto:#e8ecf5; --suave:#9aa6c4; --destaque:#ffcf5a; --azul:#6cb6ff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--fundo);color:var(--texto);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+  body{display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}
+  button{font:inherit;color:inherit;cursor:pointer}
+  button:focus-visible,select:focus-visible{outline:3px solid var(--azul);outline-offset:2px}
+
+  /* Barra superior */
+  #barra{display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    padding:8px 12px;padding-top:calc(8px + env(safe-area-inset-top));
+    background:var(--painel);border-bottom:1px solid var(--borda);z-index:30}
+  #barra h1{font-size:1.1rem;margin:0;flex:1 1 auto;white-space:nowrap}
+  .botao{background:var(--painel2);border:1px solid var(--borda);border-radius:10px;
+    padding:10px 14px;min-height:44px;font-weight:600}
+  .botao:hover{border-color:var(--azul)}
+  .botao[aria-expanded="true"]{background:var(--azul);color:#06121f;border-color:var(--azul)}
+  #astros{display:flex;gap:6px;flex:1 1 100%;overflow-x:auto;padding-bottom:2px}
+  .astro{flex:0 0 auto;border-radius:999px;padding:8px 14px;min-height:40px;
+    background:var(--painel2);border:1px solid var(--borda);font-weight:600}
+  .astro[aria-pressed="true"]{background:var(--destaque);color:#241a00;border-color:var(--destaque)}
+
+  /* Área do mapa */
+  #principal{position:relative;flex:1 1 auto;min-height:0}
+  #mapa{position:absolute;inset:0;background:#000}
+  .cesium-viewer-bottom,.cesium-widget-credits{display:none!important} /* créditos do Cesium vão ao rodapé */
+
+  #voltar{position:absolute;left:12px;top:12px;z-index:20;box-shadow:0 4px 14px #0008}
+
+  /* Lista de lugares (gaveta) */
+  #lista{position:absolute;z-index:25;left:0;right:0;top:0;max-height:70%;overflow:auto;
+    background:var(--painel);border-bottom:1px solid var(--borda);padding:8px 12px 12px;
+    box-shadow:0 8px 24px #000a}
+  #lista[hidden]{display:none}
+  #lista h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--suave);margin:12px 4px 6px}
+  #lista ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+  .item{width:100%;display:flex;align-items:center;gap:10px;text-align:left;
+    background:var(--painel2);border:1px solid var(--borda);border-radius:10px;padding:10px 12px;min-height:48px}
+  .item:hover{border-color:var(--destaque)}
+  .pino{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+    font-weight:800;font-size:.8rem;color:#101010}
+
+  /* Painel de informações (folha inferior no celular) */
+  #info{position:absolute;z-index:22;left:8px;right:8px;bottom:8px;max-height:58%;overflow:auto;
+    background:var(--painel);border:1px solid var(--borda);border-radius:16px;padding:14px 16px 16px;
+    box-shadow:0 8px 28px #000c}
+  #info[hidden]{display:none}
+  #info h2{margin:0 40px 6px 0;font-size:1.25rem}
+  #fechar{position:absolute;top:8px;right:8px;width:44px;height:44px;border-radius:50%;
+    background:var(--painel2);border:1px solid var(--borda);font-size:1.2rem}
+  .tag{display:inline-block;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:999px;color:#101010}
+  dl{margin:10px 0 0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.95rem}
+  dt{color:var(--suave)} dd{margin:0}
+  .curiosidade{margin:12px 0 0;padding:10px 12px;background:var(--painel2);border-left:4px solid var(--destaque);
+    border-radius:8px;line-height:1.45;font-size:1rem}
+
+  /* Avisos e carregamento */
+  #aviso{position:absolute;z-index:40;top:68px;pointer-events:none;left:50%;transform:translateX(-50%);width:min(92%,520px);
+    background:#3a2a05;color:#ffe9b0;border:1px solid #8a6a1a;border-radius:10px;padding:10px 14px;font-size:.9rem}
+  #aviso[hidden]{display:none}
+  #dica{position:absolute;z-index:15;left:50%;bottom:72px;transform:translateX(-50%);
+    background:#000a;padding:8px 14px;border-radius:999px;font-size:.85rem;color:var(--suave);
+    pointer-events:none;transition:opacity .6s;text-align:center;width:max-content;max-width:92%}
+  #carregando{position:absolute;inset:0;z-index:50;background:var(--fundo);display:grid;place-items:center;
+    transition:opacity .5s;text-align:center;color:var(--suave)}
+  #carregando.some{opacity:0;pointer-events:none}
+
+  /* Rodapé de créditos (visível sempre); o logo do Cesium deixa de ser flutuante */
+  #creditoCesium .cesium-credit-logoContainer{position:static!important}
+  #creditos{padding:6px 12px;font-size:.72rem;line-height:1.35;color:var(--suave);
+    background:var(--painel);border-top:1px solid var(--borda);z-index:30}
+  #creditoCesium .cesium-credit-logoContainer img{height:16px;vertical-align:middle}
+  #creditoCesium{display:inline}
+  #creditoCesium *{display:inline!important;color:var(--suave)!important}
+
+  /* Janela inicial: escolha da aula (últimos 7 dias, semana ou data) */
+  dialog#aula{background:var(--painel);color:var(--texto);border:1px solid var(--borda);border-radius:16px;
+    padding:18px 18px 16px;width:min(94vw,460px);box-shadow:0 12px 40px #000c}
+  dialog#aula::backdrop{background:#000b}
+  dialog#aula h2{margin:0 0 6px;font-size:1.2rem}
+  dialog#aula label{display:block;margin:12px 0 4px;color:var(--suave);font-size:.85rem}
+  dialog#aula select,dialog#aula input{width:100%;min-height:44px;font:inherit;color:var(--texto);
+    background:var(--painel2);border:1px solid var(--borda);border-radius:10px;padding:8px 10px}
+  #aulaResumo{margin:12px 0 0;padding:10px 12px;background:var(--painel2);border-left:4px solid var(--azul);
+    border-radius:8px;font-size:.92rem;line-height:1.45}
+  .acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .acoes .botao{flex:1 1 140px}
+  .primario{background:var(--destaque)!important;color:#241a00!important;border-color:var(--destaque)!important}
+  #filtroInfo{margin:2px 4px 6px;font-size:.85rem;color:var(--suave)}
+
+  /* Telas largas: gaveta e painel viram colunas laterais */
+  @media (min-width:760px){
+    #astros{flex:0 1 auto}
+    #barra{flex-wrap:nowrap}
+    #lista{width:340px;right:auto;top:12px;left:12px;max-height:calc(100% - 24px);border:1px solid var(--borda);border-radius:14px}
+    #info{left:auto;right:12px;bottom:12px;width:380px;max-height:calc(100% - 24px)}
+    #voltar{left:auto;right:12px}
+  }
+</style>
+</head>
+<body>
+
+<header id="barra">
+  <h1>🪐 Mapa dos Astros</h1>
+  <button id="btnAula" class="botao" title="Escolher aula, semana ou data">📅 <span id="rotuloAula">Aula</span></button>
+  <button id="btnLista" class="botao" aria-expanded="false" aria-controls="lista">Lista de lugares</button>
+  <nav id="astros" aria-label="Escolha o astro"></nav>
+</header>
+
+<main id="principal">
+  <div id="mapa"></div>
+  <button id="voltar" class="botao">⟲ Voltar à <span id="nomeVoltar">Lua</span> inteira</button>
+
+  <section id="lista" hidden aria-label="Lista de lugares"></section>
+
+  <section id="info" hidden aria-live="polite">
+    <button id="fechar" aria-label="Fechar">✕</button>
+    <h2 id="iNome"></h2>
+    <span id="iTipo" class="tag"></span>
+    <dl>
+      <dt>Tamanho</dt><dd id="iTamanho"></dd>
+      <dt id="iDetalheRot" hidden>Missão</dt><dd id="iDetalhe" hidden></dd>
+      <dt>Posição</dt><dd id="iCoord"></dd>
+    </dl>
+    <p class="curiosidade">💡 <span id="iCuriosidade"></span></p>
+  </section>
+
+  <div id="aviso" role="status" hidden></div>
+  <div id="dica">Arraste para girar · pinça (ou roda do mouse) para aproximar · toque nos pinos</div>
+  <div id="carregando"><div><div style="font-size:3rem">🌙</div>Carregando…</div></div>
+</main>
+
+<dialog id="aula" aria-labelledby="aulaTitulo">
+  <h2 id="aulaTitulo">📅 Qual aula você quer ver?</h2>
+  <p class="pequeno" style="margin:0;color:var(--suave);font-size:.9rem">O mapa abre sozinho nos <b>últimos 7 dias</b> de aula. Você pode escolher outra semana ou data.</p>
+  <label for="selAula">Período</label>
+  <select id="selAula"></select>
+  <label for="dataAula">Ou escolha uma data</label>
+  <input type="date" id="dataAula">
+  <p id="aulaResumo" role="status"></p>
+  <div class="acoes">
+    <button id="aulaOk" class="botao primario">Ver no mapa</button>
+    <button id="aulaTodos" class="botao">Ver todos os lugares</button>
+  </div>
+</dialog>
+
+<footer id="creditos">
+  <span id="creditoImagem"></span>
+  · Mapa 3D: <span id="creditoCesium"></span>
+</footer>
+
+<script>
+"use strict";
+/* =====================================================================
+   MAPA DOS ASTROS
+   - Um objeto por astro em ASTROS (raio, camadas da NASA Trek, lugares).
+   - Para incluir outro astro (ex.: Vesta, Titã), basta copiar um bloco.
+   ===================================================================== */
+
+/* ---------- Tipos de lugar (cor e letra do pino) ---------- */
+const TIPOS = {
+  pouso:    { rotulo: "Local de pouso",        cor: "#ffcf5a", letra: "P" },
+  planicie: { rotulo: "Planície / bacia",      cor: "#6cb6ff", letra: "M" },
+  cratera:  { rotulo: "Cratera de impacto",    cor: "#ff8f6b", letra: "C" },
+  relevo:   { rotulo: "Vulcão / vale / relevo", cor: "#9be39b", letra: "R" }
+};
+
+/* ---------- Dados dos astros ----------
+   Coordenadas: latitude (+N/−S) e longitude (+Leste/−Oeste), em graus.
+   alcance = distância da câmera ao lugar, em km, ao voar até ele. */
+const ASTROS = [
+  {
+    id: "lua", nome: "Lua", emoji: "🌙", pasta: "Moon", raio: 1737400,
+    credito: "Imagens: NASA/GSFC/Arizona State University (LRO) via NASA Solar System Treks",
+    camadas: [
+      { nome: "LRO_WAC_Mosaic_Global_303ppd_v02", ext: "jpg" },  // mosaico global LRO WAC
+      { nome: "LRO_LOLA_ClrShade_Global_128ppd_v04", ext: "png" } // alternativa: relevo colorido LOLA
+    ],
+    lugares: [
+      { nome:"Apollo 11", tipo:"pouso", lat:0.67416, lon:23.47314, alcance:150,
+        tamanho:"Ponto de pouso: o módulo lunar tinha cerca de 9 m de largura",
+        detalhe:"20/07/1969 · Armstrong e Aldrin",
+        curiosidade:"Neil Armstrong e Buzz Aldrin caminharam cerca de 2 horas e meia na Lua, enquanto Michael Collins esperava em órbita. Trouxeram 21,5 kg de rochas e poeira." },
+      { nome:"Apollo 12", tipo:"pouso", lat:-3.01239, lon:-23.42157, alcance:150,
+        tamanho:"Ponto de pouso: o módulo lunar tinha cerca de 9 m de largura",
+        detalhe:"19/11/1969 · Conrad e Bean",
+        curiosidade:"Eles pousaram a uns 180 metros da sonda Surveyor 3, que estava lá desde 1967. Os astronautas levaram algumas peças dela de volta para a Terra!" },
+      { nome:"Apollo 14", tipo:"pouso", lat:-3.64589, lon:-17.47136, alcance:150,
+        tamanho:"Ponto de pouso: o módulo lunar tinha cerca de 9 m de largura",
+        detalhe:"05/02/1971 · Shepard e Mitchell",
+        curiosidade:"Alan Shepard fez uma tacada de golfe na Lua com um taco improvisado. Como a gravidade lá é bem mais fraca, a bola voou mais longe que na Terra." },
+      { nome:"Apollo 15", tipo:"pouso", lat:26.13224, lon:3.62981, alcance:150,
+        tamanho:"Ponto de pouso: o módulo lunar tinha cerca de 9 m de largura",
+        detalhe:"30/07/1971 · Scott e Irwin",
+        curiosidade:"Foi a primeira missão com um carro lunar. David Scott soltou um martelo e uma pena ao mesmo tempo: sem ar, os dois caíram juntos!" },
+      { nome:"Apollo 16", tipo:"pouso", lat:-8.9730, lon:15.5002, alcance:150,
+        tamanho:"Ponto de pouso: o módulo lunar tinha cerca de 9 m de largura",
+        detalhe:"21/04/1972 · Young e Duke",
+        curiosidade:"Foi a única missão Apollo a pousar nas terras altas da Lua, uma região clara e cheia de crateras. Charles Duke deixou lá uma foto da família." },
+      { nome:"Apollo 17", tipo:"pouso", lat:20.1908, lon:30.7717, alcance:150,
+        tamanho:"Ponto de pouso: o módulo lunar tinha cerca de 9 m de largura",
+        detalhe:"11/12/1972 · Cernan e Schmitt",
+        curiosidade:"Foi a última vez que humanos pisaram na Lua. Harrison Schmitt, que era geólogo, foi o primeiro cientista a caminhar por lá." },
+      { nome:"Mar da Tranquilidade", tipo:"planicie", lat:8.5, lon:31.4, alcance:2200,
+        tamanho:"Cerca de 873 km de diâmetro",
+        curiosidade:"Os “mares” são planícies escuras de lava endurecida, não de água. A Apollo 11 pousou na borda sudoeste deste aqui." },
+      { nome:"Mar da Serenidade", tipo:"planicie", lat:28.0, lon:17.5, alcance:1900,
+        tamanho:"Cerca de 707 km de diâmetro",
+        curiosidade:"Dá para ver essa mancha escura e redonda da Terra, sem binóculo. Perto da borda dela a Apollo 17 pousou." },
+      { nome:"Mar das Crises", tipo:"planicie", lat:17.0, lon:59.1, alcance:1400,
+        tamanho:"Cerca de 418 km de diâmetro",
+        curiosidade:"É um mar quase fechado por montanhas, parecendo isolado dos outros. Em 1976 a sonda soviética Luna 24 coletou amostras aqui." },
+      { nome:"Mar das Chuvas", tipo:"planicie", lat:32.8, lon:-15.6, alcance:3000,
+        tamanho:"Cerca de 1.145 km de diâmetro",
+        curiosidade:"Foi aberto por uma colisão gigante há uns 3,9 bilhões de anos e depois encheu de lava. Apesar do nome, nunca teve chuva nem água." },
+      { nome:"Tycho", tipo:"cratera", lat:-43.31, lon:-11.36, alcance:500,
+        tamanho:"Cerca de 85 km de diâmetro e 4,7 km de profundidade",
+        curiosidade:"É jovem para a Lua: só uns 108 milhões de anos. Dele saem raios claros que se espalham por mais de 1.500 km." },
+      { nome:"Copérnico", tipo:"cratera", lat:9.62, lon:-20.08, alcance:500,
+        tamanho:"Cerca de 93 km de diâmetro e 3,8 km de profundidade",
+        curiosidade:"Suas paredes têm degraus gigantes e, com um binóculo, dá para ver a cratera e seus raios claros." },
+      { nome:"Clavius", tipo:"cratera", lat:-58.8, lon:-14.4, alcance:900,
+        tamanho:"Cerca de 225 km de diâmetro",
+        curiosidade:"É uma das maiores crateras que dá para ver da Terra. No filme “2001: Uma Odisseia no Espaço” existe uma base lunar chamada Clavius." }
+    ]
+  },
+  {
+    id: "marte", nome: "Marte", emoji: "🔴", pasta: "Mars", raio: 3396190,
+    credito: "Imagens: NASA/JPL-Caltech/USGS (Viking, MGS) via NASA Solar System Treks",
+    camadas: [
+      { nome: "Mars_Viking_MDIM21_ClrMosaic_global_232m", ext: "jpg" },   // mosaico colorido Viking
+      { nome: "Mars_MGS_MOLA_ClrShade_merge_global_463m", ext: "jpg" }    // alternativa: relevo MOLA
+    ],
+    lugares: [
+      { nome:"Monte Olimpo (Olympus Mons)", tipo:"relevo", lat:18.65, lon:-133.8, alcance:1800,
+        tamanho:"Cerca de 600 km de largura e 22 km de altura",
+        curiosidade:"É o maior vulcão do Sistema Solar: cerca de 2,5 vezes mais alto que o Monte Everest!" },
+      { nome:"Valles Marineris", tipo:"relevo", lat:-13.9, lon:-59.2, alcance:4500,
+        tamanho:"Cerca de 4.000 km de comprimento e até 7 km de profundidade",
+        curiosidade:"É um cânion gigante. O Grand Canyon, nos EUA, tem uns 450 km de comprimento: caberia vários dentro dele." },
+      { nome:"Planície Hellas", tipo:"planicie", lat:-42.7, lon:70.0, alcance:3500,
+        tamanho:"Cerca de 2.300 km de largura e 7 km de profundidade",
+        curiosidade:"É uma das maiores crateras de impacto do Sistema Solar. Às vezes aparece branca nas fotos por causa de gelo e névoa." },
+      { nome:"Cratera Gale (Curiosity)", tipo:"pouso", lat:-5.4, lon:137.8, alcance:300,
+        tamanho:"Cratera de cerca de 154 km de diâmetro",
+        detalhe:"Rover Curiosity · ago/2012",
+        curiosidade:"O rover Curiosity encontrou sinais de que ali já houve água líquida e ingredientes importantes para a vida." },
+      { nome:"Cratera Jezero (Perseverance)", tipo:"pouso", lat:18.38, lon:77.58, alcance:250,
+        tamanho:"Cratera de cerca de 45 km de diâmetro",
+        detalhe:"Rover Perseverance · fev/2021",
+        curiosidade:"Há bilhões de anos aqui havia um lago. O rover Perseverance guarda amostras de rochas para trazer à Terra, e levou o minihelicóptero Ingenuity." },
+      { nome:"Viking 1", tipo:"pouso", lat:22.7, lon:-47.95, alcance:300,
+        tamanho:"Módulo de pouso com cerca de 3 m de largura",
+        detalhe:"20/07/1976 · primeira sonda a funcionar em Marte",
+        curiosidade:"Pousou exatamente 7 anos depois da Apollo 11 e mandou as primeiras fotos coloridas da superfície de Marte." },
+      { nome:"Mars Pathfinder", tipo:"pouso", lat:19.13, lon:-33.22, alcance:300,
+        tamanho:"Módulo de pouso com cerca de 2,5 m de largura",
+        detalhe:"04/07/1997 · rover Sojourner",
+        curiosidade:"Levou o Sojourner, o primeiro robô com rodas a andar em Marte. Ele tinha o tamanho de um forninho." }
+    ]
+  },
+  {
+    id: "mercurio", nome: "Mercúrio", emoji: "⚫", pasta: "Mercury", raio: 2439400,
+    credito: "Imagens: NASA/Johns Hopkins APL/Carnegie Institution (MESSENGER) via NASA Solar System Treks",
+    camadas: [
+      { nome: "Mercury_MESSENGER_MDIS_Basemap_BDR_Mosaic_Global_166m", ext: "jpg" },
+      { nome: "Mercury_MESSENGER_MDIS_Basemap_EnhancedColor_Mosaic_Global_665m", ext: "jpg" }
+    ],
+    lugares: [
+      { nome:"Bacia Caloris", tipo:"planicie", lat:30.5, lon:189.8, alcance:2200,
+        tamanho:"Cerca de 1.550 km de diâmetro",
+        curiosidade:"Uma batida de asteroide tão forte que, do lado oposto do planeta, o chão ficou cheio de colinas bagunçadas." },
+      { nome:"Bacia Rembrandt", tipo:"planicie", lat:-33.0, lon:88.3, alcance:1500,
+        tamanho:"Cerca de 715 km de diâmetro",
+        curiosidade:"É uma das maiores bacias de impacto de Mercúrio, com cicatrizes de rachaduras no fundo." },
+      { nome:"Cratera Kuiper", tipo:"cratera", lat:-11.3, lon:-31.5, alcance:250,
+        tamanho:"Cerca de 62 km de diâmetro",
+        curiosidade:"É bem jovem e brilha mais que o terreno em volta, com raios claros espalhados." },
+      { nome:"Fim da missão MESSENGER", tipo:"pouso", lat:54.4, lon:-149.9, alcance:300,
+        tamanho:"Ponto de impacto: a sonda tinha cerca de 1,5 m de largura",
+        detalhe:"30/04/2015 · fim da missão",
+        curiosidade:"A sonda MESSENGER orbitou Mercúrio por 4 anos. Quando acabou o combustível, ela foi guiada para bater no planeta." }
+    ]
+  },
+  {
+    id: "ceres", nome: "Ceres", emoji: "🪨", pasta: "Ceres", raio: 470000,
+    credito: "Imagens: NASA/JPL-Caltech/UCLA/MPS/DLR/IDA (Dawn) via NASA Solar System Treks",
+    camadas: [
+      { nome: "Ceres_Dawn_FC_HAMO_ClrShade_DLR_Global_60ppd_Oct2016", ext: "jpg" },
+      { nome: "Ceres_Dawn_FC_HAMO_Mosaic_DLR_Global_60ppd_Oct2016", ext: "jpg" }
+    ],
+    lugares: [
+      { nome:"Cratera Occator", tipo:"cratera", lat:19.8, lon:-120.7, alcance:150,
+        tamanho:"Cerca de 92 km de diâmetro",
+        curiosidade:"Tem manchas brilhantes famosas. São sal deixado por água salgada que veio de dentro de Ceres." },
+      { nome:"Ahuna Mons", tipo:"relevo", lat:-10.5, lon:-43.8, alcance:80,
+        tamanho:"Cerca de 4 km de altura e 17 km de largura",
+        curiosidade:"É um vulcão de gelo e lama: em vez de lava quente, ele jorrou água salgada gelada." },
+      { nome:"Cratera Kerwan", tipo:"cratera", lat:-10.8, lon:123.9, alcance:300,
+        tamanho:"Cerca de 280 km de diâmetro",
+        curiosidade:"É a maior cratera bem conservada de Ceres, um planeta-anão no cinturão de asteroides." }
+    ]
+  }
+];
+
+/* ---------- Plano de aulas (mesmas semanas das folhas em atividades/) ----------
+   ini/fim: segunda a domingo (AAAA-MM-DD). "*" = todos os lugares do astro. */
+const MARES = ["Mar da Tranquilidade","Mar da Serenidade","Mar das Crises","Mar das Chuvas"];
+const APOLLOS = ["Apollo 11","Apollo 12","Apollo 14","Apollo 15","Apollo 16","Apollo 17"];
+const SEMANAS = [
+  {n:1, ini:"2026-10-19", fim:"2026-10-25", titulo:"Coordenadas e tamanhos", lugares:{lua:["Apollo 11","Apollo 12","Apollo 17","Tycho","Copérnico"]}},
+  {n:2, ini:"2026-10-26", fim:"2026-11-01", titulo:"Mares e terras altas", lugares:{lua:[...MARES,"Apollo 11","Apollo 16","Apollo 17"]}},
+  {n:3, ini:"2026-11-02", fim:"2026-11-08", titulo:"Crateras", lugares:{lua:["Tycho","Copérnico","Clavius"]}},
+  {n:4, ini:"2026-11-09", fim:"2026-11-15", titulo:"Missões Apollo", lugares:{lua:APOLLOS}},
+  {n:5, ini:"2026-11-16", fim:"2026-11-22", titulo:"Marte: o planeta vermelho", lugares:{marte:["Monte Olimpo (Olympus Mons)","Valles Marineris","Planície Hellas"]}},
+  {n:6, ini:"2026-11-23", fim:"2026-11-29", titulo:"Robôs em Marte", lugares:{marte:["Cratera Gale (Curiosity)","Cratera Jezero (Perseverance)","Viking 1","Mars Pathfinder"]}},
+  {n:7, ini:"2026-11-30", fim:"2026-12-06", titulo:"Mercúrio e Ceres", lugares:{mercurio:"*", ceres:"*"}},
+  {n:8, ini:"2026-12-07", fim:"2026-12-13", titulo:"Compare os mundos", lugares:{lua:["Apollo 11","Tycho"], marte:["Monte Olimpo (Olympus Mons)","Cratera Gale (Curiosity)"], mercurio:["Bacia Caloris"], ceres:["Cratera Occator"]}},
+  {n:9, ini:"2026-12-14", fim:"2026-12-20", titulo:"Missão final", lugares:{lua:"*", marte:"*", mercurio:"*", ceres:"*"}}
+];
+
+/* Filtro atual: null = todos os lugares; senão, lista de semanas */
+let filtroSemanas = null;
+let filtroRotulo = "Todos";
+
+/* Datas locais no formato AAAA-MM-DD (o parâmetro ?hoje=2026-11-12 serve para testar/demonstrar) */
+const isoLocal = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const HOJE = (new URLSearchParams(location.search).get("hoje") || "").match(/^\d{4}-\d{2}-\d{2}$/)
+  ? new URLSearchParams(location.search).get("hoje") : isoLocal(new Date());
+function diasAntes(iso, n){ const [a,m,d] = iso.split("-").map(Number); return isoLocal(new Date(a, m-1, d-n)); }
+const fmtData = iso => iso.slice(8,10) + "/" + iso.slice(5,7);
+
+/* Semanas com aula nos últimos 7 dias (hoje e os 6 dias anteriores) */
+function semanasUltimos7(){ const ini = diasAntes(HOJE, 6); return SEMANAS.filter(w => w.ini <= HOJE && w.fim >= ini); }
+function semanaDaData(iso){ return SEMANAS.find(w => w.ini <= iso && iso <= w.fim) || null; }
+
+/* Lugares do astro permitidos pelo filtro (todos, se o filtro não cita o astro) */
+function visiveis(a){
+  if (!filtroSemanas) return a.lugares;
+  const citam = filtroSemanas.filter(w => w.lugares[a.id]);
+  if (!citam.length) return a.lugares;
+  if (citam.some(w => w.lugares[a.id] === "*")) return a.lugares;
+  const nomes = new Set(citam.flatMap(w => w.lugares[a.id]));
+  return a.lugares.filter(l => nomes.has(l.nome));
+}
+/* Primeiro astro que a aula usa (para abrir o mapa já nele) */
+function astroDoFiltro(){
+  if (!filtroSemanas) return null;
+  return ASTROS.find(a => filtroSemanas.some(w => w.lugares[a.id])) || null;
+}
+
+/* ---------- Estado e atalhos ---------- */
+const $ = id => document.getElementById(id);
+let viewer = null;          // visualizador Cesium atual
+let astro = null;           // astro atual
+let entidadeSel = null;     // pino selecionado
+let seq = 0;                // evita corridas ao trocar de astro rápido
+const rad = Cesium.Math.toRadians;
+
+/* Formata coordenada em português: 0,67° N / 23,47° L */
+function fmtCoord(lat, lon){
+  const f = n => Math.abs(n).toLocaleString("pt-BR", {maximumFractionDigits:2, minimumFractionDigits:2});
+  return `${f(lat)}° ${lat >= 0 ? "N" : "S"} · ${f(lon)}° ${lon >= 0 ? "L" : "O"}`;
+}
+
+/* Cria o desenho SVG do pino (cor e letra por tipo) */
+function imagemPino(tipo, selecionado){
+  const t = TIPOS[tipo];
+  const borda = selecionado ? "#ffffff" : "#101010";
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="60" viewBox="0 0 48 60">
+    <path d="M24 58 C24 58 4 34 4 22 A20 20 0 0 1 44 22 C44 34 24 58 24 58Z" fill="${t.cor}" stroke="${borda}" stroke-width="3"/>
+    <text x="24" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="20" fill="#101010">${t.letra}</text></svg>`;
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+
+/* Aviso amarelo no topo do mapa */
+function avisar(msg){ const a = $("aviso"); a.textContent = msg; a.hidden = !msg; }
+
+/* =====================================================================
+   IMAGEM DA NASA (WMTS do Solar System Treks)
+   Fluxo: lê o GetCapabilities da camada (nome de matriz, níveis,
+   endereço dos tiles) -> testa o tile 0/0/0 -> usa. Se falhar, tenta a
+   próxima camada; se todas falharem, mostra esfera cinza com grade.
+   ===================================================================== */
+const BASE_TREK = "https://trek.nasa.gov/tiles";
+
+/* Texto do primeiro filho com certo nome local (ignora prefixo ows:) */
+function filho(el, nome){
+  for (const c of el.children) if (c.localName === nome) return c;
+  return null;
+}
+
+/* Lê o GetCapabilities; devolve configuração ou null se não der (rede/CORS) */
+async function lerCapabilities(pasta, camada){
+  const url = `${BASE_TREK}/${pasta}/EQ/${camada.nome}/1.0.0/WMTSCapabilities.xml`;
+  const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 8000);
+  try{
+    const r = await fetch(url, {signal: ctl.signal}); if (!r.ok) return null;
+    const xml = new DOMParser().parseFromString(await r.text(), "application/xml");
+    const g = n => Array.from(xml.getElementsByTagNameNS("*", n));
+    const res = g("ResourceURL").find(e => e.getAttribute("resourceType") === "tile");
+    const conj = g("TileMatrixSet").find(e => filho(e, "TileMatrix"));   // conjunto de matrizes
+    if (!res || !conj) return null;
+    const matrizes = Array.from(conj.children).filter(c => c.localName === "TileMatrix");
+    const estilo = g("Style").map(e => filho(e, "Identifier")).find(Boolean);
+    return {
+      modelo: res.getAttribute("template"),
+      estilo: estilo ? estilo.textContent.trim() : "default",
+      conjunto: filho(conj, "Identifier").textContent.trim(),
+      rotulos: matrizes.map(m => filho(m, "Identifier").textContent.trim()),
+      largura0: +filho(matrizes[0], "MatrixWidth").textContent,
+      altura0: +filho(matrizes[0], "MatrixHeight").textContent
+    };
+  }catch(e){ return null; } finally{ clearTimeout(t); }
+}
+
+/* Configuração padrão (padrão conhecido do Trek), usada se o Capabilities não abrir */
+function configPadrao(pasta, camada){
+  return {
+    modelo: `${BASE_TREK}/${pasta}/EQ/${camada.nome}/1.0.0/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.${camada.ext}`,
+    estilo: "default", conjunto: "default028mm",
+    rotulos: [0,1,2,3,4,5,6,7].map(String), largura0: 2, altura0: 1
+  };
+}
+
+/* Verifica se o tile 0/0/0 carrega como imagem (testa também o CORS) */
+function testarTile(cfg){
+  const url = cfg.modelo.replace(/\{style\}/i, cfg.estilo).replace("{TileMatrixSet}", cfg.conjunto)
+    .replace("{TileMatrix}", cfg.rotulos[0]).replace("{TileRow}", 0).replace("{TileCol}", 0);
+  return new Promise(ok => {
+    const img = new Image(); img.crossOrigin = "anonymous";
+    const t = setTimeout(() => ok(false), 10000);
+    img.onload = () => { clearTimeout(t); ok(true); };
+    img.onerror = () => { clearTimeout(t); ok(false); };
+    img.src = url;
+  });
+}
+
+/* Procura uma camada que funcione e a adiciona ao globo */
+async function adicionarImagem(v, a, minhaSeq){
+  for (let i = 0; i < a.camadas.length; i++){
+    const cam = a.camadas[i];
+    const cfg = (await lerCapabilities(a.pasta, cam)) || configPadrao(a.pasta, cam);
+    if (!(await testarTile(cfg))) continue;
+    if (minhaSeq !== seq) return true;                   // usuário já trocou de astro
+    const prov = new Cesium.WebMapTileServiceImageryProvider({
+      url: cfg.modelo, layer: cam.nome, style: cfg.estilo, format: "image/" + cam.ext,
+      tileMatrixSetID: cfg.conjunto, tileMatrixLabels: cfg.rotulos,
+      maximumLevel: cfg.rotulos.length - 1, tileWidth: 256, tileHeight: 256,
+      tilingScheme: new Cesium.GeographicTilingScheme({
+        ellipsoid: Cesium.Ellipsoid.default,
+        numberOfLevelZeroTilesX: cfg.largura0, numberOfLevelZeroTilesY: cfg.altura0 }),
+      credit: a.credito
+    });
+    v.imageryLayers.addImageryProvider(prov);
+    if (i > 0) avisar("A camada principal da NASA não respondeu; usando uma camada alternativa (relevo colorido).");
+    return true;
+  }
+  /* Nada funcionou: esfera cinza com grade de latitude/longitude */
+  v.imageryLayers.addImageryProvider(new Cesium.GridImageryProvider({
+    tilingScheme: new Cesium.GeographicTilingScheme({ellipsoid: Cesium.Ellipsoid.default}),
+    cells: 8, color: Cesium.Color.fromCssColorString("#6cb6ff"), glowColor: Cesium.Color.TRANSPARENT,
+    backgroundColor: Cesium.Color.fromCssColorString("#2a2f3d") }));
+  avisar("Não foi possível carregar as imagens da NASA agora. Os lugares continuam funcionando sobre uma esfera com grade.");
+  return false;
+}
+
+/* =====================================================================
+   CÂMERA
+   ===================================================================== */
+/* Altura da câmera para enxergar o astro inteiro, mesmo em tela vertical */
+function alturaInicio(){
+  const c = viewer.canvas, aspecto = c.clientWidth / Math.max(1, c.clientHeight);
+  /* fov vale para o maior lado da tela; o menor lado enxerga um ângulo menor */
+  const metade = Math.atan(Math.tan(viewer.camera.frustum.fov / 2) * Math.min(aspecto, 1 / aspecto));
+  return astro.raio * (1.15 / Math.sin(metade) - 1);
+}
+
+function visaoInicial(animar){
+  const destino = Cesium.Cartesian3.fromDegrees(0, 0, alturaInicio());
+  const orient = {heading: 0, pitch: -Cesium.Math.PI_OVER_TWO, roll: 0};
+  if (animar) viewer.camera.flyTo({destination: destino, orientation: orient, duration: 2});
+  else viewer.camera.setView({destination: destino, orientation: orient});
+}
+
+function voarPara(l){
+  const pos = Cesium.Cartesian3.fromDegrees(l.lon, l.lat, 0);
+  viewer.camera.flyToBoundingSphere(new Cesium.BoundingSphere(pos, 1), {
+    offset: new Cesium.HeadingPitchRange(0, -Cesium.Math.PI_OVER_TWO, l.alcance * 1000),
+    duration: 2.5 });
+}
+
+/* =====================================================================
+   MARCADORES E PAINEL
+   ===================================================================== */
+function criarMarcadores(){
+  for (const l of visiveis(astro)){
+    l.entidade = viewer.entities.add({
+      name: l.nome, position: Cesium.Cartesian3.fromDegrees(l.lon, l.lat, 0),
+      billboard: { image: imagemPino(l.tipo, false), width: 34, height: 42,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM },
+      label: { text: l.nome, font: "600 14px system-ui,sans-serif", fillColor: Cesium.Color.WHITE,
+        outlineColor: Cesium.Color.BLACK, outlineWidth: 4, style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        verticalOrigin: Cesium.VerticalOrigin.TOP, pixelOffset: new Cesium.Cartesian2(0, 4),
+        /* rótulos só aparecem quando a câmera está perto o bastante (evita poluição) */
+        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, astro.raio * 1.9) }
+    });
+    l.entidade._lugar = l;
+  }
+}
+
+function abrirInfo(l){
+  const t = TIPOS[l.tipo];
+  $("iNome").textContent = l.nome;
+  $("iTipo").textContent = t.rotulo; $("iTipo").style.background = t.cor;
+  $("iTamanho").textContent = l.tamanho;
+  $("iCoord").textContent = fmtCoord(l.lat, l.lon);
+  $("iCuriosidade").textContent = l.curiosidade;
+  $("iDetalhe").textContent = l.detalhe || ""; $("iDetalhe").hidden = $("iDetalheRot").hidden = !l.detalhe;
+  $("info").hidden = false;
+}
+
+function selecionar(l){
+  if (entidadeSel) entidadeSel.billboard.image = imagemPino(entidadeSel._lugar.tipo, false);
+  entidadeSel = l ? l.entidade : null;
+  if (l){ l.entidade.billboard.image = imagemPino(l.tipo, true); abrirInfo(l); }
+  else $("info").hidden = true;
+  if (viewer) viewer.scene.requestRender();
+}
+
+function irPara(l){ selecionar(l); voarPara(l); fecharLista(); }
+
+/* Lista de lugares agrupada por tipo */
+function montarLista(){
+  const sec = $("lista"); sec.innerHTML = "";
+  const fi = document.createElement("p"); fi.id = "filtroInfo"; fi.textContent = "Aula: " + filtroRotulo + " · "; sec.appendChild(fi);
+  const tr = document.createElement("button"); tr.className = "botao"; tr.textContent = "Trocar"; tr.style.cssText = "min-height:32px;padding:2px 10px";
+  tr.onclick = () => abrirAula(); fi.appendChild(tr);
+  for (const [chave, t] of Object.entries(TIPOS)){
+    const itens = visiveis(astro).filter(l => l.tipo === chave); if (!itens.length) continue;
+    const h = document.createElement("h2"); h.textContent = t.rotulo + "s"; sec.appendChild(h);
+    const ul = document.createElement("ul");
+    for (const l of itens){
+      const li = document.createElement("li"), b = document.createElement("button");
+      b.className = "item";
+      b.innerHTML = `<span class="pino" style="background:${t.cor}">${t.letra}</span><span></span>`;
+      b.lastChild.textContent = l.nome;
+      b.onclick = () => irPara(l);
+      li.appendChild(b); ul.appendChild(li);
+    }
+    sec.appendChild(ul);
+  }
+}
+function fecharLista(){ $("lista").hidden = true; $("btnLista").setAttribute("aria-expanded", "false"); }
+
+/* =====================================================================
+   CRIAÇÃO DO GLOBO (um novo Viewer por astro, pois o raio muda)
+   ===================================================================== */
+async function carregarAstro(a){
+  const minhaSeq = ++seq;
+  astro = a; entidadeSel = null;
+  $("carregando").classList.remove("some"); avisar(""); $("info").hidden = true; fecharLista();
+  if (viewer){ viewer.destroy(); viewer = null; }
+
+  /* Todos os cálculos do Cesium passam a usar o raio do astro escolhido */
+  const elipsoide = a.id === "lua" && Cesium.Ellipsoid.MOON ? Cesium.Ellipsoid.MOON
+                                                            : new Cesium.Ellipsoid(a.raio, a.raio, a.raio);
+  Cesium.Ellipsoid.default = elipsoide;
+
+  viewer = new Cesium.Viewer("mapa", {
+    baseLayer: false,                         // sem imagem do Cesium Ion
+    terrain: undefined, geocoder: false, baseLayerPicker: false, homeButton: false,
+    sceneModePicker: false, navigationHelpButton: false, animation: false, timeline: false,
+    fullscreenButton: false, infoBox: false, selectionIndicator: false,
+    scene3DOnly: true, skyBox: false, skyAtmosphere: false, requestRenderMode: true,
+    maximumRenderTimeChange: Infinity, creditContainer: $("creditoCesium"),
+    mapProjection: new Cesium.GeographicProjection(elipsoide),
+    globe: new Cesium.Globe(elipsoide)
+  });
+  const cena = viewer.scene;
+  cena.backgroundColor = Cesium.Color.BLACK;
+  cena.sun && (cena.sun.show = false); cena.moon && (cena.moon.show = false);
+  cena.fog.enabled = false;
+  cena.globe.enableLighting = false;          // imagem uniforme, sem sombra do Sol
+  cena.globe.showGroundAtmosphere = false;
+  cena.globe.baseColor = Cesium.Color.fromCssColorString("#2a2f3d");
+  cena.globe.depthTestAgainstTerrain = false;
+
+  /* Zoom/rotação: mouse e toque (arrastar = girar, pinça = zoom) */
+  const ctl = cena.screenSpaceCameraController;
+  ctl.minimumZoomDistance = a.raio * 0.01;
+  ctl.maximumZoomDistance = a.raio * 8;
+  ctl.enableTilt = true;
+
+  /* Toque/clique em um pino (área de toque ampliada para dedos) */
+  const mao = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
+  mao.setInputAction(e => {
+    const obj = cena.pick(e.position, 28, 28);
+    if (Cesium.defined(obj) && obj.id && obj.id._lugar) selecionar(obj.id._lugar);
+    else selecionar(null);
+  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+  criarMarcadores(); montarLista(); visaoInicial(false);
+  $("nomeVoltar").textContent = a.nome;
+  $("creditoImagem").textContent = a.credito;
+  document.querySelectorAll(".astro").forEach(b => b.setAttribute("aria-pressed", b.dataset.id === a.id));
+
+  await adicionarImagem(viewer, a, minhaSeq);
+  if (minhaSeq !== seq) return;
+  viewer.scene.requestRender();
+
+  /* Some a tela de carregamento quando os primeiros tiles chegarem (ou após 8 s) */
+  const esconder = () => $("carregando").classList.add("some");
+  const rem = cena.globe.tileLoadProgressEvent.addEventListener(n => { if (n === 0){ esconder(); rem(); } });
+  setTimeout(esconder, 8000);
+}
+
+/* =====================================================================
+   JANELA "QUAL AULA VOCÊ QUER VER?"
+   ===================================================================== */
+function descreverSemanas(ws){
+  return ws.map(w => `<b>Semana ${w.n}</b> (${fmtData(w.ini)} a ${fmtData(w.fim)}): ${w.titulo}`).join("<br>");
+}
+/* Transforma a escolha do seletor em {semanas, rotulo, aviso} */
+function resolverEscolha(v){
+  if (v === "todos") return {semanas:null, rotulo:"Todos os lugares", aviso:"Mostrando todos os lugares de todos os astros."};
+  if (v === "auto"){
+    const ws = semanasUltimos7();
+    if (!ws.length) return {semanas:null, rotulo:"Todos os lugares",
+      aviso:`Nenhuma aula nos últimos 7 dias (até ${fmtData(HOJE)}). Mostrando todos os lugares. As aulas vão de ${fmtData(SEMANAS[0].ini)} a ${fmtData(SEMANAS[SEMANAS.length-1].fim)}.`};
+    return {semanas:ws, rotulo:"Últimos 7 dias", aviso:"Aulas dos últimos 7 dias:<br>" + descreverSemanas(ws)};
+  }
+  const w = SEMANAS.find(x => "s" + x.n === v);
+  return {semanas:[w], rotulo:`Semana ${w.n}`, aviso:descreverSemanas([w])};
+}
+function abrirAula(){
+  const d = $("aula"); atualizarResumo(); if (!d.open) d.showModal();
+}
+function atualizarResumo(){ $("aulaResumo").innerHTML = resolverEscolha($("selAula").value).aviso; }
+function aplicarEscolha(v){
+  const r = resolverEscolha(v);
+  filtroSemanas = r.semanas; filtroRotulo = r.rotulo;
+  $("rotuloAula").textContent = r.rotulo; $("aula").close();
+  const alvo = astroDoFiltro() || astro || ASTROS[0];
+  carregarAstro(alvo);
+}
+function montarJanelaAula(){
+  const sel = $("selAula");
+  sel.innerHTML = '<option value="auto">Últimos 7 dias (automático)</option>' +
+    SEMANAS.map(w => `<option value="s${w.n}">Semana ${w.n} · ${fmtData(w.ini)} a ${fmtData(w.fim)} · ${w.titulo}</option>`).join("") +
+    '<option value="todos">Todos os lugares</option>';
+  const di = $("dataAula"); di.min = SEMANAS[0].ini; di.max = SEMANAS[SEMANAS.length-1].fim; di.value = "";
+  sel.onchange = () => { di.value = ""; atualizarResumo(); };
+  di.onchange = () => {                       // data -> semana que a contém
+    const w = di.value && semanaDaData(di.value);
+    if (w){ sel.value = "s" + w.n; atualizarResumo(); }
+    else $("aulaResumo").textContent = "Não há aula prevista nessa data (use as datas de " + fmtData(SEMANAS[0].ini) + " a " + fmtData(SEMANAS[SEMANAS.length-1].fim) + ").";
+  };
+  $("aulaOk").onclick = () => aplicarEscolha(sel.value);
+  $("aulaTodos").onclick = () => aplicarEscolha("todos");
+  $("btnAula").onclick = abrirAula;
+}
+
+/* =====================================================================
+   INICIALIZAÇÃO
+   ===================================================================== */
+function iniciar(){
+  if (typeof Cesium === "undefined"){
+    $("carregando").innerHTML = "Não foi possível carregar o mapa 3D (biblioteca Cesium). Verifique a internet e recarregue a página.";
+    return;
+  }
+  /* Botões de astro */
+  for (const a of ASTROS){
+    const b = document.createElement("button");
+    b.className = "astro"; b.dataset.id = a.id; b.textContent = `${a.emoji} ${a.nome}`;
+    b.setAttribute("aria-pressed", "false");
+    b.onclick = () => { if (a !== astro) carregarAstro(a); };
+    $("astros").appendChild(b);
+  }
+  $("btnLista").onclick = () => {
+    const abrir = $("lista").hidden; $("lista").hidden = !abrir;
+    $("btnLista").setAttribute("aria-expanded", String(abrir));
+  };
+  $("voltar").onclick = () => { selecionar(null); if (viewer) visaoInicial(true); };
+  $("fechar").onclick = () => selecionar(null);
+  document.addEventListener("keydown", e => { if (e.key === "Escape"){ selecionar(null); fecharLista(); } });
+  setTimeout(() => { $("dica").style.opacity = 0; }, 7000);
+
+  /* Início: filtro automático dos últimos 7 dias + janela com seletor */
+  montarJanelaAula();
+  const r0 = resolverEscolha("auto");
+  filtroSemanas = r0.semanas; filtroRotulo = r0.rotulo; $("rotuloAula").textContent = r0.rotulo;
+  try{ carregarAstro(astroDoFiltro() || ASTROS[0]); abrirAula(); }
+  catch(e){
+    $("carregando").textContent = "Seu navegador não conseguiu iniciar o 3D (WebGL). Tente outro navegador.";
+    console.error(e);
+  }
+}
+iniciar();
+</script>
+</body>
+</html>
