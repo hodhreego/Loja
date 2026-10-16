@@ -92,21 +92,6 @@
   #creditoCesium{display:inline}
   #creditoCesium *{display:inline!important;color:var(--suave)!important}
 
-  /* Janela inicial: escolha da aula (últimos 7 dias, semana ou data) */
-  dialog#aula{background:var(--painel);color:var(--texto);border:1px solid var(--borda);border-radius:16px;
-    padding:18px 18px 16px;width:min(94vw,460px);box-shadow:0 12px 40px #000c}
-  dialog#aula::backdrop{background:#000b}
-  dialog#aula h2{margin:0 0 6px;font-size:1.2rem}
-  dialog#aula label{display:block;margin:12px 0 4px;color:var(--suave);font-size:.85rem}
-  dialog#aula select,dialog#aula input{width:100%;min-height:44px;font:inherit;color:var(--texto);
-    background:var(--painel2);border:1px solid var(--borda);border-radius:10px;padding:8px 10px}
-  #aulaResumo{margin:12px 0 0;padding:10px 12px;background:var(--painel2);border-left:4px solid var(--azul);
-    border-radius:8px;font-size:.92rem;line-height:1.45}
-  .acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-  .acoes .botao{flex:1 1 140px}
-  .primario{background:var(--destaque)!important;color:#241a00!important;border-color:var(--destaque)!important}
-  #filtroInfo{margin:2px 4px 6px;font-size:.85rem;color:var(--suave)}
-
   /* Telas largas: gaveta e painel viram colunas laterais */
   @media (min-width:760px){
     #astros{flex:0 1 auto}
@@ -121,7 +106,6 @@
 
 <header id="barra">
   <h1>🪐 Mapa dos Astros</h1>
-  <button id="btnAula" class="botao" title="Escolher aula, semana ou data">📅 <span id="rotuloAula">Aula</span></button>
   <button id="btnLista" class="botao" aria-expanded="false" aria-controls="lista">Lista de lugares</button>
   <nav id="astros" aria-label="Escolha o astro"></nav>
 </header>
@@ -148,20 +132,6 @@
   <div id="dica">Arraste para girar · pinça (ou roda do mouse) para aproximar · toque nos pinos</div>
   <div id="carregando"><div><div style="font-size:3rem">🌙</div>Carregando…</div></div>
 </main>
-
-<dialog id="aula" aria-labelledby="aulaTitulo">
-  <h2 id="aulaTitulo">📅 Qual aula você quer ver?</h2>
-  <p class="pequeno" style="margin:0;color:var(--suave);font-size:.9rem">O mapa abre sozinho nos <b>últimos 7 dias</b> de aula. Você pode escolher outra semana ou data.</p>
-  <label for="selAula">Período</label>
-  <select id="selAula"></select>
-  <label for="dataAula">Ou escolha uma data</label>
-  <input type="date" id="dataAula">
-  <p id="aulaResumo" role="status"></p>
-  <div class="acoes">
-    <button id="aulaOk" class="botao primario">Ver no mapa</button>
-    <button id="aulaTodos" class="botao">Ver todos os lugares</button>
-  </div>
-</dialog>
 
 <footer id="creditos">
   <span id="creditoImagem"></span>
@@ -322,52 +292,6 @@ const ASTROS = [
   }
 ];
 
-/* ---------- Plano de aulas (mesmas semanas das folhas em atividades/) ----------
-   ini/fim: segunda a domingo (AAAA-MM-DD). "*" = todos os lugares do astro. */
-const MARES = ["Mar da Tranquilidade","Mar da Serenidade","Mar das Crises","Mar das Chuvas"];
-const APOLLOS = ["Apollo 11","Apollo 12","Apollo 14","Apollo 15","Apollo 16","Apollo 17"];
-const SEMANAS = [
-  {n:1, ini:"2026-10-19", fim:"2026-10-25", titulo:"Coordenadas e tamanhos", lugares:{lua:["Apollo 11","Apollo 12","Apollo 17","Tycho","Copérnico"]}},
-  {n:2, ini:"2026-10-26", fim:"2026-11-01", titulo:"Mares e terras altas", lugares:{lua:[...MARES,"Apollo 11","Apollo 16","Apollo 17"]}},
-  {n:3, ini:"2026-11-02", fim:"2026-11-08", titulo:"Crateras", lugares:{lua:["Tycho","Copérnico","Clavius"]}},
-  {n:4, ini:"2026-11-09", fim:"2026-11-15", titulo:"Missões Apollo", lugares:{lua:APOLLOS}},
-  {n:5, ini:"2026-11-16", fim:"2026-11-22", titulo:"Marte: o planeta vermelho", lugares:{marte:["Monte Olimpo (Olympus Mons)","Valles Marineris","Planície Hellas"]}},
-  {n:6, ini:"2026-11-23", fim:"2026-11-29", titulo:"Robôs em Marte", lugares:{marte:["Cratera Gale (Curiosity)","Cratera Jezero (Perseverance)","Viking 1","Mars Pathfinder"]}},
-  {n:7, ini:"2026-11-30", fim:"2026-12-06", titulo:"Mercúrio e Ceres", lugares:{mercurio:"*", ceres:"*"}},
-  {n:8, ini:"2026-12-07", fim:"2026-12-13", titulo:"Compare os mundos", lugares:{lua:["Apollo 11","Tycho"], marte:["Monte Olimpo (Olympus Mons)","Cratera Gale (Curiosity)"], mercurio:["Bacia Caloris"], ceres:["Cratera Occator"]}},
-  {n:9, ini:"2026-12-14", fim:"2026-12-20", titulo:"Missão final", lugares:{lua:"*", marte:"*", mercurio:"*", ceres:"*"}}
-];
-
-/* Filtro atual: null = todos os lugares; senão, lista de semanas */
-let filtroSemanas = null;
-let filtroRotulo = "Todos";
-
-/* Datas locais no formato AAAA-MM-DD (o parâmetro ?hoje=2026-11-12 serve para testar/demonstrar) */
-const isoLocal = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-const HOJE = (new URLSearchParams(location.search).get("hoje") || "").match(/^\d{4}-\d{2}-\d{2}$/)
-  ? new URLSearchParams(location.search).get("hoje") : isoLocal(new Date());
-function diasAntes(iso, n){ const [a,m,d] = iso.split("-").map(Number); return isoLocal(new Date(a, m-1, d-n)); }
-const fmtData = iso => iso.slice(8,10) + "/" + iso.slice(5,7);
-
-/* Semanas com aula nos últimos 7 dias (hoje e os 6 dias anteriores) */
-function semanasUltimos7(){ const ini = diasAntes(HOJE, 6); return SEMANAS.filter(w => w.ini <= HOJE && w.fim >= ini); }
-function semanaDaData(iso){ return SEMANAS.find(w => w.ini <= iso && iso <= w.fim) || null; }
-
-/* Lugares do astro permitidos pelo filtro (todos, se o filtro não cita o astro) */
-function visiveis(a){
-  if (!filtroSemanas) return a.lugares;
-  const citam = filtroSemanas.filter(w => w.lugares[a.id]);
-  if (!citam.length) return a.lugares;
-  if (citam.some(w => w.lugares[a.id] === "*")) return a.lugares;
-  const nomes = new Set(citam.flatMap(w => w.lugares[a.id]));
-  return a.lugares.filter(l => nomes.has(l.nome));
-}
-/* Primeiro astro que a aula usa (para abrir o mapa já nele) */
-function astroDoFiltro(){
-  if (!filtroSemanas) return null;
-  return ASTROS.find(a => filtroSemanas.some(w => w.lugares[a.id])) || null;
-}
-
 /* ---------- Estado e atalhos ---------- */
 const $ = id => document.getElementById(id);
 let viewer = null;          // visualizador Cesium atual
@@ -513,7 +437,7 @@ function voarPara(l){
    MARCADORES E PAINEL
    ===================================================================== */
 function criarMarcadores(){
-  for (const l of visiveis(astro)){
+  for (const l of astro.lugares){
     l.entidade = viewer.entities.add({
       name: l.nome, position: Cesium.Cartesian3.fromDegrees(l.lon, l.lat, 0),
       billboard: { image: imagemPino(l.tipo, false), width: 34, height: 42,
@@ -552,11 +476,8 @@ function irPara(l){ selecionar(l); voarPara(l); fecharLista(); }
 /* Lista de lugares agrupada por tipo */
 function montarLista(){
   const sec = $("lista"); sec.innerHTML = "";
-  const fi = document.createElement("p"); fi.id = "filtroInfo"; fi.textContent = "Aula: " + filtroRotulo + " · "; sec.appendChild(fi);
-  const tr = document.createElement("button"); tr.className = "botao"; tr.textContent = "Trocar"; tr.style.cssText = "min-height:32px;padding:2px 10px";
-  tr.onclick = () => abrirAula(); fi.appendChild(tr);
   for (const [chave, t] of Object.entries(TIPOS)){
-    const itens = visiveis(astro).filter(l => l.tipo === chave); if (!itens.length) continue;
+    const itens = astro.lugares.filter(l => l.tipo === chave); if (!itens.length) continue;
     const h = document.createElement("h2"); h.textContent = t.rotulo + "s"; sec.appendChild(h);
     const ul = document.createElement("ul");
     for (const l of itens){
@@ -635,52 +556,6 @@ async function carregarAstro(a){
 }
 
 /* =====================================================================
-   JANELA "QUAL AULA VOCÊ QUER VER?"
-   ===================================================================== */
-function descreverSemanas(ws){
-  return ws.map(w => `<b>Semana ${w.n}</b> (${fmtData(w.ini)} a ${fmtData(w.fim)}): ${w.titulo}`).join("<br>");
-}
-/* Transforma a escolha do seletor em {semanas, rotulo, aviso} */
-function resolverEscolha(v){
-  if (v === "todos") return {semanas:null, rotulo:"Todos os lugares", aviso:"Mostrando todos os lugares de todos os astros."};
-  if (v === "auto"){
-    const ws = semanasUltimos7();
-    if (!ws.length) return {semanas:null, rotulo:"Todos os lugares",
-      aviso:`Nenhuma aula nos últimos 7 dias (até ${fmtData(HOJE)}). Mostrando todos os lugares. As aulas vão de ${fmtData(SEMANAS[0].ini)} a ${fmtData(SEMANAS[SEMANAS.length-1].fim)}.`};
-    return {semanas:ws, rotulo:"Últimos 7 dias", aviso:"Aulas dos últimos 7 dias:<br>" + descreverSemanas(ws)};
-  }
-  const w = SEMANAS.find(x => "s" + x.n === v);
-  return {semanas:[w], rotulo:`Semana ${w.n}`, aviso:descreverSemanas([w])};
-}
-function abrirAula(){
-  const d = $("aula"); atualizarResumo(); if (!d.open) d.showModal();
-}
-function atualizarResumo(){ $("aulaResumo").innerHTML = resolverEscolha($("selAula").value).aviso; }
-function aplicarEscolha(v){
-  const r = resolverEscolha(v);
-  filtroSemanas = r.semanas; filtroRotulo = r.rotulo;
-  $("rotuloAula").textContent = r.rotulo; $("aula").close();
-  const alvo = astroDoFiltro() || astro || ASTROS[0];
-  carregarAstro(alvo);
-}
-function montarJanelaAula(){
-  const sel = $("selAula");
-  sel.innerHTML = '<option value="auto">Últimos 7 dias (automático)</option>' +
-    SEMANAS.map(w => `<option value="s${w.n}">Semana ${w.n} · ${fmtData(w.ini)} a ${fmtData(w.fim)} · ${w.titulo}</option>`).join("") +
-    '<option value="todos">Todos os lugares</option>';
-  const di = $("dataAula"); di.min = SEMANAS[0].ini; di.max = SEMANAS[SEMANAS.length-1].fim; di.value = "";
-  sel.onchange = () => { di.value = ""; atualizarResumo(); };
-  di.onchange = () => {                       // data -> semana que a contém
-    const w = di.value && semanaDaData(di.value);
-    if (w){ sel.value = "s" + w.n; atualizarResumo(); }
-    else $("aulaResumo").textContent = "Não há aula prevista nessa data (use as datas de " + fmtData(SEMANAS[0].ini) + " a " + fmtData(SEMANAS[SEMANAS.length-1].fim) + ").";
-  };
-  $("aulaOk").onclick = () => aplicarEscolha(sel.value);
-  $("aulaTodos").onclick = () => aplicarEscolha("todos");
-  $("btnAula").onclick = abrirAula;
-}
-
-/* =====================================================================
    INICIALIZAÇÃO
    ===================================================================== */
 function iniciar(){
@@ -705,11 +580,7 @@ function iniciar(){
   document.addEventListener("keydown", e => { if (e.key === "Escape"){ selecionar(null); fecharLista(); } });
   setTimeout(() => { $("dica").style.opacity = 0; }, 7000);
 
-  /* Início: filtro automático dos últimos 7 dias + janela com seletor */
-  montarJanelaAula();
-  const r0 = resolverEscolha("auto");
-  filtroSemanas = r0.semanas; filtroRotulo = r0.rotulo; $("rotuloAula").textContent = r0.rotulo;
-  try{ carregarAstro(astroDoFiltro() || ASTROS[0]); abrirAula(); }
+  try{ carregarAstro(ASTROS[0]); }
   catch(e){
     $("carregando").textContent = "Seu navegador não conseguiu iniciar o 3D (WebGL). Tente outro navegador.";
     console.error(e);
