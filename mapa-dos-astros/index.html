@@ -18,6 +18,7 @@
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/"}}</script>
 
 <!-- CesiumJS (versão fixa) via jsDelivr. Nenhum recurso do Cesium Ion é usado. -->
+<script>try{document.documentElement.dataset.tema=localStorage.getItem("mapa.tema")||"metro"}catch(e){document.documentElement.dataset.tema="metro"}</script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cesium@1.120.0/Build/Cesium/Widgets/widgets.css">
 <script src="https://cdn.jsdelivr.net/npm/cesium@1.120.0/Build/Cesium/Cesium.js"></script>
 
@@ -474,6 +475,68 @@
 
   body.imersivo #aviso{opacity:0;pointer-events:none}
   @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+
+  /* =====================================================================
+     TEMA METRO (padrão): leve, chapado, sem vidro, sem sombras e sem efeitos 3D
+     Estilo Windows 8 / RT: cores sólidas, quadrados, letras finas, azulejos coloridos
+     Troque para o "Vidro líquido" em Mapa e camadas > Aparência
+     ===================================================================== */
+  html[data-tema="metro"]{
+    --texto:#fff; --suave:#d0d0d0; --gold-light:#fff; --gold:#fff; --raio:0px; --suave-ease:ease-out; --seg:ease-out;
+    --metro-fundo:#1f1f1f; --metro-painel:#262626; --metro-cartao:#353535; --metro-hover:#444; --metro-ac:#2d89ef;
+    --sans:"Segoe UI","Segoe UI Variable","Selawik","Helvetica Neue",Arial,"Source Sans 3",sans-serif;
+    --serif:"Segoe UI Light","Segoe UI","Selawik","Helvetica Neue",Arial,"Source Sans 3",sans-serif;
+  }
+  html[data-tema="metro"] *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;text-shadow:none!important}
+  html[data-tema="metro"] .vidro::before,html[data-tema="metro"] .vidro::after{display:none!important}
+  html[data-tema="metro"] .vidro{background:var(--metro-painel)!important;background-image:none!important;box-shadow:none!important;border-radius:0!important;transition:opacity .15s,transform .2s}
+  html[data-tema="metro"] .vidro.denso{background:var(--metro-fundo)!important}
+  html[data-tema="metro"] :is(.btn,.campo,.cartao3d,.luacard,.trlinha,.passagem,.curiosidade,.dcard,.rotacard,.item,.interruptor,.miniaturas button,.abas,.aba,.rotasug button,.rotasav,.toast,.filtro,.tag,.selo,.vbarra,.cbarra,.vinfo,#cHora,#cInfo,#cAjustes,#cTrack,#dica,#creditos,#aviso,#iImg,#lImg,#camMidia,#rotaPerfil,.chave,.cpalco,.vpalco,.esfera,.pino,.dcard img.foto){
+    border-radius:0!important;box-shadow:none!important;background-image:none!important}
+  html[data-tema="metro"] button.vidro.redondo,html[data-tema="metro"] .redondo{border-radius:0!important}
+  /* botões */
+  html[data-tema="metro"] .btn{background:var(--metro-cartao)!important;font-weight:400;letter-spacing:.01em;transition:background .1s,transform .1s}
+  html[data-tema="metro"] .btn:hover{background:var(--metro-hover)!important}
+  html[data-tema="metro"] .btn:active{transform:scale(.96)}
+  html[data-tema="metro"] :is(.btn[aria-expanded="true"],.btn.ativo,.btn[aria-pressed="true"]){background:var(--metro-ac)!important;color:#fff}
+  html[data-tema="metro"] .btn.primario{background:#00a300!important;color:#fff;font-weight:600}
+  html[data-tema="metro"] button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  /* barra superior: azulejos coloridos */
+  html[data-tema="metro"] #barra{background:var(--metro-fundo)!important;gap:4px;padding:4px}
+  html[data-tema="metro"] #btnMenu{background:var(--metro-ac)!important;border-radius:0!important;box-shadow:none!important}
+  html[data-tema="metro"] #barra>.btn{background:var(--c,#2d89ef)!important;min-height:var(--alvo)}
+  html[data-tema="metro"] #btnCatalogo{--c:#2d89ef} html[data-tema="metro"] #btnCeu{--c:#7e3878} html[data-tema="metro"] #btnDados{--c:#00a300}
+  html[data-tema="metro"] #btnRota{--c:#da532c} html[data-tema="metro"] #btnObjetos{--c:#00aba9} html[data-tema="metro"] #btnLista{--c:#b91d47}
+  html[data-tema="metro"] #barra>.btn:hover{filter:brightness(1.12)}
+  html[data-tema="metro"] #barra>.btn[aria-expanded="true"]{box-shadow:inset 0 -4px 0 #fff!important;background:var(--c)!important}
+  html[data-tema="metro"] .marca b{font-weight:300;letter-spacing:0}
+  html[data-tema="metro"] .marca b em{color:#fff;font-weight:600}
+  /* botões redondos viram quadrados */
+  html[data-tema="metro"] #controles .btn{background:var(--metro-painel)!important}
+  html[data-tema="metro"] #controles .btn:hover{background:var(--metro-hover)!important}
+  /* painéis e textos */
+  html[data-tema="metro"] .painel{border-left:4px solid var(--metro-ac)}
+  html[data-tema="metro"] :is(h1,h2,h3){font-weight:300!important;letter-spacing:0}
+  html[data-tema="metro"] #cartao small,html[data-tema="metro"] .rotulo,html[data-tema="metro"] .rotaponto>label{color:#9dc7ff!important;font-weight:600;letter-spacing:.08em}
+  html[data-tema="metro"] .esfera{background:var(--c)!important;width:40px;height:40px}
+  html[data-tema="metro"] :is(.dcard,.rotacard,.item,.interruptor,.trlinha,.passagem,.curiosidade,.luacard){background:var(--metro-cartao)!important}
+  html[data-tema="metro"] :is(.item:hover,.rotacard:hover,.miniaturas button:hover){background:var(--metro-hover)!important}
+  html[data-tema="metro"] :is(.item[aria-current="true"],.rotacard[aria-pressed="true"],.filtro[aria-pressed="true"],.aba[aria-selected="true"]){background:var(--metro-ac)!important;box-shadow:none!important}
+  html[data-tema="metro"] .rotasav{background:#00a300!important}
+  html[data-tema="metro"] .campo{background:#3d3d3d!important;border:2px solid #6a6a6a;color:#fff}
+  html[data-tema="metro"] .campo:focus{border-color:var(--metro-ac);outline:0}
+  html[data-tema="metro"] :is(.abas,.filtro,.tag,.miniaturas button){background:var(--metro-cartao)!important}
+  html[data-tema="metro"] .selo{background:var(--metro-ac)!important;color:#fff}
+  html[data-tema="metro"] .chave{background:#6a6a6a!important}
+  html[data-tema="metro"] .chave[aria-pressed="true"],html[data-tema="metro"] [aria-pressed="true"]>.chave{background:var(--metro-ac)!important}
+  html[data-tema="metro"] .chave::after{background:#fff!important}
+  html[data-tema="metro"] #navTopo{background:var(--metro-ac)!important} html[data-tema="metro"] #navDist{color:#fff}
+  html[data-tema="metro"] .alca::after{border-radius:0}
+  html[data-tema="metro"] #aviso,html[data-tema="metro"] .toast{background:var(--metro-ac)!important}
+  html[data-tema="metro"] #cartao.vidro,html[data-tema="metro"] #info.vidro{background:var(--metro-painel)!important}
+  html[data-tema="metro"] #ui>*,html[data-tema="metro"] .painel{transition-duration:.15s!important}
+  html[data-tema="metro"] .chave::after{border-radius:0!important;box-shadow:none!important}
+  .chip-tema{min-width:120px}
 </style>
 </head>
 <body data-tela="media">
@@ -1797,6 +1860,11 @@ function montarCamadas(){
     if (extraPins.length) l2.appendChild(btnPeq("Limpar alfinetes ao vivo (" + extraPins.length + ")", () => limparExtras()));
     box.appendChild(l2);
   }
+  secao(box, "Aparência");
+  const tl = document.createElement("div"); tl.className = "linha-acoes"; const tema = document.documentElement.dataset.tema || "metro";
+  for (const [v, t] of [["metro", "Metro (leve)"], ["vidro", "Vidro líquido"]]){ const b = document.createElement("button"); b.className = "btn chip-tema"; b.textContent = t; b.setAttribute("aria-pressed", String(tema === v));
+    b.onclick = () => { document.documentElement.dataset.tema = v; guardar("mapa.tema", v); montarCamadas(); }; tl.appendChild(b); }
+  box.appendChild(tl);
   secao(box, "Nitidez da imagem");
   const nl = document.createElement("div"); nl.className = "linha-acoes";
   const nq = lerGuardado("mapa.nitidez", "auto");
