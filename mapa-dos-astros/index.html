@@ -272,6 +272,35 @@
   .estado{margin:4px 6px 2px;font-size:.84rem;color:var(--suave)}
   .estado .ok{color:#5eead4;font-weight:700} .estado .ruim{color:#ffb4a2;font-weight:700}
 
+  /* ---------- Mapa do céu ---------- */
+  #ceu{position:fixed;z-index:50;left:var(--gap);right:var(--gap);top:calc(var(--gap) + var(--alvo) + 28px + env(safe-area-inset-top));bottom:calc(var(--gap) + 40px + env(safe-area-inset-bottom));
+    display:flex;flex-direction:column;overflow:hidden;transition:transform .5s var(--suave-ease),opacity .3s,visibility 0s}
+  #ceu[hidden]{display:flex;opacity:0;pointer-events:none;visibility:hidden;transform:translateY(22px) scale(.97);transition:transform .4s var(--suave-ease),opacity .25s,visibility 0s .4s}
+  .cpalco{position:relative;flex:1;min-height:0;margin:0 12px 12px;border-radius:20px;overflow:hidden;background:#02040b;box-shadow:inset 0 0 0 .5px rgba(255,255,255,.18)}
+  #cCanvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+  #cCanvas:active{cursor:grabbing}
+  #atlas{position:absolute;inset:0;background:#000}
+  #atlas[hidden],#cCanvas[hidden]{display:none}
+  .cbarra{position:absolute;left:10px;right:10px;bottom:10px;display:flex;gap:6px;overflow-x:auto;padding:6px;border-radius:20px;z-index:3;scrollbar-width:none}
+  .cbarra::-webkit-scrollbar{display:none}
+  .cbarra .btn{flex:0 0 auto;min-height:36px;padding:0 12px;font-size:.82rem;border-radius:13px;white-space:nowrap}
+  .cbarra .campo{margin:0;min-height:36px;flex:0 0 150px;font-size:.82rem;border-radius:13px}
+  #cHora{position:absolute;right:10px;top:10px;padding:7px 12px;border-radius:14px;font-size:.78rem;line-height:1.35;z-index:3;text-align:right;color:var(--suave);pointer-events:none}
+  #cHora b{color:var(--texto);font-weight:600}
+  #cInfo{position:absolute;left:10px;top:10px;max-width:min(330px,calc(100% - 150px));padding:10px 14px;border-radius:16px;z-index:3;font-size:.86rem;line-height:1.45}
+  #cInfo[hidden],#cAjustes[hidden]{display:none}
+  #cInfo b{font-family:var(--serif);font-size:1.1rem;display:block}
+  #cInfo small{display:block;color:var(--suave)}
+  #cInfo .acoes{margin-top:8px}
+  #cAjustes{position:absolute;left:10px;right:10px;bottom:62px;max-height:62%;overflow:auto;padding:6px 14px 14px;border-radius:20px;z-index:4}
+  #cAjustes .campo{margin-top:6px}
+  #cAjustes input[type=range]{width:100%;margin:10px 0 2px;accent-color:#E9D48E}
+  #cAjustes .linha-acoes{margin:6px 0 0}
+
+  body[data-tela="compacta"] #cHora,body[data-tela="media"] #cHora,body[data-tela="relogio"] #cHora{left:10px;right:10px;text-align:left;padding:6px 12px}
+  body[data-tela="compacta"] #cInfo,body[data-tela="media"] #cInfo,body[data-tela="relogio"] #cInfo{top:76px;max-width:calc(100% - 20px)}
+  body[data-tela="compacta"] .marca b{display:none}
+
   /* ---------- Controles do mapa ---------- */
   #controles{position:fixed;z-index:25;right:var(--gap);top:calc(var(--gap) + var(--alvo) + 28px + env(safe-area-inset-top));display:flex;flex-direction:column;gap:10px}
 
@@ -335,7 +364,7 @@
   body[data-tela="paisagem"] .btn .rot{display:none}
   body[data-tela="paisagem"] #creditos{bottom:var(--gap);font-size:.66rem;padding:5px 11px}
   body[data-tela="paisagem"] #dica{display:none}
-  body[data-tela="paisagem"] #visor{top:calc(var(--gap) + var(--alvo) + 22px);bottom:calc(var(--gap) + 34px)}
+  body[data-tela="paisagem"] #ceu,body[data-tela="paisagem"] #visor{top:calc(var(--gap) + var(--alvo) + 22px);bottom:calc(var(--gap) + 34px)}
   body[data-tela="paisagem"] .vcorpo{grid-template-columns:minmax(200px,38%) 1fr}
   body[data-tela="paisagem"] .vtopo h3{display:none}
 
@@ -358,7 +387,7 @@
   body[data-tela="relogio"] #creditos{left:50%;transform:translateX(-50%);bottom:2.2%;max-width:78vw;font-size:8px;padding:3px 9px;text-align:center;border-radius:12px}
   body.imersivo[data-tela="relogio"] #creditos{opacity:.45}
   body[data-tela="relogio"] #dica,body[data-tela="relogio"] #aviso{display:none}
-  body[data-tela="relogio"] #visor{left:3%;right:3%;top:10%;bottom:4%;border-radius:36px}
+  body[data-tela="relogio"] #ceu,body[data-tela="relogio"] #visor{left:3%;right:3%;top:10%;bottom:4%;border-radius:36px}
   body[data-tela="relogio"] .vcorpo{grid-template-columns:1fr;grid-template-rows:52% 1fr;padding:0 10px 10px}
   body[data-tela="relogio"] .vlado{order:2}
   body[data-tela="relogio"] .vtopo h3,body[data-tela="relogio"] .vbarra .btn span{display:none}
@@ -394,6 +423,9 @@
     <button id="btnCatalogo" class="btn" aria-expanded="false" aria-controls="catalogo" aria-label="Astros">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg>
       <span class="rot">Astros</span></button>
+    <button id="btnCeu" class="btn" aria-expanded="false" aria-controls="ceu" aria-label="Mapa do céu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 4.6 4.9.4-3.7 3.2 1.1 4.8L12 13.4 7.8 16l1.1-4.8L5.2 8l4.9-.4z"/><path d="M19 17.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6zM4.5 3.5l.5 1.1 1.1.5-1.1.5-.5 1.1-.5-1.1L2.9 5.1l1.1-.5z" stroke-width="1.4"/></svg>
+      <span class="rot">Céu</span></button>
     <button id="btnObjetos" class="btn" aria-expanded="false" aria-controls="visor" aria-label="Objetos 3D">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2.5 8.5 4.8v9.4L12 21.5l-8.5-4.8V7.3z"/><path d="m3.5 7.3 8.5 4.8 8.5-4.8M12 12.1v9.4"/></svg>
       <span class="rot">Objetos 3D</span></button>
@@ -446,6 +478,23 @@
     <header><h3>Avisos e lembretes</h3></header>
     <div class="corpo" id="avCorpo"></div>
   </aside>
+
+  <section id="ceu" class="vidro denso" hidden aria-label="Mapa do céu">
+    <div class="alca" id="alcaCeu"></div>
+    <header class="vtopo">
+      <h3>Mapa do céu</h3>
+      <div class="abas" id="cAbas" role="tablist"></div>
+      <button id="cFechar" class="btn vidro redondo" aria-label="Fechar o mapa do céu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </header>
+    <div class="cpalco" id="cPalco">
+      <canvas id="cCanvas" aria-label="Planetário: arraste para olhar ao redor, use a pinça para aproximar"></canvas>
+      <div id="atlas" hidden></div>
+      <div id="cHora" class="vidro"></div>
+      <div id="cInfo" class="vidro" hidden></div>
+      <div id="cAjustes" class="vidro denso" hidden></div>
+      <div id="cBarra" class="cbarra vidro"></div>
+    </div>
+  </section>
 
   <section id="visor" class="vidro denso" hidden aria-label="Objetos 3D">
     <div class="alca" id="alcaVisor"></div>
@@ -1175,7 +1224,7 @@ function fecharPaineis(){
   for (const [p, b] of [["catalogo","btnCatalogo"],["lista","btnLista"],["camadas","btnCamadas"],["avisos","btnAvisos"]]){ $(p).hidden = true; $(b).setAttribute("aria-expanded","false"); }
 }
 function alternar(p, b){
-  const abrir = $(p).hidden; fecharPaineis(); if (!$("visor").hidden) fecharVisor();
+  const abrir = $(p).hidden; fecharPaineis(); if (!$("visor").hidden) fecharVisor(); if (!$("ceu").hidden) fecharCeu();
   if (abrir){ $(p).hidden = false; $(b).setAttribute("aria-expanded","true"); }
 }
 let abaAtual = "planetas";
@@ -1812,7 +1861,7 @@ function montarLadoVisor(){
   }
 }
 function abrirVisor(){
-  fecharPaineis(); $("visor").hidden = false; $("btnObjetos").setAttribute("aria-expanded", "true");
+  fecharPaineis(); if (!$("ceu").hidden) fecharCeu(); $("visor").hidden = false; $("btnObjetos").setAttribute("aria-expanded", "true");
   if (!$("vAbas").children.length){ montarAbasVisor(); montarLadoVisor(); }
   if (cenaT && !$("vThree").hidden) cenaT.ativa = true;
 }
@@ -2106,6 +2155,314 @@ function montarAvisos(){
 }
 
 /* =====================================================================
+   MAPA DO CÉU
+   1) Planetário: estrelas (catálogo de d3-celestial, até magnitude 6), constelações, Via Láctea,
+      Sol, Lua e planetas (astronomy-engine), para o local e a hora escolhidos. Arraste, use a pinça,
+      ou aponte o celular para o céu (giroscópio).
+   2) Atlas: Aladin Lite (CDS) com fotografias do céu inteiro em vários comprimentos de onda,
+      e busca automática de imagens do Observatório Vera C. Rubin.
+   ===================================================================== */
+const DADOS_CEU = "https://cdn.jsdelivr.net/gh/ofrohn/d3-celestial@master/data/";
+const AE_SRC = "https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js";
+const ALADIN_SRC = "https://aladin.cds.unistra.fr/AladinLite/api/v3/latest/aladin.js";
+const CONST_PT = {And:"Andrômeda",Ant:"Máquina Pneumática",Aps:"Ave-do-Paraíso",Aqr:"Aquário",Aql:"Águia",Ara:"Altar",Ari:"Áries",Aur:"Cocheiro",Boo:"Boieiro",Cae:"Cinzel",Cam:"Girafa",Cnc:"Câncer",CVn:"Cães de Caça",CMa:"Cão Maior",CMi:"Cão Menor",Cap:"Capricórnio",Car:"Carina",Cas:"Cassiopeia",Cen:"Centauro",Cep:"Cefeu",Cet:"Baleia",Cha:"Camaleão",Cir:"Compasso",Col:"Pomba",Com:"Cabeleira de Berenice",CrA:"Coroa Austral",CrB:"Coroa Boreal",Crv:"Corvo",Crt:"Taça",Cru:"Cruzeiro do Sul",Cyg:"Cisne",Del:"Golfinho",Dor:"Dourado",Dra:"Dragão",Equ:"Cavalinho",Eri:"Erídano",For:"Fornalha",Gem:"Gêmeos",Gru:"Grou",Her:"Hércules",Hor:"Relógio",Hya:"Hidra",Hyi:"Hidra Macho",Ind:"Índio",Lac:"Lagarto",Leo:"Leão",LMi:"Leão Menor",Lep:"Lebre",Lib:"Libra",Lup:"Lobo",Lyn:"Lince",Lyr:"Lira",Men:"Mesa",Mic:"Microscópio",Mon:"Unicórnio",Mus:"Mosca",Nor:"Esquadro",Oct:"Octante",Oph:"Ofiúco",Ori:"Órion",Pav:"Pavão",Peg:"Pégaso",Per:"Perseu",Phe:"Fênix",Pic:"Pintor",Psc:"Peixes",PsA:"Peixe Austral",Pup:"Popa",Pyx:"Bússola",Ret:"Retículo",Sge:"Flecha",Sgr:"Sagitário",Sco:"Escorpião",Scl:"Escultor",Sct:"Escudo",Ser:"Serpente",Sex:"Sextante",Tau:"Touro",Tel:"Telescópio",Tri:"Triângulo",TrA:"Triângulo Austral",Tuc:"Tucano",UMa:"Ursa Maior",UMi:"Ursa Menor",Vel:"Vela",Vir:"Virgem",Vol:"Peixe-Voador",Vul:"Raposa"};
+/* Reserva se os dados online não carregarem: as estrelas mais brilhantes (ascensão reta e declinação em graus, J2000) */
+const ESTRELAS_BASICAS = [["Sirius",101.287,-16.716,-1.46,"CMa"],["Canopus",95.988,-52.696,-0.74,"Car"],["Arcturus",213.915,19.182,-0.05,"Boo"],["Alfa do Centauro",219.9,-60.835,-0.01,"Cen"],["Vega",279.234,38.784,0.03,"Lyr"],
+  ["Capela",79.172,45.998,0.08,"Aur"],["Rigel",78.634,-8.202,0.13,"Ori"],["Procyon",114.825,5.225,0.34,"CMi"],["Betelgeuse",88.793,7.407,0.5,"Ori"],["Achernar",24.429,-57.237,0.46,"Eri"],["Hadar",210.956,-60.373,0.61,"Cen"],
+  ["Altair",297.696,8.868,0.76,"Aql"],["Acrux",186.65,-63.099,0.77,"Cru"],["Aldebaran",68.98,16.509,0.85,"Tau"],["Antares",247.352,-26.432,0.96,"Sco"],["Spica",201.298,-11.161,0.98,"Vir"],["Pollux",116.329,28.026,1.14,"Gem"],
+  ["Fomalhaut",344.413,-29.622,1.16,"PsA"],["Deneb",310.358,45.28,1.25,"Cyg"],["Mimosa",191.93,-59.689,1.25,"Cru"],["Regulus",152.093,11.967,1.35,"Leo"],["Adhara",104.656,-28.972,1.5,"CMa"],["Castor",113.65,31.889,1.58,"Gem"],
+  ["Gacrux",187.791,-57.113,1.64,"Cru"],["Shaula",263.402,-37.104,1.62,"Sco"],["Bellatrix",81.283,6.35,1.64,"Ori"],["Elnath",81.573,28.608,1.65,"Tau"],["Miaplacidus",138.3,-69.717,1.67,"Car"],["Alnilam",84.053,-1.202,1.69,"Ori"],["Polaris",37.955,89.264,1.98,"UMi"],["Imai",183.786,-58.749,2.8,"Cru"]];
+const CEU = { dados: null, estrelas: [], nomes: {}, linhas: [], rotulos: [], mw: [], aba: "planetario", az: 180, alt: 40, fov: 100, delta: 0, sujo: false, sel: null, hits: [], giro: false, aladin: null, aladinPronto: null, rubin: null, ae: null,
+  opt: Object.assign({const: true, nomes: true, mw: true, grade: false, planetas: true, realista: false, abaixo: true}, (() => { try{ return JSON.parse(localStorage.getItem("mapa.ceu") || "{}"); }catch(e){ return {}; } })()) };
+const vetEq = (raGraus, decGraus) => { const a = raGraus * RAD, d = decGraus * RAD; return [Math.cos(d) * Math.cos(a), Math.cos(d) * Math.sin(a), Math.sin(d)]; };
+const bvCor = bv => { const t = Math.max(0, Math.min(1, (bv + 0.4) / 2.4)), pts = [[155, 176, 255], [202, 215, 255], [255, 244, 234], [255, 210, 161], [255, 160, 90]], x = t * 4, i = Math.min(3, Math.floor(x)), f = x - i;
+  return pts[i].map((c, k) => Math.round(c + (pts[i + 1][k] - c) * f)); };
+const guardarCeu = () => guardar("mapa.ceu", JSON.stringify(CEU.opt));
+const carregarScript = src => new Promise((ok, err) => { const sc = document.createElement("script"); sc.src = src; sc.onload = ok; sc.onerror = err; document.head.appendChild(sc); });
+const lerJson = async f => { const r = await comTempo(25000, sg => fetch(DADOS_CEU + f, {signal: sg})); if (!r.ok) throw new Error(f); return r.json(); };
+
+async function carregarDadosCeu(){
+  if (CEU.dados) return CEU.dados;
+  try{
+    const [st, nm, ln, cn, mw] = await Promise.all([lerJson("stars.6.json"), lerJson("starnames.json"), lerJson("constellations.lines.json"), lerJson("constellations.json"), lerJson("mw.json").catch(() => null)]);
+    CEU.estrelas = st.features.map(f => { const [lo, la] = f.geometry.coordinates, ra = lo < 0 ? lo + 360 : lo, n = nm[f.id] || {};
+      return {v: vetEq(ra, la), ra, dec: la, mag: +f.properties.mag, bv: parseFloat(f.properties.bv) || 0.5, nome: (n.name || "").trim(), cons: n.c || "", hip: f.id}; });
+    CEU.linhas = ln.features.map(f => ({id: f.id, seg: f.geometry.coordinates.map(l => l.map(([lo, la]) => vetEq(lo < 0 ? lo + 360 : lo, la)))}));
+    CEU.rotulos = cn.features.filter(f => f.geometry && f.geometry.type === "Point").map(f => { const [lo, la] = f.geometry.coordinates; return {id: f.id, nome: CONST_PT[f.id] || (f.properties && f.properties.name) || f.id, v: vetEq(lo < 0 ? lo + 360 : lo, la)}; });
+    if (mw) CEU.mw = mw.features.flatMap(f => (f.geometry.type === "MultiPolygon" ? f.geometry.coordinates : [f.geometry.coordinates]).flatMap(poly => poly.map(anel => anel.filter((_, i) => i % 2 === 0).map(([lo, la]) => vetEq(lo < 0 ? lo + 360 : lo, la)))));
+    CEU.dados = "completo";
+  }catch(e){
+    CEU.estrelas = ESTRELAS_BASICAS.map(([n, ra, dec, mag, c]) => ({v: vetEq(ra, dec), ra, dec, mag, bv: 0.4, nome: n, cons: c}));
+    CEU.linhas = [{id: "Cru", seg: [[vetEq(186.65, -63.099), vetEq(187.791, -57.113)], [vetEq(191.93, -59.689), vetEq(183.786, -58.749)]]}];
+    CEU.rotulos = [{id: "Cru", nome: "Cruzeiro do Sul", v: vetEq(187.5, -60)}]; CEU.mw = []; CEU.dados = "basico";
+  }
+  if (!window.Astronomy){ try{ await carregarScript(AE_SRC); }catch(e){} }
+  return CEU.dados;
+}
+
+/* ---------- Tempo, local e posição dos astros ---------- */
+const ceuData = () => new Date(Date.now() + CEU.delta);
+function ceuLocal(){ return av.lat !== null ? {lat: av.lat, lon: av.lon, rotulo: av.rotulo || "Meu local"} : {lat: -15.79, lon: -47.88, rotulo: "Brasília (exemplo)"}; }
+function lstGraus(d, lon){ const jd = d.getTime() / 864e5 + 2440587.5, T = (jd - 2451545) / 36525;
+  const g = 280.46061837 + 360.98564736629 * (jd - 2451545) + 0.000387933 * T * T; return (((g + lon) % 360) + 360) % 360; }
+/* Matriz J2000 -> horizonte local (leste, norte, zênite), já com a precessão dos equinócios (Meeus, cap. 21) */
+function matrizHorizonte(d, lat, lon){
+  const T = ((d.getTime() / 864e5 + 2440587.5) - 2451545) / 36525, as = Math.PI / 648000;
+  const zt = (2306.2181 * T + 0.30188 * T * T + 0.017998 * T * T * T) * as, zz = (2306.2181 * T + 1.09468 * T * T + 0.018203 * T * T * T) * as, th = (2004.3109 * T - 0.42665 * T * T - 0.041833 * T * T * T) * as;
+  const cz = Math.cos(zt), sz = Math.sin(zt), cZ = Math.cos(zz), sZ = Math.sin(zz), ct = Math.cos(th), st = Math.sin(th);
+  const P = [[cz * cZ * ct - sz * sZ, -sz * cZ * ct - cz * sZ, -cZ * st], [cz * sZ * ct + sz * cZ, -sz * sZ * ct + cz * cZ, -sZ * st], [cz * st, -sz * st, ct]];
+  const L = lstGraus(d, lon) * RAD, p = lat * RAD, sl = Math.sin(L), cl = Math.cos(L), sp = Math.sin(p), cp = Math.cos(p);
+  const R = [[-sl, cl, 0], [-sp * cl, -sp * sl, cp], [cp * cl, cp * sl, sp]];
+  const C = R.map(r => [0, 1, 2].map(j => r[0] * P[0][j] + r[1] * P[1][j] + r[2] * P[2][j]));
+  return {C};
+}
+const enu = (v, m) => [m.C[0][0] * v[0] + m.C[0][1] * v[1] + m.C[0][2] * v[2], m.C[1][0] * v[0] + m.C[1][1] * v[1] + m.C[1][2] * v[2], m.C[2][0] * v[0] + m.C[2][1] * v[1] + m.C[2][2] * v[2]];
+const altAz = e => ({alt: Math.asin(Math.max(-1, Math.min(1, e[2]))) / RAD, az: ((Math.atan2(e[0], e[1]) / RAD) + 360) % 360});
+const CORPOS = [["Sun", "Sol", "#ffd45e", 0], ["Moon", "Lua", "#f4ecd0", 0], ["Mercury", "Mercúrio", "#b9b2a8", 3], ["Venus", "Vênus", "#fff2c9", 4.2], ["Mars", "Marte", "#ff8a65", 3.6],
+  ["Jupiter", "Júpiter", "#f3dfbd", 4.6], ["Saturn", "Saturno", "#e8d29a", 3.8], ["Uranus", "Urano", "#9be4ec", 2.8], ["Neptune", "Netuno", "#7da5ff", 2.6]];
+function posCorpos(d){
+  const l = ceuLocal(), out = [];
+  for (const [id, nome, cor, r] of CORPOS){
+    let ra, dec;
+    try{
+      if (window.Astronomy){ const e = Astronomy.Equator(id, d, new Astronomy.Observer(l.lat, l.lon, 0), false, true); ra = e.ra * 15; dec = e.dec; }
+      else if (id === "Sun"){ const sv = sunVec(d); ra = ((Math.atan2(sv[1], sv[0]) / RAD) + 360) % 360; dec = Math.asin(sv[2]) / RAD; }
+      else continue;
+    }catch(e){ continue; }
+    out.push({id, nome, cor, r, ra, dec, v: vetEq(ra, dec), tipo: id === "Sun" ? "Estrela (o Sol)" : id === "Moon" ? "Satélite natural da Terra" : "Planeta"});
+  }
+  return out;
+}
+const ceuCamera = () => { const a = CEU.az * RAD, h = CEU.alt * RAD, ca = Math.cos(a), sa = Math.sin(a), ch = Math.cos(h), sh = Math.sin(h);
+  return {f: [ch * sa, ch * ca, sh], r: [ca, -sa, 0], u: [-sh * sa, -sh * ca, ch]}; };
+
+/* ---------- Desenho ---------- */
+function desenharCeu(){
+  CEU.sujo = false;
+  const cv = $("cCanvas"); if (!cv || cv.hidden || !CEU.estrelas.length) return;
+  const w = cv.clientWidth, h = cv.clientHeight; if (!w || !h) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2); if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)){ cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+  const g = cv.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const d = ceuData(), l = ceuLocal(), m = matrizHorizonte(d, l.lat, l.lon), cam = ceuCamera();
+  const S = (Math.min(w, h) / 2) / (2 * Math.tan(CEU.fov * RAD / 4)), cx = w / 2, cy = h / 2, o = CEU.opt;
+  const proj = e => { const zf = e[0] * cam.f[0] + e[1] * cam.f[1] + e[2] * cam.f[2]; if (zf <= -0.9) return null;
+    const k = 2 / (1 + zf); return [cx + S * k * (e[0] * cam.r[0] + e[1] * cam.r[1]), cy - S * k * (e[0] * cam.u[0] + e[1] * cam.u[1] + e[2] * cam.u[2])]; };
+  const corpos = o.planetas ? posCorpos(d) : []; const sol = corpos.find(c => c.id === "Sun") || (window.Astronomy ? null : null);
+  const solAlt = altAz(enu((sol || {v: sunVec(d)}).v, m)).alt;
+  /* fundo: céu escuro; no modo realista, o azul do dia e do crepúsculo */
+  const dia = o.realista ? Math.max(0, Math.min(1, (solAlt + 12) / 14)) : 0, vis = 1 - dia;
+  const gr = g.createLinearGradient(0, 0, 0, h);
+  gr.addColorStop(0, `rgb(${Math.round(3 + 70 * dia)},${Math.round(6 + 120 * dia)},${Math.round(16 + 190 * dia)})`); gr.addColorStop(1, `rgb(${Math.round(8 + 120 * dia)},${Math.round(16 + 150 * dia)},${Math.round(40 + 190 * dia)})`);
+  g.fillStyle = gr; g.fillRect(0, 0, w, h);
+  const hits = []; const esc = Math.max(0.85, Math.min(2.6, Math.sqrt(100 / CEU.fov)));
+  /* Via Láctea */
+  if (o.mw && CEU.mw.length && vis > 0.15){
+    g.fillStyle = `rgba(190,205,255,${(0.05 * vis).toFixed(3)})`;
+    for (const anel of CEU.mw){ let ini = false; g.beginPath();
+      for (const v of anel){ const e = enu(v, m), q = proj(e); if (!q) continue; ini ? g.lineTo(q[0], q[1]) : (g.moveTo(q[0], q[1]), ini = true); }
+      g.closePath(); g.fill(); }
+  }
+  /* grade de altura e azimute */
+  if (o.grade){
+    g.strokeStyle = "rgba(120,170,255,.22)"; g.lineWidth = 1;
+    for (const alt of [15, 30, 45, 60, 75]){ g.beginPath(); let a0 = false; for (let az = 0; az <= 360; az += 6){ const q = proj([Math.sin(az * RAD) * Math.cos(alt * RAD), Math.cos(az * RAD) * Math.cos(alt * RAD), Math.sin(alt * RAD)]); if (!q){ a0 = false; continue; } a0 ? g.lineTo(q[0], q[1]) : (g.moveTo(q[0], q[1]), a0 = true); } g.stroke(); }
+    for (let az = 0; az < 360; az += 30){ g.beginPath(); let a0 = false; for (let alt = 0; alt <= 90; alt += 5){ const q = proj([Math.sin(az * RAD) * Math.cos(alt * RAD), Math.cos(az * RAD) * Math.cos(alt * RAD), Math.sin(alt * RAD)]); if (!q){ a0 = false; continue; } a0 ? g.lineTo(q[0], q[1]) : (g.moveTo(q[0], q[1]), a0 = true); } g.stroke(); }
+  }
+  /* constelações */
+  if (o.const){
+    g.strokeStyle = `rgba(122,165,255,${(0.42 * (0.4 + 0.6 * vis)).toFixed(2)})`; g.lineWidth = 1.1; g.beginPath();
+    for (const c of CEU.linhas) for (const seg of c.seg){ let a0 = false; for (const v of seg){ const q = proj(enu(v, m)); if (!q){ a0 = false; continue; } a0 ? g.lineTo(q[0], q[1]) : (g.moveTo(q[0], q[1]), a0 = true); } }
+    g.stroke();
+    g.fillStyle = `rgba(180,200,255,${(0.6 * vis).toFixed(2)})`; g.font = "600 11px 'Source Sans 3',sans-serif"; g.textAlign = "center";
+    for (const c of CEU.rotulos){ const e = enu(c.v, m), q = proj(e); if (q && q[0] > 0 && q[0] < w && q[1] > 0 && q[1] < h && (e[2] > -0.1 || o.abaixo)) g.fillText(c.nome.toUpperCase(), q[0], q[1]); }
+  }
+  /* horizonte e pontos cardeais */
+  g.strokeStyle = "rgba(233,212,142,.55)"; g.lineWidth = 1.6; g.beginPath(); let a0 = false;
+  for (let az = 0; az <= 360; az += 3){ const q = proj([Math.sin(az * RAD), Math.cos(az * RAD), 0]); if (!q){ a0 = false; continue; } a0 ? g.lineTo(q[0], q[1]) : (g.moveTo(q[0], q[1]), a0 = true); } g.stroke();
+  g.fillStyle = "#E9D48E"; g.font = "700 14px 'Source Sans 3',sans-serif"; g.textAlign = "center";
+  [["N", 0], ["NE", 45], ["L", 90], ["SE", 135], ["S", 180], ["SO", 225], ["O", 270], ["NO", 315]].forEach(([t, az]) => { const q = proj([Math.sin(az * RAD) * Math.cos(3 * RAD), Math.cos(az * RAD) * Math.cos(3 * RAD), Math.sin(3 * RAD)]); if (q) g.fillText(t, q[0], q[1] - 6); });
+  /* estrelas */
+  const limNome = CEU.fov < 40 ? 4.2 : CEU.fov < 80 ? 3 : 2.3;
+  for (const s of CEU.estrelas){
+    const e = enu(s.v, m); if (e[2] < 0 && !o.abaixo) continue;
+    const q = proj(e); if (!q || q[0] < -10 || q[0] > w + 10 || q[1] < -10 || q[1] > h + 10) continue;
+    const r = Math.max(0.55, (6.9 - s.mag) * 0.5 * esc), a = (e[2] < 0 ? 0.16 : 1) * (s.mag < 1 ? 1 : Math.max(0, 1 - dia * (1 + (s.mag) * 0.35))), [R, G, B] = bvCor(s.bv);
+    if (a <= 0.01) continue;
+    if (s.mag < 1.8){ const gl = g.createRadialGradient(q[0], q[1], 0, q[0], q[1], r * 4); gl.addColorStop(0, `rgba(${R},${G},${B},${(0.5 * a).toFixed(2)})`); gl.addColorStop(1, `rgba(${R},${G},${B},0)`); g.fillStyle = gl; g.beginPath(); g.arc(q[0], q[1], r * 4, 0, 7); g.fill(); }
+    g.fillStyle = `rgba(${R},${G},${B},${a.toFixed(2)})`; g.beginPath(); g.arc(q[0], q[1], r, 0, 7); g.fill();
+    if (s.mag < 4.2 || s.nome) hits.push({x: q[0], y: q[1], r: Math.max(12, r + 6), o: {tipo: "Estrela", nome: s.nome || ("Estrela" + (s.hip ? " HIP " + s.hip : "")), mag: s.mag, cons: s.cons, ra: s.ra, dec: s.dec, v: s.v}});
+    if (o.nomes && s.nome && s.mag < limNome && e[2] > -0.05 && vis > 0.2){ g.fillStyle = `rgba(235,240,255,${(0.85 * a).toFixed(2)})`; g.font = "500 11.5px 'Source Sans 3',sans-serif"; g.textAlign = "left"; g.fillText(s.nome, q[0] + r + 4, q[1] + 3); }
+  }
+  /* Sol, Lua e planetas */
+  for (const c of corpos){
+    const e = enu(c.v, m); if (e[2] < 0 && !o.abaixo) continue; const q = proj(e); if (!q) continue; const a = e[2] < 0 ? 0.35 : 1;
+    g.globalAlpha = a;
+    if (c.id === "Sun"){ const gl = g.createRadialGradient(q[0], q[1], 0, q[0], q[1], 34); gl.addColorStop(0, "rgba(255,226,120,.95)"); gl.addColorStop(.25, "rgba(255,200,80,.5)"); gl.addColorStop(1, "rgba(255,180,60,0)"); g.fillStyle = gl; g.beginPath(); g.arc(q[0], q[1], 34, 0, 7); g.fill(); g.fillStyle = "#fff3c4"; g.beginPath(); g.arc(q[0], q[1], 9, 0, 7); g.fill(); }
+    else if (c.id === "Moon"){ let fase = faseAtual(d).frac; try{ if (window.Astronomy) fase = Astronomy.MoonPhase(d) / 360; }catch(er){}
+      const rr = 11 * Math.max(1, esc * 0.8), k = (1 - Math.cos(2 * Math.PI * fase)) / 2, rx = Math.abs(rr * (1 - 2 * k)), dir = fase < .5 ? 1 : -1, ghb = k > .5;
+      g.fillStyle = "rgba(40,50,80,.85)"; g.beginPath(); g.arc(q[0], q[1], rr, 0, 7); g.fill(); g.fillStyle = "#f6efd2"; g.beginPath();
+      g.arc(q[0], q[1], rr, -Math.PI / 2, Math.PI / 2, dir < 0); g.ellipse(q[0], q[1], rx, rr, 0, Math.PI / 2, -Math.PI / 2, dir > 0 ? !ghb : ghb); g.closePath(); g.fill();
+      g.strokeStyle = "rgba(255,255,255,.45)"; g.lineWidth = 1; g.beginPath(); g.arc(q[0], q[1], rr, 0, 7); g.stroke(); }
+    else { g.fillStyle = c.cor; g.shadowColor = c.cor; g.shadowBlur = 8; g.beginPath(); g.arc(q[0], q[1], c.r * Math.max(1, esc * 0.7), 0, 7); g.fill(); g.shadowBlur = 0; }
+    g.globalAlpha = 1; g.fillStyle = "#fff"; g.font = "700 12px 'Source Sans 3',sans-serif"; g.textAlign = "left"; g.fillText(c.nome, q[0] + 13, q[1] + 4);
+    hits.push({x: q[0], y: q[1], r: 20, o: c});
+  }
+  CEU.hits = hits;
+  if (CEU.sel){ const q = proj(enu(CEU.sel.v, m)); if (q){ g.strokeStyle = "#E9D48E"; g.lineWidth = 2; g.beginPath(); g.arc(q[0], q[1], 16, 0, 7); g.stroke(); } }
+  /* rótulo de hora e direção */
+  const aa = (() => { const f = cam.f; return {az: ((Math.atan2(f[0], f[1]) / RAD) + 360) % 360, alt: Math.asin(f[2]) / RAD}; })();
+  $("cHora").innerHTML = `<b>${l.rotulo}</b><br>${d.toLocaleString("pt-BR", {weekday: "short", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit"})}${CEU.delta ? " (ajustado)" : ""}<br>Olhando para ${ponto(aa.az)} · altura ${Math.round(aa.alt)}° · campo ${Math.round(CEU.fov)}°`;
+}
+function ceuRedesenhar(){ if (CEU.sujo) return; CEU.sujo = true; requestAnimationFrame(desenharCeu); }
+
+/* ---------- Seleção e informações ---------- */
+function ceuInfo(o){
+  CEU.sel = o; const box = $("cInfo"); if (!o){ box.hidden = true; ceuRedesenhar(); return; }
+  const l = ceuLocal(), d = ceuData(), a = altAz(enu(o.v, matrizHorizonte(d, l.lat, l.lon)));
+  box.innerHTML = ""; const b = document.createElement("b"); b.textContent = o.nome; box.appendChild(b);
+  const linha = t => { const s = document.createElement("small"); s.textContent = t; box.appendChild(s); };
+  linha(o.tipo + (o.cons ? " · " + (CONST_PT[o.cons] || o.cons) : ""));
+  if (o.id){
+    try{ const ill = Astronomy.Illumination(o.id, d); if (ill && isFinite(ill.mag)) linha("Brilho (magnitude): " + ill.mag.toFixed(1));
+      const obs = new Astronomy.Observer(l.lat, l.lon, 0), nasce = Astronomy.SearchRiseSet(o.id, obs, +1, d, 1), poe = Astronomy.SearchRiseSet(o.id, obs, -1, d, 1);
+      linha("Nasce " + (nasce ? fmtH(nasce.date) : "—") + " · se põe " + (poe ? fmtH(poe.date) : "—")); }catch(e){}
+  } else if (isFinite(o.mag)) linha("Brilho (magnitude): " + o.mag.toFixed(1) + " (quanto menor, mais brilhante)");
+  linha(a.alt > 0 ? `No céu agora: altura ${Math.round(a.alt)}°, direção ${ponto(a.az)}` : `Abaixo do horizonte agora (${Math.round(a.alt)}°)`);
+  const ac = document.createElement("div"); ac.className = "acoes";
+  const bt = document.createElement("button"); bt.className = "btn"; bt.textContent = "Ver no atlas"; bt.style.minHeight = "34px";
+  bt.onclick = () => { CEU.alvoAtlas = {ra: o.ra, dec: o.dec}; ceuAba("atlas"); }; ac.appendChild(bt); box.appendChild(ac);
+  box.hidden = false; ceuRedesenhar();
+}
+function ceuToque(x, y){
+  let melhor = null, dm = 1e9;
+  for (const h of CEU.hits){ const d = Math.hypot(h.x - x, h.y - y); if (d < h.r && d < dm){ dm = d; melhor = h; } }
+  ceuInfo(melhor ? melhor.o : null);
+}
+
+/* ---------- Gestos: arrastar, pinça, roda do mouse, giroscópio ---------- */
+function ceuGestos(){
+  const cv = $("cCanvas"), ptrs = new Map(); let ini = null, dist0 = 0, fov0 = 100, mov = 0, t0 = 0;
+  cv.addEventListener("pointerdown", e => { cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]); if (ptrs.size === 1){ ini = [e.clientX, e.clientY]; mov = 0; t0 = Date.now(); CEU.giro = false; atualizarBotaoGiro(); }
+    if (ptrs.size === 2){ const [a, b] = [...ptrs.values()]; dist0 = Math.hypot(a[0] - b[0], a[1] - b[1]); fov0 = CEU.fov; } });
+  cv.addEventListener("pointermove", e => {
+    if (!ptrs.has(e.pointerId)) return; const ant = ptrs.get(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+    if (ptrs.size === 1){ const dpp = CEU.fov / Math.min(cv.clientWidth, cv.clientHeight) * 1.05, dx = e.clientX - ant[0], dy = e.clientY - ant[1]; mov += Math.abs(dx) + Math.abs(dy);
+      CEU.az = ((CEU.az - dx * dpp) % 360 + 360) % 360; CEU.alt = Math.max(-89, Math.min(89, CEU.alt + dy * dpp)); ceuRedesenhar(); }
+    else if (ptrs.size === 2){ const [a, b] = [...ptrs.values()], dd = Math.hypot(a[0] - b[0], a[1] - b[1]); if (dist0 > 0){ CEU.fov = Math.max(3, Math.min(170, fov0 * dist0 / dd)); ceuRedesenhar(); } }
+  });
+  const fim = e => { if (ptrs.size === 1 && mov < 7 && Date.now() - t0 < 500){ const r = cv.getBoundingClientRect(); ceuToque(e.clientX - r.left, e.clientY - r.top); } ptrs.delete(e.pointerId); };
+  cv.addEventListener("pointerup", fim); cv.addEventListener("pointercancel", e => ptrs.delete(e.pointerId));
+  cv.addEventListener("wheel", e => { e.preventDefault(); CEU.fov = Math.max(3, Math.min(170, CEU.fov * Math.exp(e.deltaY * 0.0012))); ceuRedesenhar(); }, {passive: false});
+  new ResizeObserver(() => ceuRedesenhar()).observe(cv);
+}
+function direcaoAparelho(a, b, g){          // para onde aponta a traseira do aparelho (W3C: alfa, beta, gama)
+  const ra = a * RAD, rb = b * RAD, rg = g * RAD, ca = Math.cos(ra), sa = Math.sin(ra), cb = Math.cos(rb), sb = Math.sin(rb), cg = Math.cos(rg), sg = Math.sin(rg);
+  const m13 = ca * sg + cg * sa * sb, m23 = sa * sg - ca * cg * sb, m33 = cb * cg, x = -m13, y = -m23, z = -m33;
+  return {az: ((Math.atan2(x, y) / RAD) + 360) % 360, alt: Math.asin(Math.max(-1, Math.min(1, z))) / RAD};
+}
+function aoOrientar(e){
+  if (!CEU.giro) return;
+  let alfa = e.alpha; if (typeof e.webkitCompassHeading === "number") alfa = 360 - e.webkitCompassHeading;
+  if (alfa === null || alfa === undefined || e.beta === null) return;
+  const d = direcaoAparelho(alfa, e.beta, e.gamma || 0), suave = 0.25; let da = d.az - CEU.az; if (da > 180) da -= 360; if (da < -180) da += 360;
+  CEU.az = ((CEU.az + da * suave) % 360 + 360) % 360; CEU.alt += (d.alt - CEU.alt) * suave; ceuRedesenhar();
+}
+async function alternarGiro(){
+  if (CEU.giro){ CEU.giro = false; atualizarBotaoGiro(); return; }
+  try{ if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === "function"){ const r = await DeviceOrientationEvent.requestPermission(); if (r !== "granted"){ toast("Sensor bloqueado", "Libere o acesso ao movimento do aparelho."); return; } } }catch(e){}
+  if (!CEU.ouvindo){ addEventListener("deviceorientationabsolute", aoOrientar, true); addEventListener("deviceorientation", aoOrientar, true); CEU.ouvindo = true; }
+  CEU.giro = true; CEU.fov = Math.min(CEU.fov, 70); atualizarBotaoGiro(); toast("Apontar o celular", "Aponte a traseira do aparelho para o céu. Toque e arraste para parar.");
+}
+function atualizarBotaoGiro(){ const b = document.getElementById("cGiro"); if (b) b.setAttribute("aria-pressed", String(CEU.giro)); }
+
+/* ---------- Atlas (Aladin Lite) ---------- */
+const SURVEYS = [["Fotografia (DSS2)", "P/DSS2/color"], ["Infravermelho (2MASS)", "P/2MASS/color"], ["Infravermelho médio (WISE)", "P/allWISE/color"], ["Pan-STARRS (profundo)", "P/PanSTARRS/DR1/color-z-zg-g"],
+  ["Plano da galáxia (DECaPS)", "P/DECaPS/DR2/color"], ["SDSS", "P/SDSS9/color"], ["Ultravioleta (GALEX)", "P/GALEXGR6_7/color"], ["Via Láctea (Mellinger)", "P/Mellinger/color"], ["Raios gama (Fermi)", "P/Fermi/color"], ["Micro-ondas (Planck)", "P/PLANCK/R2/HFI/color"]];
+const ALVOS = [["Centro da Via Láctea", "Sgr A*"], ["Andrômeda (M31)", "M 31"], ["Nebulosa de Órion (M42)", "M 42"], ["Pilares da Criação (M16)", "M 16"], ["Trífida (M20)", "M 20"], ["Lagoa (M8)", "M 8"], ["Virgem (M87)", "M 87"], ["Grande Nuvem de Magalhães", "LMC"], ["Crab (M1)", "M 1"]];
+async function garantirAladin(){
+  if (CEU.aladin) return CEU.aladin;
+  if (!CEU.aladinPronto) CEU.aladinPronto = (async () => {
+    await carregarScript(ALADIN_SRC); await A.init;
+    CEU.aladin = A.aladin("#atlas", {survey: "P/DSS2/color", fov: 60, target: CEU.alvoAtlas ? `${CEU.alvoAtlas.ra} ${CEU.alvoAtlas.dec}` : "Sgr A*", showReticle: true, showZoomControl: false, showFullscreenControl: false, showLayersControl: false, showGotoControl: false, showSimbadPointerControl: false, showCooGridControl: false, showSettingsControl: false, showContextMenu: false, showCooGrid: false});
+    return CEU.aladin;
+  })().catch(e => { CEU.aladinPronto = null; throw e; });
+  return CEU.aladinPronto;
+}
+async function procurarRubin(){
+  if (CEU.rubin) return CEU.rubin;
+  try{
+    const expr = encodeURIComponent("(ID=*Rubin*)||(ID=*LSST*)||(obs_title=*Rubin*)||(obs_title=*LSST*)||(obs_collection=*Rubin*)");
+    const r = await comTempo(12000, sg => fetch(`https://alasky.cds.unistra.fr/MocServer/query?fmt=json&get=record&expr=${expr}`, {signal: sg})); const j = await r.json();
+    CEU.rubin = (Array.isArray(j) ? j : []).filter(x => x.ID && (x.hips_service_url || x.ID)).slice(0, 6).map(x => ({nome: x.obs_title || x.ID, id: x.hips_service_url || x.ID}));
+  }catch(e){ CEU.rubin = []; }
+  return CEU.rubin;
+}
+async function montarBarraAtlas(){
+  const bar = $("cBarra"); bar.innerHTML = "";
+  const btn = (t, f, p) => { const b = botao(t, f); if (p) b.setAttribute("aria-pressed", "true"); bar.appendChild(b); return b; };
+  const campo = document.createElement("input"); campo.className = "campo"; campo.placeholder = "Buscar objeto (ex.: M13, Marte)"; bar.appendChild(campo);
+  campo.onkeydown = async e => { if (e.key === "Enter" && campo.value.trim()){ try{ (await garantirAladin()).gotoObject(campo.value.trim()); }catch(er){ toast("Atlas indisponível", "Sem conexão com o CDS."); } } };
+  for (const [t, id] of SURVEYS) btn(t, async e => { try{ (await garantirAladin()).setImageSurvey(id); [...bar.querySelectorAll(".btn[data-s]")].forEach(x => x.setAttribute("aria-pressed", "false")); e.target.setAttribute("aria-pressed", "true"); }catch(er){ toast("Atlas indisponível", "Sem conexão com o CDS."); } }).dataset.s = id;
+  for (const [t, nome] of ALVOS) btn("→ " + t, async () => { try{ (await garantirAladin()).gotoObject(nome); }catch(er){ toast("Atlas indisponível", "Sem conexão com o CDS."); } });
+  const rub = await procurarRubin();
+  if (rub.length) for (const r of rub) btn("Rubin: " + r.nome, async () => { try{ (await garantirAladin()).setImageSurvey(r.id); }catch(er){} });
+  const b1 = btn("Galeria do Vera Rubin ↗", () => window.open("https://rubinobservatory.org/gallery", "_blank", "noopener"));
+  if (!rub.length) b1.title = "Ainda não encontrei imagens do Rubin no catálogo HiPS do CDS; a galeria oficial tem as primeiras imagens (2025).";
+  btn("Mais imagens (NOIRLab) ↗", () => window.open("https://noirlab.edu/public/images/", "_blank", "noopener"));
+}
+
+/* ---------- Abas, ajustes e abertura ---------- */
+async function ceuAba(qual){
+  CEU.aba = qual; montarAbasCeu(); const atlas = qual === "atlas";
+  $("cCanvas").hidden = atlas; $("atlas").hidden = !atlas; $("cHora").hidden = atlas; $("cAjustes").hidden = true; if (atlas) $("cInfo").hidden = true; else if (CEU.sel) $("cInfo").hidden = false;
+  if (atlas){
+    montarBarraAtlas();
+    try{ const a = await garantirAladin(); if (CEU.alvoAtlas){ a.gotoRaDec(CEU.alvoAtlas.ra, CEU.alvoAtlas.dec); a.setFoV(8); CEU.alvoAtlas = null; } }
+    catch(e){ $("atlas").innerHTML = '<div style="display:grid;place-content:center;height:100%;text-align:center;padding:24px;color:#b4c1dd"><b style="font-family:var(--serif);font-size:1.2rem;color:#fff">Atlas indisponível agora</b>Não consegui falar com o CDS (Aladin Lite). Verifique a internet.</div>'; }
+  } else { montarBarraCeu(); ceuRedesenhar(); }
+}
+function montarAbasCeu(){
+  const a = $("cAbas"); a.innerHTML = "";
+  for (const [id, nome] of [["planetario", "Planetário"], ["atlas", "Atlas (imagens reais)"]]){
+    const b = document.createElement("button"); b.className = "aba"; b.role = "tab"; b.textContent = nome; b.setAttribute("aria-selected", String(CEU.aba === id)); b.onclick = () => ceuAba(id); a.appendChild(b); }
+}
+function montarBarraCeu(){
+  const bar = $("cBarra"); bar.innerHTML = "";
+  const chip = (t, k) => { const b = botao(t, () => { CEU.opt[k] = !CEU.opt[k]; guardarCeu(); b.setAttribute("aria-pressed", String(CEU.opt[k])); ceuRedesenhar(); }); b.setAttribute("aria-pressed", String(!!CEU.opt[k])); bar.appendChild(b); };
+  bar.appendChild(botao("Ajustes", () => { $("cAjustes").hidden = !$("cAjustes").hidden; if (!$("cAjustes").hidden) montarAjustesCeu(); }));
+  if (window.DeviceOrientationEvent){ const g = botao("Apontar o celular", alternarGiro); g.id = "cGiro"; bar.appendChild(g); atualizarBotaoGiro(); }
+  chip("Constelações", "const"); chip("Nomes", "nomes"); chip("Via Láctea", "mw"); chip("Sol, Lua e planetas", "planetas"); chip("Grade", "grade"); chip("Céu realista (dia/noite)", "realista"); chip("Abaixo do horizonte", "abaixo");
+}
+function montarAjustesCeu(){
+  const box = $("cAjustes"); box.innerHTML = ""; const l = ceuLocal();
+  const t = (txt, tag) => { const e = document.createElement(tag || "p"); e.className = tag ? "rotulo" : "nota"; if (tag) e.textContent = txt; else e.innerHTML = txt; box.appendChild(e); return e; };
+  t("Onde você está", "div"); t(`Local: <b></b>`); box.lastChild.querySelector("b").textContent = l.rotulo;
+  const campo = document.createElement("input"); campo.className = "campo"; campo.placeholder = "Cidade ou endereço"; box.appendChild(campo);
+  const aplicar = async () => { await atualizarPassagens().catch(() => {}); CEU.sel = null; $("cInfo").hidden = true; ceuRedesenhar(); montarAjustesCeu(); };
+  const ln = document.createElement("div"); ln.className = "linha-acoes";
+  ln.appendChild(botao("Buscar", async () => { if (!campo.value.trim()) return; try{ const r = await buscarEndereco(campo.value); if (r){ Object.assign(av, r); passesCache = null; salvarAv(); await aplicar(); } else toast("Endereço não encontrado", "Tente a cidade e o estado."); }catch(e){ toast("Sem conexão com o buscador", "Tente de novo."); } }));
+  ln.appendChild(botao("Usar minha localização", () => { if (!navigator.geolocation) return; navigator.geolocation.getCurrentPosition(async p => { av.lat = p.coords.latitude; av.lon = p.coords.longitude; av.rotulo = "Minha localização"; passesCache = null; salvarAv(); await aplicar(); }, () => toast("Não consegui a localização", "Libere o acesso ou digite o endereço."), {timeout: 12000}); }));
+  box.appendChild(ln);
+  t("Data e hora", "div");
+  const ms = Date.now() + CEU.delta, d = new Date(ms - new Date().getTimezoneOffset() * 60000), di = document.createElement("input"); di.type = "datetime-local"; di.className = "campo"; di.value = d.toISOString().slice(0, 16);
+  di.onchange = () => { const v = new Date(di.value); if (!isNaN(v)){ CEU.delta = v.getTime() - Date.now(); ceuRedesenhar(); } }; box.appendChild(di);
+  const sl = document.createElement("input"); sl.type = "range"; sl.min = -720; sl.max = 720; sl.step = 5; sl.value = Math.max(-720, Math.min(720, Math.round(CEU.delta / 60000))); sl.setAttribute("aria-label", "Minutos a partir de agora");
+  sl.oninput = () => { CEU.delta = sl.value * 60000; ceuRedesenhar(); }; box.appendChild(sl);
+  const ln2 = document.createElement("div"); ln2.className = "linha-acoes";
+  ln2.appendChild(botao("Agora", () => { CEU.delta = 0; montarAjustesCeu(); ceuRedesenhar(); })); ln2.appendChild(botao("−1 dia", () => { CEU.delta -= 864e5; montarAjustesCeu(); ceuRedesenhar(); })); ln2.appendChild(botao("+1 dia", () => { CEU.delta += 864e5; montarAjustesCeu(); ceuRedesenhar(); }));
+  box.appendChild(ln2);
+  t("Use o controle deslizante para avançar ou voltar até 12 horas e ver as estrelas se movendo.");
+}
+async function abrirCeu(){
+  fecharPaineis(); if (!$("visor").hidden) fecharVisor(); $("ceu").hidden = false; $("btnCeu").setAttribute("aria-expanded", "true");
+  if (!$("cAbas").children.length){ montarAbasCeu(); ceuGestos(); const l = ceuLocal(); CEU.az = l.lat < 0 ? 180 : 0; CEU.alt = 42; $("cBarra").innerHTML = ""; }
+  if (CEU.aba === "planetario"){ $("cHora").textContent = "Carregando estrelas…"; await carregarDadosCeu(); montarBarraCeu(); ceuRedesenhar(); if (CEU.dados === "basico") toast("Mapa do céu simplificado", "Não consegui baixar o catálogo completo de estrelas; mostrando as mais brilhantes."); }
+  else ceuAba("atlas");
+  clearInterval(CEU.relogio); CEU.relogio = setInterval(() => { if (!$("ceu").hidden && CEU.aba === "planetario" && !CEU.giro) ceuRedesenhar(); }, 20000);
+}
+function fecharCeu(){ $("ceu").hidden = true; $("btnCeu").setAttribute("aria-expanded", "false"); CEU.giro = false; clearInterval(CEU.relogio); }
+
+/* =====================================================================
    MODO MAPA LIMPO: toque no vazio esconde tudo (some a interface); outro toque traz de volta
    ===================================================================== */
 let imersivo = false, toqueTimer = null;
@@ -2174,6 +2531,8 @@ function iniciar(){
   $("btnCamadas").onclick = () => alternar("camadas", "btnCamadas");
   $("btnAvisos").onclick = () => { montarAvisos(); alternar("avisos", "btnAvisos"); };
   $("vInfo").onclick = () => $("vInfo").classList.toggle("aberto");
+  $("btnCeu").onclick = () => ($("ceu").hidden ? abrirCeu() : fecharCeu()); $("cFechar").onclick = fecharCeu;
+  arrastarFolha($("alcaCeu"), $("ceu"), fecharCeu);
   $("btnObjetos").onclick = () => ($("visor").hidden ? abrirVisor() : fecharVisor()); $("vFechar").onclick = fecharVisor;
   arrastarFolha($("alcaVisor"), $("visor"), fecharVisor);
   relevoOn = lerGuardado("mapa.relevo", "0") === "1"; prediosOn = lerGuardado("mapa.predios", "0") === "1";
@@ -2196,7 +2555,7 @@ function iniciar(){
   setTimeout(() => { $("dica").style.opacity = 0; }, 6500);
   $("zmMais").onclick = () => zoom(0.5); $("zmMenos").onclick = () => zoom(2);
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape"){ if (!$("visor").hidden) fecharVisor(); else if (imersivo) setImersivo(false); else { selecionar(null); fecharPaineis(); } }
+    if (e.key === "Escape"){ if (!$("ceu").hidden) fecharCeu(); else if (!$("visor").hidden) fecharVisor(); else if (imersivo) setImersivo(false); else { selecionar(null); fecharPaineis(); } }
     else if (e.key === "h" || e.key === "H") setImersivo(!imersivo);
   });
   /* ?astro=marte abre direto em um astro */
