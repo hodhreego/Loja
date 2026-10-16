@@ -2402,11 +2402,11 @@ const ESTRELAS_BASICAS = [["Sirius",101.287,-16.716,-1.46,"CMa"],["Canopus",95.9
   ["Fomalhaut",344.413,-29.622,1.16,"PsA"],["Deneb",310.358,45.28,1.25,"Cyg"],["Mimosa",191.93,-59.689,1.25,"Cru"],["Regulus",152.093,11.967,1.35,"Leo"],["Adhara",104.656,-28.972,1.5,"CMa"],["Castor",113.65,31.889,1.58,"Gem"],
   ["Gacrux",187.791,-57.113,1.64,"Cru"],["Shaula",263.402,-37.104,1.62,"Sco"],["Bellatrix",81.283,6.35,1.64,"Ori"],["Elnath",81.573,28.608,1.65,"Tau"],["Miaplacidus",138.3,-69.717,1.67,"Car"],["Alnilam",84.053,-1.202,1.69,"Ori"],["Polaris",37.955,89.264,1.98,"UMi"],["Imai",183.786,-58.749,2.8,"Cru"]];
 const CEU = { dados: null, estrelas: [], nomes: {}, linhas: [], rotulos: [], mw: [], aba: "planetario", az: 180, alt: 40, fov: 100, delta: 0, sujo: false, sel: null, hits: [], giro: false, aladin: null, aladinPronto: null, rubin: null, ae: null,
-  opt: Object.assign({const: true, nomes: true, mw: true, grade: false, planetas: true, realista: false, abaixo: true}, (() => { try{ return JSON.parse(localStorage.getItem("mapa.ceu") || "{}"); }catch(e){ return {}; } })()) };
+  opt: Object.assign({const: true, nomes: true, mw: true, grade: false, planetas: true, realista: false, abaixo: false}, (() => { try{ return JSON.parse(localStorage.getItem("mapa.ceu2") || "{}"); }catch(e){ return {}; } })()) };
 const vetEq = (raGraus, decGraus) => { const a = raGraus * RAD, d = decGraus * RAD; return [Math.cos(d) * Math.cos(a), Math.cos(d) * Math.sin(a), Math.sin(d)]; };
 const bvCor = bv => { const t = Math.max(0, Math.min(1, (bv + 0.4) / 2.4)), pts = [[155, 176, 255], [202, 215, 255], [255, 244, 234], [255, 210, 161], [255, 160, 90]], x = t * 4, i = Math.min(3, Math.floor(x)), f = x - i;
   return pts[i].map((c, k) => Math.round(c + (pts[i + 1][k] - c) * f)); };
-const guardarCeu = () => guardar("mapa.ceu", JSON.stringify(CEU.opt));
+const guardarCeu = () => guardar("mapa.ceu2", JSON.stringify(CEU.opt));
 const carregarScript = src => new Promise((ok, err) => { const sc = document.createElement("script"); sc.src = src; sc.onload = ok; sc.onerror = err; document.head.appendChild(sc); });
 const lerJson = async f => { const r = await comTempo(25000, sg => fetch(DADOS_CEU + f, {signal: sg})); if (!r.ok) throw new Error(f); return r.json(); };
 
@@ -2505,9 +2505,21 @@ function desenharCeu(){
     g.fillStyle = `rgba(180,200,255,${(0.6 * vis).toFixed(2)})`; g.font = "600 11px 'Source Sans 3',sans-serif"; g.textAlign = "center";
     for (const c of CEU.rotulos){ const e = enu(c.v, m), q = proj(e); if (q && q[0] > 0 && q[0] < w && q[1] > 0 && q[1] < h && (e[2] > -0.1 || o.abaixo)) g.fillText(c.nome.toUpperCase(), q[0], q[1]); }
   }
+  /* chão: o horizonte vira um círculo na projeção estereográfica (centro (0, ch/sh), raio 1/|sh|),
+     então o céu fica uma cúpula vista de dentro, com o chão escuro por baixo */
+  if (!o.abaixo){
+    const sh = Math.sin(CEU.alt * RAD), chh = Math.cos(CEU.alt * RAD), dk = Math.max(0, Math.min(1, (solAlt + 12) / 14));
+    const gc = `rgb(${Math.round(30 + 40 * dk)},${Math.round(38 + 50 * dk)},${Math.round(34 + 40 * dk)})`;
+    g.save(); g.beginPath();
+    if (Math.abs(sh) < 1e-3){ g.rect(-5, cy, w + 10, h); }
+    else{ const R = 2 * S / Math.abs(sh), ccx = cx, ccy = cy - 2 * S * chh / sh;
+      if (sh > 0){ g.rect(-5, -5, w + 10, h + 10); g.arc(ccx, ccy, R, 0, Math.PI * 2, true); } else g.arc(ccx, ccy, R, 0, Math.PI * 2); }
+    g.fillStyle = gc; g.fill("evenodd");
+    g.restore();
+  }
   /* horizonte e pontos cardeais */
-  g.strokeStyle = "rgba(233,212,142,.55)"; g.lineWidth = 1.6; g.beginPath(); let a0 = false;
-  for (let az = 0; az <= 360; az += 3){ const q = proj([Math.sin(az * RAD), Math.cos(az * RAD), 0]); if (!q){ a0 = false; continue; } a0 ? g.lineTo(q[0], q[1]) : (g.moveTo(q[0], q[1]), a0 = true); } g.stroke();
+  g.save(); g.shadowColor = "rgba(233,212,142,.75)"; g.shadowBlur = 14; g.strokeStyle = "rgba(233,212,142,.55)"; g.lineWidth = 1.6; g.beginPath(); let a0 = false;
+  for (let az = 0; az <= 360; az += 3){ const q = proj([Math.sin(az * RAD), Math.cos(az * RAD), 0]); if (!q){ a0 = false; continue; } a0 ? g.lineTo(q[0], q[1]) : (g.moveTo(q[0], q[1]), a0 = true); } g.stroke(); g.restore();
   g.fillStyle = "#E9D48E"; g.font = "700 14px 'Source Sans 3',sans-serif"; g.textAlign = "center";
   [["N", 0], ["NE", 45], ["L", 90], ["SE", 135], ["S", 180], ["SO", 225], ["O", 270], ["NO", 315]].forEach(([t, az]) => { const q = proj([Math.sin(az * RAD) * Math.cos(3 * RAD), Math.cos(az * RAD) * Math.cos(3 * RAD), Math.sin(3 * RAD)]); if (q) g.fillText(t, q[0], q[1] - 6); });
   /* estrelas */
