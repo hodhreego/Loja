@@ -300,6 +300,20 @@
   body[data-tela="compacta"] #cHora,body[data-tela="media"] #cHora,body[data-tela="relogio"] #cHora{left:10px;right:10px;text-align:left;padding:6px 12px}
   body[data-tela="compacta"] #cInfo,body[data-tela="media"] #cInfo,body[data-tela="relogio"] #cInfo{top:76px;max-width:calc(100% - 20px)}
   body[data-tela="compacta"] .marca b{display:none}
+  body[data-tela="compacta"] #cTrack,body[data-tela="media"] #cTrack,body[data-tela="relogio"] #cTrack{top:64px}
+
+  /* ---------- Rastreador ---------- */
+  #cTrack{position:absolute;left:10px;right:10px;bottom:62px;top:10px;overflow:auto;padding:8px 12px 14px;border-radius:20px;z-index:5;overscroll-behavior:contain}
+  #cTrack[hidden]{display:none}
+  #cTrack .abas{margin:4px 0 6px;position:sticky;top:0;z-index:2}
+  .trlinha{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;margin:6px 0 0;padding:10px 12px;border-radius:16px;
+    background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.03));box-shadow:inset 0 0 0 .5px rgba(255,255,255,.16),inset 1px 1.5px 1.5px -.5px rgba(255,255,255,.4)}
+  .trlinha b{font-size:.98rem} .trlinha small{display:block;color:var(--suave);font-size:.76rem;line-height:1.35}
+  .trvivo{font-size:.8rem;color:var(--texto);text-align:right;line-height:1.35;font-variant-numeric:tabular-nums}
+  .trvivo .acima{color:#5eead4;font-weight:700} .trvivo .abaixo{color:var(--suave)}
+  .trbtns{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap}
+  .trbtns .btn{min-height:32px;padding:0 10px;font-size:.76rem;border-radius:11px}
+  .trbusca{display:flex;gap:6px;margin:8px 0 2px}.trbusca .campo{margin:0;flex:1;min-height:38px}
 
   /* ---------- Controles do mapa ---------- */
   #controles{position:fixed;z-index:25;right:var(--gap);top:calc(var(--gap) + var(--alvo) + 28px + env(safe-area-inset-top));display:flex;flex-direction:column;gap:10px}
@@ -492,6 +506,7 @@
       <div id="cHora" class="vidro"></div>
       <div id="cInfo" class="vidro" hidden></div>
       <div id="cAjustes" class="vidro denso" hidden></div>
+      <div id="cTrack" class="vidro denso" hidden></div>
       <div id="cBarra" class="cbarra vidro"></div>
     </div>
   </section>
@@ -562,7 +577,8 @@ const TIPOS = {
   lancamento: { rotulo: "Base de lançamento",     cor: "#c4a3ff", letra: "B" },
   cidade:     { rotulo: "Cidade",                 cor: "#f4f4f4", letra: "★" },
   estacao:    { rotulo: "Estação espacial",       cor: "#5eead4", letra: "S" },
-  wiki:       { rotulo: "Artigo da Wikipédia",    cor: "#ffffff", letra: "W" }
+  wiki:       { rotulo: "Artigo da Wikipédia",    cor: "#ffffff", letra: "W" },
+  satelite:   { rotulo: "Satélite",               cor: "#5eead4", letra: "S" }
 };
 
 /* ---------- Fontes de imagem ----------
@@ -1110,8 +1126,8 @@ function abrirInfo(l){
   if (l.wiki){ $("iCuriosidade").textContent = "Carregando resumo…"; preencherWiki(l); }
   else if (!l.vivo && astro.terra) ac.appendChild(botaoLink("Ler na Wikipédia", "https://pt.wikipedia.org/wiki/Special:Search?search=" + encodeURIComponent(l.nome)));
   if (l.vivo){
-    const b = document.createElement("button"); b.className = "btn"; b.id = "btnSeguir"; b.textContent = viewer.trackedEntity ? "Parar de seguir" : "Seguir a ISS";
-    b.onclick = () => { if (viewer.trackedEntity){ viewer.trackedEntity = undefined; b.textContent = "Seguir a ISS"; } else { viewer.trackedEntity = issEnt; b.textContent = "Parar de seguir"; } };
+    const b = document.createElement("button"); b.className = "btn"; b.id = "btnSeguir"; b.textContent = viewer.trackedEntity ? "Parar de seguir" : "Seguir";
+    b.onclick = () => { if (viewer.trackedEntity){ viewer.trackedEntity = undefined; b.textContent = "Seguir"; } else { viewer.trackedEntity = l.entidade; b.textContent = "Parar de seguir"; } };
     ac.appendChild(b);
   }
   $("info").hidden = false; fecharPaineis();
@@ -1270,7 +1286,7 @@ function montarLista(){
 async function carregarAstro(pedido){
   const a = pedido.base ? ASTROS.find(x => x.id === pedido.base) : pedido;
   const minhaSeq = ++seq;
-  clearInterval(issTimer); issEnt = null; entidadeSel = null; issRastro = [];
+  clearInterval(issTimer); clearInterval(satTimer); satTimer = null; for (const k of Object.keys(satEnts)) delete satEnts[k]; issEnt = null; entidadeSel = null; issRastro = [];
   astro = a; $("carregando").classList.remove("some"); avisar(""); $("info").hidden = true; fecharPaineis();
   if (viewer){ viewer.destroy(); viewer = null; }
 
@@ -1341,7 +1357,7 @@ async function carregarAstro(pedido){
     aplicarCamadas(); montarCamadas();
     if (a.terra){ if (relevoOn) ligarRelevo(true); if (prediosOn) ligarPredios(true); }
   }
-  if (a.terra) iniciarISS(minhaSeq);
+  if (a.terra){ iniciarISS(minhaSeq); ativarSatsGlobo(); }
   montarCatalogo(); viewer.scene.requestRender();
   if (pedido.seguir) setTimeout(() => { if (issEnt && minhaSeq === seq) irPara(ISS_LUGAR); }, 1500);
 
@@ -1879,7 +1895,7 @@ const RAD = Math.PI / 180;
 const fmtDH = d => d.toLocaleString("pt-BR", {weekday: "short", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit"});
 const fmtD = d => d.toLocaleDateString("pt-BR", {weekday: "long", day: "2-digit", month: "long"});
 const fmtH = d => d.toLocaleTimeString("pt-BR", {hour: "2-digit", minute: "2-digit"});
-let av = (() => { try{ return Object.assign({iss: false, lead: 10, lat: null, lon: null, rotulo: "", cheia: false, nova: false, leadLua: "0", meteoros: false}, JSON.parse(localStorage.getItem("mapa.avisos") || "{}")); }catch(e){ return {iss: false, lead: 10, lat: null, lon: null, rotulo: "", cheia: false, nova: false, leadLua: "0", meteoros: false}; } })();
+let av = (() => { try{ return Object.assign({sats: {}, iss: false, lead: 10, lat: null, lon: null, rotulo: "", cheia: false, nova: false, leadLua: "0", meteoros: false}, JSON.parse(localStorage.getItem("mapa.avisos") || "{}")); }catch(e){ return {sats: {}, iss: false, lead: 10, lat: null, lon: null, rotulo: "", cheia: false, nova: false, leadLua: "0", meteoros: false}; } })();
 const salvarAv = () => guardar("mapa.avisos", JSON.stringify(av));
 let passesCache = null, timersAv = [];
 
@@ -2047,6 +2063,8 @@ function eventosAgendados(){
     const q = p.visivel ? "visível a olho nu" : "passagem";
     ev.push({quando: p.ini - av.lead * 60000, titulo: "ISS passando em " + av.lead + " min", corpo: `${fmtH(new Date(p.ini))}, altura máxima ${Math.round(p.maxEl)}° (${q}). Olhe para ${ponto(p.az0)}.`, tag: "iss" + p.ini});
   }
+  for (const id of Object.keys(av.sats || {})) if (av.sats[id] && passesSat[id] && String(id) !== "25544"){ const def = SATS.find(x => String(x.id) === String(id));
+    for (const p of passesSat[id].lista) ev.push({quando: p.ini - av.lead * 60000, titulo: (def ? def.nome : "Satélite") + " passando em " + av.lead + " min", corpo: `${fmtH(new Date(p.ini))}, altura máxima ${Math.round(p.maxEl)}°${p.visivel ? " (visível a olho nu)" : ""}. Olhe para ${ponto(p.az0)}.`, tag: "sat" + id + p.ini}); }
   for (const [tipo, on] of [["cheia", av.cheia], ["nova", av.nova]]) if (on){
     const antes = av.leadLua === "1d" ? 864e5 : 0;
     for (const d of proximasFases(tipo, 3, new Date()))
@@ -2223,13 +2241,13 @@ const CORPOS = [["Sun", "Sol", "#ffd45e", 0], ["Moon", "Lua", "#f4ecd0", 0], ["M
 function posCorpos(d){
   const l = ceuLocal(), out = [];
   for (const [id, nome, cor, r] of CORPOS){
-    let ra, dec;
+    let ra, dec, dist = null;
     try{
-      if (window.Astronomy){ const e = Astronomy.Equator(id, d, new Astronomy.Observer(l.lat, l.lon, 0), false, true); ra = e.ra * 15; dec = e.dec; }
+      if (window.Astronomy){ const e = Astronomy.Equator(id, d, new Astronomy.Observer(l.lat, l.lon, 0), false, true); ra = e.ra * 15; dec = e.dec; dist = e.dist; }
       else if (id === "Sun"){ const sv = sunVec(d); ra = ((Math.atan2(sv[1], sv[0]) / RAD) + 360) % 360; dec = Math.asin(sv[2]) / RAD; }
       else continue;
     }catch(e){ continue; }
-    out.push({id, nome, cor, r, ra, dec, v: vetEq(ra, dec), tipo: id === "Sun" ? "Estrela (o Sol)" : id === "Moon" ? "Satélite natural da Terra" : "Planeta"});
+    out.push({id, nome, cor, r, ra, dec, dist, v: vetEq(ra, dec), tipo: id === "Sun" ? "Estrela (o Sol)" : id === "Moon" ? "Satélite natural da Terra" : "Planeta"});
   }
   return out;
 }
@@ -2243,7 +2261,7 @@ function desenharCeu(){
   const w = cv.clientWidth, h = cv.clientHeight; if (!w || !h) return;
   const dpr = Math.min(window.devicePixelRatio || 1, 2); if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)){ cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
   const g = cv.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const d = ceuData(), l = ceuLocal(), m = matrizHorizonte(d, l.lat, l.lon), cam = ceuCamera();
+  const d = ceuData(), l = ceuLocal(), m = matrizHorizonte(d, l.lat, l.lon); try{ seguirAlvo(d, l, m); }catch(e){} const cam = ceuCamera();
   const S = (Math.min(w, h) / 2) / (2 * Math.tan(CEU.fov * RAD / 4)), cx = w / 2, cy = h / 2, o = CEU.opt;
   const proj = e => { const zf = e[0] * cam.f[0] + e[1] * cam.f[1] + e[2] * cam.f[2]; if (zf <= -0.9) return null;
     const k = 2 / (1 + zf); return [cx + S * k * (e[0] * cam.r[0] + e[1] * cam.r[1]), cy - S * k * (e[0] * cam.u[0] + e[1] * cam.u[1] + e[2] * cam.u[2])]; };
@@ -2307,8 +2325,9 @@ function desenharCeu(){
     g.globalAlpha = 1; g.fillStyle = "#fff"; g.font = "700 12px 'Source Sans 3',sans-serif"; g.textAlign = "left"; g.fillText(c.nome, q[0] + 13, q[1] + 4);
     hits.push({x: q[0], y: q[1], r: 20, o: c});
   }
+  try{ desenharExtras(g, proj, m, d, l, hits); }catch(e){}
   CEU.hits = hits;
-  if (CEU.sel){ const q = proj(enu(CEU.sel.v, m)); if (q){ g.strokeStyle = "#E9D48E"; g.lineWidth = 2; g.beginPath(); g.arc(q[0], q[1], 16, 0, 7); g.stroke(); } }
+  if (CEU.sel){ const q = proj(CEU.sel.enuFn ? CEU.sel.enuFn() : enu(CEU.sel.v, m)); if (q){ g.strokeStyle = "#E9D48E"; g.lineWidth = 2; g.beginPath(); g.arc(q[0], q[1], 16, 0, 7); g.stroke(); } }
   /* rótulo de hora e direção */
   const aa = (() => { const f = cam.f; return {az: ((Math.atan2(f[0], f[1]) / RAD) + 360) % 360, alt: Math.asin(f[2]) / RAD}; })();
   $("cHora").innerHTML = `<b>${l.rotulo}</b><br>${d.toLocaleString("pt-BR", {weekday: "short", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit"})}${CEU.delta ? " (ajustado)" : ""}<br>Olhando para ${ponto(aa.az)} · altura ${Math.round(aa.alt)}° · campo ${Math.round(CEU.fov)}°`;
@@ -2318,19 +2337,21 @@ function ceuRedesenhar(){ if (CEU.sujo) return; CEU.sujo = true; requestAnimatio
 /* ---------- Seleção e informações ---------- */
 function ceuInfo(o){
   CEU.sel = o; const box = $("cInfo"); if (!o){ box.hidden = true; ceuRedesenhar(); return; }
-  const l = ceuLocal(), d = ceuData(), a = altAz(enu(o.v, matrizHorizonte(d, l.lat, l.lon)));
+  const l = ceuLocal(), d = ceuData(), a = altAz(o.enuFn ? o.enuFn() : enu(o.v, matrizHorizonte(d, l.lat, l.lon)));
   box.innerHTML = ""; const b = document.createElement("b"); b.textContent = o.nome; box.appendChild(b);
   const linha = t => { const s = document.createElement("small"); s.textContent = t; box.appendChild(s); };
   linha(o.tipo + (o.cons ? " · " + (CONST_PT[o.cons] || o.cons) : ""));
-  if (o.id){
+  if (o.linhas){ try{ o.linhas().forEach(linha); }catch(e){}
+    if (o.kind === "astro"){ try{ const r = nascerPor(t => { const p = posDestaque(todosDestaques().find(x => x.id === (o.key || "").slice(6)), t); return vetEq(p.ra, p.dec); }, l, d); linha("Nasce " + (r.nasce ? fmtH(r.nasce) : "—") + " · se põe " + (r.poe ? fmtH(r.poe) : "—") + " (aprox.)"); }catch(e){} } }
+  else if (o.id){
     try{ const ill = Astronomy.Illumination(o.id, d); if (ill && isFinite(ill.mag)) linha("Brilho (magnitude): " + ill.mag.toFixed(1));
       const obs = new Astronomy.Observer(l.lat, l.lon, 0), nasce = Astronomy.SearchRiseSet(o.id, obs, +1, d, 1), poe = Astronomy.SearchRiseSet(o.id, obs, -1, d, 1);
       linha("Nasce " + (nasce ? fmtH(nasce.date) : "—") + " · se põe " + (poe ? fmtH(poe.date) : "—")); }catch(e){}
   } else if (isFinite(o.mag)) linha("Brilho (magnitude): " + o.mag.toFixed(1) + " (quanto menor, mais brilhante)");
   linha(a.alt > 0 ? `No céu agora: altura ${Math.round(a.alt)}°, direção ${ponto(a.az)}` : `Abaixo do horizonte agora (${Math.round(a.alt)}°)`);
   const ac = document.createElement("div"); ac.className = "acoes";
-  const bt = document.createElement("button"); bt.className = "btn"; bt.textContent = "Ver no atlas"; bt.style.minHeight = "34px";
-  bt.onclick = () => { CEU.alvoAtlas = {ra: o.ra, dec: o.dec}; ceuAba("atlas"); }; ac.appendChild(bt); box.appendChild(ac);
+  if (isFinite(o.ra)){ const bt = document.createElement("button"); bt.className = "btn"; bt.textContent = "Ver no atlas"; bt.style.minHeight = "34px";
+    bt.onclick = () => { CEU.alvoAtlas = {ra: o.ra, dec: o.dec}; ceuAba("atlas"); }; ac.appendChild(bt); } box.appendChild(ac);
   box.hidden = false; ceuRedesenhar();
 }
 function ceuToque(x, y){
@@ -2342,7 +2363,7 @@ function ceuToque(x, y){
 /* ---------- Gestos: arrastar, pinça, roda do mouse, giroscópio ---------- */
 function ceuGestos(){
   const cv = $("cCanvas"), ptrs = new Map(); let ini = null, dist0 = 0, fov0 = 100, mov = 0, t0 = 0;
-  cv.addEventListener("pointerdown", e => { cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]); if (ptrs.size === 1){ ini = [e.clientX, e.clientY]; mov = 0; t0 = Date.now(); CEU.giro = false; atualizarBotaoGiro(); }
+  cv.addEventListener("pointerdown", e => { cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]); if (ptrs.size === 1){ ini = [e.clientX, e.clientY]; mov = 0; t0 = Date.now(); CEU.giro = false; CEU.seguir = null; atualizarBotaoGiro(); }
     if (ptrs.size === 2){ const [a, b] = [...ptrs.values()]; dist0 = Math.hypot(a[0] - b[0], a[1] - b[1]); fov0 = CEU.fov; } });
   cv.addEventListener("pointermove", e => {
     if (!ptrs.has(e.pointerId)) return; const ant = ptrs.get(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]);
@@ -2429,7 +2450,8 @@ function montarAbasCeu(){
 function montarBarraCeu(){
   const bar = $("cBarra"); bar.innerHTML = "";
   const chip = (t, k) => { const b = botao(t, () => { CEU.opt[k] = !CEU.opt[k]; guardarCeu(); b.setAttribute("aria-pressed", String(CEU.opt[k])); ceuRedesenhar(); }); b.setAttribute("aria-pressed", String(!!CEU.opt[k])); bar.appendChild(b); };
-  bar.appendChild(botao("Ajustes", () => { $("cAjustes").hidden = !$("cAjustes").hidden; if (!$("cAjustes").hidden) montarAjustesCeu(); }));
+  bar.appendChild(botao("Rastreador", abrirRastreador));
+  bar.appendChild(botao("Ajustes", () => { $("cTrack").hidden = true; $("cAjustes").hidden = !$("cAjustes").hidden; if (!$("cAjustes").hidden) montarAjustesCeu(); }));
   if (window.DeviceOrientationEvent){ const g = botao("Apontar o celular", alternarGiro); g.id = "cGiro"; bar.appendChild(g); atualizarBotaoGiro(); }
   chip("Constelações", "const"); chip("Nomes", "nomes"); chip("Via Láctea", "mw"); chip("Sol, Lua e planetas", "planetas"); chip("Grade", "grade"); chip("Céu realista (dia/noite)", "realista"); chip("Abaixo do horizonte", "abaixo");
 }
@@ -2459,8 +2481,270 @@ async function abrirCeu(){
   if (CEU.aba === "planetario"){ $("cHora").textContent = "Carregando estrelas…"; await carregarDadosCeu(); montarBarraCeu(); ceuRedesenhar(); if (CEU.dados === "basico") toast("Mapa do céu simplificado", "Não consegui baixar o catálogo completo de estrelas; mostrando as mais brilhantes."); }
   else ceuAba("atlas");
   clearInterval(CEU.relogio); CEU.relogio = setInterval(() => { if (!$("ceu").hidden && CEU.aba === "planetario" && !CEU.giro) ceuRedesenhar(); }, 20000);
+  clearInterval(CEU.rastro); CEU.rastro = setInterval(() => { if ($("ceu").hidden || CEU.aba !== "planetario") return; atualizarRastreador(); if (CEU.seguir || TRACK.ceu.size) ceuRedesenhar(); }, 1000);
 }
-function fecharCeu(){ $("ceu").hidden = true; $("btnCeu").setAttribute("aria-expanded", "false"); CEU.giro = false; clearInterval(CEU.relogio); }
+function fecharCeu(){ $("ceu").hidden = true; clearInterval(CEU.rastro); $("btnCeu").setAttribute("aria-expanded", "false"); CEU.giro = false; clearInterval(CEU.relogio); }
+
+/* =====================================================================
+   RASTREADOR: satélites (SGP4 + TLE) e astros (planetas, anões, asteroides, cometas)
+   - Satélites: TLE do CelesTrak (reserva: tle.ivanstanojevic.me; ISS: wheretheiss.at), posição calculada aqui com satellite.js
+   - Astros: planetas e Lua pela astronomy-engine; planetas-anões e asteroides por elementos orbitais do JPL (SBDB)
+     resolvidos com a equação de Kepler (posição aproximada: arcominutos a décimos de grau)
+   ===================================================================== */
+const SATS = [
+  {id: 25544, nome: "ISS", desc: "Estação Espacial Internacional: 109 m, a ~420 km de altura", curio: "Dá cerca de 16 voltas na Terra por dia e há astronautas morando lá sem parar desde o ano 2000."},
+  {id: 48274, nome: "Estação Tiangong (CSS)", desc: "Estação espacial chinesa", curio: "Tem o módulo central Tianhe e laboratórios. Também é visível a olho nu ao passar à noite."},
+  {id: 20580, nome: "Telescópio Hubble", desc: "Observatório espacial lançado em 1990", curio: "Orbita a ~540 km de altura e já fez mais de 1,6 milhão de observações."},
+  {id: 40336, nome: "CBERS-4", desc: "Satélite sino-brasileiro (INPE) de observação da Terra", curio: "Fotografa o desmatamento e as cidades do Brasil. É uma parceria entre Brasil e China."},
+  {id: 44883, nome: "CBERS-4A", desc: "Satélite sino-brasileiro (INPE)", curio: "Sucessor do CBERS-4, lançado em 2019, com câmeras de maior resolução."},
+  {id: 47699, nome: "Amazônia-1", desc: "Primeiro satélite de observação 100% brasileiro", curio: "Projetado pelo INPE para monitorar a Amazônia e o território brasileiro."},
+  {id: 49260, nome: "Landsat 9", desc: "Satélite NASA/USGS que mapeia a superfície", curio: "A série Landsat fotografa a Terra desde 1972, a mais longa do mundo."},
+  {id: 39084, nome: "Landsat 8", desc: "Satélite NASA/USGS", curio: "Passa pelo mesmo lugar a cada 16 dias."},
+  {id: 40697, nome: "Sentinel-2A", desc: "Satélite europeu (Copernicus)", curio: "Imagens de 10 m de resolução, usadas em agricultura e florestas."},
+  {id: 42063, nome: "Sentinel-2B", desc: "Satélite europeu (Copernicus)", curio: "Trabalha junto com o 2A para cobrir a Terra a cada 5 dias."},
+  {id: 25994, nome: "Terra (satélite NASA)", desc: "Satélite científico da NASA com sensor MODIS", curio: "Lançado em 1999, acompanha o clima, queimadas e vegetação."},
+  {id: 27424, nome: "Aqua", desc: "Satélite NASA que estuda a água do planeta", curio: "Mede nuvens, oceanos, gelo e vapor de água."},
+  {id: 33591, nome: "NOAA 19", desc: "Satélite meteorológico polar", curio: "Transmite imagens que radioamadores recebem com uma antena simples."},
+  {id: 37849, nome: "Suomi NPP", desc: "Satélite meteorológico NASA/NOAA", curio: "Gera a imagem diária VIIRS e as luzes noturnas que aparecem no mapa."},
+  {id: 41866, nome: "GOES-16", desc: "Satélite meteorológico geoestacionário", curio: "Fica parado sobre as Américas a 35.786 km: dá a imagem do tempo do Brasil."}
+];
+const DESTAQUES = [
+  {id: "Pluto", ae: true, nome: "Plutão", tipo: "Planeta-anão", curio: "Visitado pela New Horizons em 2015."},
+  {id: "1", nome: "Ceres", tipo: "Planeta-anão (cinturão de asteroides)", curio: "O maior objeto entre Marte e Júpiter."},
+  {id: "136199", nome: "Éris", tipo: "Planeta-anão", curio: "Quase do tamanho de Plutão; sua descoberta levou à nova definição de planeta."},
+  {id: "136108", nome: "Haumea", tipo: "Planeta-anão", curio: "Gira tão rápido que tem forma de bola de futebol americano."},
+  {id: "136472", nome: "Makemake", tipo: "Planeta-anão", curio: "Um dos maiores objetos do cinturão de Kuiper."},
+  {id: "225088", nome: "Gonggong", tipo: "Planeta-anão (candidato)", curio: "Tem uma lua e cor avermelhada."},
+  {id: "50000", nome: "Quaoar", tipo: "Objeto transnetuniano", curio: "Tem anéis a uma distância que os cientistas não esperavam."},
+  {id: "90377", nome: "Sedna", tipo: "Objeto transnetuniano", curio: "Sua órbita leva cerca de 11 mil anos."},
+  {id: "90482", nome: "Orcus", tipo: "Objeto transnetuniano", curio: "É chamado de “anti-Plutão” porque a órbita é espelhada."},
+  {id: "4", nome: "Vesta", tipo: "Asteroide", curio: "O único asteroide que às vezes dá para ver a olho nu."},
+  {id: "2", nome: "Palas", tipo: "Asteroide", curio: "Um dos maiores asteroides, com órbita bem inclinada."},
+  {id: "10", nome: "Hígia", tipo: "Asteroide", curio: "Pode ser classificado como planeta-anão."},
+  {id: "99942", nome: "Apophis", tipo: "Asteroide próximo da Terra", curio: "Passará a ~32 mil km da Terra em 13/04/2029, mais perto que satélites geoestacionários."},
+  {id: "101955", nome: "Bennu", tipo: "Asteroide próximo da Terra", curio: "A OSIRIS-REx trouxe uma amostra dele em 2023."},
+  {id: "433", nome: "Eros", tipo: "Asteroide próximo da Terra", curio: "O primeiro asteroide orbitado por uma sonda."},
+  {id: "162173", nome: "Ryugu", tipo: "Asteroide próximo da Terra", curio: "Visitado pela japonesa Hayabusa2."},
+  {id: "65803", nome: "Didymos", tipo: "Asteroide próximo da Terra", curio: "Em 2022 a missão DART bateu em sua lua Dimorphos para desviá-la."}
+];
+const TRACK = Object.assign({ceu: new Set(), globo: new Set(), custom: [], tle: {}, reg: {}, aba: "sats", prox: {}}, (() => { try{ const j = JSON.parse(localStorage.getItem("mapa.track") || "{}"); return {ceu: new Set(j.ceu || []), globo: new Set(j.globo || []), custom: j.custom || []}; }catch(e){ return {}; } })());
+const guardarTrack = () => guardar("mapa.track", JSON.stringify({ceu: [...TRACK.ceu], globo: [...TRACK.globo], custom: TRACK.custom}));
+const elemCache = (() => { try{ return JSON.parse(localStorage.getItem("mapa.elem") || "{}"); }catch(e){ return {}; } })();
+const carregarAE = () => window.Astronomy ? Promise.resolve() : carregarScript(AE_SRC);
+
+/* ---------- satélites ---------- */
+async function tleSat(id){
+  const c = TRACK.tle[id]; if (c && Date.now() - c.t < 6 * 36e5) return c;
+  await carregarSatellite(); let l = null;
+  try{ const r = await comTempo(12000, sg => fetch(`https://celestrak.org/NORAD/elements/gp.php?CATNR=${id}&FORMAT=TLE`, {signal: sg})); const ln = (await r.text()).trim().split(/\r?\n/).map(x => x.trim());
+    const i = ln.findIndex(x => x.startsWith("1 ")); if (i >= 0 && ln[i + 1] && ln[i + 1].startsWith("2 ")) l = [ln[i], ln[i + 1]]; }catch(e){}
+  if (!l) try{ const r = await comTempo(12000, sg => fetch(`https://tle.ivanstanojevic.me/api/tle/${id}`, {signal: sg})); const j = await r.json(); if (j.line1 && j.line2) l = [j.line1, j.line2]; }catch(e){}
+  if (!l && id === 25544) try{ l = await lerTle(); }catch(e){}
+  if (!l) throw new Error("tle " + id);
+  return TRACK.tle[id] = {t: Date.now(), l, rec: satellite.twoline2satrec(l[0], l[1])};
+}
+function estadoSat(id, d, loc){
+  const c = TRACK.tle[id]; if (!c || !window.satellite) return null;
+  const pv = satellite.propagate(c.rec, d); if (!pv.position || !pv.velocity) return null;
+  const g = satellite.gstime(d), geo = satellite.eciToGeodetic(pv.position, g), ecf = satellite.eciToEcf(pv.position, g);
+  const look = satellite.ecfToLookAngles({latitude: loc.lat * RAD, longitude: loc.lon * RAD, height: 0}, ecf);
+  return {lat: geo.latitude / RAD, lon: ((geo.longitude / RAD + 540) % 360) - 180, alt: geo.height, vel: Math.hypot(pv.velocity.x, pv.velocity.y, pv.velocity.z) * 3600,
+    az: ((look.azimuth / RAD) + 360) % 360, el: look.elevation / RAD, dist: look.rangeSat, sol: satIluminado(pv.position, d)};
+}
+const enuDeAzEl = (az, el) => [Math.sin(az * RAD) * Math.cos(el * RAD), Math.cos(az * RAD) * Math.cos(el * RAD), Math.sin(el * RAD)];
+
+/* ---------- planetas-anões e asteroides (JPL SBDB + Kepler) ---------- */
+async function elementos(id){
+  const c = elemCache[id]; if (c && Date.now() - c.t < 7 * 864e5) return c;
+  const r = await comTempo(15000, sg => fetch("https://ssd-api.jpl.nasa.gov/sbdb.api?phys-par=1&sstr=" + encodeURIComponent(id), {signal: sg}));
+  const j = await r.json(); if (!j.orbit) throw new Error("sem órbita");
+  const el = Object.fromEntries((j.orbit.elements || []).map(e => [e.name, parseFloat(e.value)])), fis = Object.fromEntries((j.phys_par || []).map(e => [e.name, parseFloat(e.value)]));
+  if (!(el.e < 1) || !isFinite(el.a) || !isFinite(el.tp)) throw new Error("órbita não suportada");
+  const reg = {t: Date.now(), nome: (j.object && (j.object.shortname || j.object.fullname)) || id, el: {a: el.a, e: el.e, i: el.i, om: el.om, w: el.w, tp: el.tp, n: el.n}, H: fis.H, diam: fis.diameter};
+  elemCache[id] = reg; try{ localStorage.setItem("mapa.elem", JSON.stringify(elemCache)); }catch(e){} return reg;
+}
+function vetKepler(el, jd){       // posição heliocêntrica (UA) no equador J2000
+  const n = isFinite(el.n) ? el.n : 0.9856076686 / Math.pow(el.a, 1.5);
+  const M = ((((n * (jd - el.tp)) % 360) + 360) % 360) * RAD; let E = M + el.e * Math.sin(M);
+  for (let k = 0; k < 12; k++) E -= (E - el.e * Math.sin(E) - M) / (1 - el.e * Math.cos(E));
+  const xp = el.a * (Math.cos(E) - el.e), yp = el.a * Math.sqrt(1 - el.e * el.e) * Math.sin(E);
+  const i = el.i * RAD, O = el.om * RAD, w = el.w * RAD, co = Math.cos(O), so = Math.sin(O), cw = Math.cos(w), sw = Math.sin(w), ci = Math.cos(i), si = Math.sin(i);
+  const x = xp * (cw * co - sw * ci * so) - yp * (sw * co + cw * ci * so), y = xp * (cw * so + sw * ci * co) - yp * (sw * so - cw * ci * co), z = xp * sw * si + yp * cw * si;
+  const eps = 23.4392911 * RAD; return [x, y * Math.cos(eps) - z * Math.sin(eps), y * Math.sin(eps) + z * Math.cos(eps)];
+}
+function geoAstro(reg, d){
+  const jd = d.getTime() / 864e5 + 2440587.5 + 69 / 86400, h = vetKepler(reg.el, jd), T = Astronomy.HelioVector("Earth", d);
+  const g = [h[0] - T.x, h[1] - T.y, h[2] - T.z], dist = Math.hypot(g[0], g[1], g[2]);
+  return {ra: ((Math.atan2(g[1], g[0]) / RAD) + 360) % 360, dec: Math.asin(g[2] / dist) / RAD, dist, r: Math.hypot(h[0], h[1], h[2])};
+}
+function geoPluto(d){ const e = Astronomy.Equator("Pluto", d, new Astronomy.Observer(0, 0, 0), false, true); return {ra: e.ra * 15, dec: e.dec, dist: e.dist, r: NaN}; }
+function posDestaque(def, d){ if (def.ae) return geoPluto(d); const reg = TRACK.reg[def.id]; return reg ? geoAstro(reg, d) : null; }
+const magAprox = (reg, p) => reg && isFinite(reg.H) && isFinite(p.r) ? reg.H + 5 * Math.log10(p.r * p.dist) : null;
+function nascerPor(vfun, l, d){        // procura o nascer e o pôr nas próximas 24 h (passos de 10 min)
+  let ant = null, nasce = null, poe = null;
+  for (let mi = 0; mi <= 1440; mi += 10){ const t = new Date(d.getTime() + mi * 60000), alt = altAz(enu(vfun(t), matrizHorizonte(t, l.lat, l.lon))).alt;
+    if (ant !== null){ if (ant < -0.6 && alt >= -0.6 && !nasce) nasce = t; if (ant >= -0.6 && alt < -0.6 && !poe) poe = t; } ant = alt; }
+  return {nasce, poe};
+}
+const todosDestaques = () => DESTAQUES.concat(TRACK.custom.map(c => ({id: c.id, nome: c.nome, tipo: "Astro adicionado por você", curio: "Posição calculada com elementos orbitais do JPL."})));
+
+/* objeto rastreado: devolve o vetor no horizonte e o objeto de informações */
+function objetoRastro(kind, id, d, l, m){
+  if (kind === "sat"){
+    const def = SATS.find(x => String(x.id) === String(id)), st = estadoSat(id, d, l); if (!def || !st) return null;
+    const o = {kind, key: "sat:" + id, tipo: "Satélite artificial", nome: def.nome, ra: NaN, dec: NaN,
+      enuFn: () => { const s2 = estadoSat(id, ceuData(), ceuLocal()); return s2 ? enuDeAzEl(s2.az, s2.el) : [0, 0, -1]; },
+      linhas: () => { const s2 = estadoSat(id, ceuData(), ceuLocal()); return s2 ? [def.desc, `Altitude ${Math.round(s2.alt).toLocaleString("pt-BR")} km · velocidade ${Math.round(s2.vel).toLocaleString("pt-BR")} km/h`, `Está sobre ${s2.lat.toFixed(1)}°, ${s2.lon.toFixed(1)}° · distância de você ${Math.round(s2.dist).toLocaleString("pt-BR")} km`, s2.sol ? "Iluminado pelo Sol" : "Na sombra da Terra", def.curio] : [def.desc]; }};
+    return {kind, id, nome: def.nome, e: enuDeAzEl(st.az, st.el), cor: "#5eead4", o};
+  }
+  if (kind === "astro"){
+    const def = todosDestaques().find(x => x.id === id); if (!def) return null; let p; try{ p = posDestaque(def, d); }catch(e){ return null; } if (!p) return null;
+    const v = vetEq(p.ra, p.dec), reg = TRACK.reg[id], mg = magAprox(reg, p);
+    const o = {kind, key: "astro:" + id, tipo: def.tipo, nome: def.nome, v, ra: p.ra, dec: p.dec,
+      linhas: () => { const q = posDestaque(def, ceuData()) || p; return [`Distância da Terra: ${q.dist.toLocaleString("pt-BR", {maximumFractionDigits: q.dist < 1 ? 3 : 2})} UA (${Math.round(q.dist * 149.5978707).toLocaleString("pt-BR")} milhões de km)`,
+        `A luz leva ${(q.dist * 8.3167).toLocaleString("pt-BR", {maximumFractionDigits: 1})} minutos para chegar`, ...(isFinite(q.r) ? [`Distância do Sol: ${q.r.toFixed(2)} UA`] : []), ...(mg !== null && isFinite(mg) ? [`Brilho aproximado: magnitude ${mg.toFixed(1)}`] : []), def.curio]; }};
+    return {kind, id, nome: def.nome, e: enu(v, m), cor: "#ffb4a2", o};
+  }
+  if (kind === "planeta"){
+    const c = posCorpos(d).find(x => x.id === id); if (!c) return null;
+    return {kind, id, nome: c.nome, e: enu(c.v, m), cor: c.cor, o: c};
+  }
+  return null;
+}
+function extrasCeu(d, l, m){ const out = []; for (const key of TRACK.ceu){ const i = key.indexOf(":"), o = objetoRastro(key.slice(0, i), key.slice(i + 1), d, l, m); if (o) out.push(o); } return out; }
+function desenharExtras(g, proj, m, d, l, hits){
+  for (const x of extrasCeu(d, l, m)){
+    if (x.e[2] < 0 && !CEU.opt.abaixo) continue; const q = proj(x.e); if (!q) continue; g.globalAlpha = x.e[2] < 0 ? 0.35 : 1;
+    if (x.kind === "sat"){ g.fillStyle = "#5eead4"; g.save(); g.translate(q[0], q[1]); g.rotate(Math.PI / 4); g.fillRect(-4, -4, 8, 8); g.restore(); }
+    else { g.strokeStyle = x.cor; g.fillStyle = x.cor; g.lineWidth = 1.6; g.beginPath(); g.arc(q[0], q[1], 5, 0, 7); g.stroke(); g.beginPath(); g.arc(q[0], q[1], 1.8, 0, 7); g.fill(); }
+    g.globalAlpha = 1; g.fillStyle = "#fff"; g.font = "700 12px 'Source Sans 3',sans-serif"; g.textAlign = "left"; g.fillText(x.nome, q[0] + 10, q[1] + 4);
+    hits.push({x: q[0], y: q[1], r: 22, o: x.o});
+  }
+}
+function seguirAlvo(d, l, m){
+  if (!CEU.seguir) return; const i = CEU.seguir.indexOf(":"), x = objetoRastro(CEU.seguir.slice(0, i), CEU.seguir.slice(i + 1), d, l, m); if (!x) return;
+  const a = altAz(x.e); let da = a.az - CEU.az; if (da > 180) da -= 360; if (da < -180) da += 360;
+  const f = Math.abs(da) > 40 ? 1 : 0.4; CEU.az = ((CEU.az + da * f) % 360 + 360) % 360; CEU.alt += (Math.max(-85, Math.min(85, a.alt)) - CEU.alt) * f;
+}
+function centralizar(kind, id){
+  CEU.seguir = kind + ":" + id; CEU.fov = Math.min(CEU.fov, 60); const x = objetoRastro(kind, id, ceuData(), ceuLocal(), matrizHorizonte(ceuData(), ceuLocal().lat, ceuLocal().lon));
+  if (x && x.e[2] < 0) toast(x.nome + " está abaixo do horizonte", "Centralizei mesmo assim: ative “Abaixo do horizonte” para ver."); if (x) { ceuInfo(x.o); }
+  $("cTrack").hidden = true; ceuRedesenhar();
+}
+
+/* ---------- Painel do rastreador ---------- */
+const rastroLinhas = {};
+function elDom(tag, cls, txt){ const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; }
+function btnPeq(texto, aoClicar, pressionado){ const b = elDom("button", "btn", texto); b.onclick = aoClicar; if (pressionado !== undefined) b.setAttribute("aria-pressed", String(pressionado)); return b; }
+function textoVivo(kind, id){
+  const d = ceuData(), l = ceuLocal(), m = matrizHorizonte(d, l.lat, l.lon), x = objetoRastro(kind, id, d, l, m);
+  if (!x) return kind === "sat" ? "carregando órbita…" : "carregando órbita…";
+  const a = altAz(x.e), cima = a.alt > 0, base = `<span class="${cima ? "acima" : "abaixo"}">${cima ? "No céu · " + Math.round(a.alt) + "° " + ponto(a.az) : "Abaixo do horizonte"}</span>`;
+  if (kind === "sat"){ const st = estadoSat(id, d, l); return base + `<br>${Math.round(st.alt).toLocaleString("pt-BR")} km de altura<br>${st.lat.toFixed(1)}°, ${st.lon.toFixed(1)}°`; }
+  if (kind === "astro"){ const def = todosDestaques().find(z => z.id === id), p = posDestaque(def, d); return base + `<br>${p.dist.toLocaleString("pt-BR", {maximumFractionDigits: p.dist < 1 ? 3 : 1})} UA`; }
+  const c = posCorpos(d).find(z => z.id === id);
+  if (c && c.id === "Moon") return base + `<br>${Math.round(c.dist * 149597870.7).toLocaleString("pt-BR")} km`;
+  return base + (c && c.dist ? `<br>${c.dist < 5 ? c.dist.toFixed(2) : c.dist.toFixed(1)} UA` : "");
+}
+function atualizarRastreador(){
+  if ($("cTrack").hidden) return;
+  for (const [k, el] of Object.entries(rastroLinhas)){ const i = k.indexOf(":"); try{ el.innerHTML = textoVivo(k.slice(0, i), k.slice(i + 1)); }catch(e){} }
+  if (CEU.seguir || TRACK.ceu.size) ceuRedesenhar();
+}
+function linhaRastro(box, kind, id, nome, desc, botoes){
+  const row = elDom("div", "trlinha"), esq = elDom("div"); esq.appendChild(elDom("b", "", nome)); esq.appendChild(elDom("small", "", desc));
+  const pas = elDom("small", "trpass"); if (kind === "sat" && TRACK.prox[id]) pas.textContent = TRACK.prox[id]; esq.appendChild(pas); row.appendChild(esq);
+  const v = elDom("div", "trvivo"); v.innerHTML = "…"; row.appendChild(v); rastroLinhas[kind + ":" + id] = v;
+  const bt = elDom("div", "trbtns"); botoes.forEach(b => bt.appendChild(b)); row.appendChild(bt); box.appendChild(row); return row;
+}
+async function proximaPassagem(id){
+  if (av.lat === null) return; try{ await carregarSatellite(); const c = await tleSat(id), p = calcularPassagens(c.l[0], c.l[1], av.lat, av.lon, 2)[0];
+    TRACK.prox[id] = p ? `Próxima passagem: ${fmtDH(new Date(p.ini))} · ${Math.round(p.maxEl)}°${p.visivel ? " · visível" : ""}` : "Sem passagem boa nas próximas 48 h"; }catch(e){}
+}
+async function montarRastreador(){
+  const box = $("cTrack"); box.innerHTML = ""; Object.keys(rastroLinhas).forEach(k => delete rastroLinhas[k]);
+  const ab = elDom("div", "abas"); for (const [id, t] of [["sats", "Satélites"], ["astros", "Planetas e anões"]]){ const b = elDom("button", "aba", t); b.setAttribute("aria-selected", String(TRACK.aba === id)); b.onclick = () => { TRACK.aba = id; montarRastreador(); }; ab.appendChild(b); }
+  box.appendChild(ab);
+  const info = elDom("p", "nota", "Posições calculadas agora, para " + ceuLocal().rotulo + (av.lat === null ? " (defina seu local em Ajustes)." : ".")); box.appendChild(info);
+  const pronto = Promise.all([carregarSatellite().catch(() => {}), carregarAE().catch(() => {})]);
+  if (TRACK.aba === "sats"){
+    for (const s of SATS){
+      const nt = String(s.id) === "25544" ? !!av.iss : !!(av.sats && av.sats[s.id]);
+      linhaRastro(box, "sat", s.id, s.nome, s.desc, [
+        btnPeq("Centralizar", () => centralizar("sat", s.id)),
+        btnPeq("No céu", e => { const k = "sat:" + s.id; TRACK.ceu.has(k) ? TRACK.ceu.delete(k) : TRACK.ceu.add(k); guardarTrack(); e.target.setAttribute("aria-pressed", String(TRACK.ceu.has(k))); ceuRedesenhar(); }, TRACK.ceu.has("sat:" + s.id)),
+        btnPeq("Globo 3D", () => satNoGlobo(s.id)),
+        btnPeq("Avisar passagens", async e => {
+          if (av.lat === null){ toast("Defina seu local", "Abra Ajustes e informe a cidade ou use a localização."); return; }
+          if (estadoPermissao() === "default") await pedirPermissao();
+          if (s.id === 25544){ av.iss = !av.iss; salvarAv(); if (av.iss && !passesCache) await atualizarPassagens().catch(() => {}); reagendarAvisos(); e.target.setAttribute("aria-pressed", String(av.iss)); }
+          else { av.sats = av.sats || {}; av.sats[s.id] = !av.sats[s.id]; salvarAv(); if (av.sats[s.id]) await atualizarPassagensSat(s.id).catch(() => {}); reagendarAvisos(); e.target.setAttribute("aria-pressed", String(!!av.sats[s.id])); }
+        }, nt)]);
+    }
+    pronto.then(() => Promise.all(SATS.map(s => tleSat(s.id).then(() => proximaPassagem(s.id)).catch(() => {})))).then(() => { if (TRACK.aba === "sats" && !$("cTrack").hidden){ document.querySelectorAll("#cTrack .trpass").forEach((el, i) => { el.textContent = TRACK.prox[SATS[i].id] || ""; }); } atualizarRastreador(); });
+  } else {
+    const l1 = elDom("div", "rotulo", "Planetas, Sol e Lua"); box.appendChild(l1);
+    for (const [id, nome] of CORPOS.map(c => [c[0], c[1]])) linhaRastro(box, "planeta", id, nome, id === "Sun" ? "Estrela" : id === "Moon" ? "Satélite natural da Terra" : "Planeta", [btnPeq("Centralizar", () => centralizar("planeta", id))]);
+    box.appendChild(elDom("div", "rotulo", "Planetas-anões, asteroides e outros"));
+    for (const dd of todosDestaques()) linhaRastro(box, "astro", dd.id, dd.nome, dd.tipo, [
+      btnPeq("Centralizar", () => centralizar("astro", dd.id)),
+      btnPeq("No céu", e => { const k = "astro:" + dd.id; TRACK.ceu.has(k) ? TRACK.ceu.delete(k) : TRACK.ceu.add(k); guardarTrack(); e.target.setAttribute("aria-pressed", String(TRACK.ceu.has(k))); ceuRedesenhar(); }, TRACK.ceu.has("astro:" + dd.id)),
+      btnPeq("Ver no atlas", () => { const p = posDestaque(dd, ceuData()); if (p){ CEU.alvoAtlas = {ra: p.ra, dec: p.dec}; ceuAba("atlas"); } })]);
+    const bus = elDom("div", "trbusca"), campo = elDom("input", "campo"); campo.placeholder = "Adicionar outro astro (ex.: Halley, Juno, 2024 YR4)"; bus.appendChild(campo);
+    bus.appendChild(btnPeq("Adicionar", async () => { const q = campo.value.trim(); if (!q) return;
+      try{ await carregarAE(); const r = await elementos(q); TRACK.reg[q] = r; if (!TRACK.custom.some(c => c.id === q)) TRACK.custom.push({id: q, nome: r.nome}); guardarTrack(); montarRastreador(); }
+      catch(e){ toast("Não encontrei esse astro", "Use o nome ou número (ex.: Halley, 3 Juno). Órbitas abertas não são suportadas."); } }));
+    box.appendChild(bus);
+    pronto.then(() => Promise.all(todosDestaques().filter(x => !x.ae).map(x => elementos(x.id).then(r => { TRACK.reg[x.id] = r; }).catch(() => {})))).then(() => atualizarRastreador());
+  }
+  atualizarRastreador();
+}
+function abrirRastreador(){ const p = $("cTrack"); p.hidden = !p.hidden; if (!p.hidden){ $("cAjustes").hidden = true; montarRastreador(); } }
+
+/* ---------- Satélites no globo 3D (Terra) ---------- */
+const satEnts = {}; let satTimer = null;
+const IMG_SAT = "data:image/svg+xml;charset=utf-8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><g transform="rotate(45 20 20)"><rect x="12" y="12" width="16" height="16" rx="2" fill="#5eead4" stroke="#0b1530" stroke-width="2"/></g><circle cx="20" cy="20" r="18" fill="none" stroke="#5eead4" stroke-width="1.5" stroke-dasharray="3 4" opacity=".8"/></svg>');
+function posSatGlobo(id, d){ const st = estadoSat(id, d, ceuLocal()); return st ? {st, c: Cesium.Cartesian3.fromDegrees(st.lon, st.lat, st.alt * 1000)} : null; }
+async function criarSatGlobo(id){
+  if (!viewer || !astro.terra || String(id) === "25544" || satEnts[id]) return;
+  const def = SATS.find(x => x.id === id); if (!def) return;
+  try{ await carregarSatellite(); await tleSat(id); }catch(e){ toast("Sem dados de " + def.nome, "Não consegui baixar a órbita agora."); return; }
+  if (!viewer || !astro.terra) return;
+  const p = posSatGlobo(id, new Date()); if (!p) return;
+  const ent = viewer.entities.add({name: def.nome, position: p.c,
+    billboard: {image: IMG_SAT, width: 30, height: 30, disableDepthTestDistance: Number.POSITIVE_INFINITY},
+    label: {text: def.nome, font: "700 13px 'Source Sans 3',sans-serif", fillColor: Cesium.Color.fromCssColorString("#5eead4"), outlineColor: Cesium.Color.BLACK, outlineWidth: 4, style: Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset: new Cesium.Cartesian2(0, -26), disableDepthTestDistance: Number.POSITIVE_INFINITY},
+    polyline: {positions: [], width: 2, material: new Cesium.PolylineDashMaterialProperty({color: Cesium.Color.fromCssColorString("#5eead4").withAlpha(.85), dashLength: 12})}});
+  const lugar = {nome: def.nome, tipo: "satelite", vivo: true, sat: id, lat: p.st.lat, lon: p.st.lon, tamanho: def.desc, curiosidade: def.curio, entidade: ent}; ent._lugar = lugar;
+  satEnts[id] = {ent, lugar, orbita: 0};
+  if (!satTimer) satTimer = setInterval(atualizarSatsGlobo, 1000);
+  atualizarSatsGlobo();
+}
+function atualizarSatsGlobo(){
+  if (!viewer || !astro || !astro.terra){ return; } const agora = new Date();
+  for (const [id, o] of Object.entries(satEnts)){
+    const p = posSatGlobo(+id, agora); if (!p) continue; o.ent.position = p.c; o.lugar.lat = p.st.lat; o.lugar.lon = p.st.lon;
+    if (Date.now() - o.orbita > 60000){ o.orbita = Date.now(); const pts = []; for (let k = 0; k <= 100; k += 2){ const q = posSatGlobo(+id, new Date(agora.getTime() + k * 60000)); if (q) pts.push(q.c); } o.ent.polyline.positions = pts; }
+    if (entidadeSel === o.ent){ const set = (k, v) => { const e = $("v" + k); if (e) e.textContent = v; }, nf = n => Math.round(n).toLocaleString("pt-BR");
+      set("Altitude", nf(p.st.alt) + " km"); set("Velocidade", nf(p.st.vel) + " km/h"); set("Posição", fmtCoord(p.st.lat, p.st.lon)); set("Iluminação", p.st.sol ? "Ao sol" : "Na sombra da Terra"); }
+  }
+  viewer.scene.requestRender();
+}
+async function satNoGlobo(id){
+  TRACK.globo.add(id); guardarTrack(); fecharCeu();
+  const terra = ASTROS.find(a => a.id === "terra");
+  if (!viewer || !astro || !astro.terra) await carregarAstro(terra);
+  if (String(id) === "25544"){ if (issEnt) irPara(ISS_LUGAR); else setTimeout(() => issEnt && irPara(ISS_LUGAR), 1800); return; }
+  await criarSatGlobo(id); const o = satEnts[id]; if (o){ selecionar(o.lugar); const p = o.ent.position.getValue(viewer.clock.currentTime); viewer.camera.flyToBoundingSphere(new Cesium.BoundingSphere(p, 1), {offset: new Cesium.HeadingPitchRange(0, -Cesium.Math.PI_OVER_TWO, 3.4e6), duration: 2.5}); }
+}
+function ativarSatsGlobo(){ for (const id of TRACK.globo) criarSatGlobo(id); }
+
+/* ---------- Passagens de satélites (avisos) ---------- */
+const passesSat = {};
+async function atualizarPassagensSat(id){
+  if (av.lat === null) return null; await carregarSatellite(); const c = await tleSat(id);
+  passesSat[id] = {quando: Date.now(), lista: calcularPassagens(c.l[0], c.l[1], av.lat, av.lon, 3)}; reagendarAvisos(); return passesSat[id].lista;
+}
 
 /* =====================================================================
    MODO MAPA LIMPO: toque no vazio esconde tudo (some a interface); outro toque traz de volta
@@ -2550,6 +2834,7 @@ function iniciar(){
   if ("serviceWorker" in navigator && /^https?:/.test(location.protocol)) navigator.serviceWorker.register("sw.js").catch(() => {});
   reagendarAvisos(); avisoDoDia();
   if (av.iss && av.lat !== null) atualizarPassagens().catch(() => {});
+  if (av.lat !== null) Object.keys(av.sats || {}).filter(k => av.sats[k] && k !== "25544").forEach(k => atualizarPassagensSat(+k).catch(() => {}));
   document.addEventListener("visibilitychange", () => { if (!document.hidden){ reagendarAvisos(); avisoDoDia(); } });
   addEventListener("resize", definirTela); addEventListener("orientationchange", () => setTimeout(definirTela, 250));
   setTimeout(() => { $("dica").style.opacity = 0; }, 6500);
