@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050914">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icone.svg">
 <title>Mapa dos Astros</title>
 <meta name="description" content="Explore planetas, luas, asteroides e a Estação Espacial Internacional em 3D, com imagens de satélite da NASA.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='80' font-size='84' text-anchor='middle'%3E🪐%3C/text%3E%3C/svg%3E">
@@ -123,6 +125,7 @@
   #cartao small{display:block;color:var(--gold-light);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.66rem}
   #cartao p{margin:5px 0 0;color:var(--suave);font-size:.88rem;line-height:1.38}
   #cartao.min p{display:none}
+  .fonteuso{display:block;margin-top:3px;color:var(--suave)!important;font-weight:500!important;letter-spacing:0!important;text-transform:none!important;font-size:.72rem!important}
   .esfera{flex:0 0 auto;width:46px;height:46px;border-radius:50%;
     background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.9),var(--c) 42%,#000 135%);
     box-shadow:0 0 20px color-mix(in srgb,var(--c) 55%,transparent),inset -6px -8px 14px rgba(0,0,0,.45)}
@@ -131,7 +134,7 @@
   .painel{position:fixed;z-index:40;top:calc(var(--gap) + var(--alvo) + 28px + env(safe-area-inset-top));bottom:calc(var(--gap) + 40px + env(safe-area-inset-bottom));
     width:min(390px,calc(100vw - var(--gap)*2));display:flex;flex-direction:column;overflow:hidden;
     transition:transform .5s var(--suave-ease),opacity .3s,visibility 0s}
-  #catalogo{left:var(--gap)} #lista,#camadas{right:var(--gap)}
+  #catalogo{left:var(--gap)} #lista,#camadas,#avisos{right:var(--gap)}
   .painel[hidden]{display:flex;opacity:0;pointer-events:none;visibility:hidden;transform:translateY(18px) scale(.97);transition:transform .4s var(--suave-ease),opacity .25s,visibility 0s .4s}
   .painel header{padding:12px 18px 6px}
   .painel h3{margin:0;font-family:var(--serif);font-size:1.2rem}
@@ -248,6 +251,27 @@
   .soltar.sobre{background:rgba(233,212,142,.16);box-shadow:inset 0 0 0 1.5px var(--gold-light)}
   .soltar b{color:#fff;font-size:1rem}
 
+  /* ---------- Avisos: notificações dentro do app, passagens e fases da Lua ---------- */
+  #toasts{position:fixed;z-index:90;left:50%;top:calc(var(--gap) + env(safe-area-inset-top));transform:translateX(-50%);width:min(94vw,440px);display:grid;gap:8px;pointer-events:none}
+  .toast{pointer-events:auto;padding:12px 16px;border-radius:20px;cursor:pointer;animation:entra .5s var(--seg);background-color:rgba(60,45,0,.30)}
+  .toast b{display:block;font-family:var(--serif);font-size:1.05rem;color:var(--gold-light)}
+  .toast span{font-size:.92rem}
+  @keyframes entra{from{opacity:0;transform:translateY(-22px) scale(.94)}}
+  .passagem{width:100%;display:grid;grid-template-columns:auto 1fr;gap:2px 12px;text-align:left;margin:6px 0 0;padding:10px 12px;border-radius:16px;border:0;
+    background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.03));box-shadow:inset 0 0 0 .5px rgba(255,255,255,.16),inset 1px 1.5px 1.5px -.5px rgba(255,255,255,.4)}
+  .passagem b{grid-column:1;font-size:.96rem} .passagem .q{grid-column:2;color:var(--suave);font-size:.82rem;align-self:center}
+  .passagem .ok{color:#5eead4;font-weight:700}
+  .luacard{display:flex;gap:14px;align-items:center;margin:6px 0 0;padding:12px 14px;border-radius:18px;
+    background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.03));box-shadow:inset 0 0 0 .5px rgba(255,255,255,.16),inset 1px 1.5px 1.5px -.5px rgba(255,255,255,.4)}
+  .luacard svg{width:64px;height:64px;flex:0 0 auto;filter:drop-shadow(0 0 12px rgba(233,212,142,.35))}
+  .luacard b{display:block;font-family:var(--serif);font-size:1.12rem}
+  .luacard small{display:block;color:var(--suave);font-size:.82rem;line-height:1.45}
+  .luacard small b{display:inline;font-family:var(--sans);font-size:.9rem;color:var(--texto);font-weight:600}
+  select.campo{appearance:none;padding-right:14px}
+  select.campo option{color:#000}
+  .estado{margin:4px 6px 2px;font-size:.84rem;color:var(--suave)}
+  .estado .ok{color:#5eead4;font-weight:700} .estado .ruim{color:#ffb4a2;font-weight:700}
+
   /* ---------- Controles do mapa ---------- */
   #controles{position:fixed;z-index:25;right:var(--gap);top:calc(var(--gap) + var(--alvo) + 28px + env(safe-area-inset-top));display:flex;flex-direction:column;gap:10px}
 
@@ -293,7 +317,7 @@
   body[data-tela="media"]{--alvo:48px}
   body[data-tela="compacta"] #info{max-height:48vh}
   body[data-tela="ampla"] #info{left:auto;right:var(--gap);width:410px;max-height:min(72vh,640px);bottom:calc(var(--gap) + 40px)}
-  body[data-tela="ampla"] #lista,body[data-tela="ampla"] #camadas{right:calc(var(--gap) + var(--alvo) + 14px)}
+  body[data-tela="ampla"] #lista,body[data-tela="ampla"] #camadas,body[data-tela="ampla"] #avisos{right:calc(var(--gap) + var(--alvo) + 14px)}
   body[data-tela="ampla"] #creditos{max-width:none}
   body[data-tela="ampla"] .alca{display:none}
   body[data-tela="ampla"] #dica{bottom:calc(var(--gap) + 56px)}
@@ -306,7 +330,7 @@
   body[data-tela="paisagem"] #cartao p{display:none}
   body[data-tela="paisagem"] #controles{top:var(--gap);flex-direction:column;gap:8px}
   body[data-tela="paisagem"] .painel{top:calc(var(--gap) + var(--alvo) + 22px);bottom:calc(var(--gap) + 34px);width:min(360px,46vw)}
-  body[data-tela="paisagem"] #catalogo{left:var(--gap)} body[data-tela="paisagem"] #lista,body[data-tela="paisagem"] #camadas{right:calc(var(--gap) + var(--alvo) + 12px)}
+  body[data-tela="paisagem"] #catalogo{left:var(--gap)} body[data-tela="paisagem"] #lista,body[data-tela="paisagem"] #camadas,body[data-tela="paisagem"] #avisos{right:calc(var(--gap) + var(--alvo) + 12px)}
   body[data-tela="paisagem"] #info{left:auto;right:calc(var(--gap) + var(--alvo) + 12px);width:min(380px,50vw);bottom:var(--gap);max-height:calc(100vh - var(--gap)*2)}
   body[data-tela="paisagem"] .btn .rot{display:none}
   body[data-tela="paisagem"] #creditos{bottom:var(--gap);font-size:.66rem;padding:5px 11px}
@@ -380,11 +404,12 @@
 
   <section id="cartao" class="vidro" aria-live="polite" title="Toque para ver mais ou menos">
     <div class="esfera" id="cEsfera"></div>
-    <div><small id="cCateg"></small><h2 id="cNome"></h2><p id="cResumo"></p></div>
+    <div><small id="cCateg"></small><h2 id="cNome"></h2><p id="cResumo"></p><small id="cFonte" class="fonteuso"></small></div>
   </section>
 
   <div id="controles">
-    <button id="btnCamadas" class="btn vidro redondo" aria-expanded="false" aria-controls="camadas" aria-label="Mapa e camadas" title="Mapa e camadas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="m3 13 9 5 9-5"/><path d="m3 17.5 9 5 9-5" opacity=".55"/></svg></button>
+    <button id="btnAvisos" class="btn vidro redondo" aria-expanded="false" aria-controls="avisos" aria-label="Avisos e lembretes" title="Avisos e lembretes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9z"/><path d="M10 20.2a2.2 2.2 0 0 0 4 0"/></svg></button>
+  <button id="btnCamadas" class="btn vidro redondo" aria-expanded="false" aria-controls="camadas" aria-label="Mapa e camadas" title="Mapa e camadas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="m3 13 9 5 9-5"/><path d="m3 17.5 9 5 9-5" opacity=".55"/></svg></button>
   <button id="btnPinos" class="btn vidro redondo" aria-pressed="false" aria-label="Mostrar alfinetes de referência" title="Alfinetes de referência (desligados)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg></button>
     <button id="zmMais" class="btn vidro redondo" aria-label="Aproximar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
     <button id="zmMenos" class="btn vidro redondo" aria-label="Afastar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
@@ -414,6 +439,12 @@
     <div class="alca" data-fecha="camadas"></div>
     <header><h3>Mapa e camadas</h3></header>
     <div class="corpo" id="camCorpo"></div>
+  </aside>
+
+  <aside id="avisos" class="painel vidro denso" hidden aria-label="Avisos e lembretes">
+    <div class="alca" data-fecha="avisos"></div>
+    <header><h3>Avisos e lembretes</h3></header>
+    <div class="corpo" id="avCorpo"></div>
   </aside>
 
   <section id="visor" class="vidro denso" hidden aria-label="Objetos 3D">
@@ -451,6 +482,7 @@
 </div>
 
 <div id="aviso" class="vidro" role="status" hidden></div>
+<div id="toasts" aria-live="assertive"></div>
 <div id="carregando"><div><div class="orbita"></div><b>Mapa dos Astros</b>Preparando o globo 3D…</div></div>
 
 <script>
@@ -551,6 +583,8 @@ const ASTROS = [
     fontes:[
       xyz("esri", "Satélite Esri (alta resolução)", ESRI + "/World_Imagery/MapServer/tile/{z}/{y}/{x}", { nivelMax: 19,
         credito: "Imagens: Esri, Maxar, Earthstar Geographics e a comunidade GIS", desc: "A mais detalhada: ruas, casas e prédios em muitas cidades" }),
+      xyz("clarity", "Satélite Esri Clarity (às vezes mais nítido)", "https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { nivelMax: 19,
+        credito: "Imagens: Esri, Maxar, Earthstar Geographics e a comunidade GIS", desc: "Versão atualizada da Esri; em algumas regiões tem mais definição" }),
       xyz("s2", "Satélite Sentinel-2 sem nuvens (10 m)", "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2021_3857/default/g/{z}/{y}/{x}.jpg", { nivelMax: 14,
         credito: "Sentinel-2 cloudless © EOX IT Services GmbH (contém dados Copernicus Sentinel modificados, 2021)", desc: "Satélite europeu, mosaico global sem nuvens" }),
       xyz("osm", "Mapa de ruas (OpenStreetMap)", "https://tile.openstreetmap.org/{z}/{x}/{y}.png", { nivelMax: 19,
@@ -934,9 +968,21 @@ async function escolherFonte(a, minhaSeq, preferida){
 const lerGuardado = (k, padrao) => { try{ const v = localStorage.getItem(k); return v === null ? padrao : v; }catch(e){ return padrao; } };
 const guardar = (k, v) => { try{ localStorage.setItem(k, v); }catch(e){} };
 
+/* Nitidez: por padrão o Cesium ignora a densidade de pixels da tela (retina) e desenha em baixa resolução, o que borra tudo.
+   Aqui usamos a resolução real do aparelho e pedimos blocos de imagem mais detalhados. */
+function aplicarNitidez(){
+  if (!viewer) return;
+  const q = lerGuardado("mapa.nitidez", "auto"), dpr = window.devicePixelRatio || 1, toque = matchMedia("(pointer:coarse)").matches;
+  /* O Cesium já multiplica pela densidade de pixels: resolutionScale é o fator EXTRA. Total desejado: eco = 1×, automática = até 2×, máxima = até 3× */
+  const total = q === "eco" ? 1 : q === "max" ? Math.min(dpr * 1.25, 3) : Math.min(dpr, 2);
+  viewer.resolutionScale = total / dpr;
+  viewer.scene.globe.maximumScreenSpaceError = q === "max" ? 1 : q === "eco" ? 3 : (toque ? 1.8 : 1.3);
+  viewer.scene.globe.tileCacheSize = q === "eco" ? 100 : 300; viewer.scene.requestRender();
+}
 /* Créditos: fonte do mapa + camadas e recursos ligados (exigência das licenças) */
 function atualizarCreditos(){
   const t = [];
+  if ($("cFonte")) $("cFonte").textContent = fonteAtual ? "Mapa: " + fonteAtual.rotulo : (astro && astro.formaApenas ? "Forma aproximada" : "Mapa: carregando…");
   if (fonteAtual && fonteAtual.credito) t.push(fonteAtual.credito);
   else if (astro && astro.formaApenas) t.push("Forma aproximada (sem mapa de superfície)");
   else if (astro && astro.fontes && astro.fontes.length && Object.keys(fonteEstado).length) t.push("Mapa de superfície indisponível no momento");
@@ -1126,7 +1172,7 @@ function atualizarCartao(){
   $("cEsfera").style.setProperty("--c", astro.cor);
 }
 function fecharPaineis(){
-  for (const [p, b] of [["catalogo","btnCatalogo"],["lista","btnLista"],["camadas","btnCamadas"]]){ $(p).hidden = true; $(b).setAttribute("aria-expanded","false"); }
+  for (const [p, b] of [["catalogo","btnCatalogo"],["lista","btnLista"],["camadas","btnCamadas"],["avisos","btnAvisos"]]){ $(p).hidden = true; $(b).setAttribute("aria-expanded","false"); }
 }
 function alternar(p, b){
   const abrir = $(p).hidden; fecharPaineis(); if (!$("visor").hidden) fecharVisor();
@@ -1184,13 +1230,14 @@ async function carregarAstro(pedido){
   viewer = new Cesium.Viewer("mapa", {
     baseLayer: false, terrain: undefined, geocoder: false, baseLayerPicker: false, homeButton: false,
     sceneModePicker: false, navigationHelpButton: false, animation: false, timeline: false, fullscreenButton: false,
-    infoBox: false, selectionIndicator: false, scene3DOnly: true, requestRenderMode: true, maximumRenderTimeChange: Infinity,
+    infoBox: false, selectionIndicator: false, scene3DOnly: true, useBrowserRecommendedResolution: false, requestRenderMode: true, maximumRenderTimeChange: Infinity,
     skyBox: new Cesium.SkyBox({ sources: Object.fromEntries([["positiveX","px"],["negativeX","mx"],["positiveY","py"],["negativeY","my"],["positiveZ","pz"],["negativeZ","mz"]]
       .map(([k, f]) => [k, Cesium.buildModuleUrl(`Assets/Textures/SkyBox/tycho2t3_80_${f}.jpg`)])) }),
     skyAtmosphere: a.atmosfera ? new Cesium.SkyAtmosphere(elip) : false,
     creditContainer: $("creditoCesium"),
     mapProjection: new Cesium.GeographicProjection(elip), globe: new Cesium.Globe(elip) });
   const cena = viewer.scene, R = raioMax(a);
+  aplicarNitidez();
   cena.backgroundColor = Cesium.Color.BLACK;
   if (cena.sun) cena.sun.show = false; if (cena.moon) cena.moon.show = false;
   cena.fog.enabled = false;
@@ -1475,6 +1522,16 @@ function montarCamadas(){
     if (wikiPins.length){ const b2 = document.createElement("button"); b2.className = "btn"; b2.textContent = "Limpar artigos (" + wikiPins.length + ")"; b2.onclick = () => { limparWiki(); montarCamadas(); }; l.appendChild(b2); }
     box.appendChild(l);
   }
+  secao(box, "Nitidez da imagem");
+  const nl = document.createElement("div"); nl.className = "linha-acoes";
+  const nq = lerGuardado("mapa.nitidez", "auto");
+  for (const [v, t] of [["eco", "Economia"], ["auto", "Automática"], ["max", "Máxima"]]){
+    const b = document.createElement("button"); b.className = "btn"; b.textContent = t; b.setAttribute("aria-pressed", String(nq === v));
+    b.onclick = () => { guardar("mapa.nitidez", v); aplicarNitidez(); montarCamadas(); }; nl.appendChild(b);
+  }
+  box.appendChild(nl);
+  const nn = document.createElement("p"); nn.className = "nota"; nn.textContent = "Máxima usa a resolução total da tela e mais detalhes do mapa (gasta mais bateria). Se o mapa ainda parecer borrado num lugar, tente outra fonte: algumas regiões só têm imagens de menor resolução.";
+  box.appendChild(nn);
   const d = document.createElement("details"); d.className = "sobre";
   d.innerHTML = "<summary>Sobre as fontes</summary><p>A fonte automática é a <b>Esri</b>, a imagem de satélite mais detalhada que pode ser usada livremente aqui. Google Earth, Bing e Apple Maps só liberam as imagens com chave paga e licença própria, por isso não entram sozinhos. Se você tiver uma chave do Google Map Tiles, cole acima para ligar o 3D fotorrealista. Na Lua, em Marte e nos outros astros as imagens vêm da NASA e do USGS.</p>";
   box.appendChild(d);
@@ -1762,6 +1819,293 @@ function abrirVisor(){
 function fecharVisor(){ $("visor").hidden = true; $("btnObjetos").setAttribute("aria-expanded", "false"); if (cenaT) cenaT.ativa = false; if (document.fullscreenElement) document.exitFullscreen(); const fr = $("vSketch"); if (!fr.hidden) fr.src = "about:blank"; mostrarPalco("vazio"); }
 
 /* =====================================================================
+   AVISOS E LEMBRETES
+   - Notificações do navegador (funcionam enquanto o app estiver aberto/instalado) + aviso na tela
+   - Lembretes no calendário do aparelho (.ics): tocam mesmo com o app fechado
+   - Fases da Lua: cálculo astronômico (Jean Meeus, "Astronomical Algorithms", cap. 49)
+   - ISS: passagens sobre o endereço da pessoa (TLE da API wheretheiss.at + satellite.js)
+   ===================================================================== */
+const SAT_SRC = "https://cdn.jsdelivr.net/npm/satellite.js@5.0.0/dist/satellite.min.js";
+const RAD = Math.PI / 180;
+const fmtDH = d => d.toLocaleString("pt-BR", {weekday: "short", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit"});
+const fmtD = d => d.toLocaleDateString("pt-BR", {weekday: "long", day: "2-digit", month: "long"});
+const fmtH = d => d.toLocaleTimeString("pt-BR", {hour: "2-digit", minute: "2-digit"});
+let av = (() => { try{ return Object.assign({iss: false, lead: 10, lat: null, lon: null, rotulo: "", cheia: false, nova: false, leadLua: "0", meteoros: false}, JSON.parse(localStorage.getItem("mapa.avisos") || "{}")); }catch(e){ return {iss: false, lead: 10, lat: null, lon: null, rotulo: "", cheia: false, nova: false, leadLua: "0", meteoros: false}; } })();
+const salvarAv = () => guardar("mapa.avisos", JSON.stringify(av));
+let passesCache = null, timersAv = [];
+
+/* ---------- notificações ---------- */
+function toast(titulo, corpo){
+  const t = document.createElement("div"); t.className = "toast vidro"; t.innerHTML = "<b></b><span></span>";
+  t.querySelector("b").textContent = titulo; t.querySelector("span").textContent = corpo || "";
+  const sumir = () => { t.style.transition = "opacity .4s, transform .4s"; t.style.opacity = 0; t.style.transform = "translateY(-14px)"; setTimeout(() => t.remove(), 450); };
+  t.onclick = sumir; $("toasts").appendChild(t); setTimeout(sumir, 9000);
+}
+async function notificar(titulo, corpo, tag){
+  toast(titulo, corpo);
+  if (navigator.vibrate) try{ navigator.vibrate([180, 80, 180]); }catch(e){}
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+  const op = {body: corpo, icon: "icone.svg", badge: "icone.svg", tag: tag || "mapa-dos-astros", renotify: true, lang: "pt-BR"};
+  try{ const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration(); if (reg){ await reg.showNotification(titulo, op); return; } }catch(e){}
+  try{ new Notification(titulo, op); }catch(e){}
+}
+function estadoPermissao(){ return !("Notification" in window) ? "indisponivel" : Notification.permission; }
+async function pedirPermissao(){
+  if (!("Notification" in window)){ toast("Notificações indisponíveis", "Este navegador não permite notificações. Use os lembretes no calendário."); return "indisponivel"; }
+  let r = Notification.permission; if (r === "default") r = await Notification.requestPermission();
+  if (r === "granted") notificar("Notificações ligadas", "Você vai receber os avisos que escolher, enquanto o app estiver aberto.");
+  else if (r === "denied") toast("Notificações bloqueadas", "Libere nas configurações do navegador para este site, ou use os lembretes no calendário.");
+  montarAvisos(); return r;
+}
+
+/* ---------- Lua: fases (Meeus, cap. 49) ---------- */
+function jdFase(k){        // k inteiro = lua nova; k + 0,5 = lua cheia. Devolve a data (UT)
+  const T = k / 1236.85, T2 = T * T, T3 = T2 * T, T4 = T3 * T, sn = Math.sin;
+  const jde = 2451550.09766 + 29.530588861 * k + 0.00015437 * T2 - 0.00000015 * T3 + 0.00000000073 * T4;
+  const E = 1 - 0.002516 * T - 0.0000074 * T2;
+  const M = (2.5534 + 29.1053567 * k - 0.0000014 * T2 - 0.00000011 * T3) * RAD;
+  const Mp = (201.5643 + 385.81693528 * k + 0.0107582 * T2 + 0.00001238 * T3 - 0.000000058 * T4) * RAD;
+  const F = (160.7108 + 390.67050284 * k - 0.0016118 * T2 - 0.00000227 * T3 + 0.000000011 * T4) * RAD;
+  const O = (124.7746 - 1.56375588 * k + 0.0020672 * T2 + 0.00000215 * T3) * RAD;
+  const cheia = Math.abs(k - Math.round(k)) > 0.25;
+  const c = cheia
+    ? -0.40614 * sn(Mp) + 0.17302 * E * sn(M) + 0.01614 * sn(2 * Mp) + 0.01043 * sn(2 * F) + 0.00734 * E * sn(Mp - M) - 0.00515 * E * sn(Mp + M) + 0.00209 * E * E * sn(2 * M)
+      - 0.00111 * sn(Mp - 2 * F) - 0.00057 * sn(Mp + 2 * F) + 0.00056 * E * sn(2 * Mp + M) - 0.00042 * sn(3 * Mp) + 0.00042 * E * sn(M + 2 * F) + 0.00038 * E * sn(M - 2 * F)
+      - 0.00024 * E * sn(2 * Mp - M) - 0.00017 * sn(O) - 0.00007 * sn(Mp + 2 * M) + 0.00004 * sn(2 * Mp - 2 * F) + 0.00004 * sn(3 * M) + 0.00003 * sn(Mp + M - 2 * F)
+      + 0.00003 * sn(2 * Mp + 2 * F) - 0.00003 * sn(Mp + M + 2 * F) + 0.00003 * sn(Mp - M + 2 * F) - 0.00002 * sn(Mp - M - 2 * F) - 0.00002 * sn(3 * Mp + M) + 0.00002 * sn(4 * Mp)
+    : -0.40720 * sn(Mp) + 0.17241 * E * sn(M) + 0.01608 * sn(2 * Mp) + 0.01039 * sn(2 * F) + 0.00739 * E * sn(Mp - M) - 0.00514 * E * sn(Mp + M) + 0.00208 * E * E * sn(2 * M)
+      - 0.00111 * sn(Mp - 2 * F) - 0.00057 * sn(Mp + 2 * F) + 0.00056 * E * sn(2 * Mp + M) - 0.00042 * sn(3 * Mp) + 0.00042 * E * sn(M + 2 * F) + 0.00038 * E * sn(M - 2 * F)
+      - 0.00024 * E * sn(2 * Mp - M) - 0.00017 * sn(O) - 0.00007 * sn(Mp + 2 * M) + 0.00004 * sn(2 * Mp - 2 * F) + 0.00004 * sn(3 * M) + 0.00003 * sn(Mp + M - 2 * F)
+      + 0.00003 * sn(2 * Mp + 2 * F) - 0.00003 * sn(Mp + M + 2 * F) + 0.00003 * sn(Mp - M + 2 * F) - 0.00002 * sn(Mp - M - 2 * F) - 0.00002 * sn(3 * Mp + M) + 0.00002 * sn(4 * Mp);
+  const A = [[299.77 + 0.107408 * k - 0.009173 * T2, 0.000325], [251.88 + 0.016321 * k, 0.000165], [251.83 + 26.651886 * k, 0.000164], [349.42 + 36.412478 * k, 0.000126],
+    [84.66 + 18.206239 * k, 0.000110], [141.74 + 53.303771 * k, 0.000062], [207.14 + 2.453732 * k, 0.000060], [154.84 + 7.306860 * k, 0.000056], [34.52 + 27.261239 * k, 0.000047],
+    [207.19 + 0.121824 * k, 0.000042], [291.34 + 1.844379 * k, 0.000040], [161.72 + 24.198154 * k, 0.000037], [239.56 + 25.513099 * k, 0.000035], [331.55 + 3.592518 * k, 0.000023]];
+  const w = A.reduce((t, [a, f]) => t + f * sn(a * RAD), 0);
+  const jd = jde + c + w - 69 / 86400;                  // 69 s ≈ diferença entre o tempo dinâmico e o UT
+  return new Date((jd - 2440587.5) * 864e5);
+}
+/* Próximas fases a partir de uma data: tipo "nova" ou "cheia" */
+function proximasFases(tipo, n, de){
+  const anos = (de.getTime() / 864e5 + 2440587.5 - 2451545) / 365.25, out = [];
+  let k = Math.floor(anos * 12.3685) - 2 + (tipo === "cheia" ? 0.5 : 0);
+  while (out.length < n){ const d = jdFase(k); if (d > de) out.push(d); k += 1; }
+  return out;
+}
+function faseAtual(de){
+  const anos = (de.getTime() / 864e5 + 2440587.5 - 2451545) / 365.25;
+  let k = Math.floor(anos * 12.3685) - 2, ant = jdFase(k), prox = jdFase(k + 1);
+  while (prox <= de){ k++; ant = prox; prox = jdFase(k + 1); }
+  const frac = (de - ant) / (prox - ant), ilum = (1 - Math.cos(2 * Math.PI * frac)) / 2;
+  const nome = frac < .03 || frac > .97 ? "Lua nova" : frac < .22 ? "Lua crescente" : frac < .28 ? "Quarto crescente" : frac < .47 ? "Crescente gibosa"
+    : frac < .53 ? "Lua cheia" : frac < .72 ? "Minguante gibosa" : frac < .78 ? "Quarto minguante" : "Lua minguante";
+  return {frac, ilum, nome};
+}
+/* Desenho da fase: no hemisfério sul o lado iluminado aparece invertido em relação ao norte */
+function svgLua(frac, sul){
+  const r = 40, c = 50, k = (1 - Math.cos(2 * Math.PI * frac)) / 2, rx = Math.abs(r * (1 - 2 * k)), cresc = frac < .5, gib = k > .5;
+  let dir = cresc ? 1 : -1; if (sul) dir = -dir;
+  const so = dir > 0 ? 1 : 0, st = dir > 0 ? (gib ? 1 : 0) : (gib ? 0 : 1);
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="40" fill="#1b2542" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/>
+    <path d="M${c} ${c - r} A${r} ${r} 0 0 ${so} ${c} ${c + r} A${rx.toFixed(2)} ${r} 0 0 ${st} ${c} ${c - r}Z" fill="#f4ecd0"/></svg>`;
+}
+
+/* ---------- Sol e ISS: passagens sobre um endereço ---------- */
+function sunVec(d){            // vetor unitário Sol (referencial inercial equatorial), precisão baixa (suficiente aqui)
+  const n = d.getTime() / 864e5 + 2440587.5 - 2451545, L = (280.460 + 0.9856474 * n) * RAD, g = (357.528 + 0.9856003 * n) * RAD;
+  const lam = L + (1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g)) * RAD, eps = (23.439 - 0.0000004 * n) * RAD;
+  return [Math.cos(lam), Math.cos(eps) * Math.sin(lam), Math.sin(eps) * Math.sin(lam)];
+}
+function sunElev(d, lat, lon, gmst){
+  const s = sunVec(d), ra = Math.atan2(s[1], s[0]), dec = Math.asin(s[2]), ha = gmst + lon * RAD - ra;
+  return Math.asin(Math.sin(lat * RAD) * Math.sin(dec) + Math.cos(lat * RAD) * Math.cos(dec) * Math.cos(ha)) / RAD;
+}
+function satIluminado(pos, d){     // sombra cilíndrica da Terra
+  const s = sunVec(d), dot = pos.x * s[0] + pos.y * s[1] + pos.z * s[2]; if (dot >= 0) return true;
+  const px = pos.x - dot * s[0], py = pos.y - dot * s[1], pz = pos.z - dot * s[2];
+  return Math.hypot(px, py, pz) > 6371;
+}
+const PONTOS = ["norte", "nordeste", "leste", "sudeste", "sul", "sudoeste", "oeste", "noroeste"];
+const ponto = az => PONTOS[Math.round(((az % 360) + 360) % 360 / 45) % 8];
+function carregarSatellite(){
+  if (window.satellite) return Promise.resolve();
+  return new Promise((ok, err) => { const sc = document.createElement("script"); sc.src = SAT_SRC; sc.onload = ok; sc.onerror = err; document.head.appendChild(sc); });
+}
+async function lerTle(){
+  const r = await comTempo(10000, sg => fetch("https://api.wheretheiss.at/v1/satellites/25544/tles?format=json", {signal: sg}));
+  const j = await r.json(); if (!j.line1 || !j.line2) throw new Error("tle"); return [j.line1, j.line2];
+}
+function calcularPassagens(l1, l2, lat, lon, dias, inicio){
+  const rec = satellite.twoline2satrec(l1, l2), obs = {latitude: lat * RAD, longitude: lon * RAD, height: 0}, out = [];
+  const t0 = inicio || Date.now(), passo = 15000; let at = null;
+  for (let t = t0; t < t0 + dias * 864e5; t += passo){
+    const d = new Date(t), pv = satellite.propagate(rec, d); if (!pv.position) continue;
+    const g = satellite.gstime(d), look = satellite.ecfToLookAngles(obs, satellite.eciToEcf(pv.position, g)), el = look.elevation / RAD, az = look.azimuth / RAD;
+    if (el > 0){
+      if (!at) at = {ini: t, az0: az, maxEl: el, tMax: t, visivel: false};
+      if (el > at.maxEl){ at.maxEl = el; at.tMax = t; }
+      at.fim = t; at.az1 = az;
+      if (!at.visivel && el > 10 && sunElev(d, lat, lon, g) < -6 && satIluminado(pv.position, d)) at.visivel = true;
+    } else if (at){ out.push(at); at = null; }
+  }
+  return out.filter(p => p.maxEl >= 10);
+}
+async function atualizarPassagens(){
+  if (av.lat === null) return null;
+  await carregarSatellite(); const [l1, l2] = await lerTle();
+  const lista = calcularPassagens(l1, l2, av.lat, av.lon, 3);
+  passesCache = {lat: av.lat, lon: av.lon, quando: Date.now(), lista}; reagendarAvisos(); return lista;
+}
+async function buscarEndereco(q){
+  const u = "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language=pt-BR&q=" + encodeURIComponent(q);
+  const r = await comTempo(10000, sg => fetch(u, {signal: sg})); const j = await r.json();
+  if (!j.length) return null; return {lat: +j[0].lat, lon: +j[0].lon, rotulo: j[0].display_name.split(",").slice(0, 2).join(",").trim()};
+}
+
+/* ---------- Calendário (.ics) ---------- */
+const icsData = d => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+const icsTexto = t => String(t).replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\n/g, "\\n");
+function gerarIcs(eventos){
+  const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Mapa dos Astros//PT-BR", "CALSCALE:GREGORIAN", "X-WR-CALNAME:Mapa dos Astros"];
+  eventos.forEach((e, i) => {
+    L.push("BEGIN:VEVENT", `UID:${icsData(e.inicio)}-${i}@mapa-dos-astros`, "DTSTAMP:" + icsData(new Date()), "DTSTART:" + icsData(e.inicio), "DTEND:" + icsData(e.fim || new Date(e.inicio.getTime() + 36e5)),
+      "SUMMARY:" + icsTexto(e.titulo), "DESCRIPTION:" + icsTexto(e.descricao || ""));
+    for (const min of e.alarmes || [0]) L.push("BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + icsTexto(e.titulo), "TRIGGER:-PT" + min + "M", "END:VALARM");
+    L.push("END:VEVENT");
+  });
+  L.push("END:VCALENDAR"); return L.join("\r\n") + "\r\n";
+}
+function baixarIcs(eventos, nome){
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([gerarIcs(eventos)], {type: "text/calendar"})); a.download = nome; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+const METEOROS = [["Quadrantídeas", 1, 3], ["Líridas", 4, 22], ["Eta Aquáridas", 5, 6], ["Perseidas", 8, 12], ["Oriônidas", 10, 21], ["Leônidas", 11, 17], ["Geminidas", 12, 14]];
+function proximosMeteoros(n){
+  const agora = new Date(), out = [];
+  for (let ano = agora.getFullYear(); out.length < n && ano < agora.getFullYear() + 3; ano++)
+    for (const [nome, m, d] of METEOROS){ const dt = new Date(ano, m - 1, d, 21, 0); if (dt > agora) out.push({nome, data: dt}); }
+  return out.slice(0, n);
+}
+function eventosLua(tipo, meses){
+  const fases = proximasFases(tipo, Math.ceil(meses * 1.05), new Date());
+  return fases.map(d => ({inicio: d, fim: new Date(d.getTime() + 36e5), alarmes: [0, 1440],
+    titulo: tipo === "cheia" ? "Lua cheia" : "Lua nova", descricao: (tipo === "cheia" ? "Lua cheia" : "Lua nova") + " às " + fmtH(d) + ". Mapa dos Astros."}));
+}
+
+/* ---------- Agendador (enquanto o app estiver aberto) ---------- */
+function eventosAgendados(){
+  const ev = [];
+  if (av.iss && passesCache) for (const p of passesCache.lista){
+    const q = p.visivel ? "visível a olho nu" : "passagem";
+    ev.push({quando: p.ini - av.lead * 60000, titulo: "ISS passando em " + av.lead + " min", corpo: `${fmtH(new Date(p.ini))}, altura máxima ${Math.round(p.maxEl)}° (${q}). Olhe para ${ponto(p.az0)}.`, tag: "iss" + p.ini});
+  }
+  for (const [tipo, on] of [["cheia", av.cheia], ["nova", av.nova]]) if (on){
+    const antes = av.leadLua === "1d" ? 864e5 : 0;
+    for (const d of proximasFases(tipo, 3, new Date()))
+      ev.push({quando: d - antes, titulo: antes ? (tipo === "cheia" ? "Lua cheia amanhã" : "Lua nova amanhã") : (tipo === "cheia" ? "É lua cheia!" : "É lua nova!"), corpo: (tipo === "cheia" ? "Lua cheia" : "Lua nova") + " às " + fmtH(d) + ".", tag: "lua" + tipo + d.getTime()});
+  }
+  if (av.meteoros) for (const m of proximosMeteoros(3)) ev.push({quando: m.data - 12 * 36e5, titulo: "Chuva de meteoros: " + m.nome, corpo: "O pico é por volta de hoje à noite. Procure um lugar escuro, longe das luzes.", tag: "met" + m.nome});
+  return ev;
+}
+function reagendarAvisos(){
+  timersAv.forEach(clearTimeout); timersAv = [];
+  const agora = Date.now();
+  for (const e of eventosAgendados()){ const ms = e.quando - agora; if (ms > 0 && ms < 6 * 864e5) timersAv.push(setTimeout(() => notificar(e.titulo, e.corpo, e.tag), ms)); }
+  timersAv.push(setTimeout(reagendarAvisos, 3 * 36e5));         // reavalia de 3 em 3 horas
+}
+/* Ao abrir o app: avisa se hoje é dia de lua cheia/nova (e a pessoa ligou esse aviso) */
+function avisoDoDia(){
+  const hoje = new Date().toDateString(), vistos = lerGuardado("mapa.avisoDia", "");
+  if (vistos === hoje) return;
+  for (const [tipo, on] of [["cheia", av.cheia], ["nova", av.nova]]) if (on){
+    const [d] = proximasFases(tipo, 1, new Date(Date.now() - 864e5 * 0.5)); if (d && d.toDateString() === hoje){
+      guardar("mapa.avisoDia", hoje); notificar(tipo === "cheia" ? "Hoje é lua cheia!" : "Hoje é lua nova!", "Às " + fmtH(d) + ". Olhe para o céu."); return; }
+  }
+}
+
+/* ---------- Painel "Avisos e lembretes" ---------- */
+function montarAvisos(){
+  const box = $("avCorpo"); if (!box) return; box.innerHTML = "";
+  const nota = (t, cls) => { const p = document.createElement("p"); p.className = cls || "nota"; p.innerHTML = t; box.appendChild(p); return p; };
+  const botaoAcao = (t, f) => { const b = document.createElement("button"); b.className = "btn"; b.textContent = t; b.onclick = f; return b; };
+  const linha = (...bs) => { const l = document.createElement("div"); l.className = "linha-acoes"; bs.forEach(b => l.appendChild(b)); box.appendChild(l); return l; };
+  const select = (opcoes, valor, aoMudar) => { const sel = document.createElement("select"); sel.className = "campo";
+    for (const [v, t] of opcoes){ const o = document.createElement("option"); o.value = v; o.textContent = t; if (String(v) === String(valor)) o.selected = true; sel.appendChild(o); }
+    sel.onchange = () => aoMudar(sel.value); box.appendChild(sel); return sel; };
+
+  /* Notificações */
+  secao(box, "Notificações");
+  const perm = estadoPermissao();
+  nota(perm === "granted" ? '<span class="ok">Ligadas.</span> Os avisos aparecem mesmo com outra aba aberta, enquanto o app estiver aberto ou instalado.'
+    : perm === "denied" ? '<span class="ruim">Bloqueadas</span> nas configurações do navegador. Libere para este site, ou use os lembretes no calendário abaixo.'
+    : perm === "indisponivel" ? '<span class="ruim">Este navegador não permite notificações.</span> Use os lembretes no calendário.'
+    : "Desligadas. Ative para receber os avisos escolhidos abaixo.", "estado");
+  if (perm !== "granted" && perm !== "denied" && perm !== "indisponivel") linha(botaoAcao("Ativar notificações", pedirPermissao));
+  if (perm === "granted") linha(botaoAcao("Enviar um aviso de teste", () => notificar("Aviso de teste", "Está tudo certo! Você receberá os avisos que escolher.", "teste")));
+  nota("Para lembretes <b>com o app fechado</b>, use os botões “Adicionar ao calendário”: o calendário do seu aparelho avisa na hora certa.");
+
+  /* ISS */
+  secao(box, "ISS passando no seu endereço");
+  nota(av.lat === null ? "Escolha onde você está para calcular quando a ISS passa por cima." : `Local: <b></b>`, "estado");
+  if (av.lat !== null) box.lastChild.querySelector("b").textContent = av.rotulo || `${av.lat.toFixed(3)}, ${av.lon.toFixed(3)}`;
+  const campo = document.createElement("input"); campo.className = "campo"; campo.placeholder = "Cidade ou endereço (ex.: Cascavel, PR)"; campo.style.marginTop = "6px";
+  campo.onkeydown = e => { if (e.key === "Enter") buscar.click(); }; box.appendChild(campo);
+  const buscar = botaoAcao("Buscar endereço", async () => {
+    if (!campo.value.trim()) return; buscar.textContent = "Buscando…";
+    try{ const r = await buscarEndereco(campo.value); if (!r) toast("Endereço não encontrado", "Tente a cidade e o estado."); else { Object.assign(av, r); passesCache = null; salvarAv(); await atualizarPassagens().catch(() => {}); } }
+    catch(e){ toast("Sem conexão com o buscador", "Tente de novo em instantes."); }
+    montarAvisos();
+  });
+  linha(buscar, botaoAcao("Usar minha localização", () => {
+    if (!navigator.geolocation){ toast("Localização indisponível", "Digite o endereço."); return; }
+    navigator.geolocation.getCurrentPosition(async pos => { av.lat = pos.coords.latitude; av.lon = pos.coords.longitude; av.rotulo = "Minha localização"; passesCache = null; salvarAv(); await atualizarPassagens().catch(() => {}); montarAvisos(); },
+      () => toast("Não consegui a localização", "Libere o acesso ou digite o endereço."), {timeout: 12000});
+  }));
+  if (av.lat !== null){
+    box.appendChild(interruptor("Avisar antes de cada passagem", "Notificação na antecedência abaixo", av.iss, async () => {
+      if (!av.iss && estadoPermissao() === "default") await pedirPermissao();
+      av.iss = !av.iss; salvarAv(); if (av.iss && !passesCache) await atualizarPassagens().catch(() => {}); reagendarAvisos(); montarAvisos(); }));
+    select([[5, "5 minutos antes"], [10, "10 minutos antes"], [30, "30 minutos antes"]], av.lead, v => { av.lead = +v; salvarAv(); reagendarAvisos(); });
+    const lista = passesCache && passesCache.lista;
+    if (!lista){ linha(botaoAcao("Calcular passagens", async () => { try{ await atualizarPassagens(); }catch(e){ toast("Não consegui calcular", "Falta conexão com os dados da ISS."); } montarAvisos(); })); }
+    else {
+      nota(lista.length ? `Próximos 3 dias (horário do seu aparelho). “Visível” = a ISS está iluminada pelo Sol e o céu está escuro.` : "Nenhuma passagem boa nos próximos 3 dias.", "nota");
+      for (const p of lista.slice(0, 8)){
+        const b = document.createElement("div"); b.className = "passagem";
+        b.innerHTML = `<b></b><span class="q"></span>`; b.querySelector("b").textContent = fmtDH(new Date(p.ini));
+        b.querySelector(".q").innerHTML = `${Math.round((p.fim - p.ini) / 60000)} min · altura ${Math.round(p.maxEl)}° · de ${ponto(p.az0)} a ${ponto(p.az1)}${p.visivel ? ' · <span class="ok">visível</span>' : ""}`;
+        box.appendChild(b);
+      }
+      if (lista.length) linha(botaoAcao("Adicionar ao calendário", () => baixarIcs(lista.map(p => ({inicio: new Date(p.ini), fim: new Date(p.fim), alarmes: [av.lead],
+        titulo: "ISS passando" + (p.visivel ? " (visível)" : ""), descricao: `Altura máxima ${Math.round(p.maxEl)}°, de ${ponto(p.az0)} a ${ponto(p.az1)}. Local: ${av.rotulo}.`})), "passagens-iss.ics")),
+        botaoAcao("Recalcular", async () => { passesCache = null; try{ await atualizarPassagens(); }catch(e){} montarAvisos(); }));
+    }
+  }
+
+  /* Lua */
+  secao(box, "Fases da Lua");
+  const f = faseAtual(new Date()), sul = av.lat !== null ? av.lat < 0 : true;
+  const cartao = document.createElement("div"); cartao.className = "luacard";
+  const [nv] = proximasFases("nova", 1, new Date()), [ch] = proximasFases("cheia", 1, new Date());
+  cartao.innerHTML = svgLua(f.frac, sul) + "<div><b></b><small></small></div>";
+  cartao.querySelector("b").textContent = f.nome + " · " + Math.round(f.ilum * 100) + "% iluminada";
+  cartao.querySelector("small").innerHTML = `Próxima lua cheia: <b></b><br>Próxima lua nova: <b></b>`;
+  cartao.querySelectorAll("small b")[0].textContent = fmtDH(ch); cartao.querySelectorAll("small b")[1].textContent = fmtDH(nv);
+  box.appendChild(cartao);
+  nota("Na metade sul do planeta a Lua aparece “de cabeça para baixo” em relação ao norte; o desenho já considera isso.");
+  box.appendChild(interruptor("Avisar na lua cheia", "Notificação quando chegar a lua cheia", av.cheia, async () => { if (!av.cheia && estadoPermissao() === "default") await pedirPermissao(); av.cheia = !av.cheia; salvarAv(); reagendarAvisos(); montarAvisos(); }));
+  box.appendChild(interruptor("Avisar na lua nova", "Notificação quando começar a lua nova", av.nova, async () => { if (!av.nova && estadoPermissao() === "default") await pedirPermissao(); av.nova = !av.nova; salvarAv(); reagendarAvisos(); montarAvisos(); }));
+  select([["0", "No momento da fase"], ["1d", "1 dia antes"]], av.leadLua, v => { av.leadLua = v; salvarAv(); reagendarAvisos(); });
+  linha(botaoAcao("Lua cheia no calendário (12 meses)", () => baixarIcs(eventosLua("cheia", 12), "lua-cheia.ics")), botaoAcao("Lua nova no calendário (12 meses)", () => baixarIcs(eventosLua("nova", 12), "lua-nova.ics")));
+
+  /* Meteoros */
+  secao(box, "Chuvas de meteoros");
+  const pm = proximosMeteoros(3);
+  nota(pm.map(m => `<b>${m.nome}</b>: ${fmtD(m.data)}`).join("<br>") + "<br>(datas aproximadas do pico; a Lua e o clima mudam a visibilidade)");
+  box.appendChild(interruptor("Avisar no dia do pico", "Notificação no dia, à noite", av.meteoros, async () => { if (!av.meteoros && estadoPermissao() === "default") await pedirPermissao(); av.meteoros = !av.meteoros; salvarAv(); reagendarAvisos(); montarAvisos(); }));
+  linha(botaoAcao("Meteoros no calendário", () => baixarIcs(proximosMeteoros(14).map(m => ({inicio: m.data, fim: new Date(m.data.getTime() + 36e5 * 4), alarmes: [180, 0], titulo: "Chuva de meteoros: " + m.nome, descricao: "Pico aproximado. Procure um lugar escuro."})), "meteoros.ics")));
+}
+
+/* =====================================================================
    MODO MAPA LIMPO: toque no vazio esconde tudo (some a interface); outro toque traz de volta
    ===================================================================== */
 let imersivo = false, toqueTimer = null;
@@ -1828,6 +2172,7 @@ function iniciar(){
   $("btnCatalogo").onclick = () => alternar("catalogo", "btnCatalogo");
   $("btnLista").onclick = () => alternar("lista", "btnLista");
   $("btnCamadas").onclick = () => alternar("camadas", "btnCamadas");
+  $("btnAvisos").onclick = () => { montarAvisos(); alternar("avisos", "btnAvisos"); };
   $("vInfo").onclick = () => $("vInfo").classList.toggle("aberto");
   $("btnObjetos").onclick = () => ($("visor").hidden ? abrirVisor() : fecharVisor()); $("vFechar").onclick = fecharVisor;
   arrastarFolha($("alcaVisor"), $("visor"), fecharVisor);
@@ -1840,8 +2185,13 @@ function iniciar(){
   arrastarFolha(document.querySelector('.alca[data-fecha="catalogo"]'), $("catalogo"), fecharPaineis);
   arrastarFolha(document.querySelector('.alca[data-fecha="lista"]'), $("lista"), fecharPaineis);
   arrastarFolha(document.querySelector('.alca[data-fecha="camadas"]'), $("camadas"), fecharPaineis);
+  arrastarFolha(document.querySelector('.alca[data-fecha="avisos"]'), $("avisos"), fecharPaineis);
   arrastarFolha($("alcaInfo"), $("info"), () => selecionar(null), () => $("info").classList.toggle("min"));
   definirTela(); ativarVidro();
+  if ("serviceWorker" in navigator && /^https?:/.test(location.protocol)) navigator.serviceWorker.register("sw.js").catch(() => {});
+  reagendarAvisos(); avisoDoDia();
+  if (av.iss && av.lat !== null) atualizarPassagens().catch(() => {});
+  document.addEventListener("visibilitychange", () => { if (!document.hidden){ reagendarAvisos(); avisoDoDia(); } });
   addEventListener("resize", definirTela); addEventListener("orientationchange", () => setTimeout(definirTela, 250));
   setTimeout(() => { $("dica").style.opacity = 0; }, 6500);
   $("zmMais").onclick = () => zoom(0.5); $("zmMenos").onclick = () => zoom(2);
