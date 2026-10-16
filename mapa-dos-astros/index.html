@@ -300,6 +300,7 @@
   body[data-tela="compacta"] #cHora,body[data-tela="media"] #cHora,body[data-tela="relogio"] #cHora{left:10px;right:10px;text-align:left;padding:6px 12px}
   body[data-tela="compacta"] #cInfo,body[data-tela="media"] #cInfo,body[data-tela="relogio"] #cInfo{top:76px;max-width:calc(100% - 20px)}
   body[data-tela="compacta"] .marca b{display:none}
+  body[data-tela="compacta"] .dgrade,body[data-tela="media"] .dgrade{grid-template-columns:1fr}
   body[data-tela="compacta"] #cTrack,body[data-tela="media"] #cTrack,body[data-tela="relogio"] #cTrack{top:64px}
 
   /* ---------- Rastreador ---------- */
@@ -314,6 +315,38 @@
   .trbtns{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap}
   .trbtns .btn{min-height:32px;padding:0 10px;font-size:.76rem;border-radius:11px}
   .trbusca{display:flex;gap:6px;margin:8px 0 2px}.trbusca .campo{margin:0;flex:1;min-height:38px}
+
+  /* ---------- Hub de dados e leitor ---------- */
+  #dados{position:fixed;z-index:50;left:var(--gap);right:var(--gap);top:calc(var(--gap) + var(--alvo) + 28px + env(safe-area-inset-top));bottom:calc(var(--gap) + 40px + env(safe-area-inset-bottom));
+    display:flex;flex-direction:column;overflow:hidden;transition:transform .5s var(--suave-ease),opacity .3s,visibility 0s}
+  #dados[hidden]{display:flex;opacity:0;pointer-events:none;visibility:hidden;transform:translateY(22px) scale(.97);transition:transform .4s var(--suave-ease),opacity .25s,visibility 0s .4s}
+  .dcorpo{flex:1;min-height:0;overflow:auto;padding:2px 14px 16px;overscroll-behavior:contain}
+  .dgrade{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;align-items:start}
+  .dcard{padding:12px 14px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.03));box-shadow:inset 0 0 0 .5px rgba(255,255,255,.16),inset 1px 1.5px 1.5px -.5px rgba(255,255,255,.4)}
+  .dcard h4{margin:0 0 4px;font-family:var(--serif);font-size:1.05rem}
+  .dcard small{display:block;color:var(--suave);font-size:.78rem;line-height:1.4}
+  .dcard p{margin:6px 0 0;font-size:.9rem;line-height:1.45}
+  .dcard img.foto{display:block;width:100%;max-height:230px;object-fit:cover;border-radius:14px;margin:0 0 8px;background:#0a1226}
+  .dcard .acoes{margin-top:8px}
+  .dcard .btn{min-height:34px;padding:0 12px;font-size:.82rem;border-radius:12px}
+  .dcard a.btn{text-decoration:none}
+  .selo{display:inline-block;padding:2px 9px;border-radius:8px;font-size:.72rem;font-weight:700;margin:0 6px 4px 0;color:#101010;background:#5eead4}
+  .selo.al{background:#ffb4a2} .selo.am{background:#ffd166} .selo.cz{background:#cfd8ea}
+  .miniaturas{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+  .miniaturas button{padding:0;border:0;border-radius:14px;overflow:hidden;text-align:left;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.18);transition:transform .3s var(--seg)}
+  .miniaturas button:active{transform:scale(.95)}
+  .miniaturas img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+  .miniaturas span{display:block;padding:6px 8px;font-size:.74rem;line-height:1.3;color:var(--suave)}
+  .dbusca{display:flex;gap:6px;margin:0 0 8px;flex-wrap:wrap}.dbusca .campo{margin:0;flex:1;min-width:160px}
+  #leitor{position:fixed;z-index:95;left:50%;top:50%;transform:translate(-50%,-50%);width:min(700px,calc(100vw - 24px));max-height:calc(100vh - 40px);overflow:auto;padding:20px 22px 20px;
+    transition:opacity .25s,transform .4s var(--suave-ease)}
+  #leitor[hidden]{display:block;opacity:0;pointer-events:none;visibility:hidden;transform:translate(-50%,-46%) scale(.96)}
+  #leitor h2{margin:0 54px 4px 0;font-family:var(--serif);font-size:1.45rem;line-height:1.2}
+  #lMeta{display:block;color:var(--suave);margin-bottom:10px;font-size:.84rem}
+  #lImg{display:block;width:100%;max-height:340px;object-fit:contain;border-radius:16px;margin:4px 0 12px;background:rgba(0,0,0,.35)}
+  #lImg[hidden]{display:none}
+  #lTexto{white-space:pre-wrap;line-height:1.65;font-size:1rem}
+  #lFechar{position:absolute;top:12px;right:12px}
 
   /* ---------- Controles do mapa ---------- */
   #controles{position:fixed;z-index:25;right:var(--gap);top:calc(var(--gap) + var(--alvo) + 28px + env(safe-area-inset-top));display:flex;flex-direction:column;gap:10px}
@@ -378,7 +411,7 @@
   body[data-tela="paisagem"] .btn .rot{display:none}
   body[data-tela="paisagem"] #creditos{bottom:var(--gap);font-size:.66rem;padding:5px 11px}
   body[data-tela="paisagem"] #dica{display:none}
-  body[data-tela="paisagem"] #ceu,body[data-tela="paisagem"] #visor{top:calc(var(--gap) + var(--alvo) + 22px);bottom:calc(var(--gap) + 34px)}
+  body[data-tela="paisagem"] #dados,body[data-tela="paisagem"] #ceu,body[data-tela="paisagem"] #visor{top:calc(var(--gap) + var(--alvo) + 22px);bottom:calc(var(--gap) + 34px)}
   body[data-tela="paisagem"] .vcorpo{grid-template-columns:minmax(200px,38%) 1fr}
   body[data-tela="paisagem"] .vtopo h3{display:none}
 
@@ -401,7 +434,7 @@
   body[data-tela="relogio"] #creditos{left:50%;transform:translateX(-50%);bottom:2.2%;max-width:78vw;font-size:8px;padding:3px 9px;text-align:center;border-radius:12px}
   body.imersivo[data-tela="relogio"] #creditos{opacity:.45}
   body[data-tela="relogio"] #dica,body[data-tela="relogio"] #aviso{display:none}
-  body[data-tela="relogio"] #ceu,body[data-tela="relogio"] #visor{left:3%;right:3%;top:10%;bottom:4%;border-radius:36px}
+  body[data-tela="relogio"] #dados,body[data-tela="relogio"] #ceu,body[data-tela="relogio"] #visor{left:3%;right:3%;top:10%;bottom:4%;border-radius:36px}
   body[data-tela="relogio"] .vcorpo{grid-template-columns:1fr;grid-template-rows:52% 1fr;padding:0 10px 10px}
   body[data-tela="relogio"] .vlado{order:2}
   body[data-tela="relogio"] .vtopo h3,body[data-tela="relogio"] .vbarra .btn span{display:none}
@@ -440,6 +473,9 @@
     <button id="btnCeu" class="btn" aria-expanded="false" aria-controls="ceu" aria-label="Mapa do céu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 4.6 4.9.4-3.7 3.2 1.1 4.8L12 13.4 7.8 16l1.1-4.8L5.2 8l4.9-.4z"/><path d="M19 17.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6zM4.5 3.5l.5 1.1 1.1.5-1.1.5-.5 1.1-.5-1.1L2.9 5.1l1.1-.5z" stroke-width="1.4"/></svg>
       <span class="rot">Céu</span></button>
+    <button id="btnDados" class="btn" aria-expanded="false" aria-controls="dados" aria-label="Dados ao vivo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.9 19.1A10 10 0 0 1 4.9 4.9M19.1 4.9a10 10 0 0 1 0 14.2M8.1 16a6 6 0 0 1 0-8M15.9 8a6 6 0 0 1 0 8"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/></svg>
+      <span class="rot">Dados</span></button>
     <button id="btnObjetos" class="btn" aria-expanded="false" aria-controls="visor" aria-label="Objetos 3D">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2.5 8.5 4.8v9.4L12 21.5l-8.5-4.8V7.3z"/><path d="m3.5 7.3 8.5 4.8 8.5-4.8M12 12.1v9.4"/></svg>
       <span class="rot">Objetos 3D</span></button>
@@ -450,7 +486,7 @@
 
   <section id="cartao" class="vidro" aria-live="polite" title="Toque para ver mais ou menos">
     <div class="esfera" id="cEsfera"></div>
-    <div><small id="cCateg"></small><h2 id="cNome"></h2><p id="cResumo"></p><small id="cFonte" class="fonteuso"></small></div>
+    <div><small id="cCateg"></small><h2 id="cNome"></h2><p id="cResumo"></p><small id="cFonte" class="fonteuso"></small><button class="btn" id="cSobre" type="button" style="margin-top:6px">Sobre (Wikipédia)</button></div>
   </section>
 
   <div id="controles">
@@ -511,6 +547,16 @@
     </div>
   </section>
 
+  <section id="dados" class="vidro denso" hidden aria-label="Dados ao vivo">
+    <div class="alca" id="alcaDados"></div>
+    <header class="vtopo">
+      <h3>Dados ao vivo</h3>
+      <div class="abas" id="dAbas" role="tablist"></div>
+      <button id="dFechar" class="btn vidro redondo" aria-label="Fechar os dados"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </header>
+    <div class="dcorpo" id="dCorpo"></div>
+  </section>
+
   <section id="visor" class="vidro denso" hidden aria-label="Objetos 3D">
     <div class="alca" id="alcaVisor"></div>
     <header class="vtopo">
@@ -545,6 +591,13 @@
   <footer id="creditos" class="vidro"><span id="creditoImagem"></span> · 3D: <span id="creditoCesium"></span></footer>
 </div>
 
+<section id="leitor" class="vidro denso" hidden role="dialog" aria-modal="true" aria-label="Leitor">
+  <button id="lFechar" class="btn vidro redondo" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <h2 id="lTitulo"></h2><small id="lMeta"></small>
+  <img id="lImg" hidden alt="">
+  <div id="lTexto"></div>
+  <div class="acoes" id="lAcoes"></div>
+</section>
 <div id="aviso" class="vidro" role="status" hidden></div>
 <div id="toasts" aria-live="assertive"></div>
 <div id="carregando"><div><div class="orbita"></div><b>Mapa dos Astros</b>Preparando o globo 3D…</div></div>
@@ -578,7 +631,10 @@ const TIPOS = {
   cidade:     { rotulo: "Cidade",                 cor: "#f4f4f4", letra: "★" },
   estacao:    { rotulo: "Estação espacial",       cor: "#5eead4", letra: "S" },
   wiki:       { rotulo: "Artigo da Wikipédia",    cor: "#ffffff", letra: "W" },
-  satelite:   { rotulo: "Satélite",               cor: "#5eead4", letra: "S" }
+  satelite:   { rotulo: "Satélite",               cor: "#5eead4", letra: "S" },
+  evento:     { rotulo: "Evento ao vivo",         cor: "#ff7aa2", letra: "!" },
+  foto:       { rotulo: "Foto (Wikimedia)",       cor: "#9fd0ff", letra: "F" },
+  aviao:      { rotulo: "Aeronave ao vivo",       cor: "#e6e6e6", letra: "A" }
 };
 
 /* ---------- Fontes de imagem ----------
@@ -602,7 +658,22 @@ const CAMADAS_TERRA = [
   { id: "diaria", nome: "Imagem de ontem (satélite NASA)", desc: "Nuvens e tempo de ontem, em tons reais (VIIRS)", nivelMax: 9, alfa: .92,
     url: () => `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_SNPP_CorrectedReflectance_TrueColor/default/${ontem()}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`, credito: "NASA GIBS (VIIRS)" },
   { id: "noite", nome: "Luzes noturnas (NASA)", desc: "Cidades iluminadas vistas do espaço", nivelMax: 8, alfa: .85,
-    url: "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/default/2016-01-01/GoogleMapsCompatible_Level8/{z}/{y}/{x}.png", credito: "NASA GIBS (Black Marble)" }
+    url: "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/default/2016-01-01/GoogleMapsCompatible_Level8/{z}/{y}/{x}.png", credito: "NASA GIBS (Black Marble)" },
+  { id: "modis", nome: "MODIS cores reais (ontem)", desc: "Satélite Terra da NASA, 250 m", nivelMax: 9, alfa: .95,
+    url: () => `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${ontem()}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`, credito: "NASA GIBS (MODIS)" },
+  { id: "tempsolo", nome: "Temperatura do solo (dia)", desc: "Quão quente está o chão, ontem (MODIS)", nivelMax: 7, alfa: .7,
+    url: () => `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_Land_Surface_Temp_Day/default/${ontem()}/GoogleMapsCompatible_Level7/{z}/{y}/{x}.png`, credito: "NASA GIBS (Temp. do solo)" },
+  { id: "tempmar", nome: "Temperatura do mar", desc: "Superfície do oceano, ontem (GHRSST MUR)", nivelMax: 7, alfa: .75,
+    url: () => `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/GHRSST_L4_MUR_Sea_Surface_Temperature/default/${ontem()}/GoogleMapsCompatible_Level7/{z}/{y}/{x}.png`, credito: "NASA GIBS (GHRSST MUR)" },
+  { id: "chuva", nome: "Chuva (satélite)", desc: "Taxa de chuva do dia anterior (IMERG)", nivelMax: 6, alfa: .75,
+    url: () => `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/IMERG_Precipitation_Rate/default/${ontem()}/GoogleMapsCompatible_Level6/{z}/{y}/{x}.png`, credito: "NASA GIBS (IMERG)" },
+  { id: "aerossol", nome: "Fumaça e poeira no ar", desc: "Aerossóis na atmosfera (MODIS)", nivelMax: 6, alfa: .7,
+    url: () => `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_Aerosol/default/${ontem()}/GoogleMapsCompatible_Level6/{z}/{y}/{x}.png`, credito: "NASA GIBS (Aerossol)" },
+  { id: "fogo", nome: "Focos de calor e incêndios", desc: "Anomalias térmicas de ontem (VIIRS 375 m)", nivelMax: 8, alfa: 1,
+    url: () => `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_SNPP_Thermal_Anomalies_375m_All/default/${ontem()}/GoogleMapsCompatible_Level8/{z}/{y}/{x}.png`, credito: "NASA GIBS (VIIRS fogo)" },
+  { id: "neve", nome: "Neve e gelo", desc: "Cobertura de neve de ontem (MODIS)", nivelMax: 8, alfa: .8,
+    url: () => `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDSI_Snow_Cover/default/${ontem()}/GoogleMapsCompatible_Level8/{z}/{y}/{x}.png`, credito: "NASA GIBS (Neve)" },
+  { id: "radar", nome: "Radar de chuva ao vivo", desc: "Tempestades agora, onde há radar (RainViewer)", nivelMax: 7, alfa: .75, radar: true, credito: "Radar: RainViewer" }
 ];
 const CAMADA_GRADE = { id: "grade", nome: "Grade de latitude e longitude", desc: "Linhas para se orientar", grade: true };
 
@@ -869,7 +940,7 @@ ASTROS.forEach(a => (a.fontes || []).forEach((f, i) => { f.id = f.id || (f.t + "
    ===================================================================== */
 const $ = id => document.getElementById(id);
 let camadasLigadas = new Set((() => { try{ return JSON.parse(localStorage.getItem("mapa.camadas") || "null") || CAMADAS_TERRA.filter(c => c.padrao).map(c => c.id); }catch(e){ return ["lugares"]; } })());
-let camadaLayers = {}, relevoOn = false, prediosOn = false, googleOn = false, wikiPins = [], srcPredios = null, googleTiles = null;
+let camadaLayers = {}, relevoOn = false, prediosOn = false, googleOn = false, wikiPins = [], extraPins = [], srcPredios = null, googleTiles = null;
 let pinosOn = false;                  // alfinetes de referência começam DESLIGADOS
 const tiposOn = new Set(Object.keys(TIPOS));  // tipos visíveis quando ligados
 let viewer = null, astro = null, entidadeSel = null, seq = 0, issEnt = null, issTimer = null, issRastro = [];
@@ -1056,6 +1127,8 @@ function atualizarCreditos(){
     if (prediosOn) t.push("Prédios: © OpenStreetMap (Overpass)");
     if (relevoOn) t.push("Relevo: AWS Terrain Tiles");
     if (wikiPins.length) t.push("Artigos: Wikipédia (CC BY-SA)");
+    for (const x of EXTRAS_AO_VIVO) if (extraPins.some(l => l.tipo === x.tipo) && x.id !== "sismos" && x.id !== "eonet") t.push(x.fonte);
+    if (extraPins.some(l => l.tipo === "evento")) t.push("Eventos: USGS / NASA EONET");
   }
   $("creditoImagem").textContent = t.length ? t.join(" · ") : "";
 }
@@ -1124,7 +1197,9 @@ function abrirInfo(l){
   const ac = $("iAcoes"); ac.innerHTML = "";
   $("iImg").hidden = true; $("iRotCur").textContent = l.wiki ? "Wikipédia" : "Você sabia?";
   if (l.wiki){ $("iCuriosidade").textContent = "Carregando resumo…"; preencherWiki(l); }
-  else if (!l.vivo && astro.terra) ac.appendChild(botaoLink("Ler na Wikipédia", "https://pt.wikipedia.org/wiki/Special:Search?search=" + encodeURIComponent(l.nome)));
+  else if (!l.vivo){ const b = btnPeq("Ler na Wikipédia", () => lerWiki(l.nome.replace(/\s*\(.*?\)\s*/g, " ").trim())); ac.appendChild(b); }
+  if (l.img){ $("iImg").src = l.img; $("iImg").hidden = false; }
+  for (const k of (l.links || [])) ac.appendChild(botaoLink(k.t, k.url));
   if (l.vivo){
     const b = document.createElement("button"); b.className = "btn"; b.id = "btnSeguir"; b.textContent = viewer.trackedEntity ? "Parar de seguir" : "Seguir";
     b.onclick = () => { if (viewer.trackedEntity){ viewer.trackedEntity = undefined; b.textContent = "Seguir"; } else { viewer.trackedEntity = l.entidade; b.textContent = "Parar de seguir"; } };
@@ -1234,13 +1309,14 @@ function atualizarCartao(){
   const cat = CATEGORIAS.find(c => c.id === astro.categoria);
   $("cCateg").textContent = cat.nome + " · Ø " + astro.diametro;
   $("cNome").textContent = astro.nome; $("cResumo").textContent = astro.resumo;
+  $("cSobre").onclick = e => { e.stopPropagation(); lerWiki(WIKI_ASTRO[astro.id] || astro.nome); };
   $("cEsfera").style.setProperty("--c", astro.cor);
 }
 function fecharPaineis(){
   for (const [p, b] of [["catalogo","btnCatalogo"],["lista","btnLista"],["camadas","btnCamadas"],["avisos","btnAvisos"]]){ $(p).hidden = true; $(b).setAttribute("aria-expanded","false"); }
 }
 function alternar(p, b){
-  const abrir = $(p).hidden; fecharPaineis(); if (!$("visor").hidden) fecharVisor(); if (!$("ceu").hidden) fecharCeu();
+  const abrir = $(p).hidden; fecharPaineis(); if (!$("visor").hidden) fecharVisor(); if (!$("ceu").hidden) fecharCeu(); if (!$("dados").hidden) fecharDados();
   if (abrir){ $(p).hidden = false; $(b).setAttribute("aria-expanded","true"); }
 }
 let abaAtual = "planetas";
@@ -1335,7 +1411,7 @@ async function carregarAstro(pedido){
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
   mao.setInputAction(() => { cancelarToqueVazio(); zoom(0.5); }, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);  // toque duplo aproxima
 
-  wikiPins = []; srcPredios = null; googleTiles = null; camadaLayers = {}; camadaBase = null; fonteAtual = null; fonteEstado = {};
+  wikiPins = []; extraPins = []; srcPredios = null; googleTiles = null; camadaLayers = {}; camadaBase = null; fonteAtual = null; fonteEstado = {};
   criarMarcadores(); montarCatalogo(); montarLista(); montarCamadas(); atualizarCartao(); visaoInicial(false);
   $("creditoImagem").textContent = "Carregando imagens…";
 
@@ -1376,11 +1452,18 @@ function provedorCamada(c){
   return new Cesium.UrlTemplateImageryProvider({ url: typeof c.url === "function" ? c.url() : c.url, maximumLevel: c.nivelMax, credit: c.credito,
     tilingScheme: new Cesium.WebMercatorTilingScheme({ellipsoid: elip}) });
 }
+async function radarUrl(){
+  const j = await jget("https://api.rainviewer.com/public/weather-maps.json"); const f = (j.radar && j.radar.past || []).slice(-1)[0];
+  if (!f) throw new Error("sem radar"); return (j.host || "https://tilecache.rainviewer.com") + f.path + "/256/{z}/{x}/{y}/2/1_1.png";
+}
 function aplicarCamadas(){
   if (!viewer) return;
   for (const c of [...(astro.terra ? CAMADAS_TERRA : []), CAMADA_GRADE]){
     let l = camadaLayers[c.id];
     if (camadasLigadas.has(c.id)){
+      if (!l && c.radar){ if (!c._pend){ c._pend = true; radarUrl().then(u => { c._pend = false; if (!viewer || camadaLayers[c.id] || !camadasLigadas.has(c.id)) return;
+          const nl = viewer.imageryLayers.addImageryProvider(new Cesium.UrlTemplateImageryProvider({url: u, maximumLevel: c.nivelMax, credit: c.credito, tilingScheme: new Cesium.WebMercatorTilingScheme({ellipsoid: Cesium.Ellipsoid.default})}));
+          nl.alpha = c.alfa; camadaLayers[c.id] = nl; viewer.scene.requestRender(); }).catch(() => { c._pend = false; toast("Radar indisponível", "Não consegui falar com o RainViewer agora."); }); } continue; }
       if (!l){ l = viewer.imageryLayers.addImageryProvider(provedorCamada(c)); l.alpha = c.alfa === undefined ? 1 : c.alfa; camadaLayers[c.id] = l; }
       l.show = true;
     } else if (l) l.show = false;
@@ -1501,6 +1584,67 @@ async function ligarGoogle(on){
   viewer.scene.requestRender();
 }
 
+
+/* Cria um alfinete avulso no globo (lançamentos, terremotos, eventos, fotos, aviões) */
+function pinoGlobo(d){
+  const l = Object.assign({alcance: 30}, d); const R = raioMax(astro);
+  l.entidade = viewer.entities.add({ name: l.nome, position: Cesium.Cartesian3.fromDegrees(l.lon, l.lat, 0),
+    billboard: { image: imagemPino(l.tipo, false), width: 30, height: 38, verticalOrigin: Cesium.VerticalOrigin.BOTTOM, disableDepthTestDistance: 2e3 },
+    label: { text: l.nome, font: "600 13px 'Source Sans 3',sans-serif", fillColor: Cesium.Color.WHITE, outlineColor: Cesium.Color.BLACK, outlineWidth: 4, style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+      verticalOrigin: Cesium.VerticalOrigin.TOP, pixelOffset: new Cesium.Cartesian2(0, 4), distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, d.vis || R * 1.2) } });
+  l.entidade._lugar = l; extraPins.push(l); viewer.scene.requestRender(); return l;
+}
+function limparExtras(tipo){
+  extraPins = extraPins.filter(l => { if (!tipo || l.tipo === tipo){ if (viewer && l.entidade) viewer.entities.remove(l.entidade); return false; } return true; });
+  if (viewer) viewer.scene.requestRender(); montarCamadas();
+}
+function centroTela(){
+  if (!viewer || !astro.terra) return null;
+  const c = viewer.camera.pickEllipsoid(new Cesium.Cartesian2(viewer.canvas.clientWidth / 2, viewer.canvas.clientHeight / 2)); if (!c) return null;
+  const g = Cesium.Cartographic.fromCartesian(c); return {lat: Cesium.Math.toDegrees(g.latitude), lon: Cesium.Math.toDegrees(g.longitude)};
+}
+const EXTRAS_AO_VIVO = [
+  { tipo: "evento", id: "sismos", nome: "Terremotos das últimas 24 h", fonte: "USGS" },
+  { tipo: "evento", id: "eonet", nome: "Eventos naturais abertos (NASA EONET)", fonte: "NASA EONET" },
+  { tipo: "foto", id: "commons", nome: "Fotos do Wikimedia Commons perto", fonte: "Wikimedia Commons" },
+  { tipo: "aviao", id: "avioes", nome: "Aviões agora (perto do centro)", fonte: "OpenSky Network" }
+];
+async function carregarExtra(id){
+  if (!viewer || !astro.terra) return; const cen = centroTela();
+  const ok = n => { avisar(""); toast("Carregado", n); atualizarCreditos(); montarCamadas(); };
+  try{
+    if (id === "sismos"){
+      avisar("Buscando terremotos…"); limparExtras("evento");
+      const j = await jget("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"); let n = 0;
+      for (const f of (j.features || []).filter(f => (f.properties.mag || 0) >= 2.5).slice(0, 150)){ const [lon, lat] = f.geometry.coordinates; n++;
+        pinoGlobo({nome: "M" + (f.properties.mag || 0).toFixed(1) + " " + (f.properties.place || ""), tipo: "evento", lat, lon, alcance: 800, tamanho: "Magnitude " + f.properties.mag + " · profundidade " + Math.round(f.geometry.coordinates[2]) + " km",
+          detalhe: new Date(f.properties.time).toLocaleString("pt-BR"), curiosidade: "Terremoto registrado pelo USGS. Quanto maior a magnitude, mais energia liberada: cada ponto a mais é cerca de 32 vezes mais energia.", links: f.properties.url ? [{t: "Página do USGS", url: f.properties.url}] : [], vis: 3e7}); }
+      ok(n + " terremotos (magnitude 2,5 ou mais)");
+    } else if (id === "eonet"){
+      avisar("Buscando eventos…"); limparExtras("evento");
+      const j = await jget("https://eonet.gsfc.nasa.gov/api/v3/events?status=open&limit=120"); let n = 0;
+      for (const e of (j.events || [])){ const g = (e.geometry || []).slice(-1)[0]; if (!g || g.type !== "Point") continue; n++;
+        pinoGlobo({nome: e.title, tipo: "evento", lat: g.coordinates[1], lon: g.coordinates[0], alcance: 600, tamanho: ((e.categories || [])[0] || {}).title || "Evento natural", detalhe: (g.date || "").slice(0, 10),
+          curiosidade: "Evento natural acompanhado pela NASA (EONET): incêndios, tempestades, vulcões, icebergs e mais.", links: (e.sources || []).slice(0, 2).map(x => ({t: "Fonte: " + x.id, url: x.url})), vis: 3e7}); }
+      ok(n + " eventos naturais");
+    } else if (id === "commons"){
+      if (!cen){ avisar("Aponte o mapa para a superfície da Terra."); return; } avisar("Buscando fotos…"); limparExtras("foto");
+      const j = await jget(`https://commons.wikimedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${cen.lat}%7C${cen.lon}&ggsradius=10000&ggslimit=40&ggsnamespace=6&prop=coordinates%7Cimageinfo&iiprop=url%7Cextmetadata&iiurlwidth=480&format=json&origin=*`); let n = 0;
+      for (const p of Object.values((j.query && j.query.pages) || {})){ const c = (p.coordinates || [])[0], ii = (p.imageinfo || [])[0]; if (!c || !ii) continue; n++;
+        const t = p.title.replace(/^File:/, "").replace(/\.[a-z]+$/i, ""); const em = ii.extmetadata || {};
+        pinoGlobo({nome: t, tipo: "foto", lat: c.lat, lon: c.lon, alcance: 1.5, tamanho: "Foto do Wikimedia Commons", img: ii.thumburl, detalhe: ((em.Artist || {}).value || "").replace(/<[^>]*>/g, "").slice(0, 60),
+          curiosidade: "Licença: " + (((em.LicenseShortName || {}).value) || "veja a página"), links: [{t: "Página no Commons", url: ii.descriptionurl}], vis: 4e4}); }
+      ok(n + " fotos"); if (!n) avisar("Nenhuma foto geolocalizada num raio de 10 km.");
+    } else if (id === "avioes"){
+      if (!cen){ avisar("Aponte o mapa para a superfície da Terra."); return; } avisar("Buscando aviões…"); limparExtras("aviao");
+      const d = 2.5, j = await jget(`https://opensky-network.org/api/states/all?lamin=${cen.lat - d}&lomin=${cen.lon - d}&lamax=${cen.lat + d}&lomax=${cen.lon + d}`); let n = 0;
+      for (const a of (j.states || []).slice(0, 150)){ if (a[6] == null || a[5] == null) continue; n++;
+        pinoGlobo({nome: (a[1] || a[0] || "Aeronave").trim(), tipo: "aviao", lat: a[6], lon: a[5], alcance: 60, tamanho: "Altitude " + Math.round(a[7] || a[13] || 0) + " m · " + Math.round((a[9] || 0) * 3.6) + " km/h · rumo " + Math.round(a[10] || 0) + "°",
+          detalhe: a[2] || "", curiosidade: "Posição ao vivo recebida por receptores ADS-B da rede OpenSky (a consulta anônima tem limite de uso).", vis: 3e6}); }
+      ok(n + " aeronaves"); if (!n) avisar("Nenhuma aeronave encontrada nesta área agora.");
+    }
+  }catch(e){ avisar("Não consegui buscar esses dados agora (" + id + ")."); setTimeout(() => avisar(""), 4000); }
+}
 /* =====================================================================
    WIKIPÉDIA: artigos perto do centro da tela (só na Terra)
    ===================================================================== */
@@ -1586,6 +1730,11 @@ function montarCamadas(){
     l.appendChild(b1);
     if (wikiPins.length){ const b2 = document.createElement("button"); b2.className = "btn"; b2.textContent = "Limpar artigos (" + wikiPins.length + ")"; b2.onclick = () => { limparWiki(); montarCamadas(); }; l.appendChild(b2); }
     box.appendChild(l);
+    secao(box, "Ao vivo no globo");
+    const l2 = document.createElement("div"); l2.className = "linha-acoes";
+    for (const x of EXTRAS_AO_VIVO) l2.appendChild(btnPeq(x.nome, () => { fecharPaineis(); carregarExtra(x.id); }));
+    if (extraPins.length) l2.appendChild(btnPeq("Limpar alfinetes ao vivo (" + extraPins.length + ")", () => limparExtras()));
+    box.appendChild(l2);
   }
   secao(box, "Nitidez da imagem");
   const nl = document.createElement("div"); nl.className = "linha-acoes";
@@ -1877,7 +2026,7 @@ function montarLadoVisor(){
   }
 }
 function abrirVisor(){
-  fecharPaineis(); if (!$("ceu").hidden) fecharCeu(); $("visor").hidden = false; $("btnObjetos").setAttribute("aria-expanded", "true");
+  fecharPaineis(); if (!$("ceu").hidden) fecharCeu(); if (!$("dados").hidden) fecharDados(); $("visor").hidden = false; $("btnObjetos").setAttribute("aria-expanded", "true");
   if (!$("vAbas").children.length){ montarAbasVisor(); montarLadoVisor(); }
   if (cenaT && !$("vThree").hidden) cenaT.ativa = true;
 }
@@ -1895,7 +2044,7 @@ const RAD = Math.PI / 180;
 const fmtDH = d => d.toLocaleString("pt-BR", {weekday: "short", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit"});
 const fmtD = d => d.toLocaleDateString("pt-BR", {weekday: "long", day: "2-digit", month: "long"});
 const fmtH = d => d.toLocaleTimeString("pt-BR", {hour: "2-digit", minute: "2-digit"});
-let av = (() => { try{ return Object.assign({sats: {}, iss: false, lead: 10, lat: null, lon: null, rotulo: "", cheia: false, nova: false, leadLua: "0", meteoros: false}, JSON.parse(localStorage.getItem("mapa.avisos") || "{}")); }catch(e){ return {sats: {}, iss: false, lead: 10, lat: null, lon: null, rotulo: "", cheia: false, nova: false, leadLua: "0", meteoros: false}; } })();
+let av = (() => { try{ return Object.assign({lancs: [], sats: {}, iss: false, lead: 10, lat: null, lon: null, rotulo: "", cheia: false, nova: false, leadLua: "0", meteoros: false}, JSON.parse(localStorage.getItem("mapa.avisos") || "{}")); }catch(e){ return {lancs: [], sats: {}, iss: false, lead: 10, lat: null, lon: null, rotulo: "", cheia: false, nova: false, leadLua: "0", meteoros: false}; } })();
 const salvarAv = () => guardar("mapa.avisos", JSON.stringify(av));
 let passesCache = null, timersAv = [];
 
@@ -2065,6 +2214,7 @@ function eventosAgendados(){
   }
   for (const id of Object.keys(av.sats || {})) if (av.sats[id] && passesSat[id] && String(id) !== "25544"){ const def = SATS.find(x => String(x.id) === String(id));
     for (const p of passesSat[id].lista) ev.push({quando: p.ini - av.lead * 60000, titulo: (def ? def.nome : "Satélite") + " passando em " + av.lead + " min", corpo: `${fmtH(new Date(p.ini))}, altura máxima ${Math.round(p.maxEl)}°${p.visivel ? " (visível a olho nu)" : ""}. Olhe para ${ponto(p.az0)}.`, tag: "sat" + id + p.ini}); }
+  for (const l of av.lancs || []) for (const mi of [30, 5]) ev.push({quando: l.net - mi * 60000, titulo: `Lançamento em ${mi} min`, corpo: `${l.nome}${l.local ? " · " + l.local : ""}`, tag: "lanc" + l.id + mi});
   for (const [tipo, on] of [["cheia", av.cheia], ["nova", av.nova]]) if (on){
     const antes = av.leadLua === "1d" ? 864e5 : 0;
     for (const d of proximasFases(tipo, 3, new Date()))
@@ -2438,7 +2588,7 @@ async function ceuAba(qual){
   $("cCanvas").hidden = atlas; $("atlas").hidden = !atlas; $("cHora").hidden = atlas; $("cAjustes").hidden = true; if (atlas) $("cInfo").hidden = true; else if (CEU.sel) $("cInfo").hidden = false;
   if (atlas){
     montarBarraAtlas();
-    try{ const a = await garantirAladin(); if (CEU.alvoAtlas){ a.gotoRaDec(CEU.alvoAtlas.ra, CEU.alvoAtlas.dec); a.setFoV(8); CEU.alvoAtlas = null; } }
+    try{ const a = await garantirAladin(); if (CEU.alvoAtlas){ a.gotoRaDec(CEU.alvoAtlas.ra, CEU.alvoAtlas.dec); a.setFoV(8); CEU.alvoAtlas = null; } if (CEU.alvoNome){ a.gotoObject(CEU.alvoNome); CEU.alvoNome = null; } }
     catch(e){ $("atlas").innerHTML = '<div style="display:grid;place-content:center;height:100%;text-align:center;padding:24px;color:#b4c1dd"><b style="font-family:var(--serif);font-size:1.2rem;color:#fff">Atlas indisponível agora</b>Não consegui falar com o CDS (Aladin Lite). Verifique a internet.</div>'; }
   } else { montarBarraCeu(); ceuRedesenhar(); }
 }
@@ -2476,7 +2626,7 @@ function montarAjustesCeu(){
   t("Use o controle deslizante para avançar ou voltar até 12 horas e ver as estrelas se movendo.");
 }
 async function abrirCeu(){
-  fecharPaineis(); if (!$("visor").hidden) fecharVisor(); $("ceu").hidden = false; $("btnCeu").setAttribute("aria-expanded", "true");
+  fecharPaineis(); if (!$("visor").hidden) fecharVisor(); if (!$("dados").hidden) fecharDados(); $("ceu").hidden = false; $("btnCeu").setAttribute("aria-expanded", "true");
   if (!$("cAbas").children.length){ montarAbasCeu(); ceuGestos(); const l = ceuLocal(); CEU.az = l.lat < 0 ? 180 : 0; CEU.alt = 42; $("cBarra").innerHTML = ""; }
   if (CEU.aba === "planetario"){ $("cHora").textContent = "Carregando estrelas…"; await carregarDadosCeu(); montarBarraCeu(); ceuRedesenhar(); if (CEU.dados === "basico") toast("Mapa do céu simplificado", "Não consegui baixar o catálogo completo de estrelas; mostrando as mais brilhantes."); }
   else ceuAba("atlas");
@@ -2747,6 +2897,204 @@ async function atualizarPassagensSat(id){
 }
 
 /* =====================================================================
+   DADOS AO VIVO: APIs abertas, sem chave (ou com a chave de demonstração da NASA)
+   NASA (APOD, NeoWs, Image Library, Exoplanet Archive) · NOAA SWPC · The Space Devs (Launch Library 2)
+   Wikipédia · Wikisource · Wikimedia Commons · Projeto Gutenberg (Gutendex) · MyMemory (tradução)
+   ===================================================================== */
+async function jget(url, ms){ const r = await comTempo(ms || 15000, sg => fetch(url, {signal: sg})); if (!r.ok) throw new Error("http " + r.status); return r.json(); }
+const memoDados = {};
+async function comCache(chave, ttl, fn){ const c = memoDados[chave]; if (c && Date.now() - c.t < ttl) return c.v; const v = await fn(); memoDados[chave] = {t: Date.now(), v}; return v; }
+const semTags = h => String(h || "").replace(/<[^>]+>/g, "").replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/&#039;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+const urlHttps = u => (u && u.startsWith("//")) ? "https:" + u : u;
+const isoDia = d => d.toISOString().slice(0, 10);
+
+/* ---------- Leitor (janela de texto) ---------- */
+async function traduzir(txt){                 // MyMemory: aceita ~500 caracteres por pedido
+  const frases = txt.replace(/\s+/g, " ").split(/(?<=[.!?])\s+/), blocos = [""];
+  for (const f of frases){ const u = blocos[blocos.length - 1]; if ((u + " " + f).length > 440 && u) blocos.push(f); else blocos[blocos.length - 1] = u ? u + " " + f : f; }
+  const out = [];
+  for (const b of blocos){ try{ const j = await jget("https://api.mymemory.translated.net/get?langpair=en%7Cpt-BR&q=" + encodeURIComponent(b), 12000); const t = j.responseData && j.responseData.translatedText; out.push(t && !/MYMEMORY WARNING/i.test(t) ? t : b); }catch(e){ out.push(b); } }
+  return out.join(" ");
+}
+function abrirLeitor(o){
+  $("lTitulo").textContent = o.titulo || ""; $("lMeta").textContent = o.meta || "";
+  const im = $("lImg"); if (o.img){ im.onerror = () => { if (o.imgReserva && im.src !== o.imgReserva) im.src = o.imgReserva; else im.hidden = true; }; im.src = o.img; im.hidden = false; im.alt = o.titulo || ""; } else { im.hidden = true; im.removeAttribute("src"); }
+  $("lTexto").textContent = o.texto || ""; const ac = $("lAcoes"); ac.innerHTML = "";
+  if (o.traduzivel && o.texto){ const b = botao("Traduzir para português", async () => { b.textContent = "Traduzindo…"; $("lTexto").textContent = await traduzir(o.texto); b.remove(); }); ac.appendChild(b); }
+  (o.links || []).forEach(l => ac.appendChild(botaoLink(l.t, l.url)));
+  $("leitor").hidden = false; $("leitor").scrollTop = 0;
+}
+const fecharLeitor = () => { $("leitor").hidden = true; };
+
+/* ---------- Wikipédia / Wikisource ---------- */
+async function wikiTexto(titulo, host){
+  host = host || "pt.wikipedia.org";
+  const consulta = async t => { const j = await jget(`https://${host}/w/api.php?action=query&prop=extracts%7Cpageimages%7Cinfo&inprop=url&explaintext=1&exsectionformat=plain&piprop=thumbnail&pithumbsize=800&redirects=1&titles=${encodeURIComponent(t)}&format=json&origin=*`);
+    const pg = Object.values((j.query && j.query.pages) || {})[0]; return pg && pg.missing === undefined ? pg : null; };
+  let pg = await consulta(titulo);
+  if (!pg){ const j = await jget(`https://${host}/w/rest.php/v1/search/title?q=${encodeURIComponent(titulo)}&limit=1`).catch(() => null); if (j && j.pages && j.pages[0]) pg = await consulta(j.pages[0].title); }
+  if (!pg) throw new Error("sem artigo");
+  return {titulo: pg.title, texto: (pg.extract || "").slice(0, 16000), img: pg.thumbnail && pg.thumbnail.source, url: pg.fullurl};
+}
+async function lerWiki(titulo, host){
+  host = host || "pt.wikipedia.org"; abrirLeitor({titulo, texto: "Carregando…"});
+  try{ const w = await wikiTexto(titulo, host); const nome = host.includes("wikisource") ? "Wikisource" : "Wikipédia (" + host.split(".")[0] + ")";
+    abrirLeitor({titulo: w.titulo, meta: nome + " · texto sob licença CC BY-SA", img: w.img, texto: w.texto || "Esta página não tem texto simples.", links: [{t: "Abrir no " + (host.includes("wikisource") ? "Wikisource" : "site"), url: w.url}, ...(host === "pt.wikipedia.org" ? [{t: "Ver em inglês", url: "https://en.wikipedia.org/wiki/" + encodeURIComponent(w.titulo)}] : [])]}); }
+  catch(e){ abrirLeitor({titulo, texto: "Não encontrei esse texto agora.", links: [{t: "Buscar no site", url: `https://${host}/w/index.php?search=${encodeURIComponent(titulo)}`}]}); }
+}
+const WIKI_ASTRO = {mercurio: "Mercúrio (planeta)", venus: "Vênus (planeta)", terra: "Terra", marte: "Marte (planeta)", lua: "Lua", io: "Io (satélite)", europa: "Europa (satélite)", ganimedes: "Ganimedes (satélite)", calisto: "Calisto (satélite)", tita: "Titã (satélite)", encelado: "Encélado (satélite)", ceres: "Ceres (planeta anão)", vesta: "4 Vesta", plutao: "Plutão", caronte: "Caronte (satélite)", eros: "433 Eros", bennu: "101955 Bennu", iss: "Estação Espacial Internacional"};
+
+/* ---------- Abas do hub ---------- */
+const ABAS_DADOS = [["hoje", "Hoje"], ["lanc", "Lançamentos"], ["foto", "Fototeca NASA"], ["bib", "Biblioteca"], ["exo", "Exoplanetas"]];
+let dadosAba = "hoje";
+function montarAbasDados(){
+  const a = $("dAbas"); a.innerHTML = "";
+  for (const [id, nome] of ABAS_DADOS){ const b = elDom("button", "aba", nome); b.role = "tab"; b.setAttribute("aria-selected", String(id === dadosAba)); b.onclick = () => { dadosAba = id; montarAbasDados(); montarDados(); }; a.appendChild(b); }
+}
+function montarDados(){ const box = $("dCorpo"); box.innerHTML = ""; ({hoje: dHoje, lanc: dLanc, foto: dFoto, bib: dBib, exo: dExo})[dadosAba](box); }
+function abrirDados(){
+  fecharPaineis(); if (!$("ceu").hidden) fecharCeu(); if (!$("visor").hidden) fecharVisor(); $("dados").hidden = false; $("btnDados").setAttribute("aria-expanded", "true");
+  if (!$("dAbas").children.length) montarAbasDados(); montarDados();
+}
+function fecharDados(){ $("dados").hidden = true; $("btnDados").setAttribute("aria-expanded", "false"); fecharLeitor(); }
+const cartaoDados = (titulo, sub) => { const c = elDom("div", "dcard"); c.appendChild(elDom("h4", "", titulo)); if (sub) c.appendChild(elDom("small", "", sub)); return c; };
+const carregando = c => { const p = elDom("p", "", "Carregando…"); p.className = "carr"; c.appendChild(p); return p; };
+const falhou = (c, msg) => { c.querySelectorAll(".carr").forEach(e => e.remove()); c.appendChild(elDom("p", "", msg || "Não consegui carregar agora (sem conexão ou limite da fonte). Tente de novo em instantes.")); };
+
+/* ---------- Hoje ---------- */
+function dHoje(box){
+  const g = elDom("div", "dgrade"); box.appendChild(g);
+  /* APOD */
+  const a = cartaoDados("Foto astronômica do dia", "NASA · Astronomy Picture of the Day"); g.appendChild(a); carregando(a);
+  comCache("apod", 36e5, () => jget("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&thumbs=true")).then(j => {
+    a.querySelectorAll(".carr").forEach(e => e.remove());
+    const src = j.media_type === "video" ? (j.thumbnail_url || "") : (j.url || j.hdurl);
+    if (src){ const im = elDom("img", "foto"); im.src = src; im.alt = j.title; im.loading = "lazy"; a.insertBefore(im, a.children[1]); }
+    a.appendChild(elDom("p", "", j.title + " · " + j.date + (j.copyright ? " · © " + j.copyright.trim() : "")));
+    const ac = elDom("div", "acoes"); ac.appendChild(btnPeq("Ler a explicação", () => abrirLeitor({titulo: j.title, meta: j.date + " · " + (j.copyright ? "© " + j.copyright.trim() : "NASA") + " · texto em inglês", img: j.media_type === "video" ? j.thumbnail_url : (j.hdurl || j.url), imgReserva: j.url,
+      texto: j.explanation, traduzivel: true, links: [{t: j.media_type === "video" ? "Assistir ao vídeo" : "Abrir original", url: j.hdurl || j.url}, {t: "Página do APOD", url: "https://apod.nasa.gov/apod/"}]}))); a.appendChild(ac);
+  }).catch(() => falhou(a));
+  /* Clima espacial */
+  const c = cartaoDados("Clima espacial agora", "NOAA Space Weather Prediction Center"); g.appendChild(c); carregando(c);
+  Promise.all([jget("https://services.swpc.noaa.gov/products/noaa-scales.json"), jget("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json")]).then(([sc, kp]) => {
+    c.querySelectorAll(".carr").forEach(e => e.remove());
+    const atual = sc["0"] || {}, ultimo = kp[kp.length - 1] || [], kpv = parseFloat(ultimo[1]);
+    const lin = elDom("p", ""); const sel = (rot, o, nome) => { const n = o ? +o.Scale : 0; const sp = elDom("span", "selo " + (n >= 3 ? "al" : n >= 1 ? "am" : "cz"), `${rot}${n}`); sp.title = nome; lin.appendChild(sp); };
+    sel("G", atual.G, "Tempestade geomagnética"); sel("S", atual.S, "Radiação solar"); sel("R", atual.R, "Apagão de rádio"); c.appendChild(lin);
+    c.appendChild(elDom("p", "", `Índice Kp: ${isFinite(kpv) ? kpv.toFixed(1) : "—"} (de 0 a 9). ` + (kpv >= 5 ? "Tempestade geomagnética: auroras podem aparecer em latitudes mais baixas." : kpv >= 4 ? "Um pouco agitado: auroras nas regiões polares." : "Calmo: auroras só perto dos polos.")));
+    c.appendChild(elDom("small", "", "G = tempestade geomagnética · S = radiação solar · R = apagão de rádio (0 = nenhuma, 5 = extrema)"));
+    const gr = elDom("div", "miniaturas"); gr.style.marginTop = "8px";
+    for (const [t, u] of [["Sol em ultravioleta (SDO 193 Å)", "https://sdo.gsfc.nasa.gov/assets/img/latest/latest_512_0193.jpg"], ["Manchas solares (SDO HMI)", "https://sdo.gsfc.nasa.gov/assets/img/latest/latest_512_HMIIC.jpg"], ["Coroa solar (SOHO LASCO C2)", "https://soho.nascom.nasa.gov/data/realtime/c2/512/latest.jpg"], ["Aurora austral prevista", "https://services.swpc.noaa.gov/images/animations/ovation/south/latest.jpg"]]){
+      const b = elDom("button"); const im = elDom("img"); im.src = u; im.alt = t; im.loading = "lazy"; b.appendChild(im); b.appendChild(elDom("span", "", t)); b.onclick = () => abrirLeitor({titulo: t, img: u, meta: "Imagem mais recente · NASA/NOAA", texto: "", links: [{t: "Abrir a imagem", url: u}]}); gr.appendChild(b); }
+    c.appendChild(gr);
+  }).catch(() => falhou(c));
+  /* Pessoas no espaço */
+  const pe = cartaoDados("Quem está no espaço agora", "howmanypeopleareinspacerightnow.com"); g.appendChild(pe); carregando(pe);
+  jget("https://www.howmanypeopleareinspacerightnow.com/peopleinspace.json").then(j => { pe.querySelectorAll(".carr").forEach(e => e.remove()); pe.appendChild(elDom("p", "", `${j.number} pessoas em órbita agora.`));
+    const por = {}; (j.people || []).forEach(x => (por[x.craft || "?"] = por[x.craft || "?"] || []).push(x.name)); for (const [n, l] of Object.entries(por)) pe.appendChild(elDom("small", "", `${n}: ${l.join(", ")}`)); })
+    .catch(() => falhou(pe, "Esta fonte não respondeu. Veja a lista na Wikipédia."));
+  /* Asteroides próximos */
+  const n = cartaoDados("Asteroides passando perto da Terra", "NASA NeoWs · próximos 7 dias"); g.appendChild(n); carregando(n);
+  const hoje = new Date(), fim = new Date(Date.now() + 6 * 864e5);
+  comCache("neo", 36e5, () => jget(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${isoDia(hoje)}&end_date=${isoDia(fim)}&api_key=DEMO_KEY`)).then(j => {
+    n.querySelectorAll(".carr").forEach(e => e.remove());
+    const todos = Object.values(j.near_earth_objects || {}).flat().map(o => { const ca = (o.close_approach_data || [])[0] || {}; return {nome: o.name.replace(/[()]/g, "").trim(), d: o.estimated_diameter.meters.estimated_diameter_max, risco: o.is_potentially_hazardous_asteroid,
+      quando: ca.close_approach_date_full || ca.close_approach_date, lua: parseFloat(ca.miss_distance && ca.miss_distance.lunar), kmh: parseFloat(ca.relative_velocity && ca.relative_velocity.kilometers_per_hour), url: o.nasa_jpl_url}; }).sort((a1, b1) => a1.lua - b1.lua).slice(0, 8);
+    for (const o of todos){ const l = elDom("p", ""); l.innerHTML = ""; l.appendChild(elDom("b", "", o.nome + " ")); if (o.risco) l.appendChild(elDom("span", "selo al", "potencialmente perigoso"));
+      l.appendChild(elDom("small", "", `${o.quando} · passa a ${o.lua.toLocaleString("pt-BR", {maximumFractionDigits: 1})}× a distância da Lua · ~${Math.round(o.d)} m · ${Math.round(o.kmh).toLocaleString("pt-BR")} km/h`));
+      const ac = elDom("div", "acoes"); ac.appendChild(btnPeq("Rastrear no céu", async () => { try{ await carregarAE(); const r = await elementos(o.nome); TRACK.reg[o.nome] = r; if (!TRACK.custom.some(x => x.id === o.nome)) TRACK.custom.push({id: o.nome, nome: r.nome}); TRACK.ceu.add("astro:" + o.nome); guardarTrack(); fecharDados(); abrirCeu(); }catch(e){ toast("Não achei a órbita", "O JPL ainda não tem elementos para " + o.nome + "."); } }));
+      if (o.url) ac.appendChild(botaoLink("Detalhes (JPL)", o.url)); l.appendChild(ac); n.appendChild(l); }
+    if (!todos.length) n.appendChild(elDom("p", "", "Nenhum registro agora."));
+  }).catch(() => falhou(n));
+}
+
+/* ---------- Lançamentos ---------- */
+function dLanc(box){
+  const g = elDom("div", "dgrade"); box.appendChild(g); const lixo = cartaoDados("Próximos lançamentos", "The Space Devs · Launch Library 2"); g.appendChild(lixo); carregando(lixo);
+  comCache("lanc", 10 * 60000, () => jget("https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=14")).then(j => {
+    lixo.remove(); const lista = j.results || [];
+    if (!lista.length){ const c = cartaoDados("Sem lançamentos listados", ""); g.appendChild(c); return; }
+    for (const l of lista){
+      const c = elDom("div", "dcard"), t = new Date(l.net), pad = l.pad || {}, loc = (pad.location && pad.location.name) || "", lat = parseFloat(pad.latitude), lon = parseFloat(pad.longitude);
+      if (l.image){ const im = elDom("img", "foto"); im.src = l.image; im.loading = "lazy"; im.alt = l.name; c.appendChild(im); }
+      c.appendChild(elDom("h4", "", l.name)); const sel = elDom("span", "selo " + (/go/i.test((l.status && l.status.abbrev) || "") ? "" : "am"), (l.status && l.status.name) || "—"); c.appendChild(sel);
+      const quando = elDom("small", "", ""); const atualizar = () => { const ms = t - Date.now(); quando.textContent = fmtDH(t) + (ms > 0 ? ` · em ${Math.floor(ms / 864e5)} d ${Math.floor(ms % 864e5 / 36e5)} h ${Math.floor(ms % 36e5 / 60000)} min` : " · já aconteceu ou está acontecendo"); }; atualizar(); c.appendChild(quando);
+      c.appendChild(elDom("small", "", [(l.launch_service_provider && l.launch_service_provider.name), (l.rocket && l.rocket.configuration && l.rocket.configuration.name)].filter(Boolean).join(" · ")));
+      if (l.mission && l.mission.description) c.appendChild(elDom("p", "", l.mission.description.length > 240 ? l.mission.description.slice(0, 240) + "…" : l.mission.description));
+      c.appendChild(elDom("small", "", [pad.name, loc].filter(Boolean).join(" — ")));
+      const ac = elDom("div", "acoes"); const on = (av.lancs || []).some(x => x.id === l.id);
+      if (isFinite(lat) && isFinite(lon)) ac.appendChild(btnPeq("Ver no globo", () => lancNoGlobo(l, lat, lon, loc)));
+      ac.appendChild(btnPeq("Avisar", async e => { if (estadoPermissao() === "default") await pedirPermissao(); const i = (av.lancs || []).findIndex(x => x.id === l.id);
+        if (i >= 0) av.lancs.splice(i, 1); else (av.lancs = av.lancs || []).push({id: l.id, nome: l.name, net: t.getTime(), local: loc}); salvarAv(); reagendarAvisos(); e.target.setAttribute("aria-pressed", String(i < 0)); toast(i < 0 ? "Aviso ligado" : "Aviso desligado", l.name); }, on));
+      const v = ((l.vidURLs || [])[0]) || null; if (v && v.url) ac.appendChild(botaoLink("Transmissão", v.url)); c.appendChild(ac); g.appendChild(c);
+    }
+  }).catch(() => { falhou(lixo, "Não consegui falar com a Launch Library (limite de 15 consultas por hora). Tente mais tarde."); });
+}
+async function lancNoGlobo(l, lat, lon, loc){
+  fecharDados(); const terra = ASTROS.find(a => a.id === "terra"); if (!viewer || !astro || !astro.terra) await carregarAstro(terra);
+  const lug = pinoGlobo({nome: l.name, tipo: "lancamento", lat, lon, alcance: 60, tamanho: loc || "Plataforma de lançamento", detalhe: fmtDH(new Date(l.net)),
+    curiosidade: (l.mission && l.mission.description) || ((l.launch_service_provider && l.launch_service_provider.name) || "") + " · foguete " + ((l.rocket && l.rocket.configuration && l.rocket.configuration.name) || "")});
+  selecionar(lug); voarPara(lug);
+}
+
+/* ---------- Fototeca da NASA ---------- */
+function dFoto(box){
+  const bus = elDom("div", "dbusca"), campo = elDom("input", "campo"); campo.placeholder = "Buscar imagens da NASA (ex.: nebulosa, Webb, Marte)"; campo.value = "James Webb"; bus.appendChild(campo);
+  const res = elDom("div", "miniaturas"), msg = elDom("p", "nota"); const rodar = async () => {
+    msg.textContent = "Buscando…"; res.innerHTML = "";
+    try{ const j = await jget("https://images-api.nasa.gov/search?media_type=image&page_size=48&q=" + encodeURIComponent(campo.value || "universe")); const it = (j.collection && j.collection.items) || [];
+      msg.textContent = it.length ? "Toque numa imagem. Fonte: NASA Image and Video Library." : "Nada encontrado.";
+      for (const x of it){ const d = x.data[0], th = x.links && x.links[0] && x.links[0].href; if (!th) continue; const b = elDom("button"), im = elDom("img"); im.src = th; im.alt = d.title; im.loading = "lazy"; b.appendChild(im); b.appendChild(elDom("span", "", d.title));
+        b.onclick = () => abrirLeitor({titulo: d.title, meta: [d.date_created && d.date_created.slice(0, 10), d.center, d.photographer].filter(Boolean).join(" · ") + " · texto em inglês", img: th.replace("~thumb", "~large"), imgReserva: th, texto: semTags(d.description || ""), traduzivel: true,
+          links: [{t: "Página na NASA", url: "https://images.nasa.gov/details/" + encodeURIComponent(d.nasa_id)}]}); res.appendChild(b); } }
+    catch(e){ msg.textContent = "Não consegui falar com a fototeca da NASA agora."; } };
+  bus.appendChild(btnPeq("Buscar", rodar)); campo.onkeydown = e => { if (e.key === "Enter") rodar(); }; box.appendChild(bus);
+  const ch = elDom("div", "chips"); for (const t of ["James Webb", "Hubble", "Marte", "Júpiter", "Saturno", "Terra vista do espaço", "Apollo", "Nebulosa", "Galáxia", "Eclipse", "Aurora", "Estação Espacial"]){ ch.appendChild(btnPeq(t, () => { campo.value = t; rodar(); })); } box.appendChild(ch); box.appendChild(msg); box.appendChild(res); rodar();
+}
+
+/* ---------- Biblioteca: Wikipédia, Wikisource, Gutenberg ---------- */
+function dBib(box){
+  const fontes = [["wp", "Wikipédia (pt)"], ["wpen", "Wikipédia (en)"], ["ws", "Wikisource (pt)"], ["gu", "Projeto Gutenberg"]]; let fonte = "wp";
+  const bus = elDom("div", "dbusca"), campo = elDom("input", "campo"); campo.placeholder = "Buscar (ex.: Sistema Solar, Galileu, astronomia)"; campo.value = "Sistema Solar"; bus.appendChild(campo); bus.appendChild(btnPeq("Buscar", () => rodar())); box.appendChild(bus);
+  const ab = elDom("div", "chips"); const marcar = () => ab.querySelectorAll(".btn").forEach((b, i) => b.setAttribute("aria-pressed", String(fontes[i][0] === fonte)));
+  fontes.forEach(([id, nome]) => ab.appendChild(btnPeq(nome, () => { fonte = id; marcar(); rodar(); }))); box.appendChild(ab);
+  const ch = elDom("div", "chips"); for (const t of ["Sistema Solar", "Astronomia", "Galileu Galilei", "Telescópio Espacial Hubble", "Cometa Halley", "Eclipse", "Via Láctea", "Buraco negro", "Exoplaneta", "Lua"]) ch.appendChild(btnPeq(t, () => { campo.value = t; rodar(); })); box.appendChild(ch);
+  const msg = elDom("p", "nota"), res = elDom("div", "dgrade"); box.appendChild(msg); box.appendChild(res); marcar();
+  const item = (titulo, trecho, img, botoes) => { const c = elDom("div", "dcard"); if (img){ const im = elDom("img", "foto"); im.src = img; im.loading = "lazy"; im.alt = titulo; im.style.maxHeight = "150px"; c.appendChild(im); } c.appendChild(elDom("h4", "", titulo)); if (trecho) c.appendChild(elDom("small", "", trecho)); const ac = elDom("div", "acoes"); botoes.forEach(b => ac.appendChild(b)); c.appendChild(ac); res.appendChild(c); };
+  async function rodar(){
+    const q = campo.value.trim(); if (!q) return; msg.textContent = "Buscando…"; res.innerHTML = "";
+    try{
+      if (fonte === "wp" || fonte === "wpen"){ const h = fonte === "wp" ? "pt" : "en", j = await jget(`https://${h}.wikipedia.org/w/rest.php/v1/search/page?q=${encodeURIComponent(q)}&limit=14`);
+        (j.pages || []).forEach(pg => item(pg.title, semTags(pg.excerpt) || pg.description, pg.thumbnail && urlHttps(pg.thumbnail.url), [btnPeq("Ler", () => lerWiki(pg.title, h + ".wikipedia.org"))])); msg.textContent = (j.pages || []).length ? "Resultados da Wikipédia." : "Nada encontrado."; }
+      else if (fonte === "ws"){ const j = await jget(`https://pt.wikisource.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&srlimit=14&srprop=snippet&format=json&origin=*`);
+        const l = (j.query && j.query.search) || []; l.forEach(r => item(r.title, semTags(r.snippet), null, [btnPeq("Ler", () => lerWiki(r.title, "pt.wikisource.org")), botaoLink("Abrir", "https://pt.wikisource.org/wiki/" + encodeURIComponent(r.title.replace(/ /g, "_")))])); msg.textContent = l.length ? "Textos da Wikisource (obras em domínio público)." : "Nada encontrado."; }
+      else { const j = await jget(`https://gutendex.com/books/?search=${encodeURIComponent(q)}`); const l = (j.results || []).slice(0, 14);
+        l.forEach(b => { const f = b.formats || {}, html = f["text/html"] || f["text/html; charset=utf-8"], ep = f["application/epub+zip"], tx = f["text/plain; charset=utf-8"] || f["text/plain"];
+          item(b.title, (b.authors || []).map(a => a.name).join("; ") + " · " + (b.languages || []).join(",") + " · " + (b.download_count || 0).toLocaleString("pt-BR") + " downloads", null, [html && botaoLink("Ler online", html), ep && botaoLink("EPUB", ep), tx && botaoLink("Texto", tx)].filter(Boolean)); });
+        msg.textContent = l.length ? "Livros do Projeto Gutenberg (domínio público, a maioria em inglês)." : "Nada encontrado."; }
+    }catch(e){ msg.textContent = "Não consegui falar com essa fonte agora."; }
+  }
+  campo.onkeydown = e => { if (e.key === "Enter") rodar(); }; rodar();
+}
+
+/* ---------- Exoplanetas (NASA Exoplanet Archive) ---------- */
+function dExo(box){
+  const topo = cartaoDados("Exoplanetas confirmados", "NASA Exoplanet Archive"); box.appendChild(topo); const cont = elDom("p", "", "Carregando…"); topo.appendChild(cont);
+  const tap = sql => `https://exoplanetarchive.ipac.caltech.edu/TAP/sync?format=json&query=${encodeURIComponent(sql)}`;
+  jget(tap("select count(*) as n from pscomppars")).then(r => { cont.textContent = `${(r[0].n || r[0]["count(*)"]).toLocaleString("pt-BR")} mundos fora do Sistema Solar já foram confirmados. Abaixo, as descobertas mais recentes.`; }).catch(() => { cont.textContent = "Não consegui consultar o arquivo agora."; });
+  const bus = elDom("div", "dbusca"), campo = elDom("input", "campo"); campo.placeholder = "Filtrar por nome do planeta ou da estrela"; bus.appendChild(campo); box.appendChild(bus);
+  const res = elDom("div", "dgrade"); box.appendChild(res); let dados = [];
+  const desenhar = () => { res.innerHTML = ""; const f = campo.value.trim().toLowerCase();
+    dados.filter(d => !f || (d.pl_name + " " + d.hostname).toLowerCase().includes(f)).slice(0, 60).forEach(d => {
+      const c = elDom("div", "dcard"); c.appendChild(elDom("h4", "", d.pl_name)); c.appendChild(elDom("small", "", `Estrela ${d.hostname} · descoberto em ${d.disc_year} · método: ${d.discoverymethod}`));
+      c.appendChild(elDom("small", "", [d.pl_rade ? `raio ${(+d.pl_rade).toFixed(1)}× o da Terra` : "", d.pl_bmasse ? `massa ${(+d.pl_bmasse).toFixed(1)}× a da Terra` : "", d.pl_orbper ? `ano de ${(+d.pl_orbper).toFixed(1)} dias` : "", d.sy_dist ? `a ${Math.round(d.sy_dist * 3.26156).toLocaleString("pt-BR")} anos-luz` : ""].filter(Boolean).join(" · ")));
+      const ac = elDom("div", "acoes"); ac.appendChild(btnPeq("Ver a estrela no atlas", () => atlasIr(d.hostname))); ac.appendChild(botaoLink("Ficha na NASA", "https://exoplanetarchive.ipac.caltech.edu/overview/" + encodeURIComponent(d.pl_name))); c.appendChild(ac); res.appendChild(c); }); };
+  campo.oninput = desenhar;
+  jget(tap("select top 300 pl_name,hostname,disc_year,discoverymethod,pl_rade,pl_bmasse,pl_orbper,sy_dist from pscomppars order by disc_year desc, pl_name"), 25000).then(r => { dados = r; desenhar(); }).catch(() => res.appendChild(cartaoDados("Lista indisponível", "O arquivo da NASA não respondeu. Tente de novo mais tarde.")));
+}
+async function atlasIr(nome){ fecharDados(); CEU.alvoNome = nome; CEU.aba = "atlas"; await abrirCeu(); }
+
+/* =====================================================================
    MODO MAPA LIMPO: toque no vazio esconde tudo (some a interface); outro toque traz de volta
    ===================================================================== */
 let imersivo = false, toqueTimer = null;
@@ -2815,6 +3163,8 @@ function iniciar(){
   $("btnCamadas").onclick = () => alternar("camadas", "btnCamadas");
   $("btnAvisos").onclick = () => { montarAvisos(); alternar("avisos", "btnAvisos"); };
   $("vInfo").onclick = () => $("vInfo").classList.toggle("aberto");
+  $("btnDados").onclick = () => ($("dados").hidden ? abrirDados() : fecharDados()); $("dFechar").onclick = fecharDados; $("lFechar").onclick = fecharLeitor;
+  arrastarFolha($("alcaDados"), $("dados"), fecharDados);
   $("btnCeu").onclick = () => ($("ceu").hidden ? abrirCeu() : fecharCeu()); $("cFechar").onclick = fecharCeu;
   arrastarFolha($("alcaCeu"), $("ceu"), fecharCeu);
   $("btnObjetos").onclick = () => ($("visor").hidden ? abrirVisor() : fecharVisor()); $("vFechar").onclick = fecharVisor;
@@ -2840,7 +3190,7 @@ function iniciar(){
   setTimeout(() => { $("dica").style.opacity = 0; }, 6500);
   $("zmMais").onclick = () => zoom(0.5); $("zmMenos").onclick = () => zoom(2);
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape"){ if (!$("ceu").hidden) fecharCeu(); else if (!$("visor").hidden) fecharVisor(); else if (imersivo) setImersivo(false); else { selecionar(null); fecharPaineis(); } }
+    if (e.key === "Escape"){ if (!$("leitor").hidden) fecharLeitor(); else if (!$("dados").hidden) fecharDados(); else if (!$("ceu").hidden) fecharCeu(); else if (!$("visor").hidden) fecharVisor(); else if (imersivo) setImersivo(false); else { selecionar(null); fecharPaineis(); } }
     else if (e.key === "h" || e.key === "H") setImersivo(!imersivo);
   });
   /* ?astro=marte abre direto em um astro */
