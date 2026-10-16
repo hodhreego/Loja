@@ -536,6 +536,7 @@
   html[data-tema="metro"] #cartao.vidro,html[data-tema="metro"] #info.vidro{background:var(--metro-painel)!important}
   html[data-tema="metro"] #ui>*,html[data-tema="metro"] .painel{transition-duration:.15s!important}
   html[data-tema="metro"] .chave::after{border-radius:0!important;box-shadow:none!important}
+  html[data-tema="metro"] #btnCameras{background:#b91d47!important} html[data-tema="metro"] #btnCameras[aria-pressed="true"]{background:#e51400!important;box-shadow:inset 0 0 0 2px #fff!important}
   .chip-tema{min-width:120px}
 </style>
 </head>
@@ -3287,7 +3288,7 @@ function ativarVidro(){
     v.style.setProperty("--mx", ((e.clientX - r.left) / r.width * 100).toFixed(1) + "%");
     v.style.setProperty("--my", ((e.clientY - r.top) / r.height * 100).toFixed(1) + "%");
   };
-  document.addEventListener("pointermove", luz, {passive: true}); document.addEventListener("pointerdown", luz, {passive: true});
+  /* o brilho não segue mais o mouse/dedo: imagem limpa, sem efeito de lanterna */
   const mouse = matchMedia("(hover:hover) and (pointer:fine)").matches;
   const ok = window.CSS && (CSS.supports("backdrop-filter", "url(#lente) blur(1px)") || CSS.supports("-webkit-backdrop-filter", "url(#lente) blur(1px)"));
   if (mouse && ok) document.documentElement.classList.add("lente");
@@ -3298,10 +3299,26 @@ function ativarVidro(){
    Fontes abertas e sem chave: Caltrans (Califórnia), NYC DOT (Nova York), 511 Ontário.
    Opcional: Windy Webcams (chave grátis do usuário) e câmeras adicionadas pelo próprio usuário.
    ===================================================================== */
-const CAM = {on: false, fontes: lerJsonLocal("mapa.camFontes", {caltrans: true, nyc: true, ontario: true, windy: true, minhas: true}), dados: {}, pins: [], atual: null, timer: null, hls: null, carregando: {}};
+const CAM = {on: false, fontes: Object.assign({mundo: true, caltrans: true, nyc: true, ontario: true, windy: true, minhas: true}, lerJsonLocal("mapa.camFontes2", {})), dados: {}, pins: [], atual: null, timer: null, hls: null, carregando: {}};
 function lerJsonLocal(k, pad){ try{ const v = JSON.parse(localStorage.getItem(k) || "null"); return v === null ? pad : v; }catch(e){ return pad; } }
 function salvarJson(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+const CURADAS = [
+  ["Times Square, Nova York", 40.758, -73.9855], ["Jackson Hole, Wyoming (praça da cidade)", 43.4799, -110.7624], ["Cruzamento de Shibuya, Tóquio", 35.6595, 139.7005], ["Grande Canal, Veneza", 45.438, 12.3359],
+  ["Abbey Road, Londres", 51.532, -0.1773], ["Copacabana, Rio de Janeiro", -22.9711, -43.1822], ["Cristo Redentor, Rio de Janeiro", -22.9519, -43.2105], ["Avenida Paulista, São Paulo", -23.5614, -46.6559],
+  ["Cataratas do Iguaçu", -25.6953, -54.4367], ["Cataratas do Niágara", 43.0828, -79.0742], ["Ponte Golden Gate, São Francisco", 37.8199, -122.4783], ["Old Faithful, Yellowstone", 44.4605, -110.8281],
+  ["Vulcão Kilauea, Havaí", 19.4069, -155.2834], ["Aurora boreal, Abisko (Suécia)", 68.35, 18.83], ["Torre Eiffel, Paris", 48.8584, 2.2945], ["Coliseu, Roma", 41.8902, 12.4922],
+  ["Santorini, Grécia", 36.4618, 25.3753], ["Dubrovnik, Croácia", 42.6507, 18.0944], ["Tokyo Skytree", 35.7101, 139.8107], ["Porto de Victoria, Hong Kong", 22.293, 114.1694],
+  ["Ópera de Sydney", -33.8568, 151.2153], ["Montanha da Mesa, Cidade do Cabo", -33.9628, 18.4098], ["Machu Picchu, Peru", -13.1631, -72.545], ["Obelisco, Buenos Aires", -34.6037, -58.3816],
+  ["Aquário de Monterey, Califórnia", 36.6183, -121.9018], ["Burj Khalifa, Dubai", 25.1972, 55.2744], ["Monte Fuji, Japão", 35.3606, 138.7274], ["Pirâmides de Gizé, Egito", 29.9792, 31.1342],
+  ["Santiago, Chile", -33.4489, -70.6693], ["Cancún, México", 21.1619, -86.8515], ["Miami Beach, Flórida", 25.7907, -80.13], ["Las Vegas Strip, Nevada", 36.1147, -115.1728],
+  ["Lisboa, Portugal", 38.7139, -9.1394], ["Amsterdã, Holanda", 52.3676, 4.9041], ["Portão de Brandemburgo, Berlim", 52.5163, 13.3777], ["Bósforo, Istambul", 41.0422, 29.0083],
+  ["Vulcão Etna, Sicília", 37.751, 14.9934], ["Vulcão na Islândia (Reykjanes)", 63.89, -22.43], ["Estação McMurdo, Antártida", -77.846, 166.668], ["Praia Mole, Florianópolis", -27.6, -48.43],
+  ["Farol da Barra, Salvador", -13.01, -38.533], ["Praia de Boa Viagem, Recife", -8.1272, -34.8989], ["Pelourinho e Baía de Todos os Santos, Salvador", -12.9714, -38.5108], ["Cabo Branco, João Pessoa", -7.1485, -34.7952],
+  ["Torre CN, Toronto", 43.6426, -79.3871], ["Central Park, Nova York", 40.7829, -73.9654], ["Hollywood, Los Angeles", 34.1341, -118.3215], ["Monte Rushmore, Dakota do Sul", 43.8791, -103.4591]
+].map(([nome, lat, lon]) => { const q = encodeURIComponent(nome.split(",")[0] + " live cam"); return {fonte: "mundo", nome, lat, lon, tipo: "link", detalhe: "Câmera famosa", url: "https://www.youtube.com/results?search_query=" + q + "&sp=EgJAAQ%253D%253D",
+  links: [{t: "Procurar ao vivo no YouTube", url: "https://www.youtube.com/results?search_query=" + q + "&sp=EgJAAQ%253D%253D"}, {t: "Procurar no Google", url: "https://www.google.com/search?q=" + q}, {t: "Windy Webcams", url: "https://www.windy.com/webcams"}]}; });
 const FONTES_CAM = {
+  mundo: {nome: "Lugares famosos do mundo", desc: CURADAS.length + " lugares com câmeras ao vivo (abrem no YouTube/site)", site: ""},
   caltrans: {nome: "Califórnia (Caltrans)", desc: "Cerca de 3 mil câmeras de estradas, com imagem atualizada", site: "https://cwwp2.dot.ca.gov/vm/iframemap.htm"},
   nyc: {nome: "Nova York (NYC DOT)", desc: "Câmeras de trânsito da cidade", site: "https://webcams.nyctmc.org/"},
   ontario: {nome: "Ontário, Canadá (511)", desc: "Câmeras de rodovias de Ontário", site: "https://511on.ca/"},
@@ -3318,6 +3335,7 @@ async function carregarFonteCam(id){
   const p = (async () => {
     let lista = [];
     if (id === "caltrans"){
+      try{
       for (let off = 0; off < 6000; off += 2000){
         const j = await jget("https://gisdata.dot.ca.gov/arcgis/rest/services/CHhighway/CCTV/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultOffset=" + off + "&resultRecordCount=2000", 25000);
         for (const f of (j.features || [])){ const p = f.properties || {}, g = f.geometry && f.geometry.coordinates; const lat = num(pegar(p, "latitude", "Latitude")) ?? (g ? g[1] : null), lon = num(pegar(p, "longitude", "Longitude")) ?? (g ? g[0] : null);
@@ -3326,6 +3344,14 @@ async function carregarFonteCam(id){
           lista.push({fonte: "caltrans", nome: pegar(p, "locationName", "nearbyPlace") || "Câmera Caltrans", detalhe: [pegar(p, "route"), pegar(p, "county"), pegar(p, "direction")].filter(Boolean).join(" · "), lat, lon, tipo: hls ? "hls" : "img", url: hls || img, imgUrl: img, atualiza: 30, site: FONTES_CAM.caltrans.site}); }
         if (!(j.exceededTransferLimit || (j.properties && j.properties.exceededTransferLimit))) break;
       }
+      }catch(e){ lista = []; }
+      if (!lista.length){   // reserva: arquivos por distrito do portal CWWP
+        const rs = await Promise.allSettled(Array.from({length: 12}, (_, k) => jget("https://cwwp2.dot.ca.gov/data/d" + (k + 1) + "/cctv/cctvStatusD" + String(k + 1).padStart(2, "0") + ".json", 20000)));
+        for (const r of rs){ if (r.status !== "fulfilled") continue; for (const it of (r.value.data || [])){ const c = it.cctv || it, lo = c.location || {}, im = c.imageData || {}, st = im.static || {};
+          const lat = num(lo.latitude), lon = num(lo.longitude), img = https_(st.currentImageURL), hls = https_(im.streamingVideoURL); if (lat === null || lon === null || String(c.inService) === "false" || (!img && !hls)) continue;
+          lista.push({fonte: "caltrans", nome: lo.locationName || "Câmera Caltrans", detalhe: [lo.route, lo.county, lo.direction].filter(Boolean).join(" · "), lat, lon, tipo: hls ? "hls" : "img", url: hls || img, imgUrl: img, atualiza: 30, site: FONTES_CAM.caltrans.site}); } }
+      }
+      if (!lista.length) throw new Error("vazio");
     } else if (id === "nyc"){
       const j = await jget("https://webcams.nyctmc.org/api/cameras", 20000); const arr = Array.isArray(j) ? j : (j.cameras || j.data || []);
       for (const c of arr){ const lat = num(pegar(c, "latitude", "lat")), lon = num(pegar(c, "longitude", "lng", "lon")); const cid = pegar(c, "id", "cameraId"); const img = https_(pegar(c, "imageUrl", "image", "url")) || (cid ? "https://webcams.nyctmc.org/api/cameras/" + cid + "/image" : null);
@@ -3351,7 +3377,7 @@ function classificarUrlCam(url){
   return {tipo: "iframe", url: u};
 }
 function camsAtivas(){
-  const t = []; for (const [id, on] of Object.entries(CAM.fontes)){ if (!on || id === "minhas" || id === "windy") continue; if (CAM.dados[id]) t.push(...CAM.dados[id]); }
+  const t = []; if (CAM.fontes.mundo) t.push(...CURADAS); for (const [id, on] of Object.entries(CAM.fontes)){ if (!on || id === "minhas" || id === "windy" || id === "mundo") continue; if (CAM.dados[id]) t.push(...CAM.dados[id]); }
   if (CAM.fontes.windy && CAM.dados.windy) t.push(...CAM.dados.windy);
   if (CAM.fontes.minhas) t.push(...minhasCams().map(c => Object.assign({fonte: "minhas", atualiza: 15}, c)));
   return t;
@@ -3361,9 +3387,11 @@ function desenharCameras(){
   if (!CAM.on || !astro || !astro.terra){ viewer.scene.requestRender(); return; }
   const img = imagemPino("camera", false);
   for (const c of camsAtivas()){
+    const famosa = c.fonte === "mundo";
     CAM.pins.push(viewer.entities.add({name: c.nome, position: Cesium.Cartesian3.fromDegrees(c.lon, c.lat, 0), _cam: c,
-      billboard: {image: img, width: 28, height: 36, verticalOrigin: Cesium.VerticalOrigin.BOTTOM, scaleByDistance: new Cesium.NearFarScalar(500, 1, 6e6, 0.4), disableDepthTestDistance: 3e3, heightReference: Cesium.HeightReference.CLAMP_TO_GROUND},
-      label: {text: c.nome, font: "600 12px 'Source Sans 3',sans-serif", fillColor: Cesium.Color.WHITE, outlineColor: Cesium.Color.BLACK, outlineWidth: 4, style: Cesium.LabelStyle.FILL_AND_OUTLINE, verticalOrigin: Cesium.VerticalOrigin.TOP, pixelOffset: new Cesium.Cartesian2(0, 4), distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 15000), heightReference: Cesium.HeightReference.CLAMP_TO_GROUND}}));
+      billboard: {image: img, width: famosa ? 32 : 26, height: famosa ? 41 : 33, verticalOrigin: Cesium.VerticalOrigin.BOTTOM, scaleByDistance: famosa ? new Cesium.NearFarScalar(500, 1, 2e7, 0.7) : new Cesium.NearFarScalar(500, 1, 3e6, 0.01), disableDepthTestDistance: Number.POSITIVE_INFINITY},
+      label: {text: c.nome, font: "600 " + (famosa ? 13 : 12) + "px 'Segoe UI','Source Sans 3',sans-serif", fillColor: Cesium.Color.WHITE, outlineColor: Cesium.Color.BLACK, outlineWidth: 4, style: Cesium.LabelStyle.FILL_AND_OUTLINE, verticalOrigin: Cesium.VerticalOrigin.TOP, pixelOffset: new Cesium.Cartesian2(0, 4),
+        scaleByDistance: new Cesium.NearFarScalar(1e5, 1, 2e7, 0.6), distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, famosa ? 1.2e7 : 40000), disableDepthTestDistance: Number.POSITIVE_INFINITY}}));
   }
   viewer.scene.requestRender(); atualizarBotaoCam();
 }
@@ -3376,9 +3404,8 @@ async function ligarCameras(v){
   await Promise.all(["caltrans", "nyc", "ontario"].filter(id => CAM.fontes[id]).map(id => carregarFonteCam(id).catch(() => { falhas.push(FONTES_CAM[id].nome); })));
   avisar(""); desenharCameras(); montarCamadas();
   const n = CAM.pins.length;
-  toast(n ? n + " câmeras no mapa" : "Nenhuma câmera", n ? "Toque num alfinete C para assistir. Aproxime-se de uma região coberta." : "Não consegui carregar as fontes agora.");
+  toast(n ? n + " câmeras no mapa" : "Nenhuma câmera", n ? "Toque num alfinete vermelho para abrir a câmera. Os nomes aparecem no mapa." : "Ative alguma fonte no painel Camadas.");
   if (falhas.length) setTimeout(() => toast("Fonte indisponível", falhas.join(", ")), 600);
-  if (n && viewer.camera.positionCartographic.height > 8e6) irParaCameras();
 }
 function irParaCameras(regiao){
   const R = {ca: [-119.5, 36.8, 1.1e6], ny: [-74.0, 40.72, 1.2e5], on: [-79.4, 43.7, 3.5e5]}[regiao || "ca"]; viewer.camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(R[0], R[1], R[2]), duration: 2});
@@ -3401,7 +3428,7 @@ async function abrirCamera(c){
   CAM.atual = c; clearInterval(CAM.timer); if (CAM.hls){ try{ CAM.hls.destroy(); }catch(e){} CAM.hls = null; }
   $("camTitulo").textContent = c.nome; $("camMeta").textContent = [c.detalhe, FONTES_CAM[c.fonte] ? FONTES_CAM[c.fonte].nome : (c.fonte || "")].filter(Boolean).join(" · ");
   $("camStatus").textContent = "Carregando…"; const m = $("camMidia"); m.innerHTML = ""; $("camVisor").hidden = false; if ($("info")) selecionar(null);
-  const acoes = $("camAcoes"); acoes.innerHTML = ""; const abrirSite = c.site || c.pagina || (c.tipo === "iframe" || c.tipo === "link" ? c.url : null) || (c.imgUrl || c.url);
+  const acoes = $("camAcoes"); acoes.innerHTML = ""; const abrirSite = c.fonte === "mundo" ? null : c.site || c.pagina || (c.tipo === "iframe" || c.tipo === "link" ? c.url : null) || (c.imgUrl || c.url);
   if (abrirSite) acoes.appendChild(botaoLink("Abrir no site", abrirSite));
   acoes.appendChild(botaoLink("Ver no Google Maps", `https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lon}`));
   if (c.fonte === "minhas") acoes.appendChild(btnPeq("Remover", () => { salvarJson("mapa.minhasCams", minhasCams().filter(x => !(x.lat === c.lat && x.lon === c.lon && x.nome === c.nome))); fecharCamera(); desenharCameras(); montarCamadas(); }));
@@ -3415,7 +3442,10 @@ async function abrirCamera(c){
   } else if (c.tipo === "yt" || c.tipo === "iframe"){
     const f = document.createElement("iframe"); f.src = c.url; f.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media"; f.allowFullscreen = true; f.referrerPolicy = "no-referrer"; f.loading = "lazy"; m.appendChild(f);
     $("camStatus").textContent = c.tipo === "yt" ? "Transmissão ao vivo do YouTube." : "Câmera incorporada. Se ficar em branco, o site não permite incorporação: use \"Abrir no site\".";
-  } else { m.textContent = "Esta câmera só abre no site original."; $("camStatus").textContent = ""; }
+  } else {
+    m.innerHTML = ""; const t = document.createElement("div"); t.style.cssText = "padding:18px;text-align:center;line-height:1.5"; t.textContent = "Este lugar costuma ter câmeras ao vivo, mas elas só abrem nos sites que as transmitem. Toque num dos botões abaixo para ver ao vivo."; m.appendChild(t); $("camStatus").textContent = "";
+    for (const k of (c.links || [])) acoes.appendChild(botaoLink(k.t, k.url));
+  }
 }
 
 /* ---------- Windy Webcams (opcional) e câmeras do usuário ---------- */
@@ -3435,12 +3465,12 @@ async function buscarWindy(){
 function adicionarMinhaCam(nome, url){
   const c = centroTela(); if (!c){ avisar("Aponte o mapa para a superfície da Terra."); return false; } if (!url.trim()){ toast("Falta o link", "Cole o link da câmera."); return false; }
   const k = classificarUrlCam(url); const lista = minhasCams(); lista.push(Object.assign({nome: nome.trim() || "Minha câmera", lat: c.lat, lon: c.lon, detalhe: "Adicionada por você"}, k));
-  salvarJson("mapa.minhasCams", lista); CAM.fontes.minhas = true; salvarJson("mapa.camFontes", CAM.fontes); CAM.on = true; desenharCameras(); montarCamadas(); toast("Câmera adicionada", "Ela fica no centro atual do mapa."); return true;
+  salvarJson("mapa.minhasCams", lista); CAM.fontes.minhas = true; salvarJson("mapa.camFontes2", CAM.fontes); CAM.on = true; desenharCameras(); montarCamadas(); toast("Câmera adicionada", "Ela fica no centro atual do mapa."); return true;
 }
 function montarSecaoCameras(box){
   secao(box, "Câmeras ao vivo");
   box.appendChild(interruptor("Mostrar câmeras ao vivo", "Alfinetes C no mapa: toque para assistir", CAM.on, () => ligarCameras(!CAM.on)));
-  for (const [id, f] of Object.entries(FONTES_CAM)) box.appendChild(interruptor(f.nome, f.desc + (CAM.dados[id] ? " · " + CAM.dados[id].length + " câmeras" : ""), !!CAM.fontes[id], async () => { CAM.fontes[id] = !CAM.fontes[id]; salvarJson("mapa.camFontes", CAM.fontes);
+  for (const [id, f] of Object.entries(FONTES_CAM)) box.appendChild(interruptor(f.nome, f.desc + (CAM.dados[id] ? " · " + CAM.dados[id].length + " câmeras" : ""), !!CAM.fontes[id], async () => { CAM.fontes[id] = !CAM.fontes[id]; salvarJson("mapa.camFontes2", CAM.fontes);
     if (CAM.on && CAM.fontes[id] && ["caltrans", "nyc", "ontario"].includes(id)) await carregarFonteCam(id).catch(() => toast("Fonte indisponível", f.nome)); desenharCameras(); montarCamadas(); }));
   const ir = elDom("div", "linha-acoes"); for (const [k, t] of [["ca", "Ir à Califórnia"], ["ny", "Ir a Nova York"], ["on", "Ir a Ontário"]]) ir.appendChild(btnPeq(t, () => { fecharPaineis(); irParaCameras(k); })); box.appendChild(ir);
   const w = elDom("input", "campo"); w.type = "password"; w.autocomplete = "off"; w.placeholder = "Chave grátis do Windy Webcams (opcional)"; w.value = lerGuardado("mapa.chaveWindy", ""); w.onchange = () => guardar("mapa.chaveWindy", w.value.trim()); box.appendChild(w);
