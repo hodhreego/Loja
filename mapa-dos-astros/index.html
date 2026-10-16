@@ -3,169 +3,357 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b0e14">
+<meta name="theme-color" content="#0b1530">
 <title>Mapa dos Astros</title>
-<meta name="description" content="Explore a Lua, Marte, Mercúrio e Ceres em 3D com imagens de satélite da NASA.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='80' font-size='84' text-anchor='middle'%3E🌙%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Explore planetas, luas, asteroides e a Estação Espacial Internacional em 3D, com imagens de satélite da NASA.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='80' font-size='84' text-anchor='middle'%3E🪐%3C/text%3E%3C/svg%3E">
+
+<!-- Tipografia da identidade da loja -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- CesiumJS (versão fixa) via jsDelivr. Nenhum recurso do Cesium Ion é usado. -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cesium@1.120.0/Build/Cesium/Widgets/widgets.css">
 <script src="https://cdn.jsdelivr.net/npm/cesium@1.120.0/Build/Cesium/Cesium.js"></script>
 
 <style>
-  /* ===== Tema escuro, pensado primeiro para celular ===== */
+  /* ===== Identidade: azul-marinho profundo + dourado, vidro translúcido ===== */
   :root{
-    --fundo:#0b0e14; --painel:#141926; --painel2:#1c2333; --borda:#2a3350;
-    --texto:#e8ecf5; --suave:#9aa6c4; --destaque:#ffcf5a; --azul:#6cb6ff;
+    --navy-deep:#0b1530; --navy:#1B3A6B; --gold:#C9A227; --gold-light:#E9D48E;
+    --texto:#eef3ff; --suave:#a9b8d6; --linha:rgba(255,255,255,.16);
+    --raio:18px; --serif:'Playfair Display',Georgia,serif;
+    --sans:'Source Sans 3',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:var(--fundo);color:var(--texto);
-    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
-  body{display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:#02040b;color:var(--texto);font-family:var(--sans);overflow:hidden}
   button{font:inherit;color:inherit;cursor:pointer}
-  button:focus-visible,select:focus-visible{outline:3px solid var(--azul);outline-offset:2px}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--gold-light);outline-offset:2px}
 
-  /* Barra superior */
-  #barra{display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-    padding:8px 12px;padding-top:calc(8px + env(safe-area-inset-top));
-    background:var(--painel);border-bottom:1px solid var(--borda);z-index:30}
-  #barra h1{font-size:1.1rem;margin:0;flex:1 1 auto;white-space:nowrap}
-  .botao{background:var(--painel2);border:1px solid var(--borda);border-radius:10px;
-    padding:10px 14px;min-height:44px;font-weight:600}
-  .botao:hover{border-color:var(--azul)}
-  .botao[aria-expanded="true"]{background:var(--azul);color:#06121f;border-color:var(--azul)}
-  #astros{display:flex;gap:6px;flex:1 1 100%;overflow-x:auto;padding-bottom:2px}
-  .astro{flex:0 0 auto;border-radius:999px;padding:8px 14px;min-height:40px;
-    background:var(--painel2);border:1px solid var(--borda);font-weight:600}
-  .astro[aria-pressed="true"]{background:var(--destaque);color:#241a00;border-color:var(--destaque)}
+  /* ---------- Vidro líquido (Liquid Glass) ---------- */
+  .vidro{
+    position:relative;
+    background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04) 55%,rgba(255,255,255,.09));
+    -webkit-backdrop-filter:blur(22px) saturate(180%); backdrop-filter:blur(22px) saturate(180%);
+    border:1px solid var(--linha);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.38), inset 0 -1px 0 rgba(255,255,255,.07), 0 10px 34px rgba(0,0,0,.42);
+  }
+  .vidro::before{ /* reflexo de luz no topo */
+    content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:linear-gradient(180deg,rgba(255,255,255,.14),transparent 38%);mix-blend-mode:screen;opacity:.7}
+  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+    .vidro{background:rgba(14,26,56,.92)}
+  }
 
-  /* Área do mapa */
-  #principal{position:relative;flex:1 1 auto;min-height:0}
-  #mapa{position:absolute;inset:0;background:#000}
-  .cesium-viewer-bottom,.cesium-widget-credits{display:none!important} /* créditos do Cesium vão ao rodapé */
+  #mapa{position:fixed;inset:0;background:#000}
+  .cesium-viewer-bottom,.cesium-widget-credits{display:none!important}
 
-  #voltar{position:absolute;left:12px;top:12px;z-index:20;box-shadow:0 4px 14px #0008}
+  /* ---------- Botões ---------- */
+  .btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:14px;
+    background:rgba(255,255,255,.08);border:1px solid var(--linha);font-weight:600;font-size:.95rem;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.25);transition:background .15s,border-color .15s}
+  .btn:hover{background:rgba(255,255,255,.16);border-color:rgba(233,212,142,.6)}
+  .btn[aria-expanded="true"],.btn.ativo{background:rgba(233,212,142,.22);border-color:var(--gold-light)}
+  .btn svg{width:18px;height:18px;flex:0 0 auto}
+  /* botão redondo = só vidro transparente */
+  .redondo{width:46px;height:46px;min-height:46px;padding:0;border-radius:50%;justify-content:center}
 
-  /* Lista de lugares (gaveta) */
-  #lista{position:absolute;z-index:25;left:0;right:0;top:0;max-height:70%;overflow:auto;
-    background:var(--painel);border-bottom:1px solid var(--borda);padding:8px 12px 12px;
-    box-shadow:0 8px 24px #000a}
-  #lista[hidden]{display:none}
-  #lista h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--suave);margin:12px 4px 6px}
-  #lista ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-  .item{width:100%;display:flex;align-items:center;gap:10px;text-align:left;
-    background:var(--painel2);border:1px solid var(--borda);border-radius:10px;padding:10px 12px;min-height:48px}
-  .item:hover{border-color:var(--destaque)}
-  .pino{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
-    font-weight:800;font-size:.8rem;color:#101010}
+  /* ---------- Barra superior ---------- */
+  #barra{position:fixed;z-index:30;left:12px;right:12px;top:calc(12px + env(safe-area-inset-top));
+    display:flex;align-items:center;gap:10px;padding:8px 10px 8px 16px;border-radius:var(--raio)}
+  .marca{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+  .marca svg{width:26px;height:26px;flex:0 0 auto}
+  .marca b{font-family:var(--serif);font-size:1.18rem;letter-spacing:.01em;white-space:nowrap}
+  .marca b em{font-style:normal;color:var(--gold-light)}
 
-  /* Painel de informações (folha inferior no celular) */
-  #info{position:absolute;z-index:22;left:8px;right:8px;bottom:8px;max-height:58%;overflow:auto;
-    background:var(--painel);border:1px solid var(--borda);border-radius:16px;padding:14px 16px 16px;
-    box-shadow:0 8px 28px #000c}
+  /* ---------- Cartão do astro atual ---------- */
+  #cartao{position:fixed;z-index:20;left:12px;top:calc(76px + env(safe-area-inset-top));width:min(340px,calc(100vw - 24px));
+    padding:12px 14px;border-radius:var(--raio);display:flex;gap:12px;align-items:center}
+  #cartao h2{margin:0;font-family:var(--serif);font-size:1.25rem;line-height:1.15}
+  #cartao small{display:block;color:var(--gold-light);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.68rem}
+  #cartao p{margin:4px 0 0;color:var(--suave);font-size:.86rem;line-height:1.35}
+  .esfera{flex:0 0 auto;width:46px;height:46px;border-radius:50%;
+    background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.85),var(--c) 42%,#000 135%);
+    box-shadow:0 0 18px color-mix(in srgb,var(--c) 55%,transparent),inset -6px -8px 14px rgba(0,0,0,.45)}
+
+  /* ---------- Painéis laterais (catálogo e lugares) ---------- */
+  .painel{position:fixed;z-index:40;top:calc(76px + env(safe-area-inset-top));bottom:64px;width:min(380px,calc(100vw - 24px));
+    border-radius:var(--raio);display:flex;flex-direction:column;overflow:hidden;
+    transition:transform .28s cubic-bezier(.2,.8,.2,1),opacity .2s}
+  #catalogo{left:12px}
+  #lista{right:12px}
+  .painel[hidden]{display:flex;opacity:0;pointer-events:none;visibility:hidden;transform:translateY(12px)}
+  .painel header{padding:14px 16px 6px}
+  .painel h3{margin:0;font-family:var(--serif);font-size:1.15rem}
+  .painel .corpo{overflow:auto;padding:6px 12px 14px;flex:1;overscroll-behavior:contain}
+  .abas{display:flex;gap:4px;padding:4px;margin:8px 12px 2px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid var(--linha);overflow-x:auto}
+  .aba{flex:1 0 auto;border:0;background:transparent;border-radius:11px;padding:8px 10px;font-weight:600;font-size:.82rem;color:var(--suave);white-space:nowrap}
+  .aba[aria-selected="true"]{background:rgba(233,212,142,.24);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+  .item{width:100%;display:flex;align-items:center;gap:12px;text-align:left;margin:6px 0 0;padding:10px 12px;border-radius:14px;
+    background:rgba(255,255,255,.06);border:1px solid transparent;min-height:56px}
+  .item:hover{background:rgba(255,255,255,.12)}
+  .item[aria-current="true"]{border-color:var(--gold-light);background:rgba(233,212,142,.14)}
+  .item .esfera{width:34px;height:34px}
+  .item b{display:block;font-size:1rem}
+  .item span.sub{display:block;color:var(--suave);font-size:.8rem}
+  .rotulo{margin:14px 6px 2px;color:var(--gold-light);font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+  .pino{flex:0 0 auto;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:.82rem;color:#101010}
+  .vazio{color:var(--suave);padding:14px 8px;font-size:.92rem}
+
+  /* ---------- Painel de informações ---------- */
+  #info{position:fixed;z-index:35;left:12px;right:12px;bottom:60px;max-height:50vh;overflow:auto;border-radius:var(--raio);padding:16px 18px 18px}
   #info[hidden]{display:none}
-  #info h2{margin:0 40px 6px 0;font-size:1.25rem}
-  #fechar{position:absolute;top:8px;right:8px;width:44px;height:44px;border-radius:50%;
-    background:var(--painel2);border:1px solid var(--borda);font-size:1.2rem}
-  .tag{display:inline-block;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:999px;color:#101010}
-  dl{margin:10px 0 0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.95rem}
-  dt{color:var(--suave)} dd{margin:0}
-  .curiosidade{margin:12px 0 0;padding:10px 12px;background:var(--painel2);border-left:4px solid var(--destaque);
-    border-radius:8px;line-height:1.45;font-size:1rem}
+  #info h2{margin:0 52px 6px 0;font-family:var(--serif);font-size:1.4rem;line-height:1.15}
+  #fechar{position:absolute;top:10px;right:10px;z-index:2}
+  .tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.04em;padding:3px 10px;border-radius:8px;color:#101010}
+  dl{margin:12px 0 0;display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:.95rem}
+  dt{color:var(--suave)} dd{margin:0;font-weight:500}
+  .curiosidade{margin:14px 0 0;padding:11px 14px;background:rgba(233,212,142,.1);border-left:3px solid var(--gold-light);border-radius:10px;line-height:1.5}
+  .acoes{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+  .vivo{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;letter-spacing:.1em;color:#5eead4}
+  .vivo::before{content:"";width:8px;height:8px;border-radius:50%;background:#5eead4;box-shadow:0 0 0 0 #5eead4aa;animation:pulso 1.6s infinite}
+  @keyframes pulso{70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
 
-  /* Avisos e carregamento */
-  #aviso{position:absolute;z-index:40;top:68px;pointer-events:none;left:50%;transform:translateX(-50%);width:min(92%,520px);
-    background:#3a2a05;color:#ffe9b0;border:1px solid #8a6a1a;border-radius:10px;padding:10px 14px;font-size:.9rem}
+  /* ---------- Controles do mapa (vidro redondo) ---------- */
+  #controles{position:fixed;z-index:25;right:12px;top:calc(76px + env(safe-area-inset-top));display:flex;flex-direction:column;gap:10px}
+
+  /* ---------- Avisos, carregamento e créditos ---------- */
+  #aviso{position:fixed;z-index:45;top:calc(76px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);
+    width:min(92vw,560px);padding:10px 16px;border-radius:14px;font-size:.9rem;color:#ffeab0;
+    background:linear-gradient(135deg,rgba(120,80,0,.55),rgba(60,40,0,.45))}
   #aviso[hidden]{display:none}
-  #dica{position:absolute;z-index:15;left:50%;bottom:72px;transform:translateX(-50%);
-    background:#000a;padding:8px 14px;border-radius:999px;font-size:.85rem;color:var(--suave);
-    pointer-events:none;transition:opacity .6s;text-align:center;width:max-content;max-width:92%}
-  #carregando{position:absolute;inset:0;z-index:50;background:var(--fundo);display:grid;place-items:center;
-    transition:opacity .5s;text-align:center;color:var(--suave)}
+  #carregando{position:fixed;inset:0;z-index:60;display:grid;place-items:center;text-align:center;
+    background:radial-gradient(ellipse at 50% 40%,#13254f,#02040b 70%);transition:opacity .6s;color:var(--suave)}
   #carregando.some{opacity:0;pointer-events:none}
-
-  /* Rodapé de créditos (visível sempre); o logo do Cesium deixa de ser flutuante */
-  #creditoCesium .cesium-credit-logoContainer{position:static!important}
-  #creditos{padding:6px 12px;font-size:.72rem;line-height:1.35;color:var(--suave);
-    background:var(--painel);border-top:1px solid var(--borda);z-index:30}
-  #creditoCesium .cesium-credit-logoContainer img{height:16px;vertical-align:middle}
+  #carregando b{display:block;font-family:var(--serif);font-size:1.7rem;color:#fff;margin:14px 0 4px}
+  .orbita{width:74px;height:74px;margin:0 auto;border-radius:50%;border:2px solid rgba(233,212,142,.25);position:relative;animation:gira 2.4s linear infinite}
+  .orbita::after{content:"";position:absolute;top:-6px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--gold-light);box-shadow:0 0 14px var(--gold-light)}
+  @keyframes gira{to{transform:rotate(360deg)}}
+  #creditos{position:fixed;z-index:30;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));padding:7px 14px;border-radius:14px;
+    font-size:.72rem;line-height:1.35;color:var(--suave)}
   #creditoCesium{display:inline}
   #creditoCesium *{display:inline!important;color:var(--suave)!important}
+  #creditoCesium .cesium-credit-logoContainer{position:static!important}
+  #creditoCesium img{height:14px;vertical-align:middle}
 
-  /* Telas largas: gaveta e painel viram colunas laterais */
+  /* ---------- Celular ---------- */
+  @media (max-width:759px){
+    .marca b{font-size:1.02rem}
+    .btn .rot{display:none}                       /* só ícone na barra */
+    #barra .btn{padding:0 13px}
+    #cartao{top:calc(70px + env(safe-area-inset-top));width:auto;max-width:calc(100vw - 80px);padding:8px 12px}
+    #cartao p{display:none}
+    #cartao .esfera{width:34px;height:34px}
+    #cartao h2{font-size:1.05rem}
+    #controles{top:calc(70px + env(safe-area-inset-top));gap:8px}
+    .redondo{width:42px;height:42px;min-height:42px}
+    .painel{left:12px;right:12px;width:auto;top:auto;bottom:60px;max-height:62vh}
+    #info{max-height:46vh}
+  }
   @media (min-width:760px){
-    #astros{flex:0 1 auto}
-    #barra{flex-wrap:nowrap}
-    #lista{width:340px;right:auto;top:12px;left:12px;max-height:calc(100% - 24px);border:1px solid var(--borda);border-radius:14px}
-    #info{left:auto;right:12px;bottom:12px;width:380px;max-height:calc(100% - 24px)}
-    #voltar{left:auto;right:12px}
+    #info{left:auto;right:12px;width:400px;bottom:64px;max-height:min(72vh,620px)}
+    #controles{right:12px}
+    #lista{right:70px}
+    #creditos{right:auto;max-width:calc(100vw - 24px)}
   }
 </style>
 </head>
 <body>
 
-<header id="barra">
-  <h1>🪐 Mapa dos Astros</h1>
-  <button id="btnLista" class="botao" aria-expanded="false" aria-controls="lista">Lista de lugares</button>
-  <nav id="astros" aria-label="Escolha o astro"></nav>
+<div id="mapa"></div>
+
+<header id="barra" class="vidro">
+  <div class="marca">
+    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="7" fill="#E9D48E"/><ellipse cx="16" cy="16" rx="14" ry="5.2" transform="rotate(-24 16 16)" stroke="#E9D48E" stroke-width="1.6"/></svg>
+    <b>Mapa dos <em>Astros</em></b>
+  </div>
+  <button id="btnCatalogo" class="btn" aria-expanded="false" aria-controls="catalogo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg>
+    <span class="rot">Astros</span></button>
+  <button id="btnLista" class="btn" aria-expanded="false" aria-controls="lista">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
+    <span class="rot">Lugares</span></button>
 </header>
 
-<main id="principal">
-  <div id="mapa"></div>
-  <button id="voltar" class="botao">⟲ Voltar à <span id="nomeVoltar">Lua</span> inteira</button>
+<section id="cartao" class="vidro" aria-live="polite">
+  <div class="esfera" id="cEsfera"></div>
+  <div><small id="cCateg"></small><h2 id="cNome"></h2><p id="cResumo"></p></div>
+</section>
 
-  <section id="lista" hidden aria-label="Lista de lugares"></section>
+<div id="controles">
+  <button id="zmMais" class="btn vidro redondo" aria-label="Aproximar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+  <button id="zmMenos" class="btn vidro redondo" aria-label="Afastar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+  <button id="voltar" class="btn vidro redondo" aria-label="Voltar à vista geral" title="Voltar à vista geral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
+</div>
 
-  <section id="info" hidden aria-live="polite">
-    <button id="fechar" aria-label="Fechar">✕</button>
-    <h2 id="iNome"></h2>
-    <span id="iTipo" class="tag"></span>
-    <dl>
-      <dt>Tamanho</dt><dd id="iTamanho"></dd>
-      <dt id="iDetalheRot" hidden>Missão</dt><dd id="iDetalhe" hidden></dd>
-      <dt>Posição</dt><dd id="iCoord"></dd>
-    </dl>
-    <p class="curiosidade">💡 <span id="iCuriosidade"></span></p>
-  </section>
+<aside id="catalogo" class="painel vidro" hidden aria-label="Catálogo de astros">
+  <header><h3>Escolha um astro</h3></header>
+  <div class="abas" id="abas" role="tablist"></div>
+  <div class="corpo" id="catCorpo"></div>
+</aside>
 
-  <div id="aviso" role="status" hidden></div>
-  <div id="dica">Arraste para girar · pinça (ou roda do mouse) para aproximar · toque nos pinos</div>
-  <div id="carregando"><div><div style="font-size:3rem">🌙</div>Carregando…</div></div>
-</main>
+<aside id="lista" class="painel vidro" hidden aria-label="Lista de lugares">
+  <header><h3 id="listaTitulo">Lugares</h3></header>
+  <div class="corpo" id="listaCorpo"></div>
+</aside>
 
-<footer id="creditos">
-  <span id="creditoImagem"></span>
-  · Mapa 3D: <span id="creditoCesium"></span>
-</footer>
+<section id="info" class="vidro" hidden aria-live="polite">
+  <button id="fechar" class="btn redondo" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <h2 id="iNome"></h2>
+  <span id="iTipo" class="tag"></span> <span id="iVivo" class="vivo" hidden>AO VIVO</span>
+  <dl id="iDados"></dl>
+  <p class="curiosidade"><b>Você sabia?</b> <span id="iCuriosidade"></span></p>
+  <div class="acoes" id="iAcoes"></div>
+</section>
+
+<div id="aviso" class="vidro" role="status" hidden></div>
+<div id="carregando"><div><div class="orbita"></div><b>Mapa dos Astros</b>Preparando o globo 3D…</div></div>
+
+<footer id="creditos" class="vidro"><span id="creditoImagem"></span> · 3D: <span id="creditoCesium"></span></footer>
 
 <script>
 "use strict";
 /* =====================================================================
    MAPA DOS ASTROS
-   - Um objeto por astro em ASTROS (raio, camadas da NASA Trek, lugares).
-   - Para incluir outro astro (ex.: Vesta, Titã), basta copiar um bloco.
+   Um objeto por astro em ASTROS. Para incluir outro, copie um bloco.
+   - raios: semieixos [x,y,z] em metros (o Cesium só desenha esferas e elipsoides de revolução, como a Terra)
+   - forma: (opcional) formato 3 eixos desenhado como objeto 3D, para asteroides alongados como Eros
+   - fontes: de onde vêm as imagens; o app testa uma a uma e usa a primeira que responder
+   - lugares: marcadores (lat/lon em graus; +N/−S, +L/−O); alcance = distância da câmera em km
    ===================================================================== */
 
-/* ---------- Tipos de lugar (cor e letra do pino) ---------- */
+/* ---------- Categorias ---------- */
+const CATEGORIAS = [
+  { id: "planetas", nome: "Planetas" },
+  { id: "luas",     nome: "Luas" },
+  { id: "anoes",    nome: "Anões e asteroides" },
+  { id: "estacoes", nome: "Estações" }
+];
+
+/* ---------- Tipos de lugar ---------- */
 const TIPOS = {
-  pouso:    { rotulo: "Local de pouso",        cor: "#ffcf5a", letra: "P" },
-  planicie: { rotulo: "Planície / bacia",      cor: "#6cb6ff", letra: "M" },
-  cratera:  { rotulo: "Cratera de impacto",    cor: "#ff8f6b", letra: "C" },
-  relevo:   { rotulo: "Vulcão / vale / relevo", cor: "#9be39b", letra: "R" }
+  pouso:      { rotulo: "Local de pouso",         cor: "#ffd166", letra: "P" },
+  planicie:   { rotulo: "Planície / bacia",       cor: "#6cb6ff", letra: "M" },
+  cratera:    { rotulo: "Cratera de impacto",     cor: "#ff8f6b", letra: "C" },
+  relevo:     { rotulo: "Vulcão / vale / relevo", cor: "#7ee0a1", letra: "R" },
+  lancamento: { rotulo: "Base de lançamento",     cor: "#c4a3ff", letra: "B" },
+  cidade:     { rotulo: "Cidade",                 cor: "#f4f4f4", letra: "★" },
+  estacao:    { rotulo: "Estação espacial",       cor: "#5eead4", letra: "S" }
 };
 
-/* ---------- Dados dos astros ----------
-   Coordenadas: latitude (+N/−S) e longitude (+Leste/−Oeste), em graus.
-   alcance = distância da câmera ao lugar, em km, ao voar até ele. */
+/* ---------- Fontes de imagem ----------
+   trek : NASA Solar System Treks (WMTS)    gibs : NASA GIBS (Terra)
+   natural : Natural Earth, incluído no Cesium   wms : USGS Astrogeology (descobre a camada sozinho) */
+const wmsUsgs = (...mapas) => ({ t: "wms", urls: mapas.map(m => `https://planetarymaps.usgs.gov/cgi-bin/mapserv?map=/maps/${m}.map`),
+  credito: "Mapas: USGS Astrogeology Science Center / NASA" });
+const trek = (pasta, nome, ext, credito) => ({ t: "trek", pasta, nome, ext, credito });
+
 const ASTROS = [
-  {
-    id: "lua", nome: "Lua", emoji: "🌙", pasta: "Moon", raio: 1737400,
-    credito: "Imagens: NASA/GSFC/Arizona State University (LRO) via NASA Solar System Treks",
-    camadas: [
-      { nome: "LRO_WAC_Mosaic_Global_303ppd_v02", ext: "jpg" },  // mosaico global LRO WAC
-      { nome: "LRO_LOLA_ClrShade_Global_128ppd_v04", ext: "png" } // alternativa: relevo colorido LOLA
-    ],
-    lugares: [
+  /* ===================== PLANETAS ===================== */
+  { id:"mercurio", nome:"Mercúrio", categoria:"planetas", cor:"#a39d96", raios:[2439400,2439400,2439400],
+    diametro:"4.879 km", resumo:"O menor planeta e o mais próximo do Sol. Um ano lá dura só 88 dias.",
+    fontes:[ trek("Mercury","Mercury_MESSENGER_MDIS_Basemap_BDR_Mosaic_Global_166m","jpg","Imagens: NASA/Johns Hopkins APL/Carnegie Institution (MESSENGER) via NASA Solar System Treks"),
+             trek("Mercury","Mercury_MESSENGER_MDIS_Basemap_EnhancedColor_Mosaic_Global_665m","jpg","Imagens: NASA/Johns Hopkins APL/Carnegie Institution (MESSENGER) via NASA Solar System Treks"),
+             wmsUsgs("mercury/mercury_simp_cyl") ],
+    lugares:[
+      { nome:"Bacia Caloris", tipo:"planicie", lat:30.5, lon:189.8, alcance:2200,
+        tamanho:"Cerca de 1.550 km de diâmetro",
+        curiosidade:"Uma batida de asteroide tão forte que, do lado oposto do planeta, o chão ficou cheio de colinas bagunçadas." },
+      { nome:"Bacia Rembrandt", tipo:"planicie", lat:-33.0, lon:88.3, alcance:1500,
+        tamanho:"Cerca de 715 km de diâmetro",
+        curiosidade:"É uma das maiores bacias de impacto de Mercúrio, com cicatrizes de rachaduras no fundo." },
+      { nome:"Cratera Kuiper", tipo:"cratera", lat:-11.3, lon:-31.5, alcance:250,
+        tamanho:"Cerca de 62 km de diâmetro",
+        curiosidade:"É bem jovem e brilha mais que o terreno em volta, com raios claros espalhados." },
+      { nome:"Fim da missão MESSENGER", tipo:"pouso", lat:54.4, lon:-149.9, alcance:300,
+        tamanho:"Ponto de impacto: a sonda tinha cerca de 1,5 m de largura",
+        detalhe:"30/04/2015 · fim da missão",
+        curiosidade:"A sonda MESSENGER orbitou Mercúrio por 4 anos. Quando acabou o combustível, ela foi guiada para bater no planeta." }
+    ] },
+  { id:"venus", nome:"Vênus", categoria:"planetas", cor:"#e3c07a", raios:[6051800,6051800,6051800],
+    diametro:"12.104 km", resumo:"O planeta mais quente (cerca de 465 °C). Um dia lá dura mais que um ano!",
+    fontes:[ wmsUsgs("venus/venus_simp_cyl") ],
+    lugares:[
+      { nome:"Maxwell Montes", tipo:"relevo", lat:65.2, lon:3.3, alcance:1800,
+        tamanho:"Cerca de 11 km acima do nível médio do planeta",
+        curiosidade:"É a montanha mais alta de Vênus. Os mapas dela foram feitos por radar, porque nuvens grossas escondem a superfície." },
+      { nome:"Maat Mons", tipo:"relevo", lat:0.5, lon:194.5, alcance:1500,
+        tamanho:"Vulcão com cerca de 8 km de altura",
+        curiosidade:"É um dos maiores vulcões de Vênus, e a superfície do planeta é cheia de vulcões." },
+      { nome:"Venera 13", tipo:"pouso", lat:-7.5, lon:-57.0, alcance:700,
+        tamanho:"Módulo de pouso soviético",
+        detalhe:"01/03/1982 · União Soviética",
+        curiosidade:"Funcionou por cerca de 2 horas na superfície, sob calor e pressão enormes, e mandou as primeiras fotos coloridas de Vênus." }
+    ] },
+  { id:"terra", nome:"Terra", categoria:"planetas", cor:"#3b82c4", raios:[6378137,6378137,6356752.314245], atmosfera:true, terra:true,
+    diametro:"12.742 km", resumo:"Nosso planeta: único lugar conhecido com vida e 71% coberto por água.",
+    fontes:[ { t:"gibs", credito:"Imagens: NASA Earth Observatory / NASA GIBS (Blue Marble)" },
+             { t:"natural", credito:"Imagens: Natural Earth (incluído no CesiumJS)" } ],
+    lugares:[
+      { nome:"Brasília", tipo:"cidade", lat:-15.78, lon:-47.93, alcance:350,
+        tamanho:"Distrito Federal com cerca de 5.760 km²",
+        curiosidade:"Foi planejada nos anos 1950 e inaugurada em 1960. Vista de cima, o Plano Piloto lembra um avião." },
+      { nome:"Centro de Lançamento de Alcântara", tipo:"lancamento", lat:-2.373, lon:-44.396, alcance:300,
+        tamanho:"Base com cerca de 620 km²",
+        curiosidade:"Fica muito perto da linha do Equador, onde a rotação da Terra dá um empurrão extra aos foguetes e economiza combustível." },
+      { nome:"Centro Espacial Kennedy", tipo:"lancamento", lat:28.573, lon:-80.649, alcance:300,
+        tamanho:"Cerca de 570 km² (Flórida, EUA)",
+        curiosidade:"Daqui saíram as missões Apollo para a Lua, inclusive a Apollo 11." },
+      { nome:"Centro Espacial de Kourou", tipo:"lancamento", lat:5.236, lon:-52.769, alcance:300,
+        tamanho:"Base com cerca de 700 km² (Guiana Francesa)",
+        curiosidade:"Também fica perto do Equador. É a base de onde partem os foguetes europeus Ariane." },
+      { nome:"Cosmódromo de Baikonur", tipo:"lancamento", lat:45.965, lon:63.305, alcance:400,
+        tamanho:"Uma das maiores bases espaciais do mundo (Cazaquistão)",
+        curiosidade:"Em 1957 saiu daqui o Sputnik, o primeiro satélite artificial, e em 1961 Yuri Gagarin, o primeiro humano no espaço." },
+      { nome:"Monte Everest", tipo:"relevo", lat:27.988, lon:86.925, alcance:150,
+        tamanho:"Cerca de 8.849 m de altitude",
+        curiosidade:"É o ponto mais alto da Terra acima do nível do mar, na fronteira entre Nepal e China." },
+      { nome:"Fossa das Marianas", tipo:"relevo", lat:11.373, lon:142.592, alcance:600,
+        tamanho:"Cerca de 10.935 m de profundidade",
+        curiosidade:"É o ponto mais fundo dos oceanos. O Everest caberia lá dentro e ainda sobraria mais de 2 km de água por cima." },
+      { nome:"Grande Barreira de Corais", tipo:"relevo", lat:-18.29, lon:147.70, alcance:1800,
+        tamanho:"Cerca de 2.300 km de comprimento (Austrália)",
+        curiosidade:"É a maior estrutura viva do planeta e pode ser vista do espaço." }
+    ] },
+  { id:"marte", nome:"Marte", categoria:"planetas", cor:"#c1573b", raios:[3396190,3396190,3396190],
+    diametro:"6.779 km", resumo:"O planeta vermelho: tem o maior vulcão do Sistema Solar e já teve rios e lagos.",
+    fontes:[ trek("Mars","Mars_Viking_MDIM21_ClrMosaic_global_232m","jpg","Imagens: NASA/JPL-Caltech/USGS (Viking) via NASA Solar System Treks"),
+             trek("Mars","Mars_MGS_MOLA_ClrShade_merge_global_463m","jpg","Imagens: NASA/JPL-Caltech/GSFC (MGS MOLA) via NASA Solar System Treks"),
+             wmsUsgs("mars/mars_simp_cyl") ],
+    lugares:[
+      { nome:"Monte Olimpo (Olympus Mons)", tipo:"relevo", lat:18.65, lon:-133.8, alcance:1800,
+        tamanho:"Cerca de 600 km de largura e 22 km de altura",
+        curiosidade:"É o maior vulcão do Sistema Solar: cerca de 2,5 vezes mais alto que o Monte Everest!" },
+      { nome:"Valles Marineris", tipo:"relevo", lat:-13.9, lon:-59.2, alcance:4500,
+        tamanho:"Cerca de 4.000 km de comprimento e até 7 km de profundidade",
+        curiosidade:"É um cânion gigante. O Grand Canyon, nos EUA, tem uns 450 km de comprimento: caberia vários dentro dele." },
+      { nome:"Planície Hellas", tipo:"planicie", lat:-42.7, lon:70.0, alcance:3500,
+        tamanho:"Cerca de 2.300 km de largura e 7 km de profundidade",
+        curiosidade:"É uma das maiores crateras de impacto do Sistema Solar. Às vezes aparece branca nas fotos por causa de gelo e névoa." },
+      { nome:"Cratera Gale (Curiosity)", tipo:"pouso", lat:-5.4, lon:137.8, alcance:300,
+        tamanho:"Cratera de cerca de 154 km de diâmetro",
+        detalhe:"Rover Curiosity · ago/2012",
+        curiosidade:"O rover Curiosity encontrou sinais de que ali já houve água líquida e ingredientes importantes para a vida." },
+      { nome:"Cratera Jezero (Perseverance)", tipo:"pouso", lat:18.38, lon:77.58, alcance:250,
+        tamanho:"Cratera de cerca de 45 km de diâmetro",
+        detalhe:"Rover Perseverance · fev/2021",
+        curiosidade:"Há bilhões de anos aqui havia um lago. O rover Perseverance guarda amostras de rochas para trazer à Terra, e levou o minihelicóptero Ingenuity." },
+      { nome:"Viking 1", tipo:"pouso", lat:22.7, lon:-47.95, alcance:300,
+        tamanho:"Módulo de pouso com cerca de 3 m de largura",
+        detalhe:"20/07/1976 · primeira sonda a funcionar em Marte",
+        curiosidade:"Pousou exatamente 7 anos depois da Apollo 11 e mandou as primeiras fotos coloridas da superfície de Marte." },
+      { nome:"Mars Pathfinder", tipo:"pouso", lat:19.13, lon:-33.22, alcance:300,
+        tamanho:"Módulo de pouso com cerca de 2,5 m de largura",
+        detalhe:"04/07/1997 · rover Sojourner",
+        curiosidade:"Levou o Sojourner, o primeiro robô com rodas a andar em Marte. Ele tinha o tamanho de um forninho." }
+    ] },
+
+  /* ===================== LUAS ===================== */
+  { id:"lua", nome:"Lua", categoria:"luas", cor:"#bdbdbd", raios:[1737400,1737400,1737400], moon:true,
+    diametro:"3.474 km", resumo:"A única lua da Terra e o único mundo além dela onde humanos já pisaram.",
+    fontes:[ trek("Moon","LRO_WAC_Mosaic_Global_303ppd_v02","jpg","Imagens: NASA/GSFC/Arizona State University (LRO) via NASA Solar System Treks"),
+             trek("Moon","LRO_LOLA_ClrShade_Global_128ppd_v04","png","Imagens: NASA/GSFC (LRO LOLA) via NASA Solar System Treks"),
+             wmsUsgs("earth/moon_simp_cyl") ],
+    lugares:[
       { nome:"Apollo 11", tipo:"pouso", lat:0.67416, lon:23.47314, alcance:150,
         tamanho:"Ponto de pouso: o módulo lunar tinha cerca de 9 m de largura",
         detalhe:"20/07/1969 · Armstrong e Aldrin",
@@ -211,74 +399,45 @@ const ASTROS = [
       { nome:"Clavius", tipo:"cratera", lat:-58.8, lon:-14.4, alcance:900,
         tamanho:"Cerca de 225 km de diâmetro",
         curiosidade:"É uma das maiores crateras que dá para ver da Terra. No filme “2001: Uma Odisseia no Espaço” existe uma base lunar chamada Clavius." }
-    ]
-  },
-  {
-    id: "marte", nome: "Marte", emoji: "🔴", pasta: "Mars", raio: 3396190,
-    credito: "Imagens: NASA/JPL-Caltech/USGS (Viking, MGS) via NASA Solar System Treks",
-    camadas: [
-      { nome: "Mars_Viking_MDIM21_ClrMosaic_global_232m", ext: "jpg" },   // mosaico colorido Viking
-      { nome: "Mars_MGS_MOLA_ClrShade_merge_global_463m", ext: "jpg" }    // alternativa: relevo MOLA
-    ],
-    lugares: [
-      { nome:"Monte Olimpo (Olympus Mons)", tipo:"relevo", lat:18.65, lon:-133.8, alcance:1800,
-        tamanho:"Cerca de 600 km de largura e 22 km de altura",
-        curiosidade:"É o maior vulcão do Sistema Solar: cerca de 2,5 vezes mais alto que o Monte Everest!" },
-      { nome:"Valles Marineris", tipo:"relevo", lat:-13.9, lon:-59.2, alcance:4500,
-        tamanho:"Cerca de 4.000 km de comprimento e até 7 km de profundidade",
-        curiosidade:"É um cânion gigante. O Grand Canyon, nos EUA, tem uns 450 km de comprimento: caberia vários dentro dele." },
-      { nome:"Planície Hellas", tipo:"planicie", lat:-42.7, lon:70.0, alcance:3500,
-        tamanho:"Cerca de 2.300 km de largura e 7 km de profundidade",
-        curiosidade:"É uma das maiores crateras de impacto do Sistema Solar. Às vezes aparece branca nas fotos por causa de gelo e névoa." },
-      { nome:"Cratera Gale (Curiosity)", tipo:"pouso", lat:-5.4, lon:137.8, alcance:300,
-        tamanho:"Cratera de cerca de 154 km de diâmetro",
-        detalhe:"Rover Curiosity · ago/2012",
-        curiosidade:"O rover Curiosity encontrou sinais de que ali já houve água líquida e ingredientes importantes para a vida." },
-      { nome:"Cratera Jezero (Perseverance)", tipo:"pouso", lat:18.38, lon:77.58, alcance:250,
-        tamanho:"Cratera de cerca de 45 km de diâmetro",
-        detalhe:"Rover Perseverance · fev/2021",
-        curiosidade:"Há bilhões de anos aqui havia um lago. O rover Perseverance guarda amostras de rochas para trazer à Terra, e levou o minihelicóptero Ingenuity." },
-      { nome:"Viking 1", tipo:"pouso", lat:22.7, lon:-47.95, alcance:300,
-        tamanho:"Módulo de pouso com cerca de 3 m de largura",
-        detalhe:"20/07/1976 · primeira sonda a funcionar em Marte",
-        curiosidade:"Pousou exatamente 7 anos depois da Apollo 11 e mandou as primeiras fotos coloridas da superfície de Marte." },
-      { nome:"Mars Pathfinder", tipo:"pouso", lat:19.13, lon:-33.22, alcance:300,
-        tamanho:"Módulo de pouso com cerca de 2,5 m de largura",
-        detalhe:"04/07/1997 · rover Sojourner",
-        curiosidade:"Levou o Sojourner, o primeiro robô com rodas a andar em Marte. Ele tinha o tamanho de um forninho." }
-    ]
-  },
-  {
-    id: "mercurio", nome: "Mercúrio", emoji: "⚫", pasta: "Mercury", raio: 2439400,
-    credito: "Imagens: NASA/Johns Hopkins APL/Carnegie Institution (MESSENGER) via NASA Solar System Treks",
-    camadas: [
-      { nome: "Mercury_MESSENGER_MDIS_Basemap_BDR_Mosaic_Global_166m", ext: "jpg" },
-      { nome: "Mercury_MESSENGER_MDIS_Basemap_EnhancedColor_Mosaic_Global_665m", ext: "jpg" }
-    ],
-    lugares: [
-      { nome:"Bacia Caloris", tipo:"planicie", lat:30.5, lon:189.8, alcance:2200,
-        tamanho:"Cerca de 1.550 km de diâmetro",
-        curiosidade:"Uma batida de asteroide tão forte que, do lado oposto do planeta, o chão ficou cheio de colinas bagunçadas." },
-      { nome:"Bacia Rembrandt", tipo:"planicie", lat:-33.0, lon:88.3, alcance:1500,
-        tamanho:"Cerca de 715 km de diâmetro",
-        curiosidade:"É uma das maiores bacias de impacto de Mercúrio, com cicatrizes de rachaduras no fundo." },
-      { nome:"Cratera Kuiper", tipo:"cratera", lat:-11.3, lon:-31.5, alcance:250,
-        tamanho:"Cerca de 62 km de diâmetro",
-        curiosidade:"É bem jovem e brilha mais que o terreno em volta, com raios claros espalhados." },
-      { nome:"Fim da missão MESSENGER", tipo:"pouso", lat:54.4, lon:-149.9, alcance:300,
-        tamanho:"Ponto de impacto: a sonda tinha cerca de 1,5 m de largura",
-        detalhe:"30/04/2015 · fim da missão",
-        curiosidade:"A sonda MESSENGER orbitou Mercúrio por 4 anos. Quando acabou o combustível, ela foi guiada para bater no planeta." }
-    ]
-  },
-  {
-    id: "ceres", nome: "Ceres", emoji: "🪨", pasta: "Ceres", raio: 470000,
-    credito: "Imagens: NASA/JPL-Caltech/UCLA/MPS/DLR/IDA (Dawn) via NASA Solar System Treks",
-    camadas: [
-      { nome: "Ceres_Dawn_FC_HAMO_ClrShade_DLR_Global_60ppd_Oct2016", ext: "jpg" },
-      { nome: "Ceres_Dawn_FC_HAMO_Mosaic_DLR_Global_60ppd_Oct2016", ext: "jpg" }
-    ],
-    lugares: [
+    ] },
+  { id:"io", nome:"Io", categoria:"luas", cor:"#e6cf5a", raios:[1821600,1821600,1821600],
+    diametro:"3.643 km", resumo:"Lua de Júpiter e o corpo mais vulcânico do Sistema Solar.",
+    fontes:[ wmsUsgs("jupiter/io_simp_cyl","io/io_simp_cyl") ], lugares:[] },
+  { id:"europa", nome:"Europa", categoria:"luas", cor:"#d9cdb8", raios:[1560800,1560800,1560800],
+    diametro:"3.122 km", resumo:"Lua de Júpiter com um oceano de água salgada escondido sob uma crosta de gelo.",
+    fontes:[ wmsUsgs("jupiter/europa_simp_cyl","europa/europa_simp_cyl") ], lugares:[] },
+  { id:"ganimedes", nome:"Ganimedes", categoria:"luas", cor:"#9c8f82", raios:[2634100,2634100,2634100],
+    diametro:"5.268 km", resumo:"A maior lua do Sistema Solar: é maior que o planeta Mercúrio!",
+    fontes:[ wmsUsgs("jupiter/ganymede_simp_cyl","ganymede/ganymede_simp_cyl") ], lugares:[] },
+  { id:"calisto", nome:"Calisto", categoria:"luas", cor:"#75685e", raios:[2410300,2410300,2410300],
+    diametro:"4.821 km", resumo:"Lua de Júpiter com uma das superfícies mais antigas e cheias de crateras.",
+    fontes:[ wmsUsgs("jupiter/callisto_simp_cyl","callisto/callisto_simp_cyl") ], lugares:[] },
+  { id:"tita", nome:"Titã", categoria:"luas", cor:"#d29a45", raios:[2574730,2574730,2574730],
+    diametro:"5.150 km", resumo:"Lua de Saturno com atmosfera espessa e lagos de metano líquido.",
+    fontes:[ wmsUsgs("saturn/titan_simp_cyl","titan/titan_simp_cyl") ],
+    lugares:[
+      { nome:"Local de pouso da Huygens", tipo:"pouso", lat:-10.573, lon:192.335, alcance:600,
+        tamanho:"Sonda europeia com cerca de 1,3 m de largura",
+        detalhe:"14/01/2005 · Missão Cassini–Huygens",
+        curiosidade:"É o pouso mais distante da Terra já feito: a Huygens desceu num mundo coberto de névoa alaranjada e mandou fotos do chão." },
+      { nome:"Selk (alvo da Dragonfly)", tipo:"cratera", lat:7.0, lon:199.0, alcance:700,
+        tamanho:"Cratera de cerca de 80 km",
+        curiosidade:"A NASA vai mandar para cá a Dragonfly, um drone do tamanho de um carro pequeno, para voar em Titã." },
+      { nome:"Kraken Mare", tipo:"planicie", lat:68.0, lon:-50.0, alcance:2200,
+        tamanho:"O maior mar de Titã, com cerca de 1.170 km de extensão",
+        curiosidade:"É um mar de metano e etano líquidos, a temperaturas perto de −180 °C. Água lá é dura como rocha." }
+    ] },
+  { id:"encelado", nome:"Encélado", categoria:"luas", cor:"#eef4f7", raios:[252100,252100,252100],
+    diametro:"504 km", resumo:"Pequena lua de Saturno que lança jatos de vapor de água pelo polo sul.",
+    fontes:[ wmsUsgs("saturn/enceladus_simp_cyl","enceladus/enceladus_simp_cyl") ], lugares:[] },
+
+  /* ===================== ANÕES E ASTEROIDES ===================== */
+  { id:"ceres", nome:"Ceres", categoria:"anoes", cor:"#8d8a86", raios:[470000,470000,470000],
+    diametro:"940 km", resumo:"O maior objeto do cinturão de asteroides e um planeta-anão.",
+    fontes:[ trek("Ceres","Ceres_Dawn_FC_HAMO_ClrShade_DLR_Global_60ppd_Oct2016","jpg","Imagens: NASA/JPL-Caltech/UCLA/MPS/DLR/IDA (Dawn) via NASA Solar System Treks"),
+             trek("Ceres","Ceres_Dawn_FC_HAMO_Mosaic_DLR_Global_60ppd_Oct2016","jpg","Imagens: NASA/JPL-Caltech/UCLA/MPS/DLR/IDA (Dawn) via NASA Solar System Treks"),
+             wmsUsgs("ceres/ceres_simp_cyl","asteroids/ceres_simp_cyl") ],
+    lugares:[
       { nome:"Cratera Occator", tipo:"cratera", lat:19.8, lon:-120.7, alcance:150,
         tamanho:"Cerca de 92 km de diâmetro",
         curiosidade:"Tem manchas brilhantes famosas. São sal deixado por água salgada que veio de dentro de Ceres." },
@@ -288,271 +447,449 @@ const ASTROS = [
       { nome:"Cratera Kerwan", tipo:"cratera", lat:-10.8, lon:123.9, alcance:300,
         tamanho:"Cerca de 280 km de diâmetro",
         curiosidade:"É a maior cratera bem conservada de Ceres, um planeta-anão no cinturão de asteroides." }
-    ]
-  }
+    ] },
+  { id:"vesta", nome:"Vesta", categoria:"anoes", cor:"#a79c8e", raios:[262700,262700,262700],
+    diametro:"cerca de 525 km", resumo:"Segundo maior objeto do cinturão de asteroides, visitado pela sonda Dawn.",
+    fontes:[ trek("Vesta","Vesta_Dawn_FC_HAMO_ClrShade_DLR_Global_48ppd","jpg","Imagens: NASA/JPL-Caltech/UCLA/MPS/DLR/IDA (Dawn) via NASA Solar System Treks"),
+             trek("Vesta","Vesta_Dawn_FC_HAMO_Mosaic_Global_74ppd","jpg","Imagens: NASA/JPL-Caltech/UCLA/MPS/DLR/IDA (Dawn) via NASA Solar System Treks"),
+             wmsUsgs("vesta/vesta_simp_cyl","asteroids/vesta_simp_cyl") ],
+    lugares:[
+      { nome:"Rheasilvia", tipo:"cratera", lat:-75.0, lon:-59.0, alcance:500,
+        tamanho:"Cerca de 505 km de diâmetro",
+        curiosidade:"Uma batida gigante cavou essa bacia no polo sul e deixou uma montanha central bem mais alta que o Monte Everest." }
+    ] },
+  { id:"plutao", nome:"Plutão", categoria:"anoes", cor:"#d2b79a", raios:[1188300,1188300,1188300],
+    diametro:"2.377 km", resumo:"Planeta-anão visitado pela sonda New Horizons em 2015.",
+    fontes:[ wmsUsgs("pluto/pluto_simp_cyl","plutocharon/pluto_simp_cyl") ],
+    lugares:[
+      { nome:"Sputnik Planitia (o “coração”)", tipo:"planicie", lat:24.0, lon:178.0, alcance:2000,
+        tamanho:"Cerca de 1.000 km de largura (posição aproximada)",
+        curiosidade:"É uma enorme planície de gelo de nitrogênio, em forma de coração, que a New Horizons fotografou em 14/07/2015." }
+    ] },
+  { id:"caronte", nome:"Caronte", categoria:"anoes", cor:"#8f8c8a", raios:[606000,606000,606000],
+    diametro:"1.212 km", resumo:"A maior lua de Plutão: os dois giram em torno de um ponto entre eles.",
+    fontes:[ wmsUsgs("pluto/charon_simp_cyl","plutocharon/charon_simp_cyl") ], lugares:[] },
+  { id:"eros", nome:"Eros", categoria:"anoes", cor:"#8a8178", raios:[17200,17200,17200], forma:[17200,5600,5600], lonInicial:90, formaApenas:true,
+    diametro:"34 × 11 × 11 km", resumo:"Asteroide alongado, o primeiro a ser orbitado e a receber uma sonda (NEAR Shoemaker, 2001).",
+    fontes:[], lugares:[] },
+  { id:"bennu", nome:"Bennu", categoria:"anoes", cor:"#5a5550", raios:[245,245,245], forma:[245,245,245], formaApenas:true,
+    diametro:"cerca de 490 m", resumo:"Asteroide pequeno, em forma de pião. A OSIRIS-REx trouxe uma amostra dele à Terra em 2023.",
+    fontes:[], lugares:[] },
+
+  /* ===================== ESTAÇÕES ===================== */
+  { id:"iss", nome:"Estação Espacial Internacional", categoria:"estacoes", cor:"#5eead4", base:"terra", seguir:true,
+    diametro:"cerca de 109 m", resumo:"Orbita a Terra a cerca de 400 km de altura. Posição ao vivo." }
 ];
 
-/* ---------- Estado e atalhos ---------- */
+/* =====================================================================
+   ESTADO
+   ===================================================================== */
 const $ = id => document.getElementById(id);
-let viewer = null;          // visualizador Cesium atual
-let astro = null;           // astro atual
-let entidadeSel = null;     // pino selecionado
-let seq = 0;                // evita corridas ao trocar de astro rápido
-const rad = Cesium.Math.toRadians;
+let viewer = null, astro = null, entidadeSel = null, seq = 0, issEnt = null, issTimer = null, issRastro = [];
+const elipsoideDe = a => a.raios[0] === a.raios[1] && a.raios[1] === a.raios[2]
+  ? (a.moon && Cesium.Ellipsoid.MOON ? Cesium.Ellipsoid.MOON : new Cesium.Ellipsoid(...a.raios))
+  : new Cesium.Ellipsoid(...a.raios);
+const raioMax = a => Math.max(...a.raios);
 
-/* Formata coordenada em português: 0,67° N / 23,47° L */
 function fmtCoord(lat, lon){
   const f = n => Math.abs(n).toLocaleString("pt-BR", {maximumFractionDigits:2, minimumFractionDigits:2});
   return `${f(lat)}° ${lat >= 0 ? "N" : "S"} · ${f(lon)}° ${lon >= 0 ? "L" : "O"}`;
 }
-
-/* Cria o desenho SVG do pino (cor e letra por tipo) */
-function imagemPino(tipo, selecionado){
-  const t = TIPOS[tipo];
-  const borda = selecionado ? "#ffffff" : "#101010";
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="60" viewBox="0 0 48 60">
-    <path d="M24 58 C24 58 4 34 4 22 A20 20 0 0 1 44 22 C44 34 24 58 24 58Z" fill="${t.cor}" stroke="${borda}" stroke-width="3"/>
-    <text x="24" y="30" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="20" fill="#101010">${t.letra}</text></svg>`;
-  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-}
-
-/* Aviso amarelo no topo do mapa */
 function avisar(msg){ const a = $("aviso"); a.textContent = msg; a.hidden = !msg; }
 
+function imagemPino(tipo, sel){
+  const t = TIPOS[tipo], borda = sel ? "#ffffff" : "rgba(0,0,0,.65)";
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="60" viewBox="0 0 48 60">
+    <defs><filter id="s" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="3" stdDeviation="2.4" flood-opacity=".5"/></filter></defs>
+    <path filter="url(#s)" d="M24 57 C24 57 5 34 5 22 A19 19 0 0 1 43 22 C43 34 24 57 24 57Z" fill="${t.cor}" stroke="${borda}" stroke-width="${sel ? 3.5 : 2.5}"/>
+    <circle cx="24" cy="22" r="11.5" fill="rgba(255,255,255,.35)"/>
+    <text x="24" y="28.5" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="19" fill="#101010">${t.letra}</text></svg>`;
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+const IMG_ISS = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <g stroke="#0b1530" stroke-width="1.2"><rect x="3" y="24" width="18" height="16" rx="1.5" fill="#E9D48E"/><rect x="43" y="24" width="18" height="16" rx="1.5" fill="#E9D48E"/>
+  <rect x="21" y="30" width="22" height="4" fill="#cfd8ea"/><rect x="27" y="22" width="10" height="20" rx="3" fill="#ffffff"/></g>
+  <circle cx="32" cy="32" r="30" fill="none" stroke="#5eead4" stroke-width="1.6" stroke-dasharray="3 5" opacity=".8"/></svg>`);
+
 /* =====================================================================
-   IMAGEM DA NASA (WMTS do Solar System Treks)
-   Fluxo: lê o GetCapabilities da camada (nome de matriz, níveis,
-   endereço dos tiles) -> testa o tile 0/0/0 -> usa. Se falhar, tenta a
-   próxima camada; se todas falharem, mostra esfera cinza com grade.
+   IMAGENS DE SUPERFÍCIE
+   O app testa cada fonte da lista; a primeira que responde é usada.
+   Se nenhuma responder, mostra o astro em modelo 3D simplificado (cor + sombra).
    ===================================================================== */
 const BASE_TREK = "https://trek.nasa.gov/tiles";
+const filho = (el, nome) => Array.from(el.children).find(c => c.localName === nome) || null;
+const comTempo = (ms, fn) => { const c = new AbortController(); const t = setTimeout(() => c.abort(), ms); return fn(c.signal).finally(() => clearTimeout(t)); };
 
-/* Texto do primeiro filho com certo nome local (ignora prefixo ows:) */
-function filho(el, nome){
-  for (const c of el.children) if (c.localName === nome) return c;
-  return null;
-}
-
-/* Lê o GetCapabilities; devolve configuração ou null se não der (rede/CORS) */
-async function lerCapabilities(pasta, camada){
-  const url = `${BASE_TREK}/${pasta}/EQ/${camada.nome}/1.0.0/WMTSCapabilities.xml`;
-  const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 8000);
-  try{
-    const r = await fetch(url, {signal: ctl.signal}); if (!r.ok) return null;
-    const xml = new DOMParser().parseFromString(await r.text(), "application/xml");
-    const g = n => Array.from(xml.getElementsByTagNameNS("*", n));
-    const res = g("ResourceURL").find(e => e.getAttribute("resourceType") === "tile");
-    const conj = g("TileMatrixSet").find(e => filho(e, "TileMatrix"));   // conjunto de matrizes
-    if (!res || !conj) return null;
-    const matrizes = Array.from(conj.children).filter(c => c.localName === "TileMatrix");
-    const estilo = g("Style").map(e => filho(e, "Identifier")).find(Boolean);
-    return {
-      modelo: res.getAttribute("template"),
-      estilo: estilo ? estilo.textContent.trim() : "default",
-      conjunto: filho(conj, "Identifier").textContent.trim(),
-      rotulos: matrizes.map(m => filho(m, "Identifier").textContent.trim()),
-      largura0: +filho(matrizes[0], "MatrixWidth").textContent,
-      altura0: +filho(matrizes[0], "MatrixHeight").textContent
-    };
-  }catch(e){ return null; } finally{ clearTimeout(t); }
-}
-
-/* Configuração padrão (padrão conhecido do Trek), usada se o Capabilities não abrir */
-function configPadrao(pasta, camada){
-  return {
-    modelo: `${BASE_TREK}/${pasta}/EQ/${camada.nome}/1.0.0/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.${camada.ext}`,
-    estilo: "default", conjunto: "default028mm",
-    rotulos: [0,1,2,3,4,5,6,7].map(String), largura0: 2, altura0: 1
-  };
-}
-
-/* Verifica se o tile 0/0/0 carrega como imagem (testa também o CORS) */
-function testarTile(cfg){
-  const url = cfg.modelo.replace(/\{style\}/i, cfg.estilo).replace("{TileMatrixSet}", cfg.conjunto)
-    .replace("{TileMatrix}", cfg.rotulos[0]).replace("{TileRow}", 0).replace("{TileCol}", 0);
+function testarImagem(url, ms = 9000){
   return new Promise(ok => {
     const img = new Image(); img.crossOrigin = "anonymous";
-    const t = setTimeout(() => ok(false), 10000);
+    const t = setTimeout(() => ok(false), ms);
     img.onload = () => { clearTimeout(t); ok(true); };
     img.onerror = () => { clearTimeout(t); ok(false); };
     img.src = url;
   });
 }
+const sub = (modelo, cfg, z = 0, r = 0, c = 0) => modelo.replace(/\{style\}/i, cfg.estilo).replace("{TileMatrixSet}", cfg.conjunto)
+  .replace("{TileMatrix}", cfg.rotulos[z]).replace("{TileRow}", r).replace("{TileCol}", c);
 
-/* Procura uma camada que funcione e a adiciona ao globo */
+/* --- NASA Trek: lê o GetCapabilities (ou usa o padrão conhecido) --- */
+async function lerCapabilitiesWmts(url){
+  try{
+    const r = await comTempo(8000, s => fetch(url, {signal: s})); if (!r.ok) return null;
+    const xml = new DOMParser().parseFromString(await r.text(), "application/xml");
+    const g = n => Array.from(xml.getElementsByTagNameNS("*", n));
+    const res = g("ResourceURL").find(e => e.getAttribute("resourceType") === "tile");
+    const conj = g("TileMatrixSet").find(e => filho(e, "TileMatrix"));
+    if (!res || !conj) return null;
+    const ms = Array.from(conj.children).filter(c => c.localName === "TileMatrix");
+    const est = g("Style").map(e => filho(e, "Identifier")).find(Boolean);
+    return { modelo: res.getAttribute("template"), estilo: est ? est.textContent.trim() : "default",
+      conjunto: filho(conj, "Identifier").textContent.trim(), rotulos: ms.map(m => filho(m, "Identifier").textContent.trim()),
+      w0: +filho(ms[0], "MatrixWidth").textContent, h0: +filho(ms[0], "MatrixHeight").textContent, tile: 256 };
+  }catch(e){ return null; }
+}
+async function prepararTrek(f){
+  const cfg = (await lerCapabilitiesWmts(`${BASE_TREK}/${f.pasta}/EQ/${f.nome}/1.0.0/WMTSCapabilities.xml`)) || {
+    modelo: `${BASE_TREK}/${f.pasta}/EQ/${f.nome}/1.0.0/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.${f.ext}`,
+    estilo: "default", conjunto: "default028mm", rotulos: ["0","1","2","3","4","5","6","7"], w0: 2, h0: 1, tile: 256 };
+  return (await testarImagem(sub(cfg.modelo, cfg))) ? cfg : null;
+}
+/* --- NASA GIBS (Blue Marble) --- */
+async function prepararGibs(){
+  const cfg = { modelo: "https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/BlueMarble_ShadedRelief_Bathymetry/default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpeg",
+    estilo: "default", conjunto: "500m", rotulos: ["0","1","2","3","4","5","6","7","8"], w0: 2, h0: 1, tile: 512 };
+  return (await testarImagem(sub(cfg.modelo, cfg))) ? cfg : null;
+}
+function provedorWmts(cfg, elip, credito){
+  return new Cesium.WebMapTileServiceImageryProvider({
+    url: cfg.modelo, layer: "x", style: cfg.estilo, format: "image/jpeg", tileMatrixSetID: cfg.conjunto,
+    tileMatrixLabels: cfg.rotulos, maximumLevel: cfg.rotulos.length - 1, tileWidth: cfg.tile, tileHeight: cfg.tile,
+    tilingScheme: new Cesium.GeographicTilingScheme({ellipsoid: elip, numberOfLevelZeroTilesX: cfg.w0, numberOfLevelZeroTilesY: cfg.h0}),
+    credit: credito });
+}
+/* --- USGS Astrogeology (WMS): descobre a camada pelo GetCapabilities e testa um GetMap --- */
+async function tentarWms(url){
+  try{
+    const sep = url.includes("?") ? "&" : "?";
+    const r = await comTempo(8000, s => fetch(`${url}${sep}SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities`, {signal: s})); if (!r.ok) return null;
+    const xml = new DOMParser().parseFromString(await r.text(), "application/xml");
+    const nomes = Array.from(xml.getElementsByTagName("Layer")).map(l => filho(l, "Name")).filter(Boolean).map(n => n.textContent.trim());
+    const bom = nomes.filter(n => !/graticule|label|nomenclature|grid|footprint|feature/i.test(n));
+    const camada = bom.find(n => /mosaic|global|basemap|color|clr|shade|simp/i.test(n)) || bom[0];
+    if (!camada) return null;
+    const teste = `${url}${sep}SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=${encodeURIComponent(camada)}&STYLES=&SRS=EPSG:4326&BBOX=-180,-90,180,90&WIDTH=512&HEIGHT=256&FORMAT=image/jpeg`;
+    return (await testarImagem(teste)) ? {url, camada} : null;
+  }catch(e){ return null; }
+}
+const primeiro = ps => new Promise(ok => { let n = ps.length; if (!n) ok(null); ps.forEach(p => p.then(v => { if (v) ok(v); else if (--n === 0) ok(null); })); });
+
+/* Textura de rocha gerada no navegador (asteroides sem mapa): ruído + crateras */
+function texturaRocha(cor){
+  const c = document.createElement("canvas"); c.width = 1024; c.height = 512; const g = c.getContext("2d");
+  g.fillStyle = cor; g.fillRect(0, 0, 1024, 512);
+  let x = 12345; const rnd = () => (x = (x * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 9000; i++){ g.fillStyle = `rgba(${rnd() < .5 ? "0,0,0" : "255,255,255"},${(rnd() * .09).toFixed(3)})`; g.fillRect(rnd() * 1024, rnd() * 512, 1 + rnd() * 5, 1 + rnd() * 5); }
+  for (let i = 0; i < 140; i++){ const cx = rnd() * 1024, cy = rnd() * 512, r = 4 + rnd() * rnd() * 46;
+    g.beginPath(); g.arc(cx, cy, r, 0, 7); g.fillStyle = "rgba(0,0,0,.20)"; g.fill();
+    g.beginPath(); g.arc(cx - r * .12, cy - r * .12, r * .88, 0, 7); g.fillStyle = "rgba(255,255,255,.07)"; g.fill();
+    g.beginPath(); g.arc(cx, cy, r, 0, 7); g.strokeStyle = "rgba(255,255,255,.18)"; g.lineWidth = 1.2; g.stroke(); }
+  return c.toDataURL("image/jpeg", .85);
+}
+
+/* Adiciona a primeira imagem que funcionar; devolve a fonte usada ou null */
 async function adicionarImagem(v, a, minhaSeq){
-  for (let i = 0; i < a.camadas.length; i++){
-    const cam = a.camadas[i];
-    const cfg = (await lerCapabilities(a.pasta, cam)) || configPadrao(a.pasta, cam);
-    if (!(await testarTile(cfg))) continue;
-    if (minhaSeq !== seq) return true;                   // usuário já trocou de astro
-    const prov = new Cesium.WebMapTileServiceImageryProvider({
-      url: cfg.modelo, layer: cam.nome, style: cfg.estilo, format: "image/" + cam.ext,
-      tileMatrixSetID: cfg.conjunto, tileMatrixLabels: cfg.rotulos,
-      maximumLevel: cfg.rotulos.length - 1, tileWidth: 256, tileHeight: 256,
-      tilingScheme: new Cesium.GeographicTilingScheme({
-        ellipsoid: Cesium.Ellipsoid.default,
-        numberOfLevelZeroTilesX: cfg.largura0, numberOfLevelZeroTilesY: cfg.altura0 }),
-      credit: a.credito
-    });
-    v.imageryLayers.addImageryProvider(prov);
-    if (i > 0) avisar("A camada principal da NASA não respondeu; usando uma camada alternativa (relevo colorido).");
-    return true;
+  const elip = Cesium.Ellipsoid.default;
+  for (const f of a.fontes){
+    if (minhaSeq !== seq) return "cancelado";
+    if (f.t === "trek"){ const cfg = await prepararTrek(f); if (cfg){ v.imageryLayers.addImageryProvider(provedorWmts(cfg, elip, f.credito)); return f; } }
+    else if (f.t === "gibs"){ const cfg = await prepararGibs(); if (cfg){ v.imageryLayers.addImageryProvider(provedorWmts(cfg, elip, f.credito)); return f; } }
+    else if (f.t === "natural"){
+      try{ const p = await Cesium.TileMapServiceImageryProvider.fromUrl(Cesium.buildModuleUrl("Assets/Textures/NaturalEarthII"), {credit: f.credito}); v.imageryLayers.addImageryProvider(p); return f; }catch(e){}
+    }
+    else if (f.t === "wms"){
+      const ok = await primeiro(f.urls.map(tentarWms));
+      if (ok){
+        v.imageryLayers.addImageryProvider(new Cesium.WebMapServiceImageryProvider({ url: ok.url, layers: ok.camada, parameters: {format: "image/jpeg", transparent: false, styles: ""},
+          tilingScheme: new Cesium.GeographicTilingScheme({ellipsoid: elip}), tileWidth: 256, tileHeight: 256, credit: f.credito }));
+        return f;
+      }
+    }
   }
-  /* Nada funcionou: esfera cinza com grade de latitude/longitude */
-  v.imageryLayers.addImageryProvider(new Cesium.GridImageryProvider({
-    tilingScheme: new Cesium.GeographicTilingScheme({ellipsoid: Cesium.Ellipsoid.default}),
-    cells: 8, color: Cesium.Color.fromCssColorString("#6cb6ff"), glowColor: Cesium.Color.TRANSPARENT,
-    backgroundColor: Cesium.Color.fromCssColorString("#2a2f3d") }));
-  avisar("Não foi possível carregar as imagens da NASA agora. Os lugares continuam funcionando sobre uma esfera com grade.");
-  return false;
+  return null;
 }
 
 /* =====================================================================
    CÂMERA
    ===================================================================== */
-/* Altura da câmera para enxergar o astro inteiro, mesmo em tela vertical */
 function alturaInicio(){
-  const c = viewer.canvas, aspecto = c.clientWidth / Math.max(1, c.clientHeight);
-  /* fov vale para o maior lado da tela; o menor lado enxerga um ângulo menor */
-  const metade = Math.atan(Math.tan(viewer.camera.frustum.fov / 2) * Math.min(aspecto, 1 / aspecto));
-  return astro.raio * (1.15 / Math.sin(metade) - 1);
+  const c = viewer.canvas, asp = c.clientWidth / Math.max(1, c.clientHeight);
+  const metade = Math.atan(Math.tan(viewer.camera.frustum.fov / 2) * Math.min(asp, 1 / asp));
+  const R = raioMax(astro);
+  return R * (1.22 / Math.sin(metade) - 1);
 }
-
 function visaoInicial(animar){
-  const destino = Cesium.Cartesian3.fromDegrees(0, 0, alturaInicio());
+  const destino = Cesium.Cartesian3.fromDegrees(astro.lonInicial || 0, 0, alturaInicio());
   const orient = {heading: 0, pitch: -Cesium.Math.PI_OVER_TWO, roll: 0};
   if (animar) viewer.camera.flyTo({destination: destino, orientation: orient, duration: 2});
   else viewer.camera.setView({destination: destino, orientation: orient});
 }
-
 function voarPara(l){
   const pos = Cesium.Cartesian3.fromDegrees(l.lon, l.lat, 0);
+  viewer.trackedEntity = undefined;
   viewer.camera.flyToBoundingSphere(new Cesium.BoundingSphere(pos, 1), {
-    offset: new Cesium.HeadingPitchRange(0, -Cesium.Math.PI_OVER_TWO, l.alcance * 1000),
-    duration: 2.5 });
+    offset: new Cesium.HeadingPitchRange(0, -Cesium.Math.PI_OVER_TWO, l.alcance * 1000), duration: 2.5 });
+}
+function zoom(fator){
+  /* fator 0.5 aproxima (metade da altura), 2 afasta (dobro) */
+  const cam = viewer.camera, R = raioMax(astro);
+  const h = Math.max(1, cam.getMagnitude() - R);
+  const alvo = Math.min(R * 8, Math.max(R * 0.012, h * fator));
+  if (fator < 1) cam.zoomIn(h - alvo); else cam.zoomOut(alvo - h);
+  viewer.scene.requestRender();
 }
 
 /* =====================================================================
-   MARCADORES E PAINEL
+   MARCADORES E PAINEL DE INFORMAÇÕES
    ===================================================================== */
 function criarMarcadores(){
+  const R = raioMax(astro);
   for (const l of astro.lugares){
     l.entidade = viewer.entities.add({
       name: l.nome, position: Cesium.Cartesian3.fromDegrees(l.lon, l.lat, 0),
-      billboard: { image: imagemPino(l.tipo, false), width: 34, height: 42,
-        verticalOrigin: Cesium.VerticalOrigin.BOTTOM },
-      label: { text: l.nome, font: "600 14px system-ui,sans-serif", fillColor: Cesium.Color.WHITE,
+      billboard: { image: imagemPino(l.tipo, false), width: 34, height: 42, verticalOrigin: Cesium.VerticalOrigin.BOTTOM },
+      label: { text: l.nome, font: "600 14px 'Source Sans 3',system-ui,sans-serif", fillColor: Cesium.Color.WHITE,
         outlineColor: Cesium.Color.BLACK, outlineWidth: 4, style: Cesium.LabelStyle.FILL_AND_OUTLINE,
         verticalOrigin: Cesium.VerticalOrigin.TOP, pixelOffset: new Cesium.Cartesian2(0, 4),
-        /* rótulos só aparecem quando a câmera está perto o bastante (evita poluição) */
-        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, astro.raio * 1.9) }
-    });
+        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, R * 1.9) } });
     l.entidade._lugar = l;
   }
 }
-
+function linhasInfo(l){
+  const L = [];
+  if (l.tamanho) L.push(["Tamanho", l.tamanho]);
+  if (l.detalhe) L.push(["Missão", l.detalhe]);
+  if (!l.vivo) L.push(["Posição", fmtCoord(l.lat, l.lon)]);
+  return L;
+}
 function abrirInfo(l){
   const t = TIPOS[l.tipo];
-  $("iNome").textContent = l.nome;
-  $("iTipo").textContent = t.rotulo; $("iTipo").style.background = t.cor;
-  $("iTamanho").textContent = l.tamanho;
-  $("iCoord").textContent = fmtCoord(l.lat, l.lon);
-  $("iCuriosidade").textContent = l.curiosidade;
-  $("iDetalhe").textContent = l.detalhe || ""; $("iDetalhe").hidden = $("iDetalheRot").hidden = !l.detalhe;
-  $("info").hidden = false;
+  $("iNome").textContent = l.nome; $("iTipo").textContent = t.rotulo; $("iTipo").style.background = t.cor;
+  $("iVivo").hidden = !l.vivo; $("iCuriosidade").textContent = l.curiosidade;
+  const dl = $("iDados"); dl.innerHTML = "";
+  for (const [k, v] of linhasInfo(l)){ const dt = document.createElement("dt"), dd = document.createElement("dd"); dt.textContent = k; dd.textContent = v; dl.append(dt, dd); }
+  if (l.vivo) for (const k of ["Altitude","Velocidade","Posição","Iluminação"]){ const dt = document.createElement("dt"), dd = document.createElement("dd"); dt.textContent = k; dd.id = "v" + k; dd.textContent = "…"; dl.append(dt, dd); }
+  const ac = $("iAcoes"); ac.innerHTML = "";
+  if (l.vivo){
+    const b = document.createElement("button"); b.className = "btn"; b.id = "btnSeguir"; b.textContent = viewer.trackedEntity ? "Parar de seguir" : "Seguir a ISS";
+    b.onclick = () => { if (viewer.trackedEntity){ viewer.trackedEntity = undefined; b.textContent = "Seguir a ISS"; } else { viewer.trackedEntity = issEnt; b.textContent = "Parar de seguir"; } };
+    ac.appendChild(b);
+  }
+  $("info").hidden = false; fecharPaineis();
 }
-
 function selecionar(l){
-  if (entidadeSel) entidadeSel.billboard.image = imagemPino(entidadeSel._lugar.tipo, false);
+  if (entidadeSel && entidadeSel.billboard && entidadeSel._lugar && !entidadeSel._lugar.vivo) entidadeSel.billboard.image = imagemPino(entidadeSel._lugar.tipo, false);
   entidadeSel = l ? l.entidade : null;
-  if (l){ l.entidade.billboard.image = imagemPino(l.tipo, true); abrirInfo(l); }
+  if (l){ if (!l.vivo) l.entidade.billboard.image = imagemPino(l.tipo, true); abrirInfo(l); }
   else $("info").hidden = true;
   if (viewer) viewer.scene.requestRender();
 }
-
-function irPara(l){ selecionar(l); voarPara(l); fecharLista(); }
-
-/* Lista de lugares agrupada por tipo */
-function montarLista(){
-  const sec = $("lista"); sec.innerHTML = "";
-  for (const [chave, t] of Object.entries(TIPOS)){
-    const itens = astro.lugares.filter(l => l.tipo === chave); if (!itens.length) continue;
-    const h = document.createElement("h2"); h.textContent = t.rotulo + "s"; sec.appendChild(h);
-    const ul = document.createElement("ul");
-    for (const l of itens){
-      const li = document.createElement("li"), b = document.createElement("button");
-      b.className = "item";
-      b.innerHTML = `<span class="pino" style="background:${t.cor}">${t.letra}</span><span></span>`;
-      b.lastChild.textContent = l.nome;
-      b.onclick = () => irPara(l);
-      li.appendChild(b); ul.appendChild(li);
-    }
-    sec.appendChild(ul);
-  }
-}
-function fecharLista(){ $("lista").hidden = true; $("btnLista").setAttribute("aria-expanded", "false"); }
+function irPara(l){ selecionar(l); if (l.vivo) voarISS(); else voarPara(l); fecharPaineis(); }
 
 /* =====================================================================
-   CRIAÇÃO DO GLOBO (um novo Viewer por astro, pois o raio muda)
+   ISS AO VIVO (API pública wheretheiss.at)
    ===================================================================== */
-async function carregarAstro(a){
+const API_ISS = "https://api.wheretheiss.at/v1/satellites/25544";
+const ISS_LUGAR = { nome:"Estação Espacial Internacional (ISS)", tipo:"estacao", vivo:true, lat:0, lon:0,
+  tamanho:"Cerca de 109 m de ponta a ponta, como um campo de futebol",
+  curiosidade:"Ela viaja a quase 28.000 km/h e dá cerca de 16 voltas na Terra por dia. Os astronautas veem o nascer do sol a cada 90 minutos!" };
+
+async function lerISS(){
+  try{ const r = await comTempo(6000, s => fetch(API_ISS, {signal: s})); if (!r.ok) return null; return await r.json(); }catch(e){ return null; }
+}
+async function lerOrbitaISS(t0){
+  /* 3 chamadas × 10 pontos = 30 posições (próximos ~90 min) para desenhar a órbita prevista */
+  const pts = [];
+  for (let k = 0; k < 3; k++){
+    const ts = Array.from({length: 10}, (_, i) => t0 + (k * 10 + i) * 180).join(",");
+    try{ const r = await comTempo(7000, s => fetch(`${API_ISS}/positions?units=kilometers&timestamps=${ts}`, {signal: s}));
+      if (r.ok) (await r.json()).forEach(p => pts.push(p)); }catch(e){}
+  }
+  return pts;
+}
+async function iniciarISS(minhaSeq){
+  const d = await lerISS();
+  if (minhaSeq !== seq) return;
+  if (!d){ avisar("Não foi possível obter a posição ao vivo da ISS agora. Tente novamente em instantes."); return; }
+  ISS_LUGAR.lat = d.latitude; ISS_LUGAR.lon = d.longitude;
+  const pos = Cesium.Cartesian3.fromDegrees(d.longitude, d.latitude, d.altitude * 1000);
+  issRastro = [];
+  issEnt = viewer.entities.add({ name: "ISS", position: pos,
+    billboard: { image: IMG_ISS, width: 46, height: 46, disableDepthTestDistance: Number.POSITIVE_INFINITY },
+    label: { text: "ISS", font: "700 14px 'Source Sans 3',sans-serif", fillColor: Cesium.Color.fromCssColorString("#5eead4"),
+      outlineColor: Cesium.Color.BLACK, outlineWidth: 4, style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+      pixelOffset: new Cesium.Cartesian2(0, -34), disableDepthTestDistance: Number.POSITIVE_INFINITY },
+    polyline: { positions: [], width: 2.5, material: Cesium.Color.fromCssColorString("#5eead4").withAlpha(.9) } });
+  ISS_LUGAR.entidade = issEnt; issEnt._lugar = ISS_LUGAR;
+  const prev = viewer.entities.add({ name: "Órbita prevista", polyline: { positions: [], width: 1.6,
+    material: new Cesium.PolylineDashMaterialProperty({color: Cesium.Color.fromCssColorString("#E9D48E").withAlpha(.85), dashLength: 14}) } });
+  atualizarISS(d);
+  clearInterval(issTimer); issTimer = setInterval(async () => { const n = await lerISS(); if (n && viewer) atualizarISS(n); }, 5000);
+  lerOrbitaISS(Math.floor(d.timestamp)).then(ps => {
+    if (minhaSeq !== seq || !viewer) return;
+    prev.polyline.positions = ps.map(p => Cesium.Cartesian3.fromDegrees(p.longitude, p.latitude, p.altitude * 1000));
+    viewer.scene.requestRender();
+  });
+}
+function atualizarISS(d){
+  ISS_LUGAR.lat = d.latitude; ISS_LUGAR.lon = d.longitude;
+  const pos = Cesium.Cartesian3.fromDegrees(d.longitude, d.latitude, d.altitude * 1000);
+  issEnt.position = pos; issRastro.push(pos); if (issRastro.length > 120) issRastro.shift();
+  issEnt.polyline.positions = issRastro.slice();
+  const nf = n => n.toLocaleString("pt-BR", {maximumFractionDigits: 0});
+  const set = (k, v) => { const e = $("v" + k); if (e) e.textContent = v; };
+  set("Altitude", nf(d.altitude) + " km"); set("Velocidade", nf(d.velocity) + " km/h");
+  set("Posição", fmtCoord(d.latitude, d.longitude));
+  set("Iluminação", d.visibility === "daylight" ? "Ao sol" : d.visibility === "eclipsed" ? "Na sombra da Terra" : "Crepúsculo");
+  viewer.scene.requestRender();
+}
+function voarISS(){
+  if (!issEnt) return;
+  viewer.trackedEntity = undefined;
+  const p = issEnt.position.getValue(viewer.clock.currentTime);
+  viewer.camera.flyToBoundingSphere(new Cesium.BoundingSphere(p, 1), { offset: new Cesium.HeadingPitchRange(0, -Cesium.Math.PI_OVER_TWO, 3.2e6), duration: 2.5 });
+}
+
+/* =====================================================================
+   INTERFACE: cartão, catálogo, lista de lugares
+   ===================================================================== */
+function atualizarCartao(){
+  const cat = CATEGORIAS.find(c => c.id === astro.categoria);
+  $("cCateg").textContent = cat.nome + " · Ø " + astro.diametro;
+  $("cNome").textContent = astro.nome; $("cResumo").textContent = astro.resumo;
+  $("cEsfera").style.setProperty("--c", astro.cor);
+}
+function fecharPaineis(){
+  for (const [p, b] of [["catalogo","btnCatalogo"],["lista","btnLista"]]){ $(p).hidden = true; $(b).setAttribute("aria-expanded","false"); }
+}
+function alternar(p, b){
+  const abrir = $(p).hidden; fecharPaineis();
+  if (abrir){ $(p).hidden = false; $(b).setAttribute("aria-expanded","true"); }
+}
+let abaAtual = "planetas";
+function montarCatalogo(){
+  const abas = $("abas"); abas.innerHTML = "";
+  for (const c of CATEGORIAS){
+    const b = document.createElement("button"); b.className = "aba"; b.role = "tab"; b.textContent = c.nome;
+    b.setAttribute("aria-selected", String(c.id === abaAtual));
+    b.onclick = () => { abaAtual = c.id; montarCatalogo(); };
+    abas.appendChild(b);
+  }
+  const corpo = $("catCorpo"); corpo.innerHTML = "";
+  for (const a of ASTROS.filter(x => x.categoria === abaAtual)){
+    const b = document.createElement("button"); b.className = "item";
+    if ((astro && astro.id === (a.base || a.id)) && (!a.seguir || issEnt)) b.setAttribute("aria-current", "true");
+    b.innerHTML = `<span class="esfera" style="--c:${a.cor}"></span><span><b></b><span class="sub"></span></span>`;
+    b.querySelector("b").textContent = a.nome; b.querySelector(".sub").textContent = "Ø " + a.diametro;
+    b.onclick = () => { carregarAstro(a); fecharPaineis(); };
+    corpo.appendChild(b);
+  }
+}
+function montarLista(){
+  const corpo = $("listaCorpo"); corpo.innerHTML = "";
+  $("listaTitulo").textContent = "Lugares em " + astro.nome;
+  const todos = astro.lugares.slice(); if (astro.terra) todos.unshift(ISS_LUGAR);
+  if (!todos.length){
+    corpo.innerHTML = '<p class="vazio">Este astro ainda não tem lugares marcados. Gire o globo e aproxime para explorar a superfície.</p>'; return; }
+  for (const [chave, t] of Object.entries(TIPOS)){
+    const itens = todos.filter(l => l.tipo === chave); if (!itens.length) continue;
+    const h = document.createElement("div"); h.className = "rotulo"; h.textContent = t.rotulo + "s"; corpo.appendChild(h);
+    for (const l of itens){
+      const b = document.createElement("button"); b.className = "item";
+      b.innerHTML = `<span class="pino" style="background:${t.cor}">${t.letra}</span><span><b></b></span>`;
+      b.querySelector("b").textContent = l.nome + (l.vivo ? " · ao vivo" : "");
+      b.onclick = () => irPara(l); corpo.appendChild(b);
+    }
+  }
+}
+
+/* =====================================================================
+   CRIAÇÃO DO GLOBO (um Viewer novo por astro, pois forma e tamanho mudam)
+   ===================================================================== */
+async function carregarAstro(pedido){
+  const a = pedido.base ? ASTROS.find(x => x.id === pedido.base) : pedido;
   const minhaSeq = ++seq;
-  astro = a; entidadeSel = null;
-  $("carregando").classList.remove("some"); avisar(""); $("info").hidden = true; fecharLista();
+  clearInterval(issTimer); issEnt = null; entidadeSel = null; issRastro = [];
+  astro = a; $("carregando").classList.remove("some"); avisar(""); $("info").hidden = true; fecharPaineis();
   if (viewer){ viewer.destroy(); viewer = null; }
 
-  /* Todos os cálculos do Cesium passam a usar o raio do astro escolhido */
-  const elipsoide = a.id === "lua" && Cesium.Ellipsoid.MOON ? Cesium.Ellipsoid.MOON
-                                                            : new Cesium.Ellipsoid(a.raio, a.raio, a.raio);
-  Cesium.Ellipsoid.default = elipsoide;
-
+  const elip = elipsoideDe(a);
+  Cesium.Ellipsoid.default = elip;
   viewer = new Cesium.Viewer("mapa", {
-    baseLayer: false,                         // sem imagem do Cesium Ion
-    terrain: undefined, geocoder: false, baseLayerPicker: false, homeButton: false,
-    sceneModePicker: false, navigationHelpButton: false, animation: false, timeline: false,
-    fullscreenButton: false, infoBox: false, selectionIndicator: false,
-    scene3DOnly: true, skyBox: false, skyAtmosphere: false, requestRenderMode: true,
-    maximumRenderTimeChange: Infinity, creditContainer: $("creditoCesium"),
-    mapProjection: new Cesium.GeographicProjection(elipsoide),
-    globe: new Cesium.Globe(elipsoide)
-  });
-  const cena = viewer.scene;
+    baseLayer: false, terrain: undefined, geocoder: false, baseLayerPicker: false, homeButton: false,
+    sceneModePicker: false, navigationHelpButton: false, animation: false, timeline: false, fullscreenButton: false,
+    infoBox: false, selectionIndicator: false, scene3DOnly: true, requestRenderMode: true, maximumRenderTimeChange: Infinity,
+    skyBox: new Cesium.SkyBox({ sources: Object.fromEntries([["positiveX","px"],["negativeX","mx"],["positiveY","py"],["negativeY","my"],["positiveZ","pz"],["negativeZ","mz"]]
+      .map(([k, f]) => [k, Cesium.buildModuleUrl(`Assets/Textures/SkyBox/tycho2t3_80_${f}.jpg`)])) }),
+    skyAtmosphere: a.atmosfera ? new Cesium.SkyAtmosphere(elip) : false,
+    creditContainer: $("creditoCesium"),
+    mapProjection: new Cesium.GeographicProjection(elip), globe: new Cesium.Globe(elip) });
+  const cena = viewer.scene, R = raioMax(a);
   cena.backgroundColor = Cesium.Color.BLACK;
-  cena.sun && (cena.sun.show = false); cena.moon && (cena.moon.show = false);
+  if (cena.sun) cena.sun.show = false; if (cena.moon) cena.moon.show = false;
   cena.fog.enabled = false;
-  cena.globe.enableLighting = false;          // imagem uniforme, sem sombra do Sol
-  cena.globe.showGroundAtmosphere = false;
-  cena.globe.baseColor = Cesium.Color.fromCssColorString("#2a2f3d");
+  cena.globe.showGroundAtmosphere = !!a.atmosfera;
+  cena.globe.baseColor = Cesium.Color.fromCssColorString(a.cor).darken(0.45, new Cesium.Color());
   cena.globe.depthTestAgainstTerrain = false;
+  cena.globe.enableLighting = false;
+  /* Luz presa à câmera: dá volume ao astro quando não há imagem */
+  const luzCamera = () => {
+    cena.globe.enableLighting = true; cena.light = new Cesium.DirectionalLight({direction: viewer.camera.directionWC.clone()});
+    /* luz vinda do alto e da esquerda da câmera: cria sombra e volume */
+    cena.preRender.addEventListener(() => {
+      const c = viewer.camera, d = cena.light.direction;
+      Cesium.Cartesian3.multiplyByScalar(c.directionWC, 1, d);
+      Cesium.Cartesian3.add(d, Cesium.Cartesian3.multiplyByScalar(c.rightWC, 0.85, new Cesium.Cartesian3()), d);
+      Cesium.Cartesian3.subtract(d, Cesium.Cartesian3.multiplyByScalar(c.upWC, 0.55, new Cesium.Cartesian3()), d);
+      Cesium.Cartesian3.normalize(d, d);
+    });
+  };
 
-  /* Zoom/rotação: mouse e toque (arrastar = girar, pinça = zoom) */
   const ctl = cena.screenSpaceCameraController;
-  ctl.minimumZoomDistance = a.raio * 0.01;
-  ctl.maximumZoomDistance = a.raio * 8;
-  ctl.enableTilt = true;
+  ctl.minimumZoomDistance = Math.max(R * 0.008, 60); ctl.maximumZoomDistance = R * 9; ctl.enableTilt = true;
 
-  /* Toque/clique em um pino (área de toque ampliada para dedos) */
   const mao = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
   mao.setInputAction(e => {
     const obj = cena.pick(e.position, 28, 28);
-    if (Cesium.defined(obj) && obj.id && obj.id._lugar) selecionar(obj.id._lugar);
-    else selecionar(null);
+    if (Cesium.defined(obj) && obj.id && obj.id._lugar) selecionar(obj.id._lugar); else selecionar(null);
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
-  criarMarcadores(); montarLista(); visaoInicial(false);
-  $("nomeVoltar").textContent = a.nome;
-  $("creditoImagem").textContent = a.credito;
-  document.querySelectorAll(".astro").forEach(b => b.setAttribute("aria-pressed", b.dataset.id === a.id));
+  criarMarcadores(); montarCatalogo(); montarLista(); atualizarCartao(); visaoInicial(false);
+  $("creditoImagem").textContent = "Carregando imagens…";
 
-  await adicionarImagem(viewer, a, minhaSeq);
-  if (minhaSeq !== seq) return;
-  viewer.scene.requestRender();
+  let fonte = null;
+  if (a.formaApenas){
+    luzCamera(); cena.globe.show = false;               // o globo fica invisível; o asteroide é um objeto 3D
+    viewer.entities.add({ position: Cesium.Cartesian3.ZERO,
+      orientation: Cesium.Transforms.headingPitchRollQuaternion(Cesium.Cartesian3.ZERO, new Cesium.HeadingPitchRoll(Cesium.Math.PI_OVER_TWO, 0, 0)),
+      ellipsoid: { radii: new Cesium.Cartesian3(...a.forma),
+      material: new Cesium.ImageMaterialProperty({ image: texturaRocha(a.cor) }), slicePartitions: 96, stackPartitions: 64 } }); $("creditoImagem").textContent = "Forma aproximada (sem mapa de superfície)"; avisar("Modelo simplificado: este asteroide é mostrado só pela forma, sem mapa de superfície."); }
+  else{
+    fonte = await adicionarImagem(viewer, a, minhaSeq);
+    if (fonte === "cancelado" || minhaSeq !== seq) return;
+    if (fonte){ $("creditoImagem").textContent = fonte.credito; }
+    else{ luzCamera();
+      cena.imageryLayers.addImageryProvider(new Cesium.GridImageryProvider({ tilingScheme: new Cesium.GeographicTilingScheme({ellipsoid: elip}),
+        cells: 8, color: Cesium.Color.WHITE.withAlpha(.35), glowColor: Cesium.Color.TRANSPARENT, backgroundColor: Cesium.Color.TRANSPARENT }));
+      $("creditoImagem").textContent = "Mapa de superfície indisponível no momento";
+      avisar("Não consegui carregar o mapa de superfície de " + a.nome + " agora. Mostrando o astro em modelo simplificado; os lugares continuam disponíveis."); }
+  }
+  if (a.terra) iniciarISS(minhaSeq);
+  montarCatalogo(); viewer.scene.requestRender();
+  if (pedido.seguir) setTimeout(() => { if (issEnt && minhaSeq === seq) irPara(ISS_LUGAR); }, 1500);
 
-  /* Some a tela de carregamento quando os primeiros tiles chegarem (ou após 8 s) */
   const esconder = () => $("carregando").classList.add("some");
   const rem = cena.globe.tileLoadProgressEvent.addEventListener(n => { if (n === 0){ esconder(); rem(); } });
-  setTimeout(esconder, 8000);
+  setTimeout(esconder, 6000); if (a.formaApenas) esconder();
 }
 
 /* =====================================================================
@@ -560,31 +897,18 @@ async function carregarAstro(a){
    ===================================================================== */
 function iniciar(){
   if (typeof Cesium === "undefined"){
-    $("carregando").innerHTML = "Não foi possível carregar o mapa 3D (biblioteca Cesium). Verifique a internet e recarregue a página.";
-    return;
-  }
-  /* Botões de astro */
-  for (const a of ASTROS){
-    const b = document.createElement("button");
-    b.className = "astro"; b.dataset.id = a.id; b.textContent = `${a.emoji} ${a.nome}`;
-    b.setAttribute("aria-pressed", "false");
-    b.onclick = () => { if (a !== astro) carregarAstro(a); };
-    $("astros").appendChild(b);
-  }
-  $("btnLista").onclick = () => {
-    const abrir = $("lista").hidden; $("lista").hidden = !abrir;
-    $("btnLista").setAttribute("aria-expanded", String(abrir));
-  };
-  $("voltar").onclick = () => { selecionar(null); if (viewer) visaoInicial(true); };
+    $("carregando").innerHTML = "<div><b>Não foi possível carregar o mapa 3D.</b>Verifique a internet e recarregue a página.</div>"; return; }
+  $("btnCatalogo").onclick = () => alternar("catalogo", "btnCatalogo");
+  $("btnLista").onclick = () => alternar("lista", "btnLista");
+  $("voltar").onclick = () => { selecionar(null); if (viewer){ viewer.trackedEntity = undefined; visaoInicial(true); } };
   $("fechar").onclick = () => selecionar(null);
-  document.addEventListener("keydown", e => { if (e.key === "Escape"){ selecionar(null); fecharLista(); } });
-  setTimeout(() => { $("dica").style.opacity = 0; }, 7000);
-
-  try{ carregarAstro(ASTROS[0]); }
-  catch(e){
-    $("carregando").textContent = "Seu navegador não conseguiu iniciar o 3D (WebGL). Tente outro navegador.";
-    console.error(e);
-  }
+  $("zmMais").onclick = () => zoom(0.5); $("zmMenos").onclick = () => zoom(2);
+  document.addEventListener("keydown", e => { if (e.key === "Escape"){ selecionar(null); fecharPaineis(); } });
+  /* ?astro=marte abre direto em um astro */
+  const pedido = new URLSearchParams(location.search).get("astro");
+  const inicial = ASTROS.find(x => x.id === pedido) || ASTROS.find(x => x.id === "terra");
+  try{ carregarAstro(inicial); }
+  catch(e){ $("carregando").textContent = "Seu navegador não conseguiu iniciar o 3D (WebGL). Tente outro navegador."; console.error(e); }
 }
 iniciar();
 </script>
