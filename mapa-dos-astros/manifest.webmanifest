@@ -1,0 +1,13 @@
+{
+  "name": "Mapa dos Astros",
+  "short_name": "Astros",
+  "description": "Explore planetas, luas, asteroides e a ISS em 3D, com avisos de passagens e fases da Lua.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#050914",
+  "theme_color": "#050914",
+  "icons": [{ "src": "icone.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
