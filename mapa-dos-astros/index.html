@@ -361,6 +361,13 @@
   .miniaturas img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
   .miniaturas span{display:block;padding:6px 8px;font-size:.74rem;line-height:1.3;color:var(--suave)}
   .dbusca{display:flex;gap:6px;margin:0 0 8px;flex-wrap:wrap}.dbusca .campo{margin:0;flex:1;min-width:160px}
+  a.btn,a.btn:visited{color:var(--texto)}
+  #camVisor{position:fixed;z-index:96;left:50%;top:50%;transform:translate(-50%,-50%);width:min(760px,calc(100vw - 24px));max-height:calc(100vh - 28px);overflow:auto;padding:18px 20px 18px;transition:opacity .25s,transform .4s var(--suave-ease)}
+  #camVisor[hidden]{display:block;opacity:0;pointer-events:none;visibility:hidden;transform:translate(-50%,-46%) scale(.96)}
+  #camVisor h2{margin:0 54px 4px 0;font-family:var(--serif);font-size:1.35rem;line-height:1.2}#camMeta{display:block;color:var(--suave);margin-bottom:10px;font-size:.84rem}
+  #camMidia{aspect-ratio:16/9;width:100%;border-radius:16px;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center;color:var(--suave)}
+  #camMidia img,#camMidia video,#camMidia iframe{width:100%;height:100%;object-fit:contain;border:0;background:#000}
+  #camFechar{position:absolute;top:12px;right:12px}
   #leitor{position:fixed;z-index:95;left:50%;top:50%;transform:translate(-50%,-50%);width:min(700px,calc(100vw - 24px));max-height:calc(100vh - 40px);overflow:auto;padding:20px 22px 20px;
     transition:opacity .25s,transform .4s var(--suave-ease)}
   #leitor[hidden]{display:block;opacity:0;pointer-events:none;visibility:hidden;transform:translate(-50%,-46%) scale(.96)}
@@ -518,6 +525,7 @@
   <div id="controles">
     <button id="btnAvisos" class="btn vidro redondo" aria-expanded="false" aria-controls="avisos" aria-label="Avisos e lembretes" title="Avisos e lembretes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9z"/><path d="M10 20.2a2.2 2.2 0 0 0 4 0"/></svg></button>
   <button id="btnCamadas" class="btn vidro redondo" aria-expanded="false" aria-controls="camadas" aria-label="Mapa e camadas" title="Mapa e camadas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="m3 13 9 5 9-5"/><path d="m3 17.5 9 5 9-5" opacity=".55"/></svg></button>
+  <button id="btnCameras" class="btn vidro redondo" aria-pressed="false" aria-label="Câmeras ao vivo" title="Câmeras ao vivo (desligadas)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6.5" width="13" height="11" rx="2.5"/><path d="m15.5 10.5 6-3.5v10l-6-3.5"/></svg></button>
   <button id="btnPinos" class="btn vidro redondo" aria-pressed="false" aria-label="Mostrar alfinetes de referência" title="Alfinetes de referência (desligados)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg></button>
     <button id="zmMais" class="btn vidro redondo" aria-label="Aproximar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
     <button id="zmMenos" class="btn vidro redondo" aria-label="Afastar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
@@ -640,6 +648,13 @@
   <div id="lTexto"></div>
   <div class="acoes" id="lAcoes"></div>
 </section>
+<section id="camVisor" class="vidro denso" hidden role="dialog" aria-modal="true" aria-label="Câmera ao vivo">
+  <button id="camFechar" class="btn vidro redondo" aria-label="Fechar a câmera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <h2 id="camTitulo"></h2><small id="camMeta"></small>
+  <div id="camMidia"></div>
+  <small id="camStatus" class="nota"></small>
+  <div class="linha-acoes" id="camAcoes"></div>
+</section>
 <div id="aviso" class="vidro" role="status" hidden></div>
 <div id="toasts" aria-live="assertive"></div>
 <div id="carregando"><div><div class="orbita"></div><b>Mapa dos Astros</b>Preparando o globo 3D…</div></div>
@@ -676,7 +691,8 @@ const TIPOS = {
   satelite:   { rotulo: "Satélite",               cor: "#5eead4", letra: "S" },
   evento:     { rotulo: "Evento ao vivo",         cor: "#ff7aa2", letra: "!" },
   foto:       { rotulo: "Foto (Wikimedia)",       cor: "#9fd0ff", letra: "F" },
-  aviao:      { rotulo: "Aeronave ao vivo",       cor: "#e6e6e6", letra: "A" }
+  aviao:      { rotulo: "Aeronave ao vivo",       cor: "#e6e6e6", letra: "A" },
+  camera:     { rotulo: "Câmera ao vivo",         cor: "#ff5d73", letra: "C" }
 };
 
 /* ---------- Fontes de imagem ----------
@@ -1449,13 +1465,14 @@ async function carregarAstro(pedido){
   mao.setInputAction(e => {
     if (typeof tocarMapaRota === "function" && tocarMapaRota(e.position)) return;
     const obj = cena.pick(e.position, 28, 28);
-    if (Cesium.defined(obj) && obj.id && obj.id._lugar){ cancelarToqueVazio(); setImersivo(false); selecionar(obj.id._lugar); }
+    if (Cesium.defined(obj) && obj.id && obj.id._cam){ cancelarToqueVazio(); abrirCamera(obj.id._cam); }
+    else if (Cesium.defined(obj) && obj.id && obj.id._lugar){ cancelarToqueVazio(); setImersivo(false); selecionar(obj.id._lugar); }
     else agendarToqueVazio();              // toque no vazio: esconde/mostra os menus (como no Google Maps)
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
   mao.setInputAction(() => { cancelarToqueVazio(); zoom(0.5); }, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);  // toque duplo aproxima
 
-  wikiPins = []; extraPins = []; srcPredios = null; googleTiles = null; camadaLayers = {}; camadaBase = null; fonteAtual = null; fonteEstado = {};
-  criarMarcadores(); montarCatalogo(); montarLista(); montarCamadas(); atualizarCartao(); visaoInicial(false);
+  wikiPins = []; extraPins = []; CAM.pins = []; srcPredios = null; googleTiles = null; camadaLayers = {}; camadaBase = null; fonteAtual = null; fonteEstado = {};
+  criarMarcadores(); desenharCameras(); montarCatalogo(); montarLista(); montarCamadas(); atualizarCartao(); visaoInicial(false);
   $("creditoImagem").textContent = "Carregando imagens…";
 
   let fonte = null;
@@ -1773,6 +1790,7 @@ function montarCamadas(){
     l.appendChild(b1);
     if (wikiPins.length){ const b2 = document.createElement("button"); b2.className = "btn"; b2.textContent = "Limpar artigos (" + wikiPins.length + ")"; b2.onclick = () => { limparWiki(); montarCamadas(); }; l.appendChild(b2); }
     box.appendChild(l);
+    montarSecaoCameras(box);
     secao(box, "Ao vivo no globo");
     const l2 = document.createElement("div"); l2.className = "linha-acoes";
     for (const x of EXTRAS_AO_VIVO) l2.appendChild(btnPeq(x.nome, () => { fecharPaineis(); carregarExtra(x.id); }));
@@ -3196,6 +3214,165 @@ function ativarVidro(){
 }
 
 /* =====================================================================
+   CÂMERAS AO VIVO (só na Terra): alfinetes no mapa; toque para assistir
+   Fontes abertas e sem chave: Caltrans (Califórnia), NYC DOT (Nova York), 511 Ontário.
+   Opcional: Windy Webcams (chave grátis do usuário) e câmeras adicionadas pelo próprio usuário.
+   ===================================================================== */
+const CAM = {on: false, fontes: lerJsonLocal("mapa.camFontes", {caltrans: true, nyc: true, ontario: true, windy: true, minhas: true}), dados: {}, pins: [], atual: null, timer: null, hls: null, carregando: {}};
+function lerJsonLocal(k, pad){ try{ const v = JSON.parse(localStorage.getItem(k) || "null"); return v === null ? pad : v; }catch(e){ return pad; } }
+function salvarJson(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+const FONTES_CAM = {
+  caltrans: {nome: "Califórnia (Caltrans)", desc: "Cerca de 3 mil câmeras de estradas, com imagem atualizada", site: "https://cwwp2.dot.ca.gov/vm/iframemap.htm"},
+  nyc: {nome: "Nova York (NYC DOT)", desc: "Câmeras de trânsito da cidade", site: "https://webcams.nyctmc.org/"},
+  ontario: {nome: "Ontário, Canadá (511)", desc: "Câmeras de rodovias de Ontário", site: "https://511on.ca/"},
+  windy: {nome: "Windy Webcams (mundo)", desc: "Câmeras do mundo todo; precisa de uma chave grátis sua", site: "https://api.windy.com/keys"},
+  minhas: {nome: "Minhas câmeras", desc: "As que você adicionou", site: ""}
+};
+const num = v => { const n = parseFloat(v); return isFinite(n) ? n : null; };
+const pegar = (o, ...ks) => { for (const k of ks) if (o && o[k] !== undefined && o[k] !== null && o[k] !== "") return o[k]; return null; };
+const https_ = u => u ? String(u).trim().replace(/^http:\/\//i, "https://") : null;
+
+async function carregarFonteCam(id){
+  if (CAM.dados[id]) return CAM.dados[id];
+  if (CAM.carregando[id]) return CAM.carregando[id];
+  const p = (async () => {
+    let lista = [];
+    if (id === "caltrans"){
+      for (let off = 0; off < 6000; off += 2000){
+        const j = await jget("https://gisdata.dot.ca.gov/arcgis/rest/services/CHhighway/CCTV/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultOffset=" + off + "&resultRecordCount=2000", 25000);
+        for (const f of (j.features || [])){ const p = f.properties || {}, g = f.geometry && f.geometry.coordinates; const lat = num(pegar(p, "latitude", "Latitude")) ?? (g ? g[1] : null), lon = num(pegar(p, "longitude", "Longitude")) ?? (g ? g[0] : null);
+          const img = https_(pegar(p, "currentImageURL")), hls = https_(pegar(p, "streamingVideoURL")); const em = String(pegar(p, "inService") || "true").toLowerCase();
+          if (lat === null || lon === null || em === "false" || (!img && !hls)) continue;
+          lista.push({fonte: "caltrans", nome: pegar(p, "locationName", "nearbyPlace") || "Câmera Caltrans", detalhe: [pegar(p, "route"), pegar(p, "county"), pegar(p, "direction")].filter(Boolean).join(" · "), lat, lon, tipo: hls ? "hls" : "img", url: hls || img, imgUrl: img, atualiza: 30, site: FONTES_CAM.caltrans.site}); }
+        if (!(j.exceededTransferLimit || (j.properties && j.properties.exceededTransferLimit))) break;
+      }
+    } else if (id === "nyc"){
+      const j = await jget("https://webcams.nyctmc.org/api/cameras", 20000); const arr = Array.isArray(j) ? j : (j.cameras || j.data || []);
+      for (const c of arr){ const lat = num(pegar(c, "latitude", "lat")), lon = num(pegar(c, "longitude", "lng", "lon")); const cid = pegar(c, "id", "cameraId"); const img = https_(pegar(c, "imageUrl", "image", "url")) || (cid ? "https://webcams.nyctmc.org/api/cameras/" + cid + "/image" : null);
+        if (lat === null || lon === null || !img || String(pegar(c, "isOnline", "online") || "true") === "false") continue;
+        lista.push({fonte: "nyc", nome: pegar(c, "name", "location") || "Câmera de Nova York", detalhe: pegar(c, "area", "borough") || "NYC DOT", lat, lon, tipo: "img", url: img, imgUrl: img, atualiza: 5, site: FONTES_CAM.nyc.site}); }
+    } else if (id === "ontario"){
+      const j = await jget("https://511on.ca/api/v2/get/cameras?format=json&lang=en", 25000); const arr = Array.isArray(j) ? j : (j.cameras || []);
+      for (const c of arr){ const lat = num(pegar(c, "Latitude", "latitude")), lon = num(pegar(c, "Longitude", "longitude")); const v = (c.Views || c.views || []).find(x => x && (x.Url || x.url) && String(x.Status || x.status || "Enabled").toLowerCase() !== "disabled"); const img = v ? https_(v.Url || v.url) : null;
+        if (lat === null || lon === null || !img) continue;
+        lista.push({fonte: "ontario", nome: pegar(c, "Location", "location", "Name") || "Câmera 511 Ontário", detalhe: pegar(c, "Roadway", "roadway") || "Ontário", lat, lon, tipo: "img", url: img, imgUrl: img, atualiza: 30, site: FONTES_CAM.ontario.site}); }
+    }
+    CAM.dados[id] = lista; return lista;
+  })();
+  CAM.carregando[id] = p; try{ return await p; } finally{ delete CAM.carregando[id]; }
+}
+const minhasCams = () => lerJsonLocal("mapa.minhasCams", []);
+function classificarUrlCam(url){
+  const u = url.trim(); let m;
+  if ((m = u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|live\/|embed\/|shorts\/))([\w-]{11})/))) return {tipo: "yt", url: "https://www.youtube-nocookie.com/embed/" + m[1] + "?autoplay=1&mute=1&playsinline=1"};
+  if ((m = u.match(/youtube\.com\/channel\/(UC[\w-]{22})/))) return {tipo: "yt", url: "https://www.youtube-nocookie.com/embed/live_stream?channel=" + m[1] + "&autoplay=1&mute=1&playsinline=1"};
+  if (/\.m3u8(\?|$)/i.test(u)) return {tipo: "hls", url: u};
+  if (/\.(jpe?g|png|gif|webp|mjpe?g)(\?|$)/i.test(u) || /snapshot|image|cgi-bin|\.cgi/i.test(u)) return {tipo: "img", url: u, imgUrl: u};
+  return {tipo: "iframe", url: u};
+}
+function camsAtivas(){
+  const t = []; for (const [id, on] of Object.entries(CAM.fontes)){ if (!on || id === "minhas" || id === "windy") continue; if (CAM.dados[id]) t.push(...CAM.dados[id]); }
+  if (CAM.fontes.windy && CAM.dados.windy) t.push(...CAM.dados.windy);
+  if (CAM.fontes.minhas) t.push(...minhasCams().map(c => Object.assign({fonte: "minhas", atualiza: 15}, c)));
+  return t;
+}
+function desenharCameras(){
+  if (!viewer) return; for (const e of CAM.pins) viewer.entities.remove(e); CAM.pins = [];
+  if (!CAM.on || !astro || !astro.terra){ viewer.scene.requestRender(); return; }
+  const img = imagemPino("camera", false);
+  for (const c of camsAtivas()){
+    CAM.pins.push(viewer.entities.add({name: c.nome, position: Cesium.Cartesian3.fromDegrees(c.lon, c.lat, 0), _cam: c,
+      billboard: {image: img, width: 28, height: 36, verticalOrigin: Cesium.VerticalOrigin.BOTTOM, scaleByDistance: new Cesium.NearFarScalar(500, 1, 6e6, 0.4), disableDepthTestDistance: 3e3, heightReference: Cesium.HeightReference.CLAMP_TO_GROUND},
+      label: {text: c.nome, font: "600 12px 'Source Sans 3',sans-serif", fillColor: Cesium.Color.WHITE, outlineColor: Cesium.Color.BLACK, outlineWidth: 4, style: Cesium.LabelStyle.FILL_AND_OUTLINE, verticalOrigin: Cesium.VerticalOrigin.TOP, pixelOffset: new Cesium.Cartesian2(0, 4), distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 15000), heightReference: Cesium.HeightReference.CLAMP_TO_GROUND}}));
+  }
+  viewer.scene.requestRender(); atualizarBotaoCam();
+}
+function atualizarBotaoCam(){ const b = $("btnCameras"); if (!b) return; b.setAttribute("aria-pressed", String(CAM.on)); b.classList.toggle("ativo", CAM.on); b.title = "Câmeras ao vivo (" + (CAM.on ? "ligadas: " + CAM.pins.length : "desligadas") + ")"; }
+async function ligarCameras(v){
+  CAM.on = v; atualizarBotaoCam();
+  if (!v){ desenharCameras(); montarCamadas(); return; }
+  if (!viewer || !astro || !astro.terra) await carregarAstro(ASTROS.find(a => a.id === "terra"));
+  avisar("Procurando câmeras ao vivo…"); const falhas = [];
+  await Promise.all(["caltrans", "nyc", "ontario"].filter(id => CAM.fontes[id]).map(id => carregarFonteCam(id).catch(() => { falhas.push(FONTES_CAM[id].nome); })));
+  avisar(""); desenharCameras(); montarCamadas();
+  const n = CAM.pins.length;
+  toast(n ? n + " câmeras no mapa" : "Nenhuma câmera", n ? "Toque num alfinete C para assistir. Aproxime-se de uma região coberta." : "Não consegui carregar as fontes agora.");
+  if (falhas.length) setTimeout(() => toast("Fonte indisponível", falhas.join(", ")), 600);
+  if (n && viewer.camera.positionCartographic.height > 8e6) irParaCameras();
+}
+function irParaCameras(regiao){
+  const R = {ca: [-119.5, 36.8, 1.1e6], ny: [-74.0, 40.72, 1.2e5], on: [-79.4, 43.7, 3.5e5]}[regiao || "ca"]; viewer.camera.flyTo({destination: Cesium.Cartesian3.fromDegrees(R[0], R[1], R[2]), duration: 2});
+}
+
+/* ---------- Janela da câmera ---------- */
+function fecharCamera(){
+  $("camVisor").hidden = true; clearInterval(CAM.timer); CAM.timer = null; if (CAM.hls){ try{ CAM.hls.destroy(); }catch(e){} CAM.hls = null; }
+  $("camMidia").innerHTML = ""; CAM.atual = null;
+}
+const carregarHls = () => window.Hls ? Promise.resolve(window.Hls) : new Promise((ok, err) => { const s = document.createElement("script"); s.src = "https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"; s.onload = () => ok(window.Hls); s.onerror = err; document.head.appendChild(s); });
+function mostrarSnapshot(c, msg){
+  const m = $("camMidia"); m.innerHTML = ""; const im = document.createElement("img"); im.alt = c.nome; im.referrerPolicy = "no-referrer";
+  const base = c.imgUrl || c.url, carregar = () => { im.src = base + (base.includes("?") ? "&" : "?") + "_t=" + Date.now(); };
+  im.onload = () => { $("camStatus").textContent = (msg ? msg + " " : "") + "Imagem atualizada às " + new Date().toLocaleTimeString("pt-BR") + " (a cada " + (c.atualiza || 15) + " s)."; };
+  im.onerror = () => { $("camStatus").textContent = "Esta câmera não respondeu agora (pode estar fora do ar ou bloquear sites de fora). Use \"Abrir no site\"."; };
+  m.appendChild(im); carregar(); clearInterval(CAM.timer); CAM.timer = setInterval(carregar, (c.atualiza || 15) * 1000);
+}
+async function abrirCamera(c){
+  CAM.atual = c; clearInterval(CAM.timer); if (CAM.hls){ try{ CAM.hls.destroy(); }catch(e){} CAM.hls = null; }
+  $("camTitulo").textContent = c.nome; $("camMeta").textContent = [c.detalhe, FONTES_CAM[c.fonte] ? FONTES_CAM[c.fonte].nome : (c.fonte || "")].filter(Boolean).join(" · ");
+  $("camStatus").textContent = "Carregando…"; const m = $("camMidia"); m.innerHTML = ""; $("camVisor").hidden = false; if ($("info")) selecionar(null);
+  const acoes = $("camAcoes"); acoes.innerHTML = ""; const abrirSite = c.site || c.pagina || (c.tipo === "iframe" || c.tipo === "link" ? c.url : null) || (c.imgUrl || c.url);
+  if (abrirSite) acoes.appendChild(botaoLink("Abrir no site", abrirSite));
+  acoes.appendChild(botaoLink("Ver no Google Maps", `https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lon}`));
+  if (c.fonte === "minhas") acoes.appendChild(btnPeq("Remover", () => { salvarJson("mapa.minhasCams", minhasCams().filter(x => !(x.lat === c.lat && x.lon === c.lon && x.nome === c.nome))); fecharCamera(); desenharCameras(); montarCamadas(); }));
+  if (c.tipo === "img") mostrarSnapshot(c);
+  else if (c.tipo === "hls"){
+    const v = document.createElement("video"); v.controls = true; v.muted = true; v.autoplay = true; v.playsInline = true; m.appendChild(v);
+    const cair = () => { if (CAM.atual === c) mostrarSnapshot(c, c.imgUrl ? "O vídeo não abriu; mostrando a imagem da câmera." : ""); if (!c.imgUrl) $("camStatus").textContent = "O vídeo não abriu. Use \"Abrir no site\"."; };
+    try{ if (v.canPlayType("application/vnd.apple.mpegurl")){ v.src = c.url; v.onerror = cair; v.play().catch(() => {}); $("camStatus").textContent = "Vídeo ao vivo."; }
+      else{ const Hls = await carregarHls(); if (!Hls.isSupported()) throw new Error("sem hls"); const h = new Hls({lowLatencyMode: true}); CAM.hls = h; h.loadSource(c.url); h.attachMedia(v); h.on(Hls.Events.MANIFEST_PARSED, () => { v.play().catch(() => {}); $("camStatus").textContent = "Vídeo ao vivo."; }); h.on(Hls.Events.ERROR, (e, d) => { if (d.fatal) cair(); }); } }
+    catch(e){ cair(); }
+  } else if (c.tipo === "yt" || c.tipo === "iframe"){
+    const f = document.createElement("iframe"); f.src = c.url; f.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media"; f.allowFullscreen = true; f.referrerPolicy = "no-referrer"; f.loading = "lazy"; m.appendChild(f);
+    $("camStatus").textContent = c.tipo === "yt" ? "Transmissão ao vivo do YouTube." : "Câmera incorporada. Se ficar em branco, o site não permite incorporação: use \"Abrir no site\".";
+  } else { m.textContent = "Esta câmera só abre no site original."; $("camStatus").textContent = ""; }
+}
+
+/* ---------- Windy Webcams (opcional) e câmeras do usuário ---------- */
+async function buscarWindy(){
+  const chave = lerGuardado("mapa.chaveWindy", ""); if (!chave){ toast("Chave necessária", "Cole sua chave grátis do Windy Webcams no painel."); return; }
+  const c = centroTela(); if (!c){ avisar("Aponte o mapa para a superfície da Terra."); return; }
+  avisar("Buscando câmeras Windy…");
+  try{ const r = await comTempo(15000, sg => fetch(`https://api.windy.com/webcams/api/v3/webcams?nearby=${c.lat.toFixed(4)},${c.lon.toFixed(4)},250&limit=50&include=images,location,player,urls`, {headers: {"x-windy-api-key": chave}, signal: sg}));
+    if (!r.ok) throw new Error("http " + r.status); const j = await r.json(); const out = CAM.dados.windy || [];
+    for (const w of (j.webcams || [])){ const lo = w.location || {}, pl = w.player || {}; const emb = https_(typeof pl.live === "string" ? pl.live : (pl.live && pl.live.embed) || (typeof pl.day === "string" ? pl.day : pl.day && pl.day.embed));
+      const lat = num(lo.latitude), lon = num(lo.longitude); if (lat === null || lon === null) continue; const prev = https_(w.images && w.images.current && (w.images.current.preview || w.images.current.thumbnail));
+      if (out.some(x => x.id === w.webcamId)) continue;
+      out.push({id: w.webcamId, fonte: "windy", nome: w.title || "Câmera Windy", detalhe: [lo.city, lo.country].filter(Boolean).join(", "), lat, lon, tipo: emb ? "iframe" : (prev ? "img" : "link"), url: emb || prev, imgUrl: prev, atualiza: 60, site: (w.urls && w.urls.detail) || "https://www.windy.com/webcams/" + w.webcamId}); }
+    CAM.dados.windy = out; avisar(""); if (!CAM.on) CAM.on = true; desenharCameras(); montarCamadas(); toast("Windy", (j.webcams || []).length + " câmeras encontradas perto do centro do mapa.");
+  }catch(e){ avisar("Não consegui falar com o Windy (chave inválida ou bloqueio do site)."); setTimeout(() => avisar(""), 4500); }
+}
+function adicionarMinhaCam(nome, url){
+  const c = centroTela(); if (!c){ avisar("Aponte o mapa para a superfície da Terra."); return false; } if (!url.trim()){ toast("Falta o link", "Cole o link da câmera."); return false; }
+  const k = classificarUrlCam(url); const lista = minhasCams(); lista.push(Object.assign({nome: nome.trim() || "Minha câmera", lat: c.lat, lon: c.lon, detalhe: "Adicionada por você"}, k));
+  salvarJson("mapa.minhasCams", lista); CAM.fontes.minhas = true; salvarJson("mapa.camFontes", CAM.fontes); CAM.on = true; desenharCameras(); montarCamadas(); toast("Câmera adicionada", "Ela fica no centro atual do mapa."); return true;
+}
+function montarSecaoCameras(box){
+  secao(box, "Câmeras ao vivo");
+  box.appendChild(interruptor("Mostrar câmeras ao vivo", "Alfinetes C no mapa: toque para assistir", CAM.on, () => ligarCameras(!CAM.on)));
+  for (const [id, f] of Object.entries(FONTES_CAM)) box.appendChild(interruptor(f.nome, f.desc + (CAM.dados[id] ? " · " + CAM.dados[id].length + " câmeras" : ""), !!CAM.fontes[id], async () => { CAM.fontes[id] = !CAM.fontes[id]; salvarJson("mapa.camFontes", CAM.fontes);
+    if (CAM.on && CAM.fontes[id] && ["caltrans", "nyc", "ontario"].includes(id)) await carregarFonteCam(id).catch(() => toast("Fonte indisponível", f.nome)); desenharCameras(); montarCamadas(); }));
+  const ir = elDom("div", "linha-acoes"); for (const [k, t] of [["ca", "Ir à Califórnia"], ["ny", "Ir a Nova York"], ["on", "Ir a Ontário"]]) ir.appendChild(btnPeq(t, () => { fecharPaineis(); irParaCameras(k); })); box.appendChild(ir);
+  const w = elDom("input", "campo"); w.type = "password"; w.autocomplete = "off"; w.placeholder = "Chave grátis do Windy Webcams (opcional)"; w.value = lerGuardado("mapa.chaveWindy", ""); w.onchange = () => guardar("mapa.chaveWindy", w.value.trim()); box.appendChild(w);
+  const wl = elDom("div", "linha-acoes"); wl.appendChild(btnPeq("Buscar câmeras Windy aqui", () => { fecharPaineis(); buscarWindy(); })); wl.appendChild(botaoLink("Pegar chave grátis", "https://api.windy.com/keys")); box.appendChild(wl);
+  const nome = elDom("input", "campo"); nome.placeholder = "Nome da sua câmera"; const url = elDom("input", "campo"); url.placeholder = "Link: YouTube ao vivo, vídeo .m3u8, imagem ou página de incorporação"; box.appendChild(nome); box.appendChild(url);
+  const al = elDom("div", "linha-acoes"); al.appendChild(btnPeq("Adicionar no centro do mapa", () => { if (adicionarMinhaCam(nome.value, url.value)){ nome.value = ""; url.value = ""; } })); box.appendChild(al);
+  const d = elDom("details", "sobre"); d.appendChild(elDom("summary", "", "Mais câmeras do mundo")); const dl = elDom("div", "linha-acoes");
+  for (const [t, u] of [["Windy Webcams", "https://www.windy.com/webcams"], ["SkylineWebcams", "https://www.skylinewebcams.com/"], ["EarthCam", "https://www.earthcam.com/"], ["Webcamtaxi", "https://www.webcamtaxi.com/"], ["Explore.org", "https://explore.org/livecams"], ["NASA ao vivo", "https://www.nasa.gov/live/"]]) dl.appendChild(botaoLink(t, u)); d.appendChild(dl);
+  d.appendChild(elDom("p", "", "Muitas câmeras do mundo só permitem ver no site delas. Se achar uma transmissão do YouTube ao vivo, cole o link acima para ela virar um alfinete no mapa. Imagens atualizam sozinhas; o app não grava nem guarda nenhuma imagem.")); box.appendChild(d);
+}
+
+/* =====================================================================
    DIRIGIR: rotas econômicas (menos combustível, menos subidas e menos paradas)
    Caminhos: OSRM + Valhalla (OpenStreetMap). Altitudes: Open-Meteo / AWS Terrain.
    Paradas e semáforos: OpenStreetMap (Overpass). O consumo é estimado por física.
@@ -3651,7 +3828,7 @@ function iniciar(){
   arrastarFolha(document.querySelector('.alca[data-fecha="camadas"]'), $("camadas"), fecharPaineis);
   arrastarFolha(document.querySelector('.alca[data-fecha="avisos"]'), $("avisos"), fecharPaineis);
   arrastarFolha($("alcaInfo"), $("info"), () => selecionar(null), () => $("info").classList.toggle("min"));
-  montarNav(); definirTela(); ativarVidro();
+  montarNav(); $("btnCameras").onclick = () => ligarCameras(!CAM.on); $("camFechar").onclick = fecharCamera; definirTela(); ativarVidro();
   if ("serviceWorker" in navigator && /^https?:/.test(location.protocol)) navigator.serviceWorker.register("sw.js").catch(() => {});
   reagendarAvisos(); avisoDoDia();
   if (av.iss && av.lat !== null) atualizarPassagens().catch(() => {});
@@ -3661,7 +3838,7 @@ function iniciar(){
   setTimeout(() => { $("dica").style.opacity = 0; }, 6500);
   $("zmMais").onclick = () => zoom(0.5); $("zmMenos").onclick = () => zoom(2);
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape"){ if (ROTA.rodando) sairNavegacao(); else if (ROTA.pick){ ROTA.pick = null; avisar(""); } else if (!$("leitor").hidden) fecharLeitor(); else if (!$("dados").hidden) fecharDados(); else if (!$("ceu").hidden) fecharCeu(); else if (!$("visor").hidden) fecharVisor(); else if (imersivo) setImersivo(false); else { selecionar(null); fecharPaineis(); } }
+    if (e.key === "Escape"){ if (!$("camVisor").hidden) fecharCamera(); else if (ROTA.rodando) sairNavegacao(); else if (ROTA.pick){ ROTA.pick = null; avisar(""); } else if (!$("leitor").hidden) fecharLeitor(); else if (!$("dados").hidden) fecharDados(); else if (!$("ceu").hidden) fecharCeu(); else if (!$("visor").hidden) fecharVisor(); else if (imersivo) setImersivo(false); else { selecionar(null); fecharPaineis(); } }
     else if (e.key === "h" || e.key === "H") setImersivo(!imersivo);
   });
   /* ?astro=marte abre direto em um astro */
