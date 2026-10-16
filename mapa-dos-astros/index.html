@@ -12,6 +12,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+<!-- three.js: carregado só quando a pessoa abre um arquivo STL/OBJ no visor de objetos 3D -->
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/"}}</script>
+
 <!-- CesiumJS (versão fixa) via jsDelivr. Nenhum recurso do Cesium Ion é usado. -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cesium@1.120.0/Build/Cesium/Widgets/widgets.css">
 <script src="https://cdn.jsdelivr.net/npm/cesium@1.120.0/Build/Cesium/Cesium.js"></script>
@@ -128,7 +131,7 @@
   .painel{position:fixed;z-index:40;top:calc(var(--gap) + var(--alvo) + 28px + env(safe-area-inset-top));bottom:calc(var(--gap) + 40px + env(safe-area-inset-bottom));
     width:min(390px,calc(100vw - var(--gap)*2));display:flex;flex-direction:column;overflow:hidden;
     transition:transform .5s var(--suave-ease),opacity .3s,visibility 0s}
-  #catalogo{left:var(--gap)} #lista{right:var(--gap)}
+  #catalogo{left:var(--gap)} #lista,#camadas{right:var(--gap)}
   .painel[hidden]{display:flex;opacity:0;pointer-events:none;visibility:hidden;transform:translateY(18px) scale(.97);transition:transform .4s var(--suave-ease),opacity .25s,visibility 0s .4s}
   .painel header{padding:12px 18px 6px}
   .painel h3{margin:0;font-family:var(--serif);font-size:1.2rem}
@@ -193,6 +196,58 @@
   .vivo::before{content:"";width:8px;height:8px;border-radius:50%;background:#5eead4;box-shadow:0 0 0 0 #5eead4aa;animation:pulso 1.6s infinite}
   @keyframes pulso{70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
 
+  #iImg{display:block;width:100%;max-height:170px;object-fit:cover;border-radius:16px;margin:4px 0 10px;box-shadow:inset 0 0 0 .5px rgba(255,255,255,.3),0 6px 18px rgba(0,0,0,.35)}
+  #iImg[hidden]{display:none}
+  .campo{width:100%;min-height:var(--alvo);padding:0 14px;margin-top:8px;border-radius:14px;border:0;color:var(--texto);font:inherit;font-size:.92rem;
+    background:rgba(0,0,0,.3);box-shadow:inset 0 1px 3px rgba(0,0,0,.5),inset 0 0 0 .5px rgba(255,255,255,.2)}
+  .campo::placeholder{color:var(--suave)}
+  details.sobre{margin:14px 6px 4px;color:var(--suave);font-size:.84rem;line-height:1.5}
+  details.sobre summary{cursor:pointer;font-weight:600;color:var(--gold-light);padding:6px 0}
+  .linha-acoes{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 0}
+  .item .pino.ok{background:var(--gold-light)}
+  .nota{margin:6px 6px 0;color:var(--suave);font-size:.8rem}
+
+  /* ---------- Visor de objetos 3D ---------- */
+  #visor{position:fixed;z-index:50;left:var(--gap);right:var(--gap);top:calc(var(--gap) + var(--alvo) + 28px + env(safe-area-inset-top));bottom:calc(var(--gap) + 40px + env(safe-area-inset-bottom));
+    display:flex;flex-direction:column;overflow:hidden;transition:transform .5s var(--suave-ease),opacity .3s,visibility 0s}
+  #visor[hidden]{display:flex;opacity:0;pointer-events:none;visibility:hidden;transform:translateY(22px) scale(.97);transition:transform .4s var(--suave-ease),opacity .25s,visibility 0s .4s}
+  .vtopo{display:flex;align-items:center;gap:12px;padding:10px 12px 8px 18px}
+  .vtopo h3{margin:0;font-family:var(--serif);font-size:1.25rem;white-space:nowrap}
+  .vtopo .abas{flex:1;margin:0;min-width:0}
+  .vcorpo{flex:1;min-height:0;display:grid;grid-template-columns:minmax(280px,360px) 1fr;gap:12px;padding:0 12px 12px}
+  .vlado{order:-1;overflow:auto;min-height:0;overscroll-behavior:contain;padding-right:2px}
+  .vpalco{position:relative;min-height:0;border-radius:20px;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#1b2c57,#060b1a 75%);
+    box-shadow:inset 0 0 0 .5px rgba(255,255,255,.18),inset 0 12px 40px rgba(0,0,0,.35)}
+  #vPalco model-viewer,#vThree,#vSketch{position:absolute;inset:0;width:100%;height:100%;border:0;--poster-color:transparent;background:transparent}
+  #vThree[hidden],#vSketch[hidden],.vvazio[hidden],#vPalco model-viewer[hidden]{display:none!important}
+  .vvazio{position:absolute;inset:0;display:grid;place-content:center;gap:6px;text-align:center;padding:24px;color:var(--suave)}
+  .vvazio b{font-family:var(--serif);font-size:1.3rem;color:#fff}
+  .vbarra{position:absolute;left:10px;right:10px;bottom:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:6px;border-radius:20px;z-index:3}
+  .vbarra[hidden],.vinfo[hidden]{display:none}
+  .vbarra .btn{min-height:38px;padding:0 12px;font-size:.84rem;border-radius:13px}
+  .vbarra select{min-height:38px;border-radius:13px;border:0;padding:0 10px;color:var(--texto);font:inherit;font-size:.84rem;background:rgba(0,0,0,.35);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.25)}
+  .vbarra select option{color:#000}
+  .vinfo{position:absolute;left:10px;top:10px;max-width:calc(100% - 20px);padding:9px 14px;border-radius:16px;z-index:3;font-size:.84rem;line-height:1.4}
+  .vinfo b{font-family:var(--serif);font-size:1.02rem;display:block}
+  .vinfo small{color:var(--suave)}
+  .vinfo a{color:var(--gold-light)}
+  .cartoes{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+  .cartao3d{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:0 0 10px;border-radius:16px;overflow:hidden;border:0;min-height:96px;
+    background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.03));box-shadow:inset 0 0 0 .5px rgba(255,255,255,.16),inset 1px 1.5px 1.5px -.5px rgba(255,255,255,.4);transition:transform .35s var(--seg)}
+  .cartao3d:active{transform:scale(.95)}
+  .cartao3d .mini{width:100%;aspect-ratio:4/3;object-fit:cover;background:radial-gradient(circle at 50% 40%,#2a4a8c,#0a1226);display:grid;place-items:center;color:var(--gold-light)}
+  .cartao3d .mini svg{width:38%;opacity:.85}
+  .cartao3d b,.cartao3d small{padding:0 10px;display:block;line-height:1.25}
+  .cartao3d b{font-size:.9rem} .cartao3d small{color:var(--suave);font-size:.74rem}
+  .cartao3d[aria-current="true"]{box-shadow:inset 0 0 0 1px var(--gold-light),0 0 18px rgba(233,212,142,.25)}
+  .vlado .busca{display:flex;gap:6px;margin:0 0 8px}
+  .vlado .busca .campo{margin:0;flex:1}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+  .soltar{display:grid;place-items:center;gap:6px;text-align:center;padding:22px 14px;border-radius:18px;color:var(--suave);cursor:pointer;
+    background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.22);border:0;width:100%;font-size:.92rem}
+  .soltar.sobre{background:rgba(233,212,142,.16);box-shadow:inset 0 0 0 1.5px var(--gold-light)}
+  .soltar b{color:#fff;font-size:1rem}
+
   /* ---------- Controles do mapa ---------- */
   #controles{position:fixed;z-index:25;right:var(--gap);top:calc(var(--gap) + var(--alvo) + 28px + env(safe-area-inset-top));display:flex;flex-direction:column;gap:10px}
 
@@ -222,6 +277,14 @@
      ===================================================================== */
   /* celular em pé e telas médias: painéis viram folhas inferiores com alça para arrastar */
   body[data-tela="compacta"] .painel,body[data-tela="media"] .painel{left:var(--gap);right:var(--gap);width:auto;top:auto;bottom:calc(var(--gap) + 40px + env(safe-area-inset-bottom));max-height:64vh}
+  body[data-tela="compacta"] .vcorpo,body[data-tela="media"] .vcorpo{grid-template-columns:1fr;grid-template-rows:50% 1fr}
+  body[data-tela="compacta"] .vbarra,body[data-tela="media"] .vbarra,body[data-tela="relogio"] .vbarra,body[data-tela="paisagem"] .vbarra{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:5px}
+  body[data-tela="compacta"] .vbarra .btn,body[data-tela="media"] .vbarra .btn,body[data-tela="relogio"] .vbarra .btn,body[data-tela="paisagem"] .vbarra .btn{flex:0 0 auto;min-height:34px;padding:0 10px;font-size:.78rem}
+  body[data-tela="compacta"] .vinfo small,body[data-tela="media"] .vinfo small,body[data-tela="paisagem"] .vinfo small{display:none!important}
+  body[data-tela="compacta"] .vinfo.aberto small,body[data-tela="media"] .vinfo.aberto small,body[data-tela="paisagem"] .vinfo.aberto small{display:block!important}
+  body[data-tela="compacta"] .vinfo,body[data-tela="media"] .vinfo,body[data-tela="paisagem"] .vinfo{cursor:pointer;padding:6px 12px;max-height:60%;overflow:auto}
+  body[data-tela="compacta"] .vlado,body[data-tela="media"] .vlado{order:2}
+  body[data-tela="compacta"] .vtopo h3,body[data-tela="media"] .vtopo h3{display:none}
   body[data-tela="compacta"] .alca,body[data-tela="media"] .alca,body[data-tela="relogio"] .alca,body[data-tela="paisagem"] .alca{display:block}
   body[data-tela="compacta"] #cartao p,body[data-tela="media"] #cartao p{display:none}
   body[data-tela="compacta"] #cartao .esfera,body[data-tela="media"] #cartao .esfera{width:36px;height:36px}
@@ -230,7 +293,7 @@
   body[data-tela="media"]{--alvo:48px}
   body[data-tela="compacta"] #info{max-height:48vh}
   body[data-tela="ampla"] #info{left:auto;right:var(--gap);width:410px;max-height:min(72vh,640px);bottom:calc(var(--gap) + 40px)}
-  body[data-tela="ampla"] #lista{right:calc(var(--gap) + var(--alvo) + 14px)}
+  body[data-tela="ampla"] #lista,body[data-tela="ampla"] #camadas{right:calc(var(--gap) + var(--alvo) + 14px)}
   body[data-tela="ampla"] #creditos{max-width:none}
   body[data-tela="ampla"] .alca{display:none}
   body[data-tela="ampla"] #dica{bottom:calc(var(--gap) + 56px)}
@@ -243,11 +306,14 @@
   body[data-tela="paisagem"] #cartao p{display:none}
   body[data-tela="paisagem"] #controles{top:var(--gap);flex-direction:column;gap:8px}
   body[data-tela="paisagem"] .painel{top:calc(var(--gap) + var(--alvo) + 22px);bottom:calc(var(--gap) + 34px);width:min(360px,46vw)}
-  body[data-tela="paisagem"] #catalogo{left:var(--gap)} body[data-tela="paisagem"] #lista{right:calc(var(--gap) + var(--alvo) + 12px)}
+  body[data-tela="paisagem"] #catalogo{left:var(--gap)} body[data-tela="paisagem"] #lista,body[data-tela="paisagem"] #camadas{right:calc(var(--gap) + var(--alvo) + 12px)}
   body[data-tela="paisagem"] #info{left:auto;right:calc(var(--gap) + var(--alvo) + 12px);width:min(380px,50vw);bottom:var(--gap);max-height:calc(100vh - var(--gap)*2)}
   body[data-tela="paisagem"] .btn .rot{display:none}
   body[data-tela="paisagem"] #creditos{bottom:var(--gap);font-size:.66rem;padding:5px 11px}
   body[data-tela="paisagem"] #dica{display:none}
+  body[data-tela="paisagem"] #visor{top:calc(var(--gap) + var(--alvo) + 22px);bottom:calc(var(--gap) + 34px)}
+  body[data-tela="paisagem"] .vcorpo{grid-template-columns:minmax(200px,38%) 1fr}
+  body[data-tela="paisagem"] .vtopo h3{display:none}
 
   /* relógio (Galaxy Watch e semelhantes): só o globo + menu recolhido; tudo grande e centralizado */
   body[data-tela="relogio"]{--alvo:44px;--gap:6px;--raio:20px;font-size:12.5px}
@@ -268,6 +334,12 @@
   body[data-tela="relogio"] #creditos{left:50%;transform:translateX(-50%);bottom:2.2%;max-width:78vw;font-size:8px;padding:3px 9px;text-align:center;border-radius:12px}
   body.imersivo[data-tela="relogio"] #creditos{opacity:.45}
   body[data-tela="relogio"] #dica,body[data-tela="relogio"] #aviso{display:none}
+  body[data-tela="relogio"] #visor{left:3%;right:3%;top:10%;bottom:4%;border-radius:36px}
+  body[data-tela="relogio"] .vcorpo{grid-template-columns:1fr;grid-template-rows:52% 1fr;padding:0 10px 10px}
+  body[data-tela="relogio"] .vlado{order:2}
+  body[data-tela="relogio"] .vtopo h3,body[data-tela="relogio"] .vbarra .btn span{display:none}
+  body[data-tela="relogio"] .vinfo{display:none}
+  body[data-tela="relogio"] .cartoes{grid-template-columns:repeat(2,1fr)}
   body[data-tela="relogio"] #fechar{width:36px;height:36px;min-height:36px;top:8px;right:8px}
 
   body.imersivo #aviso{opacity:0;pointer-events:none}
@@ -298,6 +370,9 @@
     <button id="btnCatalogo" class="btn" aria-expanded="false" aria-controls="catalogo" aria-label="Astros">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg>
       <span class="rot">Astros</span></button>
+    <button id="btnObjetos" class="btn" aria-expanded="false" aria-controls="visor" aria-label="Objetos 3D">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2.5 8.5 4.8v9.4L12 21.5l-8.5-4.8V7.3z"/><path d="m3.5 7.3 8.5 4.8 8.5-4.8M12 12.1v9.4"/></svg>
+      <span class="rot">Objetos 3D</span></button>
     <button id="btnLista" class="btn" aria-expanded="false" aria-controls="lista" aria-label="Lugares">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
       <span class="rot">Lugares</span></button>
@@ -309,7 +384,8 @@
   </section>
 
   <div id="controles">
-    <button id="btnPinos" class="btn vidro redondo" aria-pressed="false" aria-label="Mostrar alfinetes de referência" title="Alfinetes de referência (desligados)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg></button>
+    <button id="btnCamadas" class="btn vidro redondo" aria-expanded="false" aria-controls="camadas" aria-label="Mapa e camadas" title="Mapa e camadas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="m3 13 9 5 9-5"/><path d="m3 17.5 9 5 9-5" opacity=".55"/></svg></button>
+  <button id="btnPinos" class="btn vidro redondo" aria-pressed="false" aria-label="Mostrar alfinetes de referência" title="Alfinetes de referência (desligados)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg></button>
     <button id="zmMais" class="btn vidro redondo" aria-label="Aproximar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
     <button id="zmMenos" class="btn vidro redondo" aria-label="Afastar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
     <button id="voltar" class="btn vidro redondo" aria-label="Voltar à vista geral" title="Voltar à vista geral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
@@ -334,13 +410,39 @@
     <div class="corpo" id="listaCorpo"></div>
   </aside>
 
+  <aside id="camadas" class="painel vidro denso" hidden aria-label="Mapa e camadas">
+    <div class="alca" data-fecha="camadas"></div>
+    <header><h3>Mapa e camadas</h3></header>
+    <div class="corpo" id="camCorpo"></div>
+  </aside>
+
+  <section id="visor" class="vidro denso" hidden aria-label="Objetos 3D">
+    <div class="alca" id="alcaVisor"></div>
+    <header class="vtopo">
+      <h3>Objetos 3D</h3>
+      <div class="abas" id="vAbas" role="tablist"></div>
+      <button id="vFechar" class="btn vidro redondo" aria-label="Fechar o visor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </header>
+    <div class="vcorpo">
+      <div class="vpalco" id="vPalco">
+        <div id="vVazio" class="vvazio"><b>Escolha um objeto</b><span>Gire com o dedo ou o mouse, aproxime com a pinça. Modelos animados têm botão de play.</span></div>
+        <div id="vThree" hidden></div>
+        <iframe id="vSketch" hidden title="Modelo do Sketchfab" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+        <div id="vBarra" class="vbarra vidro" hidden></div>
+        <div id="vInfo" class="vinfo vidro" hidden></div>
+      </div>
+      <div class="vlado" id="vLado"></div>
+    </div>
+  </section>
+
   <section id="info" class="vidro denso" hidden aria-live="polite">
     <div class="alca" id="alcaInfo" title="Arraste para baixo para fechar; toque para recolher"></div>
     <button id="fechar" class="btn vidro redondo" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <h2 id="iNome"></h2>
+    <img id="iImg" hidden alt="">
     <span id="iTipo" class="tag"></span> <span id="iVivo" class="vivo" hidden>AO VIVO</span>
     <dl id="iDados"></dl>
-    <p class="curiosidade"><b>Você sabia?</b> <span id="iCuriosidade"></span></p>
+    <p class="curiosidade"><b id="iRotCur">Você sabia?</b> <span id="iCuriosidade"></span></p>
     <div class="acoes" id="iAcoes"></div>
   </section>
 
@@ -378,15 +480,34 @@ const TIPOS = {
   relevo:     { rotulo: "Vulcão / vale / relevo", cor: "#7ee0a1", letra: "R" },
   lancamento: { rotulo: "Base de lançamento",     cor: "#c4a3ff", letra: "B" },
   cidade:     { rotulo: "Cidade",                 cor: "#f4f4f4", letra: "★" },
-  estacao:    { rotulo: "Estação espacial",       cor: "#5eead4", letra: "S" }
+  estacao:    { rotulo: "Estação espacial",       cor: "#5eead4", letra: "S" },
+  wiki:       { rotulo: "Artigo da Wikipédia",    cor: "#ffffff", letra: "W" }
 };
 
 /* ---------- Fontes de imagem ----------
    trek : NASA Solar System Treks (WMTS)    gibs : NASA GIBS (Terra)
    natural : Natural Earth, incluído no Cesium   wms : USGS Astrogeology (descobre a camada sozinho) */
 const wmsUsgs = (...mapas) => ({ t: "wms", urls: mapas.map(m => `https://planetarymaps.usgs.gov/cgi-bin/mapserv?map=/maps/${m}.map`),
-  credito: "Mapas: USGS Astrogeology Science Center / NASA" });
-const trek = (pasta, nome, ext, credito) => ({ t: "trek", pasta, nome, ext, credito });
+  credito: "Mapas: USGS Astrogeology Science Center / NASA", rotulo: "USGS Astrogeology", desc: "Mapas planetários do serviço geológico dos EUA" });
+const trek = (pasta, nome, ext, credito) => ({ t: "trek", pasta, nome, ext, credito,
+  rotulo: "NASA Trek · " + nome.replace(/_/g, " "), desc: "Mosaico científico da NASA (Solar System Treks)" });
+/* xyz: mapas em blocos (Web Mercator) de qualquer site: {z}/{x}/{y} e {s} para subdomínios */
+const xyz = (id, rotulo, url, o = {}) => ({ t: "xyz", id, rotulo, url, sub: o.sub, nivelMax: o.nivelMax || 18, credito: o.credito, desc: o.desc || "" });
+const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services";
+
+/* ---------- Camadas por cima do mapa-base (só na Terra, exceto a grade) ---------- */
+const ontem = () => new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+const CAMADAS_TERRA = [
+  { id: "lugares", nome: "Nomes de lugares e fronteiras", desc: "Países, cidades, rios e mares (Esri)", padrao: true, nivelMax: 19, alfa: 1,
+    url: ESRI + "/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", credito: "Rótulos: Esri" },
+  { id: "estradas", nome: "Estradas e ferrovias", desc: "Rodovias, ruas principais e trilhos (Esri)", nivelMax: 19, alfa: 1,
+    url: ESRI + "/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}", credito: "Transporte: Esri" },
+  { id: "diaria", nome: "Imagem de ontem (satélite NASA)", desc: "Nuvens e tempo de ontem, em tons reais (VIIRS)", nivelMax: 9, alfa: .92,
+    url: () => `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_SNPP_CorrectedReflectance_TrueColor/default/${ontem()}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`, credito: "NASA GIBS (VIIRS)" },
+  { id: "noite", nome: "Luzes noturnas (NASA)", desc: "Cidades iluminadas vistas do espaço", nivelMax: 8, alfa: .85,
+    url: "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/default/2016-01-01/GoogleMapsCompatible_Level8/{z}/{y}/{x}.png", credito: "NASA GIBS (Black Marble)" }
+];
+const CAMADA_GRADE = { id: "grade", nome: "Grade de latitude e longitude", desc: "Linhas para se orientar", grade: true };
 
 const ASTROS = [
   /* ===================== PLANETAS ===================== */
@@ -427,8 +548,27 @@ const ASTROS = [
     ] },
   { id:"terra", nome:"Terra", categoria:"planetas", cor:"#3b82c4", raios:[6378137,6378137,6356752.314245], atmosfera:true, terra:true,
     diametro:"12.742 km", resumo:"Nosso planeta: único lugar conhecido com vida e 71% coberto por água.",
-    fontes:[ { t:"gibs", credito:"Imagens: NASA Earth Observatory / NASA GIBS (Blue Marble)" },
-             { t:"natural", credito:"Imagens: Natural Earth (incluído no CesiumJS)" } ],
+    fontes:[
+      xyz("esri", "Satélite Esri (alta resolução)", ESRI + "/World_Imagery/MapServer/tile/{z}/{y}/{x}", { nivelMax: 19,
+        credito: "Imagens: Esri, Maxar, Earthstar Geographics e a comunidade GIS", desc: "A mais detalhada: ruas, casas e prédios em muitas cidades" }),
+      xyz("s2", "Satélite Sentinel-2 sem nuvens (10 m)", "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2021_3857/default/g/{z}/{y}/{x}.jpg", { nivelMax: 14,
+        credito: "Sentinel-2 cloudless © EOX IT Services GmbH (contém dados Copernicus Sentinel modificados, 2021)", desc: "Satélite europeu, mosaico global sem nuvens" }),
+      xyz("osm", "Mapa de ruas (OpenStreetMap)", "https://tile.openstreetmap.org/{z}/{x}/{y}.png", { nivelMax: 19,
+        credito: "© Colaboradores do OpenStreetMap", desc: "Ruas, estradas e nomes feitos por voluntários" }),
+      xyz("carto", "Ruas em tons claros (CARTO)", "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png", { sub: ["a","b","c","d"], nivelMax: 19,
+        credito: "© OpenStreetMap © CARTO", desc: "Mapa de ruas limpo e fácil de ler" }),
+      xyz("escuro", "Mapa escuro (CARTO)", "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png", { sub: ["a","b","c","d"], nivelMax: 19,
+        credito: "© OpenStreetMap © CARTO", desc: "Fundo escuro, bom para destacar camadas" }),
+      xyz("esri-rua", "Mapa de ruas (Esri)", ESRI + "/World_Street_Map/MapServer/tile/{z}/{y}/{x}", { nivelMax: 19,
+        credito: "Esri, HERE, Garmin, OpenStreetMap e colaboradores", desc: "Estilo clássico de mapa rodoviário" }),
+      xyz("esri-topo", "Mapa topográfico (Esri)", ESRI + "/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", { nivelMax: 19,
+        credito: "Esri, HERE, Garmin, FAO, NOAA, USGS e colaboradores", desc: "Relevo sombreado, rios, florestas e trilhas" }),
+      xyz("topo", "Relevo e trilhas (OpenTopoMap)", "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", { sub: ["a","b","c"], nivelMax: 17,
+        credito: "Dados: OpenStreetMap, SRTM | Estilo: OpenTopoMap (CC-BY-SA)", desc: "Curvas de nível e montanhas" }),
+      xyz("usgs", "Satélite USGS (só EUA)", "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}", { nivelMax: 16,
+        credito: "USGS The National Map", desc: "Cobre apenas os Estados Unidos" }),
+      { t: "gibs", rotulo: "NASA Blue Marble", desc: "Imagem global de baixa resolução (500 m por pixel)", credito: "Imagens: NASA Earth Observatory / NASA GIBS (Blue Marble)" },
+      { t: "natural", rotulo: "Natural Earth (funciona offline)", desc: "Mapa simples incluído no CesiumJS", credito: "Imagens: Natural Earth (incluído no CesiumJS)" } ],
     lugares:[
       { nome:"Brasília", tipo:"cidade", lat:-15.78, lon:-47.93, alcance:350,
         tamanho:"Distrito Federal com cerca de 5.760 km²",
@@ -622,10 +762,15 @@ const ASTROS = [
     diametro:"cerca de 109 m", resumo:"Orbita a Terra a cerca de 400 km de altura. Posição ao vivo." }
 ];
 
+/* Dá um id a cada fonte que ainda não tem (usado para lembrar a escolha da pessoa) */
+ASTROS.forEach(a => (a.fontes || []).forEach((f, i) => { f.id = f.id || (f.t + "-" + (f.nome || i)); }));
+
 /* =====================================================================
    ESTADO
    ===================================================================== */
 const $ = id => document.getElementById(id);
+let camadasLigadas = new Set((() => { try{ return JSON.parse(localStorage.getItem("mapa.camadas") || "null") || CAMADAS_TERRA.filter(c => c.padrao).map(c => c.id); }catch(e){ return ["lugares"]; } })());
+let camadaLayers = {}, relevoOn = false, prediosOn = false, googleOn = false, wikiPins = [], srcPredios = null, googleTiles = null;
 let pinosOn = false;                  // alfinetes de referência começam DESLIGADOS
 const tiposOn = new Set(Object.keys(TIPOS));  // tipos visíveis quando ligados
 let viewer = null, astro = null, entidadeSel = null, seq = 0, issEnt = null, issTimer = null, issRastro = [];
@@ -739,26 +884,69 @@ function texturaRocha(cor){
   return c.toDataURL("image/jpeg", .85);
 }
 
-/* Adiciona a primeira imagem que funcionar; devolve a fonte usada ou null */
-async function adicionarImagem(v, a, minhaSeq){
-  const elip = Cesium.Ellipsoid.default;
-  for (const f of a.fontes){
-    if (minhaSeq !== seq) return "cancelado";
-    if (f.t === "trek"){ const cfg = await prepararTrek(f); if (cfg){ v.imageryLayers.addImageryProvider(provedorWmts(cfg, elip, f.credito)); return f; } }
-    else if (f.t === "gibs"){ const cfg = await prepararGibs(); if (cfg){ v.imageryLayers.addImageryProvider(provedorWmts(cfg, elip, f.credito)); return f; } }
-    else if (f.t === "natural"){
-      try{ const p = await Cesium.TileMapServiceImageryProvider.fromUrl(Cesium.buildModuleUrl("Assets/Textures/NaturalEarthII"), {credit: f.credito}); v.imageryLayers.addImageryProvider(p); return f; }catch(e){}
-    }
-    else if (f.t === "wms"){
-      const ok = await primeiro(f.urls.map(tentarWms));
-      if (ok){
-        v.imageryLayers.addImageryProvider(new Cesium.WebMapServiceImageryProvider({ url: ok.url, layers: ok.camada, parameters: {format: "image/jpeg", transparent: false, styles: ""},
-          tilingScheme: new Cesium.GeographicTilingScheme({ellipsoid: elip}), tileWidth: 256, tileHeight: 256, credit: f.credito }));
-        return f;
-      }
-    }
+/* Cria o provedor de imagens de uma fonte (testando antes se ela responde); null se não funcionar */
+async function criarProvedor(f, elip){
+  if (f.t === "xyz"){
+    const teste = f.url.replace("{s}", f.sub ? f.sub[0] : "").replace("{z}", 2).replace("{x}", 1).replace("{y}", 1);
+    if (!(await testarImagem(teste))) return null;
+    return new Cesium.UrlTemplateImageryProvider({ url: f.url, subdomains: f.sub, maximumLevel: f.nivelMax, credit: f.credito, tileWidth: 256, tileHeight: 256,
+      tilingScheme: new Cesium.WebMercatorTilingScheme({ellipsoid: elip}) });
+  }
+  if (f.t === "trek"){ const cfg = await prepararTrek(f); return cfg ? provedorWmts(cfg, elip, f.credito) : null; }
+  if (f.t === "gibs"){ const cfg = await prepararGibs(); return cfg ? provedorWmts(cfg, elip, f.credito) : null; }
+  if (f.t === "natural"){
+    try{ return await Cesium.TileMapServiceImageryProvider.fromUrl(Cesium.buildModuleUrl("Assets/Textures/NaturalEarthII"), {credit: f.credito}); }catch(e){ return null; }
+  }
+  if (f.t === "wms"){
+    const ok = await primeiro(f.urls.map(tentarWms)); if (!ok) return null;
+    return new Cesium.WebMapServiceImageryProvider({ url: ok.url, layers: ok.camada, parameters: {format: "image/jpeg", transparent: false, styles: ""},
+      tilingScheme: new Cesium.GeographicTilingScheme({ellipsoid: elip}), tileWidth: 256, tileHeight: 256, credit: f.credito });
   }
   return null;
+}
+/* Troca a camada de baixo (mapa-base) mantendo as camadas por cima */
+let camadaBase = null, fonteAtual = null, fonteEstado = {};     // fonteEstado[id] = "ok" | "falhou"
+function usarProvedor(f, p){
+  if (camadaBase) viewer.imageryLayers.remove(camadaBase, true);
+  camadaBase = viewer.imageryLayers.addImageryProvider(p, 0); fonteAtual = f; atualizarCreditos(); viewer.scene.requestRender();
+}
+async function colocarFonte(f, minhaSeq){
+  const p = await criarProvedor(f, Cesium.Ellipsoid.default).catch(() => null);
+  if (minhaSeq !== seq) return "cancelado";
+  fonteEstado[f.id] = p ? "ok" : "falhou";
+  if (!p) return null;
+  usarProvedor(f, p); return f;
+}
+/* Usa a fonte escolhida pela pessoa; senão (ou se falhar) testa TODAS ao mesmo tempo e fica com a primeira da lista que responder (a mais detalhada) */
+async function escolherFonte(a, minhaSeq, preferida){
+  if (preferida){
+    const f = a.fontes.find(x => x.id === preferida);
+    if (f){ const r = await colocarFonte(f, minhaSeq); if (r === "cancelado") return r; if (r) return r;
+      avisar("A fonte escolhida não respondeu agora; usei a mais detalhada disponível."); }
+  }
+  const elip = Cesium.Ellipsoid.default;
+  const res = await Promise.all(a.fontes.map(f => criarProvedor(f, elip).catch(() => null)));
+  if (minhaSeq !== seq) return "cancelado";
+  a.fontes.forEach((f, i) => { fonteEstado[f.id] = res[i] ? "ok" : "falhou"; });
+  const i = res.findIndex(Boolean); if (i < 0) return null;
+  usarProvedor(a.fontes[i], res[i]); return a.fontes[i];
+}
+const lerGuardado = (k, padrao) => { try{ const v = localStorage.getItem(k); return v === null ? padrao : v; }catch(e){ return padrao; } };
+const guardar = (k, v) => { try{ localStorage.setItem(k, v); }catch(e){} };
+
+/* Créditos: fonte do mapa + camadas e recursos ligados (exigência das licenças) */
+function atualizarCreditos(){
+  const t = [];
+  if (fonteAtual && fonteAtual.credito) t.push(fonteAtual.credito);
+  else if (astro && astro.formaApenas) t.push("Forma aproximada (sem mapa de superfície)");
+  else if (astro && astro.fontes && astro.fontes.length && Object.keys(fonteEstado).length) t.push("Mapa de superfície indisponível no momento");
+  if (astro && astro.terra){
+    for (const c of CAMADAS_TERRA) if (camadasLigadas.has(c.id)) t.push(c.credito);
+    if (prediosOn) t.push("Prédios: © OpenStreetMap (Overpass)");
+    if (relevoOn) t.push("Relevo: AWS Terrain Tiles");
+    if (wikiPins.length) t.push("Artigos: Wikipédia (CC BY-SA)");
+  }
+  $("creditoImagem").textContent = t.length ? t.join(" · ") : "";
 }
 
 /* =====================================================================
@@ -823,6 +1011,9 @@ function abrirInfo(l){
   for (const [k, v] of linhasInfo(l)){ const dt = document.createElement("dt"), dd = document.createElement("dd"); dt.textContent = k; dd.textContent = v; dl.append(dt, dd); }
   if (l.vivo) for (const k of ["Altitude","Velocidade","Posição","Iluminação"]){ const dt = document.createElement("dt"), dd = document.createElement("dd"); dt.textContent = k; dd.id = "v" + k; dd.textContent = "…"; dl.append(dt, dd); }
   const ac = $("iAcoes"); ac.innerHTML = "";
+  $("iImg").hidden = true; $("iRotCur").textContent = l.wiki ? "Wikipédia" : "Você sabia?";
+  if (l.wiki){ $("iCuriosidade").textContent = "Carregando resumo…"; preencherWiki(l); }
+  else if (!l.vivo && astro.terra) ac.appendChild(botaoLink("Ler na Wikipédia", "https://pt.wikipedia.org/wiki/Special:Search?search=" + encodeURIComponent(l.nome)));
   if (l.vivo){
     const b = document.createElement("button"); b.className = "btn"; b.id = "btnSeguir"; b.textContent = viewer.trackedEntity ? "Parar de seguir" : "Seguir a ISS";
     b.onclick = () => { if (viewer.trackedEntity){ viewer.trackedEntity = undefined; b.textContent = "Seguir a ISS"; } else { viewer.trackedEntity = issEnt; b.textContent = "Parar de seguir"; } };
@@ -935,10 +1126,10 @@ function atualizarCartao(){
   $("cEsfera").style.setProperty("--c", astro.cor);
 }
 function fecharPaineis(){
-  for (const [p, b] of [["catalogo","btnCatalogo"],["lista","btnLista"]]){ $(p).hidden = true; $(b).setAttribute("aria-expanded","false"); }
+  for (const [p, b] of [["catalogo","btnCatalogo"],["lista","btnLista"],["camadas","btnCamadas"]]){ $(p).hidden = true; $(b).setAttribute("aria-expanded","false"); }
 }
 function alternar(p, b){
-  const abrir = $(p).hidden; fecharPaineis();
+  const abrir = $(p).hidden; fecharPaineis(); if (!$("visor").hidden) fecharVisor();
   if (abrir){ $(p).hidden = false; $(b).setAttribute("aria-expanded","true"); }
 }
 let abaAtual = "planetas";
@@ -1021,7 +1212,7 @@ async function carregarAstro(pedido){
   };
 
   const ctl = cena.screenSpaceCameraController;
-  ctl.minimumZoomDistance = Math.max(R * 0.008, 60); ctl.maximumZoomDistance = R * 9; ctl.enableTilt = true;
+  ctl.minimumZoomDistance = a.terra ? 40 : Math.max(R * 0.008, 60); ctl.maximumZoomDistance = R * 9; ctl.enableTilt = true;
 
   const mao = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
   viewer.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
@@ -1032,7 +1223,8 @@ async function carregarAstro(pedido){
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
   mao.setInputAction(() => { cancelarToqueVazio(); zoom(0.5); }, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);  // toque duplo aproxima
 
-  criarMarcadores(); montarCatalogo(); montarLista(); atualizarCartao(); visaoInicial(false);
+  wikiPins = []; srcPredios = null; googleTiles = null; camadaLayers = {}; camadaBase = null; fonteAtual = null; fonteEstado = {};
+  criarMarcadores(); montarCatalogo(); montarLista(); montarCamadas(); atualizarCartao(); visaoInicial(false);
   $("creditoImagem").textContent = "Carregando imagens…";
 
   let fonte = null;
@@ -1043,14 +1235,15 @@ async function carregarAstro(pedido){
       ellipsoid: { radii: new Cesium.Cartesian3(...a.forma),
       material: new Cesium.ImageMaterialProperty({ image: texturaRocha(a.cor) }), slicePartitions: 96, stackPartitions: 64 } }); $("creditoImagem").textContent = "Forma aproximada (sem mapa de superfície)"; avisar("Modelo simplificado: este asteroide é mostrado só pela forma, sem mapa de superfície."); }
   else{
-    fonte = await adicionarImagem(viewer, a, minhaSeq);
+    fonte = await escolherFonte(a, minhaSeq, lerGuardado("mapa.fonte." + a.id, ""));
     if (fonte === "cancelado" || minhaSeq !== seq) return;
-    if (fonte){ $("creditoImagem").textContent = fonte.credito; }
-    else{ luzCamera();
+    if (!fonte){ luzCamera();
       cena.imageryLayers.addImageryProvider(new Cesium.GridImageryProvider({ tilingScheme: new Cesium.GeographicTilingScheme({ellipsoid: elip}),
         cells: 8, color: Cesium.Color.WHITE.withAlpha(.35), glowColor: Cesium.Color.TRANSPARENT, backgroundColor: Cesium.Color.TRANSPARENT }));
       $("creditoImagem").textContent = "Mapa de superfície indisponível no momento";
       avisar("Não consegui carregar o mapa de superfície de " + a.nome + " agora. Mostrando o astro em modelo simplificado; os lugares continuam disponíveis."); }
+    aplicarCamadas(); montarCamadas();
+    if (a.terra){ if (relevoOn) ligarRelevo(true); if (prediosOn) ligarPredios(true); }
   }
   if (a.terra) iniciarISS(minhaSeq);
   montarCatalogo(); viewer.scene.requestRender();
@@ -1060,6 +1253,513 @@ async function carregarAstro(pedido){
   const rem = cena.globe.tileLoadProgressEvent.addEventListener(n => { if (n === 0){ esconder(); rem(); } });
   setTimeout(esconder, 6000); if (a.formaApenas) esconder();
 }
+
+/* =====================================================================
+   CAMADAS POR CIMA DO MAPA (nomes, estradas, nuvens, luzes noturnas, grade)
+   ===================================================================== */
+function provedorCamada(c){
+  const elip = Cesium.Ellipsoid.default;
+  if (c.grade) return new Cesium.GridImageryProvider({ tilingScheme: new Cesium.GeographicTilingScheme({ellipsoid: elip}), cells: 8,
+    color: Cesium.Color.WHITE.withAlpha(.55), glowColor: Cesium.Color.TRANSPARENT, backgroundColor: Cesium.Color.TRANSPARENT });
+  return new Cesium.UrlTemplateImageryProvider({ url: typeof c.url === "function" ? c.url() : c.url, maximumLevel: c.nivelMax, credit: c.credito,
+    tilingScheme: new Cesium.WebMercatorTilingScheme({ellipsoid: elip}) });
+}
+function aplicarCamadas(){
+  if (!viewer) return;
+  for (const c of [...(astro.terra ? CAMADAS_TERRA : []), CAMADA_GRADE]){
+    let l = camadaLayers[c.id];
+    if (camadasLigadas.has(c.id)){
+      if (!l){ l = viewer.imageryLayers.addImageryProvider(provedorCamada(c)); l.alpha = c.alfa === undefined ? 1 : c.alfa; camadaLayers[c.id] = l; }
+      l.show = true;
+    } else if (l) l.show = false;
+  }
+  atualizarCreditos(); viewer.scene.requestRender();
+}
+function alternarCamada(id){
+  camadasLigadas.has(id) ? camadasLigadas.delete(id) : camadasLigadas.add(id);
+  guardar("mapa.camadas", JSON.stringify([...camadasLigadas])); aplicarCamadas(); montarCamadas();
+}
+
+/* =====================================================================
+   RELEVO 3D (AWS Terrain Tiles, formato Terrarium) — só na Terra
+   ===================================================================== */
+const TERRARIUM = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
+const cacheAlt = new Map();
+const carregarImg = url => new Promise((ok, err) => { const i = new Image(); i.crossOrigin = "anonymous"; i.onload = () => ok(i); i.onerror = err; i.src = url; });
+function dadosTerrarium(z, x, y){
+  const k = z + "/" + x + "/" + y; if (cacheAlt.has(k)) return cacheAlt.get(k);
+  const pr = carregarImg(TERRARIUM.replace("{z}", z).replace("{x}", x).replace("{y}", y)).then(img => {
+    const c = document.createElement("canvas"); c.width = img.width; c.height = img.height;
+    const g = c.getContext("2d", {willReadFrequently: true}); g.drawImage(img, 0, 0);
+    return {d: g.getImageData(0, 0, c.width, c.height).data, w: c.width, h: c.height};
+  });
+  cacheAlt.set(k, pr); if (cacheAlt.size > 300) cacheAlt.delete(cacheAlt.keys().next().value);
+  return pr;
+}
+/* Grade 65×65 de alturas (m) de um bloco; abaixo do nível do mar fica 0 (oceano plano) */
+async function alturasTile(x, y, nivel){
+  const zz = Math.min(nivel, 13), sh = nivel - zz, px = x >> sh, py = y >> sh;
+  const out = new Float32Array(65 * 65);
+  let t; try{ t = await dadosTerrarium(zz, px, py); }catch(e){ return out; }
+  const n = 1 << sh, ox = (x - (px << sh)) / n, oy = (y - (py << sh)) / n, esc = 1 / n;
+  const h = (a, b) => { const k = (b * t.w + a) * 4; return Math.max(0, t.d[k] * 256 + t.d[k + 1] + t.d[k + 2] / 256 - 32768); };
+  for (let j = 0; j < 65; j++) for (let i = 0; i < 65; i++){
+    const u = (ox + esc * i / 64) * (t.w - 1), v = (oy + esc * j / 64) * (t.h - 1);
+    const x0 = Math.floor(u), y0 = Math.floor(v), x1 = Math.min(x0 + 1, t.w - 1), y1 = Math.min(y0 + 1, t.h - 1), fx = u - x0, fy = v - y0;
+    out[j * 65 + i] = h(x0, y0) * (1 - fx) * (1 - fy) + h(x1, y0) * fx * (1 - fy) + h(x0, y1) * (1 - fx) * fy + h(x1, y1) * fx * fy;
+  }
+  return out;
+}
+function ligarRelevo(on){
+  relevoOn = on; guardar("mapa.relevo", on ? "1" : "0");
+  if (viewer && astro.terra){
+    const g = viewer.scene.globe;
+    g.terrainProvider = on ? new Cesium.CustomHeightmapTerrainProvider({ callback: (x, y, l) => alturasTile(x, y, l), width: 65, height: 65,
+      tilingScheme: new Cesium.WebMercatorTilingScheme({ellipsoid: Cesium.Ellipsoid.default}), ellipsoid: Cesium.Ellipsoid.default }) : new Cesium.EllipsoidTerrainProvider();
+    viewer.scene.verticalExaggeration = on ? 1.6 : 1; g.depthTestAgainstTerrain = on;
+    viewer.scene.requestRender();
+  }
+  atualizarCreditos();
+}
+
+/* =====================================================================
+   PRÉDIOS EM 3D (OpenStreetMap via Overpass) — só perto do chão, na Terra
+   ===================================================================== */
+const OVERPASS = ["https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter"];
+let predioTimer = null, predioIds = new Set();
+function ligarPredios(on){
+  prediosOn = on; guardar("mapa.predios", on ? "1" : "0");
+  if (viewer && astro.terra){
+    if (on){
+      if (!srcPredios){ srcPredios = new Cesium.CustomDataSource("predios"); viewer.dataSources.add(srcPredios); predioIds = new Set();
+        viewer.camera.moveEnd.addEventListener(agendarPredios); }
+      srcPredios.show = true; agendarPredios();
+    } else if (srcPredios) srcPredios.show = false;
+  }
+  atualizarCreditos();
+}
+function agendarPredios(){ clearTimeout(predioTimer); predioTimer = setTimeout(carregarPredios, 700); }
+async function carregarPredios(){
+  if (!prediosOn || !viewer || !astro.terra || !srcPredios) return;
+  const alt = viewer.camera.positionCartographic.height;
+  if (alt > 3500){ avisar("Aproxime-se (menos de 3,5 km de altura) para ver os prédios em 3D."); return; }
+  avisar("");
+  let r = viewer.camera.computeViewRectangle(); const D = Cesium.Math.toDegrees;
+  const c = viewer.camera.positionCartographic;
+  if (!r) r = new Cesium.Rectangle(c.longitude - .004, c.latitude - .004, c.longitude + .004, c.latitude + .004);
+  let s = D(r.south), n = D(r.north), w = D(r.west), e = D(r.east), mLat = (s + n) / 2, mLon = (w + e) / 2;
+  if (n - s > .03){ s = mLat - .015; n = mLat + .015; } if (e - w > .03){ w = mLon - .015; e = mLon + .015; }
+  const q = `[out:json][timeout:25];way["building"](${s.toFixed(5)},${w.toFixed(5)},${n.toFixed(5)},${e.toFixed(5)});out geom 1800;`;
+  let dados = null;
+  for (const url of OVERPASS){
+    try{ const resp = await comTempo(25000, sg => fetch(url, {method: "POST", body: "data=" + encodeURIComponent(q), signal: sg}));
+      if (resp.ok){ dados = await resp.json(); break; } }catch(err){}
+  }
+  if (!dados || !prediosOn || !viewer){ if (!dados) avisar("Não consegui carregar os prédios agora (servidor do OpenStreetMap ocupado)."); return; }
+  if (predioIds.size > 2500){ srcPredios.entities.removeAll(); predioIds.clear(); }
+  for (const el of dados.elements || []){
+    if (!el.geometry || el.geometry.length < 4 || predioIds.has(el.id)) continue;
+    predioIds.add(el.id);
+    const t = el.tags || {};
+    let h = parseFloat(String(t.height || "").replace(",", ".")); if (!(h > 0)) h = parseFloat(t["building:levels"]) * 3.2;
+    if (!(h > 0)) h = /house|garage|shed|hut|cabin/.test(t.building || "") ? 5 : 9;
+    const cor = h < 10 ? "#f3e8d4" : h < 30 ? "#d4e4fa" : "#a9c8ff";
+    const pts = el.geometry.slice(0, -1).flatMap(g => [g.lon, g.lat]);
+    srcPredios.entities.add({ polygon: { hierarchy: new Cesium.PolygonHierarchy(Cesium.Cartesian3.fromDegreesArray(pts)),
+      height: 0, heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND, extrudedHeight: h, extrudedHeightReference: Cesium.HeightReference.RELATIVE_TO_GROUND,
+      material: Cesium.Color.fromCssColorString(cor).withAlpha(.93), outline: true, outlineColor: Cesium.Color.fromCssColorString("#55627d").withAlpha(.6) } });
+  }
+  viewer.scene.requestRender();
+}
+
+/* =====================================================================
+   GOOGLE 3D FOTORREALISTA (opcional: precisa de uma chave da própria pessoa)
+   ===================================================================== */
+async function ligarGoogle(on){
+  if (!viewer || !astro.terra) return;
+  if (!on){ if (googleTiles){ viewer.scene.primitives.remove(googleTiles); googleTiles = null; } viewer.scene.globe.show = true; googleOn = false; viewer.scene.requestRender(); return; }
+  const chave = lerGuardado("mapa.chaveGoogle", "");
+  if (!chave){ avisar("Cole sua chave do Google Map Tiles no painel Mapa e camadas para usar o 3D fotorrealista."); googleOn = false; return; }
+  try{
+    avisar("Carregando o 3D fotorrealista do Google…");
+    if (Cesium.GoogleMaps) Cesium.GoogleMaps.defaultApiKey = chave;
+    googleTiles = await Cesium.createGooglePhotorealistic3DTileset();
+    viewer.scene.primitives.add(googleTiles); viewer.scene.globe.show = false; googleOn = true; avisar("");
+  }catch(e){ googleOn = false; avisar("Não consegui abrir o 3D do Google: confira a chave e se a API Map Tiles está ativada."); }
+  viewer.scene.requestRender();
+}
+
+/* =====================================================================
+   WIKIPÉDIA: artigos perto do centro da tela (só na Terra)
+   ===================================================================== */
+async function wikiPerto(){
+  if (!viewer || !astro.terra) return;
+  const c = viewer.camera.pickEllipsoid(new Cesium.Cartesian2(viewer.canvas.clientWidth / 2, viewer.canvas.clientHeight / 2));
+  if (!c){ avisar("Aponte o mapa para a superfície da Terra e tente de novo."); return; }
+  const g = Cesium.Cartographic.fromCartesian(c), lat = Cesium.Math.toDegrees(g.latitude), lon = Cesium.Math.toDegrees(g.longitude);
+  avisar("Procurando artigos da Wikipédia por perto…");
+  try{
+    const u = `https://pt.wikipedia.org/w/api.php?action=query&list=geosearch&gscoord=${lat}%7C${lon}&gsradius=10000&gslimit=40&format=json&origin=*`;
+    const r = await comTempo(10000, sg => fetch(u, {signal: sg})); const j = await r.json();
+    const lista = (j.query && j.query.geosearch) || [];
+    limparWiki();
+    for (const a of lista){
+      const l = { nome: a.title, tipo: "wiki", wiki: true, wikiTitulo: a.title, lat: a.lat, lon: a.lon, alcance: 1.5, tamanho: "A " + Math.round(a.dist) + " m do centro da tela" };
+      l.entidade = viewer.entities.add({ name: a.title, position: Cesium.Cartesian3.fromDegrees(a.lon, a.lat, 0),
+        billboard: { image: imagemPino("wiki", false), width: 30, height: 38, verticalOrigin: Cesium.VerticalOrigin.BOTTOM, heightReference: Cesium.HeightReference.CLAMP_TO_GROUND, disableDepthTestDistance: 2e3 },
+        label: { text: a.title, font: "600 13px 'Source Sans 3',sans-serif", fillColor: Cesium.Color.WHITE, outlineColor: Cesium.Color.BLACK, outlineWidth: 4, style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+          verticalOrigin: Cesium.VerticalOrigin.TOP, pixelOffset: new Cesium.Cartesian2(0, 4), distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 40000), heightReference: Cesium.HeightReference.CLAMP_TO_GROUND } });
+      l.entidade._lugar = l; wikiPins.push(l);
+    }
+    avisar(lista.length ? "" : "Nenhum artigo da Wikipédia num raio de 10 km. Mova o mapa para uma cidade.");
+    if (lista.length) setTimeout(() => avisar(""), 0);
+    atualizarCreditos(); montarCamadas(); viewer.scene.requestRender();
+    if (lista.length){ fecharPaineis(); $("dica").textContent = lista.length + " artigos da Wikipédia: toque num alfinete W"; $("dica").style.opacity = 1; setTimeout(() => { $("dica").style.opacity = 0; }, 5000); }
+  }catch(e){ avisar("Não consegui falar com a Wikipédia agora."); }
+}
+function limparWiki(){ for (const l of wikiPins) if (viewer && l.entidade) viewer.entities.remove(l.entidade); wikiPins = []; atualizarCreditos(); if (viewer) viewer.scene.requestRender(); }
+async function preencherWiki(l){
+  try{
+    const r = await comTempo(9000, sg => fetch("https://pt.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(l.wikiTitulo), {signal: sg}));
+    const j = await r.json(); if (entidadeSel !== l.entidade) return;
+    $("iCuriosidade").textContent = j.extract || "Este artigo não tem resumo.";
+    if (j.thumbnail && j.thumbnail.source){ $("iImg").src = j.thumbnail.source; $("iImg").hidden = false; }
+    const url = j.content_urls && j.content_urls.desktop && j.content_urls.desktop.page;
+    if (url) $("iAcoes").appendChild(botaoLink("Abrir na Wikipédia", url));
+  }catch(e){ if (entidadeSel === l.entidade) $("iCuriosidade").textContent = "Não consegui carregar o resumo agora."; }
+}
+function botaoLink(texto, href){ const a = document.createElement("a"); a.className = "btn"; a.textContent = texto; a.href = href; a.target = "_blank"; a.rel = "noopener"; a.style.textDecoration = "none"; return a; }
+
+/* =====================================================================
+   PAINEL "MAPA E CAMADAS"
+   ===================================================================== */
+function interruptor(titulo, sub, ligado, aoAlternar){
+  const b = document.createElement("button"); b.className = "interruptor"; b.style.marginTop = "6px"; b.setAttribute("aria-pressed", String(!!ligado));
+  b.innerHTML = '<span><b></b><span class="sub"></span></span><span class="chave" aria-hidden="true"></span>';
+  b.querySelector("b").textContent = titulo; b.querySelector(".sub").textContent = sub || "";
+  b.onclick = () => aoAlternar(); return b;
+}
+function secao(box, texto){ const d = document.createElement("div"); d.className = "rotulo"; d.textContent = texto; box.appendChild(d); }
+function montarCamadas(){
+  const box = $("camCorpo"); if (!box || !astro) return; box.innerHTML = "";
+  /* Fonte do mapa */
+  secao(box, "Fonte do mapa");
+  const guardada = lerGuardado("mapa.fonte." + astro.id, "");
+  const fontes = astro.fontes || [];
+  if (!fontes.length){ const p = document.createElement("p"); p.className = "vazio"; p.textContent = "Este astro não tem mapa de superfície: aparece só a forma aproximada."; box.appendChild(p); }
+  const itemFonte = (id, titulo, sub, marcado) => {
+    const b = document.createElement("button"); b.className = "item"; if (marcado) b.setAttribute("aria-current", "true");
+    b.innerHTML = `<span class="pino ${marcado ? "ok" : ""}">${marcado ? "✓" : "○"}</span><span><b></b><span class="sub"></span></span>`;
+    b.querySelector("b").textContent = titulo; b.querySelector(".sub").textContent = sub; b.onclick = () => trocarFonte(id); box.appendChild(b);
+  };
+  if (fontes.length > 1) itemFonte("", "Automática (mais detalhada)", "Usa sozinha a melhor fonte que estiver respondendo" + (!guardada && fonteAtual ? " · agora: " + fonteAtual.rotulo : ""), !guardada);
+  for (const f of fontes){
+    const st = fonteEstado[f.id] === "falhou" ? " · indisponível agora" : "";
+    itemFonte(f.id, f.rotulo || f.id, (f.desc || "") + st, !!guardada && guardada === f.id && fonteAtual === f);
+  }
+  /* Camadas */
+  secao(box, "Camadas");
+  for (const c of [...(astro.terra ? CAMADAS_TERRA : []), CAMADA_GRADE]) box.appendChild(interruptor(c.nome, c.desc, camadasLigadas.has(c.id), () => alternarCamada(c.id)));
+  /* 3D e extras (Terra) */
+  if (astro.terra){
+    secao(box, "3D");
+    box.appendChild(interruptor("Relevo 3D", "Montanhas e vales em altura (AWS Terrain)", relevoOn, () => { ligarRelevo(!relevoOn); montarCamadas(); }));
+    box.appendChild(interruptor("Prédios em 3D", "Casas e prédios do OpenStreetMap, perto do chão (menos de 3,5 km)", prediosOn, () => { ligarPredios(!prediosOn); montarCamadas(); }));
+    box.appendChild(interruptor("Google 3D fotorrealista", "Opcional: precisa da sua chave do Google Map Tiles", googleOn, async () => { await ligarGoogle(!googleOn); montarCamadas(); }));
+    const campo = document.createElement("input"); campo.className = "campo"; campo.type = "password"; campo.autocomplete = "off"; campo.placeholder = "Chave do Google Map Tiles (opcional)";
+    campo.value = lerGuardado("mapa.chaveGoogle", ""); campo.onchange = () => guardar("mapa.chaveGoogle", campo.value.trim()); box.appendChild(campo);
+    secao(box, "Descobrir");
+    const l = document.createElement("div"); l.className = "linha-acoes";
+    const b1 = document.createElement("button"); b1.className = "btn"; b1.textContent = "Wikipédia perto do centro"; b1.onclick = wikiPerto;
+    l.appendChild(b1);
+    if (wikiPins.length){ const b2 = document.createElement("button"); b2.className = "btn"; b2.textContent = "Limpar artigos (" + wikiPins.length + ")"; b2.onclick = () => { limparWiki(); montarCamadas(); }; l.appendChild(b2); }
+    box.appendChild(l);
+  }
+  const d = document.createElement("details"); d.className = "sobre";
+  d.innerHTML = "<summary>Sobre as fontes</summary><p>A fonte automática é a <b>Esri</b>, a imagem de satélite mais detalhada que pode ser usada livremente aqui. Google Earth, Bing e Apple Maps só liberam as imagens com chave paga e licença própria, por isso não entram sozinhos. Se você tiver uma chave do Google Map Tiles, cole acima para ligar o 3D fotorrealista. Na Lua, em Marte e nos outros astros as imagens vêm da NASA e do USGS.</p>";
+  box.appendChild(d);
+}
+async function trocarFonte(id){
+  guardar("mapa.fonte." + astro.id, id); const minha = seq; avisar("Carregando o mapa…");
+  const f = astro.fontes.find(x => x.id === id);
+  const r = f ? await colocarFonte(f, minha) : await escolherFonte(astro, minha, "");
+  if (r === "cancelado") return;
+  avisar(r ? "" : "Essa fonte não respondeu agora. O mapa anterior continua na tela.");
+  if (!r && f){ guardar("mapa.fonte." + astro.id, ""); }
+  montarCamadas();
+}
+
+/* =====================================================================
+   VISOR DE OBJETOS 3D: galeria animada, Sketchfab, arquivos (GLB/GLTF/STL/OBJ) e editores online
+   - glTF/GLB (formato que o Blender exporta, com animações): <model-viewer> do Google
+   - STL/OBJ (impressão 3D): three.js, com medidas e volume
+   - Sketchfab: busca pela API pública e visualização incorporada
+   ===================================================================== */
+const MV_SRC = "https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js";
+const KH = n => ["https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Assets@main/Models/" + n + "/glTF-Binary/" + n.split("/").pop() + ".glb",
+                 "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/" + n + "/glTF-Binary/" + n.split("/").pop() + ".glb"];
+const MVA = "https://modelviewer.dev/shared-assets/models/";
+const KHRONOS = "Modelo de exemplo do Khronos glTF Sample Assets (licença de cada modelo no repositório)";
+const GALERIA = [
+  { nome: "Astronauta", tag: "Espaço", urls: [MVA + "Astronaut.glb"], credito: "Astronauta: NASA, via model-viewer (Google)" },
+  { nome: "Neil Armstrong", tag: "Espaço", urls: [MVA + "NeilArmstrong.glb"], credito: "Neil Armstrong: NASA, via model-viewer (Google)" },
+  { nome: "Robô expressivo", tag: "Animado", urls: [MVA + "RobotExpressive.glb"], credito: "Robot Expressive: Tomás Laulhé (CC0), exportado do Blender" },
+  { nome: "Raposa", tag: "Animado", urls: KH("Fox"), credito: "Fox: PixelMannen (CC0), animação de @tomkranis (CC BY 4.0). " + KHRONOS },
+  { nome: "Homem caminhando", tag: "Animado", urls: KH("CesiumMan"), credito: "Cesium Man: Cesium (CC BY 4.0). " + KHRONOS },
+  { nome: "Robô BrainStem", tag: "Animado", urls: KH("BrainStem"), credito: "BrainStem: Keith Hunter. " + KHRONOS },
+  { nome: "Capacete espacial", tag: "Objeto", urls: KH("DamagedHelmet"), credito: "Battle Damaged Sci-fi Helmet: theblueturtle_ (CC BY-NC 4.0). " + KHRONOS },
+  { nome: "Câmera antiga", tag: "Objeto", urls: KH("AntiqueCamera"), credito: KHRONOS },
+  { nome: "Lanterna", tag: "Objeto", urls: KH("Lantern"), credito: KHRONOS },
+  { nome: "Carrinho de brinquedo", tag: "Objeto", urls: KH("ToyCar"), credito: KHRONOS },
+  { nome: "Patinho", tag: "Objeto", urls: KH("Duck"), credito: KHRONOS },
+  { nome: "Abacate", tag: "Objeto", urls: KH("Avocado"), credito: KHRONOS }
+];
+const EDITORES = [
+  { nome: "Tinkercad", desc: "Modelagem 3D simples para impressão 3D (ótimo para começar)", url: "https://www.tinkercad.com/" },
+  { nome: "Editor do three.js", desc: "Editor 3D no navegador: importa e exporta glTF, OBJ e STL", url: "https://threejs.org/editor/" },
+  { nome: "Blockbench (web)", desc: "Modelos e animações em estilo de blocos, direto no navegador", url: "https://web.blockbench.net/" },
+  { nome: "Spline", desc: "Cenas 3D interativas no navegador", url: "https://spline.design/" },
+  { nome: "Vectary", desc: "Design 3D online com realidade aumentada", url: "https://www.vectary.com/" },
+  { nome: "Blender (grátis)", desc: "O programa completo de modelagem e animação 3D", url: "https://www.blender.org/download/" },
+  { nome: "Blender Studio", desc: "Filmes e animações abertos feitos no Blender", url: "https://studio.blender.org/" },
+  { nome: "Thingiverse", desc: "Milhares de modelos grátis para imprimir em 3D", url: "https://www.thingiverse.com/" },
+  { nome: "Printables", desc: "Modelos para impressora 3D da comunidade Prusa", url: "https://www.printables.com/" },
+  { nome: "MyMiniFactory", desc: "Modelos testados para impressão 3D", url: "https://www.myminifactory.com/" },
+  { nome: "NASA 3D Resources", desc: "Modelos 3D de naves, planetas e satélites da NASA", url: "https://science.nasa.gov/3d-resources/" },
+  { nome: "Smithsonian 3D", desc: "Fósseis, museus e objetos históricos em 3D", url: "https://3d.si.edu/" }
+];
+const ICONE_CUBO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2.5 8.5 4.8v9.4L12 21.5l-8.5-4.8V7.3z"/><path d="m3.5 7.3 8.5 4.8 8.5-4.8M12 12.1v9.4"/></svg>';
+let visorAba = "galeria", mvCarregando = null, tres = null, cenaT = null, modeloAtual = null;
+
+function mostrarPalco(qual){          // "vazio" | "mv" | "three" | "sketch"
+  const mv = $("mv"); if (mv) mv.hidden = qual !== "mv";
+  $("vThree").hidden = qual !== "three"; $("vSketch").hidden = qual !== "sketch"; $("vVazio").hidden = qual !== "vazio";
+  $("vBarra").hidden = qual === "vazio" || qual === "sketch"; $("vInfo").hidden = qual === "vazio";
+  if (qual !== "sketch") $("vSketch").src = "about:blank";
+  if (qual !== "three" && cenaT) cenaT.ativa = false;
+}
+function infoPalco(titulo, linhas){
+  const i = $("vInfo"); i.innerHTML = ""; const b = document.createElement("b"); b.textContent = titulo; i.appendChild(b);
+  for (const l of linhas){ const sm = document.createElement("small"); if (l.html) sm.innerHTML = l.html; else sm.textContent = l; sm.style.display = "block"; i.appendChild(sm); }
+}
+function botao(texto, aoClicar, ativo){ const b = document.createElement("button"); b.className = "btn"; b.textContent = texto; b.onclick = aoClicar; if (ativo) b.setAttribute("aria-pressed", "true"); return b; }
+
+/* ---------- glTF/GLB com model-viewer ---------- */
+function garantirModelViewer(){
+  if (!mvCarregando) mvCarregando = import(MV_SRC).catch(e => { mvCarregando = null; throw e; });
+  return mvCarregando;
+}
+let mvEstado = {fila: [], titulo: "", credito: ""};
+async function mostrarGlb(urls, titulo, credito){
+  mvEstado = {fila: [].concat(urls), titulo, credito};
+  mostrarPalco("vazio"); $("vVazio").hidden = true; infoPalco(titulo, ["Carregando o modelo…"]); $("vInfo").hidden = false;
+  try{ await garantirModelViewer(); }catch(e){ infoPalco(titulo, ["Não consegui carregar o visualizador 3D (sem internet?)."]); return; }
+  let mv = $("mv");
+  if (!mv){
+    mv = document.createElement("model-viewer"); mv.id = "mv";
+    mv.setAttribute("camera-controls", ""); mv.setAttribute("touch-action", "pan-y"); mv.setAttribute("shadow-intensity", "1.1"); mv.setAttribute("exposure", "1.05");
+    mv.setAttribute("ar", ""); mv.setAttribute("ar-modes", "webxr scene-viewer quick-look"); mv.setAttribute("auto-rotate", ""); mv.setAttribute("interaction-prompt", "none");
+    $("vPalco").insertBefore(mv, $("vBarra"));
+    /* ouvintes criados uma só vez; leem o estado do modelo atual */
+    mv.addEventListener("error", () => {
+      if (mvEstado.fila.length) mv.src = mvEstado.fila.shift();
+      else infoPalco(mvEstado.titulo, ["Não consegui abrir este modelo agora. Tente outro."]);
+    });
+    mv.addEventListener("load", () => {
+      const anims = mv.availableAnimations || [], dim = mv.getDimensions ? mv.getDimensions() : null, linhas = [];
+      if (dim) linhas.push(`Tamanho: ${(dim.x * 100).toFixed(0)} × ${(dim.y * 100).toFixed(0)} × ${(dim.z * 100).toFixed(0)} cm (escala do modelo)`);
+      if (anims.length) linhas.push("Animações: " + anims.length);
+      if (mvEstado.credito) linhas.push(mvEstado.credito);
+      infoPalco(mvEstado.titulo, linhas); montarBarraMv(mv, anims);
+    });
+  }
+  mostrarPalco("mv"); $("vBarra").hidden = false; $("vInfo").hidden = false;
+  mv.src = mvEstado.fila.shift();
+}
+function montarBarraMv(mv, anims){
+  const b = $("vBarra"); b.innerHTML = "";
+  b.appendChild(botao("Girar sozinho", e => { const on = mv.hasAttribute("auto-rotate"); on ? mv.removeAttribute("auto-rotate") : mv.setAttribute("auto-rotate", ""); e.target.setAttribute("aria-pressed", String(!on)); }, true));
+  if (anims.length){
+    const sel = document.createElement("select"); sel.setAttribute("aria-label", "Animação");
+    anims.forEach(a => { const o = document.createElement("option"); o.value = a; o.textContent = a; sel.appendChild(o); });
+    sel.onchange = () => { mv.animationName = sel.value; mv.play(); };
+    mv.animationName = anims[0]; mv.autoplay = true; mv.play();
+    b.appendChild(sel);
+    b.appendChild(botao("Pausar", e => { if (mv.paused){ mv.play(); e.target.textContent = "Pausar"; } else { mv.pause(); e.target.textContent = "Tocar"; } }));
+  }
+  b.appendChild(botao("Recentralizar", () => { mv.cameraOrbit = "auto auto auto"; mv.fieldOfView = "auto"; mv.jumpCameraToGoal && mv.jumpCameraToGoal(); }));
+  b.appendChild(botao("Tela cheia", () => { const p = $("vPalco"); document.fullscreenElement ? document.exitFullscreen() : (p.requestFullscreen && p.requestFullscreen()); }));
+  if (mv.canActivateAR !== false){ const ar = botao("Ver em AR", () => mv.activateAR && mv.activateAR()); b.appendChild(ar); }
+}
+
+/* ---------- STL e OBJ com three.js (impressão 3D) ---------- */
+async function garantirThree(){
+  if (tres) return tres;
+  const THREE = await import("three");
+  const [{OrbitControls}, {STLLoader}, {OBJLoader}] = await Promise.all([import("three/addons/controls/OrbitControls.js"), import("three/addons/loaders/STLLoader.js"), import("three/addons/loaders/OBJLoader.js")]);
+  tres = {THREE, OrbitControls, STLLoader, OBJLoader}; return tres;
+}
+async function iniciarCenaThree(){
+  const {THREE, OrbitControls} = await garantirThree(); if (cenaT) return cenaT;
+  const caixa = $("vThree"), r = new THREE.WebGLRenderer({antialias: true, alpha: true}); r.setPixelRatio(Math.min(devicePixelRatio, 2));
+  caixa.appendChild(r.domElement); r.domElement.style.cssText = "width:100%;height:100%;display:block;touch-action:none";
+  const cena = new THREE.Scene(), cam = new THREE.PerspectiveCamera(40, 1, .01, 5000);
+  cena.add(new THREE.HemisphereLight(0xdfe9ff, 0x20263a, 1.1));
+  const d1 = new THREE.DirectionalLight(0xffffff, 1.6); d1.position.set(3, 5, 4); cena.add(d1);
+  const d2 = new THREE.DirectionalLight(0x9fb8ff, .6); d2.position.set(-4, 2, -3); cena.add(d2);
+  const grade = new THREE.GridHelper(4, 16, 0x6c7ea8, 0x2a3558); grade.material.transparent = true; grade.material.opacity = .5; cena.add(grade);
+  const ctl = new OrbitControls(cam, r.domElement); ctl.enableDamping = true; ctl.autoRotate = true; ctl.autoRotateSpeed = 1.4;
+  const c = cenaT = { THREE, r, cena, cam, ctl, grade, malha: null, ativa: false };
+  const ajustar = () => { const w = caixa.clientWidth || 300, h = caixa.clientHeight || 300; r.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); };
+  new ResizeObserver(ajustar).observe(caixa); ajustar();
+  (function laco(){ requestAnimationFrame(laco); if (!c.ativa) return; ctl.update(); r.render(cena, cam); })();
+  return c;
+}
+function volumeMm3(geo){        // soma dos volumes assinados dos triângulos (STL)
+  const p = geo.attributes.position, idx = geo.index; let v = 0;
+  const n = idx ? idx.count : p.count;
+  for (let i = 0; i < n; i += 3){
+    const a = idx ? idx.getX(i) : i, b = idx ? idx.getX(i + 1) : i + 1, c = idx ? idx.getX(i + 2) : i + 2;
+    const ax = p.getX(a), ay = p.getY(a), az = p.getZ(a), bx = p.getX(b), by = p.getY(b), bz = p.getZ(b), cx = p.getX(c), cy = p.getY(c), cz = p.getZ(c);
+    v += (ax * (by * cz - bz * cy) - ay * (bx * cz - bz * cx) + az * (bx * cy - by * cx)) / 6;
+  }
+  return Math.abs(v);
+}
+async function mostrarMalha(obj3d, titulo, linhasExtra, geo){
+  const c = await iniciarCenaThree(), T = c.THREE;
+  if (c.malha){ c.cena.remove(c.malha); c.malha.traverse && c.malha.traverse(o => { if (o.geometry) o.geometry.dispose(); }); }
+  const raiz = new T.Group(); raiz.add(obj3d);
+  const caixa = new T.Box3().setFromObject(obj3d), tam = caixa.getSize(new T.Vector3()), cen = caixa.getCenter(new T.Vector3());
+  obj3d.position.sub(cen); const maior = Math.max(tam.x, tam.y, tam.z) || 1, esc = 2 / maior; raiz.scale.setScalar(esc);
+  raiz.position.y = (tam.y * esc) / 2; c.cena.add(raiz); c.malha = raiz;
+  c.cam.position.set(2.8, 2.2, 3.4); c.ctl.target.set(0, raiz.position.y, 0); c.ctl.update();
+  mostrarPalco("three"); c.ativa = true; $("vInfo").hidden = false;
+  const linhas = [`Dimensões: ${tam.x.toFixed(1)} × ${tam.y.toFixed(1)} × ${tam.z.toFixed(1)} (unidades do arquivo; em STL costuma ser mm)`];
+  if (geo){ linhas.push("Triângulos: " + Math.round((geo.index ? geo.index.count : geo.attributes.position.count) / 3).toLocaleString("pt-BR"));
+    const v = volumeMm3(geo); if (v > 0) linhas.push("Volume aproximado: " + (v / 1000).toLocaleString("pt-BR", {maximumFractionDigits: 1}) + " cm³ (se estiver em mm)"); }
+  infoPalco(titulo, linhas.concat(linhasExtra || []));
+  const b = $("vBarra"); b.hidden = false; b.innerHTML = "";
+  b.appendChild(botao("Girar sozinho", e => { c.ctl.autoRotate = !c.ctl.autoRotate; e.target.setAttribute("aria-pressed", String(c.ctl.autoRotate)); }, true));
+  b.appendChild(botao("Aramado", e => { let on = false; raiz.traverse(o => { if (o.material){ o.material.wireframe = !o.material.wireframe; on = o.material.wireframe; } }); e.target.setAttribute("aria-pressed", String(on)); }));
+  b.appendChild(botao("Recentralizar", () => { c.cam.position.set(2.8, 2.2, 3.4); c.ctl.target.set(0, raiz.position.y, 0); c.ctl.update(); }));
+  b.appendChild(botao("Tela cheia", () => { const p = $("vPalco"); document.fullscreenElement ? document.exitFullscreen() : (p.requestFullscreen && p.requestFullscreen()); }));
+}
+async function abrirArquivo(nomeArq, dados, tipo){      // dados: ArrayBuffer (stl) | string (obj)
+  const ext = nomeArq.toLowerCase().split(".").pop().split("?")[0];
+  try{
+    const {THREE, STLLoader, OBJLoader} = await garantirThree();
+    const mat = new THREE.MeshStandardMaterial({color: 0xc9d6ee, metalness: .15, roughness: .5, side: THREE.DoubleSide});
+    if (ext === "stl"){ const geo = new STLLoader().parse(dados); geo.computeVertexNormals(); await mostrarMalha(new THREE.Mesh(geo, mat), nomeArq, [], geo); }
+    else { const g = new OBJLoader().parse(dados); g.traverse(o => { if (o.isMesh) o.material = mat; }); await mostrarMalha(g, nomeArq, []); }
+  }catch(e){ console.error(e); infoPalco(nomeArq, ["Não consegui abrir este arquivo."]); $("vInfo").hidden = false; }
+}
+async function abrirPorEndereco(url){
+  url = url.trim(); if (!url) return;
+  const ext = url.toLowerCase().split("?")[0].split("#")[0].split(".").pop(), nome = decodeURIComponent(url.split("/").pop().split("?")[0] || "modelo");
+  if (ext === "glb" || ext === "gltf") return mostrarGlb(url, nome, "Fonte: " + new URL(url).host);
+  if (ext === "stl" || ext === "obj"){
+    try{ const r = await fetch(url); if (!r.ok) throw 0; await abrirArquivo(nome, ext === "stl" ? await r.arrayBuffer() : await r.text()); }
+    catch(e){ mostrarPalco("vazio"); $("vVazio").innerHTML = "<b>Esse site não deixa abrir direto</b><span>Baixe o arquivo e solte em “Meu arquivo”.</span>"; }
+    return;
+  }
+  mostrarPalco("vazio"); $("vVazio").innerHTML = "<b>Formato não reconhecido</b><span>Use um endereço terminado em .glb, .gltf, .stl ou .obj.</span>";
+}
+async function abrirDoComputador(arq){
+  const ext = arq.name.toLowerCase().split(".").pop();
+  if (ext === "glb" || ext === "gltf") return mostrarGlb(URL.createObjectURL(arq), arq.name, ext === "gltf" ? "Arquivos .gltf com texturas separadas podem não aparecer: prefira .glb" : "");
+  if (ext === "stl") return abrirArquivo(arq.name, await arq.arrayBuffer());
+  if (ext === "obj") return abrirArquivo(arq.name, await arq.text());
+  mostrarPalco("vazio"); $("vVazio").innerHTML = "<b>Formato não aceito</b><span>Use .glb, .gltf, .stl ou .obj.</span>";
+}
+
+/* ---------- Sketchfab (API pública de busca + visualização incorporada) ---------- */
+async function buscarSketchfab(q, f){
+  const u = new URL("https://api.sketchfab.com/v3/search"); u.searchParams.set("type", "models"); u.searchParams.set("q", q); u.searchParams.set("count", "24");
+  if (f && f.animated) u.searchParams.set("animated", "true"); if (f && f.downloadable) u.searchParams.set("downloadable", "true");
+  const r = await comTempo(12000, sg => fetch(u, {signal: sg})); if (!r.ok) throw new Error("busca"); return (await r.json()).results || [];
+}
+function mostrarSketchfab(m){
+  mostrarPalco("sketch"); const fr = $("vSketch"); fr.src = `https://sketchfab.com/models/${m.uid}/embed?autostart=1&ui_theme=dark&dnt=1`;
+  $("vInfo").hidden = false;
+  infoPalco(m.name, [`por ${(m.user && (m.user.displayName || m.user.username)) || "autor"} no Sketchfab`, (m.license && m.license.label) ? "Licença: " + m.license.label : "",
+    {html: `<a href="${m.viewerUrl || ("https://sketchfab.com/models/" + m.uid)}" target="_blank" rel="noopener">Abrir no Sketchfab (baixar, se o autor permitir)</a>`}].filter(Boolean));
+}
+
+/* ---------- Abas do visor ---------- */
+const ABAS_VISOR = [["galeria", "Galeria"], ["sketchfab", "Sketchfab"], ["arquivo", "Meu arquivo"], ["editores", "Editores"]];
+function montarAbasVisor(){
+  const abas = $("vAbas"); abas.innerHTML = "";
+  for (const [id, nome] of ABAS_VISOR){
+    const b = document.createElement("button"); b.className = "aba"; b.role = "tab"; b.textContent = nome; b.setAttribute("aria-selected", String(id === visorAba));
+    b.onclick = () => { visorAba = id; montarAbasVisor(); montarLadoVisor(); }; abas.appendChild(b);
+  }
+}
+function montarLadoVisor(){
+  const lado = $("vLado"); lado.innerHTML = "";
+  if (visorAba === "galeria"){
+    const g = document.createElement("div"); g.className = "cartoes";
+    for (const m of GALERIA){
+      const c = document.createElement("button"); c.className = "cartao3d"; if (modeloAtual === m) c.setAttribute("aria-current", "true");
+      c.innerHTML = `<span class="mini">${ICONE_CUBO}</span><b></b><small></small>`; c.querySelector("b").textContent = m.nome; c.querySelector("small").textContent = m.tag;
+      c.onclick = () => { modeloAtual = m; mostrarGlb(m.urls, m.nome, m.credito); montarLadoVisor(); }; g.appendChild(c);
+    }
+    lado.appendChild(g);
+  } else if (visorAba === "sketchfab"){
+    const f = {animated: false, downloadable: false};
+    const bus = document.createElement("div"); bus.className = "busca";
+    const campo = document.createElement("input"); campo.className = "campo"; campo.placeholder = "Buscar modelos (ex.: foguete, dinossauro)"; campo.value = campo.dataset.q = "space";
+    const ir = botao("Buscar", () => rodar()); bus.append(campo, ir); lado.appendChild(bus);
+    const chips = document.createElement("div"); chips.className = "chips"; lado.appendChild(chips);
+    const res = document.createElement("div"); res.className = "cartoes"; lado.appendChild(res);
+    const msg = document.createElement("p"); msg.className = "nota"; lado.appendChild(msg);
+    const rodar = async () => {
+      msg.textContent = "Buscando…"; res.innerHTML = "";
+      try{
+        const lista = await buscarSketchfab(campo.value || "space", f); msg.textContent = lista.length ? "Toque num modelo. Os créditos e a licença de cada um aparecem no visor." : "Nada encontrado.";
+        for (const m of lista){
+          const imgs = (m.thumbnails && m.thumbnails.images) || [], t = imgs.slice().sort((a, b) => Math.abs(a.width - 320) - Math.abs(b.width - 320))[0];
+          const c = document.createElement("button"); c.className = "cartao3d";
+          c.innerHTML = `<img class="mini" alt="" loading="lazy"><b></b><small></small>`; if (t) c.querySelector("img").src = t.url; else c.querySelector("img").remove();
+          c.querySelector("b").textContent = m.name; c.querySelector("small").textContent = (m.user && m.user.displayName) || "";
+          c.onclick = () => mostrarSketchfab(m); res.appendChild(c);
+        }
+      }catch(e){ msg.textContent = "Não consegui falar com o Sketchfab agora."; }
+    };
+    for (const [rot, ac] of [["Animados", () => { f.animated = !f.animated; return f.animated; }], ["Para imprimir em 3D", () => { f.downloadable = !f.downloadable; if (f.downloadable) campo.value = "3d print"; return f.downloadable; }],
+                             ["Espaço", () => { campo.value = "spacecraft astronaut planet"; return null; }], ["Feito no Blender", () => { campo.value = "blender"; return null; }]]){
+      const ch = botao(rot, e => { const r = ac(); if (r !== null) e.target.setAttribute("aria-pressed", String(r)); rodar(); }); chips.appendChild(ch);
+    }
+    campo.onkeydown = e => { if (e.key === "Enter") rodar(); }; rodar();
+  } else if (visorAba === "arquivo"){
+    const z = document.createElement("button"); z.className = "soltar"; z.innerHTML = "<b>Solte um arquivo aqui</b><span>ou toque para escolher: .glb, .gltf, .stl, .obj</span>";
+    const inp = document.createElement("input"); inp.type = "file"; inp.accept = ".glb,.gltf,.stl,.obj"; inp.hidden = true; inp.onchange = () => inp.files[0] && abrirDoComputador(inp.files[0]);
+    z.onclick = () => inp.click();
+    for (const ev of ["dragenter", "dragover"]) z.addEventListener(ev, e => { e.preventDefault(); z.classList.add("sobre"); });
+    for (const ev of ["dragleave", "drop"]) z.addEventListener(ev, e => { e.preventDefault(); z.classList.remove("sobre"); });
+    z.addEventListener("drop", e => { const a = e.dataTransfer.files[0]; if (a) abrirDoComputador(a); });
+    lado.append(z, inp);
+    const r = document.createElement("div"); r.className = "busca"; r.style.marginTop = "12px";
+    const campo = document.createElement("input"); campo.className = "campo"; campo.placeholder = "…ou cole o endereço de um .glb/.stl/.obj"; campo.onkeydown = e => { if (e.key === "Enter") abrirPorEndereco(campo.value); };
+    r.append(campo, botao("Abrir", () => abrirPorEndereco(campo.value))); lado.appendChild(r);
+    const n = document.createElement("p"); n.className = "nota";
+    n.textContent = "Os arquivos abrem no seu aparelho e não são enviados para nenhum servidor. Para impressão 3D, o STL mostra as medidas e o volume.";
+    lado.appendChild(n);
+  } else {
+    const n = document.createElement("p"); n.className = "nota"; n.style.marginTop = "0";
+    n.innerHTML = "<b>E o Blender?</b> O Blender completo não roda dentro do navegador. Faça o modelo e a animação no Blender, exporte como <b>.glb</b> e abra em “Meu arquivo”: as animações aparecem aqui, com botão de play.";
+    lado.appendChild(n);
+    for (const e of EDITORES){
+      const a = document.createElement("a"); a.className = "item"; a.href = e.url; a.target = "_blank"; a.rel = "noopener"; a.style.textDecoration = "none"; a.style.color = "inherit";
+      a.innerHTML = `<span class="pino" style="background:#E9D48E">↗</span><span><b></b><span class="sub"></span></span>`; a.querySelector("b").textContent = e.nome; a.querySelector(".sub").textContent = e.desc; lado.appendChild(a);
+    }
+  }
+}
+function abrirVisor(){
+  fecharPaineis(); $("visor").hidden = false; $("btnObjetos").setAttribute("aria-expanded", "true");
+  if (!$("vAbas").children.length){ montarAbasVisor(); montarLadoVisor(); }
+  if (cenaT && !$("vThree").hidden) cenaT.ativa = true;
+}
+function fecharVisor(){ $("visor").hidden = true; $("btnObjetos").setAttribute("aria-expanded", "false"); if (cenaT) cenaT.ativa = false; if (document.fullscreenElement) document.exitFullscreen(); const fr = $("vSketch"); if (!fr.hidden) fr.src = "about:blank"; mostrarPalco("vazio"); }
 
 /* =====================================================================
    MODO MAPA LIMPO: toque no vazio esconde tudo (some a interface); outro toque traz de volta
@@ -1127,6 +1827,11 @@ function iniciar(){
     $("carregando").innerHTML = "<div><b>Não foi possível carregar o mapa 3D.</b>Verifique a internet e recarregue a página.</div>"; return; }
   $("btnCatalogo").onclick = () => alternar("catalogo", "btnCatalogo");
   $("btnLista").onclick = () => alternar("lista", "btnLista");
+  $("btnCamadas").onclick = () => alternar("camadas", "btnCamadas");
+  $("vInfo").onclick = () => $("vInfo").classList.toggle("aberto");
+  $("btnObjetos").onclick = () => ($("visor").hidden ? abrirVisor() : fecharVisor()); $("vFechar").onclick = fecharVisor;
+  arrastarFolha($("alcaVisor"), $("visor"), fecharVisor);
+  relevoOn = lerGuardado("mapa.relevo", "0") === "1"; prediosOn = lerGuardado("mapa.predios", "0") === "1";
   $("btnPinos").onclick = alternarPinos; $("chavePinos").onclick = alternarPinos;
   $("voltar").onclick = () => { selecionar(null); if (viewer){ viewer.trackedEntity = undefined; visaoInicial(true); } };
   $("fechar").onclick = () => selecionar(null);
@@ -1134,13 +1839,14 @@ function iniciar(){
   $("cartao").onclick = () => $("cartao").classList.toggle("min");
   arrastarFolha(document.querySelector('.alca[data-fecha="catalogo"]'), $("catalogo"), fecharPaineis);
   arrastarFolha(document.querySelector('.alca[data-fecha="lista"]'), $("lista"), fecharPaineis);
+  arrastarFolha(document.querySelector('.alca[data-fecha="camadas"]'), $("camadas"), fecharPaineis);
   arrastarFolha($("alcaInfo"), $("info"), () => selecionar(null), () => $("info").classList.toggle("min"));
   definirTela(); ativarVidro();
   addEventListener("resize", definirTela); addEventListener("orientationchange", () => setTimeout(definirTela, 250));
   setTimeout(() => { $("dica").style.opacity = 0; }, 6500);
   $("zmMais").onclick = () => zoom(0.5); $("zmMenos").onclick = () => zoom(2);
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape"){ if (imersivo) setImersivo(false); else { selecionar(null); fecharPaineis(); } }
+    if (e.key === "Escape"){ if (!$("visor").hidden) fecharVisor(); else if (imersivo) setImersivo(false); else { selecionar(null); fecharPaineis(); } }
     else if (e.key === "h" || e.key === "H") setImersivo(!imersivo);
   });
   /* ?astro=marte abre direto em um astro */
