@@ -1,6 +1,6 @@
 # Renderiza 4 páginas (capa, índice, 2 interiores) de cada apostila para a loja.
 import fitz, os, sys, json, glob
-B = r"I:\Meu Drive\##Aulas @hodhreego\#$old1\PSS VENDAS"
+B = os.environ.get("PSS_VENDAS", r"I:\Meu Drive\##Aulas @hodhreego\#$old1\PSS VENDAS")
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "img")
 P = {
  "matematica":        ("Av80 Apostila Matemática PSS Av80", "Apostila PSS Matemática — SEED-PR 2027.pdf"),
@@ -11,7 +11,7 @@ P = {
  "artes":             ("Av86 Apostila de Artes Av86", "Apostila PSS Artes — SEED-PR 2027.pdf"),
  "lingua-inglesa":    ("Av87 Apostila de L. Inglesa Inglês PSS Av87", "Apostila PSS Língua Inglesa — SEED-PR 2027.pdf"),
  "educacao-fisica":   ("Av88 Apostila de Ed. Física PSS Av88", "Apostila PSS Educação Física — SEED-PR 2027.pdf"),
- "lingua-portuguesa": ("Av88 Apostila de Língua Portuguesa", "Apostila PSS Língua Portuguesa 2.0 — SEED-PR 2027.pdf"),
+ "lingua-portuguesa": ("Av77 Apostila de Língua Portuguesa", "Apostila PSS Língua Portuguesa 2.0 — SEED-PR 2027.pdf"),
  "gestao-negocios":   ("Av89 Apostila de Gestão e Negócios — Administração", "Apostila PSS Gestão e Negócios (Administração) — SEED-PR 2027.pdf"),
  "informacao-comunicacao": ("Av90 Apostila de Infomação e Comunicação", "Apostila PSS INFORMAÇÃO E COMUNICAÇÃO — SEED-PR 2027.pdf"),
  "quimica":           ("Av91 Apostila de Química Av91", "Apostila PSS Química — SEED-PR 2027.pdf"),
@@ -43,6 +43,7 @@ def ultimo_pdf(pasta, padrao):
     pdfs = glob.glob(os.path.join(pasta, "*.pdf"))
     sim = "simulado" in padrao.lower()          # apostila e simulado dividem a mesma pasta
     pdfs = [p for p in pdfs if ("simulado" in os.path.basename(p).lower()) == sim]
+    pdfs = [p for p in pdfs if "resumo" not in os.path.basename(p).lower()]   # Resumo Mapa Mental não é a apostila
     normais = [p for p in pdfs if "jumbo" not in os.path.basename(p).lower()]
     pdfs = normais or pdfs                       # prefere a versão normal à JUMBO
     return max(pdfs, key=os.path.getmtime) if pdfs else os.path.join(pasta, padrao)
