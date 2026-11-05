@@ -153,6 +153,11 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .certs{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px;scroll-snap-type:x proximity;flex:1 1 100%}
 .cert{flex:0 0 auto;min-width:150px;max-width:210px;scroll-snap-align:start;text-align:left;background:#fff;border:2px solid var(--line);border-radius:14px;padding:10px 14px;cursor:pointer;font:600 14px 'Source Sans 3';color:var(--navy);transition:.15s}
 .cert b{display:block;font-size:15px;line-height:1.2}.cert small{display:block;color:var(--mut);font-weight:600;margin-top:3px;font-size:12px}
+.cert{display:flex;align-items:center;gap:10px}
+.cert .ct{display:block;min-width:0}
+.cert .ic{flex:0 0 36px;width:36px;height:36px;border-radius:11px;background:var(--azul-claro,#e8f1ff);display:flex;align-items:center;justify-content:center;color:var(--navy)}
+.cert .ic svg{width:22px;height:22px;display:block}
+.cert.on .ic{background:rgba(255,255,255,.16);color:#fff}
 .cert:hover{border-color:var(--navy)}.cert.on{background:var(--navy);border-color:var(--navy);color:#fff}.cert.on small{color:var(--gold-light)}
 .info-cert{margin-top:22px;background:linear-gradient(135deg,#fff,#f4f8ff);border:2px solid var(--line);border-left:6px solid var(--gold);border-radius:16px;padding:20px 22px;display:none;animation:subir .4s ease}
 .info-cert.show{display:block}
@@ -239,7 +244,7 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 <script>
 const ITENS=__DATA__;
 const WA="__WA__";
-const GR=[["pss","PSS SEED-PR 2027"],["cisop","CISOP Cascavel 2026"],["prefeitura","Prefeitura de Cascavel 2026"],["reforco","Reforço e recomposição"],["outros","Outros concursos"]];
+const GR=[["reforco","Reforço e recomposição"],["pss","PSS SEED-PR 2027"],["cisop","CISOP Cascavel 2026"],["prefeitura","Prefeitura de Cascavel 2026"],["outros","Outros concursos"]];
 let filtro="todos",busca="";{const h=location.hash.slice(1);if(["pss","cisop","prefeitura","simulado","outros"].includes(h))filtro=h}
 const $=s=>document.querySelector(s);
 const brl=n=>n.toFixed(2).replace(".",",");
@@ -299,7 +304,16 @@ function render(){
 }
 function chips(){
   const c=g=>ITENS.filter(i=>g==="todos"||i.grupo===g).length;
-  $("#chips").innerHTML=[["todos","Todos os certames"],...GR].map(([k,n])=>`<button class="cert ${filtro===k?'on':''}" onclick="filtro='${k}';chips();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'nearest'})"><b>${n}</b><small>${c(k)} ${c(k)===1?'material':'materiais'}</small></button>`).join("");
+  const svg=(p)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+  const IC={
+    todos:svg('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
+    pss:svg('<path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.6 3 3 6 3s6-1.4 6-3v-5"/>'),
+    cisop:svg('<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6V3Z"/>'),
+    prefeitura:svg('<path d="M3 21h18"/><path d="M5 21V9l7-4 7 4v12"/><path d="M9 21v-6h6v6"/>'),
+    reforco:svg('<path d="M4 19V5a2 2 0 0 1 2-2h3v16H6a2 2 0 0 0-2 2Z"/><path d="M9 3h4v16H9z"/><path d="m13 5 3-1 4 15-3 1z"/>'),
+    outros:svg('<circle cx="12" cy="12" r="9"/><path d="m16 8-2.5 5.5L8 16l2.5-5.5L16 8Z"/>')
+  };
+  $("#chips").innerHTML=[["todos","Todos os certames"],...GR].map(([k,n])=>`<button class="cert ${filtro===k?'on':''}" onclick="filtro='${k}';chips();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'nearest'})"><span class="ic">${IC[k]||IC.outros}</span><span class="ct"><b>${n}</b><small>${c(k)} ${c(k)===1?'material':'materiais'}</small></span></button>`).join("");
 }
 /* miniaturas animadas: as páginas sobem (scroll vertical) enquanto o card está visível */
 let io=null,rolando=false,tRol=null;
@@ -307,13 +321,14 @@ const todas=()=>[...document.querySelectorAll(".cover")];
 addEventListener("scroll",()=>{
   rolando=true;clearTimeout(tRol);
   todas().forEach(cv=>{if(cv._reset)cv._reset()});          /* rolando: só a capa aparece */
-  tRol=setTimeout(()=>{rolando=false;todas().forEach(cv=>{if(cv._vis&&cv._start)cv._start(250+Math.random()*500)})},140);   /* parou: anima já */
+  tRol=setTimeout(()=>{rolando=false;todas().forEach(cv=>{if(cv._vis&&cv._start)cv._start(250+Math.random()*2200)})},140);   /* parou: anima já */
 },{passive:true});
 function anima(){
   if(io)io.disconnect();
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-  const CAPA=5000,PAG=2200;
   todas().forEach(cv=>{const n=+cv.dataset.n;if(n<2)return;let k=0;
+    /* cada card tem seu proprio ritmo: nada de animacoes sincronizadas */
+    const CAPA=3200+Math.random()*4200, PAG=1500+Math.random()*2100;
     const bk=cv.querySelector(".book"),pgs=[...bk.querySelectorAll(".pg:not(.base)")],ds=cv.querySelectorAll(".dots i");
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
     if(matchMedia("(hover:hover)").matches){cv.onmouseenter=()=>cv._p=1;cv.onmouseleave=()=>cv._p=0}
@@ -329,10 +344,10 @@ function anima(){
   });
   io=new IntersectionObserver(es=>es.forEach(e=>{const cv=e.target;cv._vis=e.isIntersecting;
     if(!cv._start)return;
-    if(e.isIntersecting){if(!rolando)cv._start(400+Math.random()*600)}else cv._reset()}),{threshold:.4});
+    if(e.isIntersecting){if(!rolando)cv._start(300+Math.random()*2600)}else cv._reset()}),{threshold:.4});
   todas().forEach(cv=>io.observe(cv));
   /* loop: se a página está parada e a miniatura visível sem timer, retoma sozinha */
-  clearInterval(window._wd);window._wd=setInterval(()=>{if(rolando)return;todas().forEach(cv=>{if(cv._vis&&cv._start&&!cv._t&&!cv._p)cv._start(300)})},1500);
+  clearInterval(window._wd);window._wd=setInterval(()=>{if(rolando)return;todas().forEach(cv=>{if(cv._vis&&cv._start&&!cv._t&&!cv._p)cv._start(300+Math.random()*1800)})},1500);
 }
 const NOMES=["Capa","Índice","Página interna","Página interna"];
 let cur=null;
