@@ -43,15 +43,23 @@ P = [
  ("se-liga-1em", "Se Liga 2026 — 1ª série EM + Extraordinário", "reforco", "Z0B1XY879A", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
  ("se-liga-2em", "Se Liga 2026 — 2ª série EM + Extraordinário", "reforco", "E9OG7N4KWB", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
  ("se-liga-3em", "Se Liga 2026 — 3ª série EM + Extraordinário", "reforco", "KW8Z5RAO01", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("saeb-9", "Simulado SAEB — 9º ano", "reforco", "69K16VV8WO", 15, "50 questões de Matemática com gabarito e resoluções."),
- ("saeb-3em", "Simulado SAEB — 3ª série EM", "reforco", "8WPNKOEN0P", 15, "50 questões de Matemática com gabarito e resoluções."),
+ ("saeb-9", "Simulado SAEB — 9º ano", "reforco", "69K16VV8WO", 10, "50 questões de Matemática com gabarito e resoluções."),
+ ("saeb-3em", "Simulado SAEB — 3ª série EM", "reforco", "8WPNKOEN0P", 10, "50 questões de Matemática com gabarito e resoluções."),
 ]
 GRUPOS = {"pss": "PSS SEED-PR 2027", "cisop": "CISOP Cascavel 2026", "prefeitura": "Prefeitura de Cascavel 2026", "simulado": "Simulados", "reforco": "Reforço e recomposição", "outros": "Outros concursos"}
 items = []
+def tipo_de(slug):
+    if slug.startswith('volume-'): return 'volumes'
+    if slug.startswith('se-liga-'): return 'se-liga'
+    if slug.startswith('saeb-'): return 'saeb'
+    return 'apostilas'
+
 for slug, nome, g, code, preco, sub in P:
     imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 5) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
     items.append({"slug": slug, "nome": nome, "grupo": g, "grupoNome": GRUPOS[g], "link": (CHK + code) if code else None,
-                  "preco": preco, "sub": sub, "imgs": imgs, "paginas": pag.get(slug, {}).get("paginas")})
+                  "preco": preco, "sub": sub, "imgs": imgs, "tipo": tipo_de(slug),
+                  "de": 15 if slug in ('saeb-9', 'saeb-3em') else None,
+                  "paginas": pag.get(slug, {}).get("paginas")})
 
 HTML = r'''<!DOCTYPE html>
 <html lang="pt-BR">
@@ -151,6 +159,13 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 
 /* certames */
 .certs{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px;scroll-snap-type:x proximity;flex:1 1 100%}
+.conteudo{display:grid;grid-template-columns:190px 1fr;gap:24px;align-items:start;margin-top:10px}
+.indice{position:sticky;top:18px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 6px 18px rgba(15,37,71,.06)}
+.indice b{display:block;font:700 12px 'Source Sans 3';text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin:2px 0 8px}
+.indice a{display:block;padding:7px 9px;border-radius:8px;color:var(--navy);font:600 13.5px 'Source Sans 3';cursor:pointer}
+.indice a:hover{background:#eef3fb}
+.indice hr{border:0;border-top:1px solid var(--line);margin:8px 0}
+@media(max-width:900px){.conteudo{grid-template-columns:1fr}.indice{position:static;display:flex;flex-wrap:wrap;gap:4px;align-items:center}.indice b{width:100%;margin:0}.indice a{padding:5px 8px}.indice hr{display:none}}
 .cert{flex:0 0 auto;min-width:150px;max-width:210px;scroll-snap-align:start;text-align:left;background:#fff;border:2px solid var(--line);border-radius:14px;padding:10px 14px;cursor:pointer;font:600 14px 'Source Sans 3';color:var(--navy);transition:.15s}
 .cert b{display:block;font-size:15px;line-height:1.2}.cert small{display:block;color:var(--mut);font-weight:600;margin-top:3px;font-size:12px}
 .cert{display:flex;align-items:center;gap:10px}
@@ -211,11 +226,29 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 
 <div class="wrap tools"><div class="bar">
   <div class="certs" id="chips"></div>
+  <div class="certs" id="tipos" style="margin-top:10px"></div>
   <input id="q" type="search" placeholder="Buscar apostila…">
 </div></div>
 
 <div class="wrap"><div class="info-cert" id="infoc"></div></div>
-<main class="wrap" id="main"></main>
+<div class="conteudo wrap">
+  <aside class="indice">
+    <b>Índice</b>
+    <a onclick="setTipo('todos')">Todas as atividades</a>
+    <a onclick="setTipo('volumes')">Volumes</a>
+    <a onclick="setTipo('se-liga')">Se Liga</a>
+    <a onclick="setTipo('saeb')">Simulados SAEB</a>
+    <a onclick="setTipo('apostilas')">Apostilas</a>
+    <hr>
+    <b>Certames</b>
+    <a onclick="setGrupo('pss')">PSS SEED-PR</a>
+    <a onclick="setGrupo('cisop')">CISOP Cascavel</a>
+    <a onclick="setGrupo('prefeitura')">Prefeitura de Cascavel</a>
+    <a onclick="setGrupo('reforco')">Reforço e recomposição</a>
+    <a onclick="setGrupo('outros')">Outros concursos</a>
+  </aside>
+  <main id="main"></main>
+</div>
 <div class="wrap empty" id="empty">Nenhum material encontrado.</div>
 
 <footer><div class="wrap">
@@ -245,7 +278,8 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 const ITENS=__DATA__;
 const WA="__WA__";
 const GR=[["reforco","Reforço e recomposição"],["pss","PSS SEED-PR 2027"],["cisop","CISOP Cascavel 2026"],["prefeitura","Prefeitura de Cascavel 2026"],["outros","Outros concursos"]];
-let filtro="todos",busca="";{const h=location.hash.slice(1);if(["pss","cisop","prefeitura","simulado","outros"].includes(h))filtro=h}
+const TIPOS=[["todos","Todas as atividades"],["volumes","Volumes"],["se-liga","Se Liga"],["saeb","Simulados SAEB"],["apostilas","Apostilas"]];
+let filtro="todos",busca="",filtroTipo="todos";{const h=location.hash.slice(1);if(["pss","cisop","prefeitura","simulado","outros"].includes(h))filtro=h}
 const $=s=>document.querySelector(s);
 const brl=n=>n.toFixed(2).replace(".",",");
 function card(it){
@@ -295,7 +329,7 @@ function render(){
   const q=busca.toLowerCase();let total=0;
   $("#main").innerHTML=GR.map(([g,nome])=>{
     if(filtro!=="todos"&&filtro!==g)return "";
-    const l=ITENS.filter(i=>i.grupo===g&&(i.nome+" "+i.grupoNome).toLowerCase().includes(q));
+    const l=ITENS.filter(i=>(filtroTipo==="todos"||i.tipo===filtroTipo)&&i.grupo===g&&(i.nome+" "+i.grupoNome).toLowerCase().includes(q));
     total+=l.length;if(!l.length)return "";
     return `<section class="grupo"><h2>${nome}</h2><div class="grid">${l.map(card).join("")}</div></section>`;}).join("");
   $("#empty").style.display=total?"none":"block";
@@ -315,6 +349,20 @@ function chips(){
   };
   $("#chips").innerHTML=[["todos","Todos os certames"],...GR].map(([k,n])=>`<button class="cert ${filtro===k?'on':''}" onclick="filtro='${k}';chips();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'nearest'})"><span class="ic">${IC[k]||IC.outros}</span><span class="ct"><b>${n}</b><small>${c(k)} ${c(k)===1?'material':'materiais'}</small></span></button>`).join("");
 }
+function tipos(){
+  const svg=(p)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+  const I={
+    todos:svg('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
+    volumes:svg('<path d="M21 8 12 3 3 8v8l9 5 9-5V8Z"/><path d="m3 8 9 5 9-5"/><path d="M12 13v8"/>'),
+    'se-liga':svg('<path d="M12 6c-2-2-5-2-8-1v13c3-1 6-1 8 1 2-2 5-2 8-1V5c-3-1-6-1-8 1Z"/><path d="M12 6v13"/>'),
+    saeb:svg('<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 11h6M9 15h6"/>'),
+    apostilas:svg('<path d="M4 19V5a2 2 0 0 1 2-2h3v16H6a2 2 0 0 0-2 2Z"/><path d="M9 3h4v16H9z"/><path d="m13 5 3-1 4 15-3 1z"/>')
+  };
+  const c=k=>k==='todos'?ITENS.length:ITENS.filter(i=>i.tipo===k).length;
+  $("#tipos").innerHTML=TIPOS.map(([k,n])=>`<button class="cert ${filtroTipo===k?'on':''}" onclick="setTipo('${k}')"><span class="ic">${I[k]||I.todos}</span><span class="ct"><b>${n}</b><small>${c(k)} ${c(k)===1?'material':'materiais'}</small></span></button>`).join("");
+}
+function setTipo(t){filtroTipo=t;tipos();render();document.getElementById('main').scrollIntoView({behavior:'smooth',block:'start'})}
+function setGrupo(g){filtro=g;chips();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'nearest'})}
 /* miniaturas animadas: as páginas sobem (scroll vertical) enquanto o card está visível */
 let io=null,rolando=false,tRol=null;
 const todas=()=>[...document.querySelectorAll(".cover")];
@@ -365,7 +413,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")fecha();
   if($("#modal").classList.contains("open")&&cur){const on=[...$("#th").children].findIndex(x=>x.classList.contains("on"));
     if(e.key==="ArrowRight")foto(Math.min(on+1,cur.imgs.length-1));if(e.key==="ArrowLeft")foto(Math.max(on-1,0));}});
 $("#q").addEventListener("input",e=>{busca=e.target.value;render()});
-chips();render();
+chips();tipos();render();
 const WNUM="5545999699444";
 const WOPT=[
  ["Tenho uma dúvida sobre um material","Olá, Prof. Rodrigo! Tenho uma dúvida sobre o material{P}.\nMinha dúvida é: ",
