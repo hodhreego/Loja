@@ -43,6 +43,7 @@ P = [
  ("se-liga-1em", "Se Liga 2026 · Matemática — 1ª série EM + Extraordinário", "reforco", "Z0B1XY879A", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
  ("se-liga-2em", "Se Liga 2026 · Matemática — 2ª série EM + Extraordinário", "reforco", "E9OG7N4KWB", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
  ("se-liga-3em", "Se Liga 2026 · Matemática — 3ª série EM + Extraordinário", "reforco", "KW8Z5RAO01", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
+ ("saeb-5", "Simulado SAEB de Matemática — 5º ano", "reforco", "", 10, "50 questões de Matemática com gabarito e resoluções."),
  ("saeb-9", "Simulado SAEB de Matemática — 9º ano", "reforco", "69K16VV8WO", 10, "50 questões de Matemática com gabarito e resoluções."),
  ("saeb-3em", "Simulado SAEB de Matemática — 3ª série EM", "reforco", "8WPNKOEN0P", 10, "50 questões de Matemática com gabarito e resoluções."),
  ("sei-6", "Semanas de Estudos · Matemática — 6º ano", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (6º ano) · revisão semanal com gabarito e resoluções."),
@@ -85,7 +86,7 @@ GRUPOS = {"pss": "PSS SEED-PR 2027", "cisop": "CISOP Cascavel 2026", "prefeitura
 AV = {"matematica":80,"conhecimentos-basicos":81,"pedagogo":82,"educacao-especial":83,"historia":84,"geografia":85,"artes":86,"lingua-inglesa":87,"educacao-fisica":88,"gestao-negocios":89,"pedagogo-abaetetuba":90,"quimica":91,"simulado-matematica":79,
  "volume-cilindro":136,"volume-cone":137,"volume-cubo":138,"volume-cubo-bloco-prisma":139,"volume-esfera":140,"volume-paralelepipedo":141,"volume-piramide":142,"volume-prisma":143,
  "se-liga-1em":122,"se-liga-2em":123,"se-liga-3em":124,"se-liga-6":125,"se-liga-7":126,"se-liga-8":127,"se-liga-9":128,
- "sei-1em":129,"sei-2em":130,"sei-3em":131,"sei-6":132,"sei-7":133,"sei-8":134,"sei-9":135,"saeb-9":113,"saeb-3em":114}
+ "sei-1em":129,"sei-2em":130,"sei-3em":131,"sei-6":132,"sei-7":133,"sei-8":134,"sei-9":135,"saeb-5":112,"saeb-9":113,"saeb-3em":114}
 items = []
 def tipo_de(slug):
     if slug.startswith('volume-'): return 'volumes'
@@ -100,7 +101,7 @@ for slug, nome, g, code, preco, sub in P:
         imgs = [(i + '?v=5') if i.endswith('-1.jpg') else i for i in imgs]
     items.append({"slug": slug, "av": ("Av%d" % AV[slug]) if slug in AV else slug, "nome": nome, "grupo": g, "grupoNome": GRUPOS[g], "link": (CHK + code) if code else None,
                   "preco": preco, "sub": sub, "imgs": imgs, "tipo": tipo_de(slug),
-                  "de": 15 if slug in ('saeb-9', 'saeb-3em') else None,
+                  "de": 15 if slug in ('saeb-5', 'saeb-9', 'saeb-3em') else None,
                   "paginas": pag.get(slug, {}).get("paginas")})
 
 HTML = r'''<!DOCTYPE html>

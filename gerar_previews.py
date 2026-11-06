@@ -172,6 +172,8 @@ for k, pasta in NIVEIS.items():
     ITENS['sei-' + k] = (os.path.join(PROD, 'sei', pasta, 'material.pdf'),
                          os.path.join(PROD, 'sei', pasta, 'arte-1.png'))
 
+ITENS['saeb-5'] = (os.path.join(SAEB, '5-ano', 'simulado-saeb-matematica-5ano.pdf'),
+                   os.path.join(PROD, 'saeb', '5-ano', 'arte-1.png'))
 ITENS['saeb-9'] = (os.path.join(SAEB, '9-ano', 'simulado-saeb-matematica-9-ano.pdf'),
                    os.path.join(PROD, 'saeb', '9-ano', 'arte-1.png'))
 ITENS['saeb-3em'] = (os.path.join(SAEB, '3-ano-EM', 'simulado-saeb-matematica-3-ano-em.pdf'),
