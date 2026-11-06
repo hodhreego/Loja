@@ -82,6 +82,10 @@ def _desc(slug, nome, sub):
     return sub
 P = [(a, b, c, d, e, _desc(a, b, f)) for a, b, c, d, e, f in P]
 GRUPOS = {"pss": "PSS SEED-PR 2027", "cisop": "CISOP Cascavel 2026", "prefeitura": "Prefeitura de Cascavel 2026", "simulado": "Simulados", "reforco": "Reforço e recomposição", "outros": "Outros concursos"}
+AV = {"matematica":80,"conhecimentos-basicos":81,"pedagogo":82,"educacao-especial":83,"historia":84,"geografia":85,"artes":86,"lingua-inglesa":87,"educacao-fisica":88,"gestao-negocios":89,"pedagogo-abaetetuba":90,"quimica":91,"simulado-matematica":79,
+ "volume-cilindro":136,"volume-cone":137,"volume-cubo":138,"volume-cubo-bloco-prisma":139,"volume-esfera":140,"volume-paralelepipedo":141,"volume-piramide":142,"volume-prisma":143,
+ "se-liga-1em":122,"se-liga-2em":123,"se-liga-3em":124,"se-liga-6":125,"se-liga-7":126,"se-liga-8":127,"se-liga-9":128,
+ "sei-1em":129,"sei-2em":130,"sei-3em":131,"sei-6":132,"sei-7":133,"sei-8":134,"sei-9":135,"saeb-9":113,"saeb-3em":114}
 items = []
 def tipo_de(slug):
     if slug.startswith('volume-'): return 'volumes'
@@ -94,7 +98,7 @@ for slug, nome, g, code, preco, sub in P:
     imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 9) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
     if tipo_de(slug) in ('se-liga', 'sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
         imgs = [(i + '?v=5') if i.endswith('-1.jpg') else i for i in imgs]
-    items.append({"slug": slug, "nome": nome, "grupo": g, "grupoNome": GRUPOS[g], "link": (CHK + code) if code else None,
+    items.append({"slug": slug, "av": ("Av%d" % AV[slug]) if slug in AV else slug, "nome": nome, "grupo": g, "grupoNome": GRUPOS[g], "link": (CHK + code) if code else None,
                   "preco": preco, "sub": sub, "imgs": imgs, "tipo": tipo_de(slug),
                   "de": 15 if slug in ('saeb-9', 'saeb-3em') else None,
                   "paginas": pag.get(slug, {}).get("paginas")})
@@ -379,6 +383,7 @@ section.grupo h2{font-size:22px}
   <div class="side" id="side"></div></div></div>
 
 <script>
+const QC=(function(){try{return new URLSearchParams(location.search).get("c")}catch(e){return null}})();
 const ITENS=__DATA__;
 const WA="__WA__";
 const GR=[["reforco","Reforço e recomposição"],["pss","PSS SEED-PR 2027"],["cisop","CISOP Cascavel 2026"],["prefeitura","Prefeitura de Cascavel 2026"],["outros","Outros concursos"]];
@@ -576,33 +581,30 @@ function cPaint(){
     :`<p style="color:var(--mut);font-size:14px">Carrinho vazio. Toque em <b>🛒 +</b> no material que quiser.</p>`;
 }
 function cPedido(){
-  const itens=CART.map(x=>{const i=cFind(x.slug);return i?{slug:i.slug,nome:i.nome,grupo:i.grupoNome,preco:i.preco,q:x.q}:null}).filter(Boolean);
+  const itens=CART.map(x=>{const i=cFind(x.slug);return i?{slug:i.slug,av:i.av,nome:i.nome,grupo:i.grupoNome,preco:i.preco,q:x.q}:null}).filter(Boolean);
   const total=itens.reduce((s,i)=>s+i.preco*i.q,0);
   return {criado:new Date().toISOString(),itens:itens,total:Math.round(total*100)/100};
 }
 function cTexto(p,cod){
-  let t="🛒 *PEDIDO "+cod+"*\n\n";
-  p.itens.forEach(i=>{t+="• "+i.q+"x "+i.nome+" — R$ "+brl(i.preco*i.q)+"\n"});
-  t+="\n*Total: R$ "+brl(p.total)+"*\n\nConfira e me envie o link de pagamento. Depois do pagamento o material vai para o seu e-mail.";
-  return t;
+  const cods=[];p.itens.forEach(i=>{for(let k=0;k<i.q;k++)cods.push(i.av)});
+  const base=location.origin+location.pathname.replace(/index\.html$/,"");
+  return cods.join(" ")+"\n\nAbrir o carrinho na loja: "+base+"?c="+cods.join(",");
 }
 async function cfinal(){
   if(!CART.length){toast("Carrinho vazio");return}
-  const p=cPedido();let cod="";
-  if(API_PEDIDOS){
-    try{
-      const r=await fetch(API_PEDIDOS,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({acao:"novo",pedido:p})});
-      const j=await r.json();cod=j.codigo||"";
-    }catch(e){}
-  }
-  if(!cod)cod="PED-"+new Date().toISOString().slice(2,10).replace(/-/g,"")+"-"+Math.random().toString(36).slice(2,6).toUpperCase();
-  const base=location.origin+location.pathname.replace(/index\.html$/,"");
-  const link=base+"pedido.html?p="+encodeURIComponent(cod);
-  const txt=cTexto(p,cod)+(API_PEDIDOS?"\n\n🧾 Pedido: "+link:"");
-  window.open("https://wa.me/"+WNUM+"?text="+encodeURIComponent(txt),"_blank");
-  toast("Pedido "+cod+" enviado");
+  const p=cPedido();
+  window.open("https://wa.me/"+WNUM+"?text="+encodeURIComponent(cTexto(p)),"_blank");
+  toast("Pedido enviado");
+}
+function cDoLink(){
+  try{
+    const c=QC;if(!c)return;
+    const novo=[];c.split(/[,\s]+/).filter(Boolean).forEach(t=>{const i=ITENS.find(x=>x.av.toLowerCase()===t.toLowerCase()||x.slug===t);if(!i)return;const e=novo.find(x=>x.slug===i.slug);if(e)e.q++;else novo.push({slug:i.slug,q:1})});
+    if(novo.length){CART=novo;cSave();cPaint();ctoggle(true)}
+  }catch(e){}
 }
 cPaint();
+cDoLink();
 winit();
 </script>
 </body>
