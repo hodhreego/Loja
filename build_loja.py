@@ -28,23 +28,23 @@ P = [
  ("cisop-monitor-biblioteca", "Monitor de Biblioteca", "prefeitura", "njnvex3v", 20, "Prefeitura de Cascavel 2026 · teste seletivo · banca Fafipa · prova 29/11/2026."),
  ("cisop-professor-ed-infantil", "Professor de Educação Infantil", "prefeitura", "enxexhh2", 20, "Prefeitura de Cascavel 2026 · teste seletivo · banca Fafipa · prova 29/11/2026."),
  ("cisop-professor-temporario", "Professor Temporário", "prefeitura", "55drvhe3", 20, "Prefeitura de Cascavel 2026 · teste seletivo · banca Fafipa · prova 29/11/2026."),
- ("volume-cone", "Volume do Cone · 9º ano", "reforco", "39YN13DQWO", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("volume-cubo", "Volume do Cubo · 9º ano", "reforco", "E9OG7NO5WB", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("volume-paralelepipedo", "Volume do Paralelepípedo · 9º ano", "reforco", "R9JXP1J80X", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("volume-prisma", "Volume do Prisma · 9º ano", "reforco", "KW8Z5RKD01", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("volume-esfera", "Volume da Esfera · 9º ano", "reforco", "7WXGXJQY0A", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("volume-piramide", "Volume da Pirâmide · 9º ano", "reforco", "KW8Z557B01", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("volume-cilindro", "Volume do Cilindro (com π) · 9º ano", "reforco", "G92KQR5KWE", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("volume-cubo-bloco-prisma", "Volume — Cubo, Bloco e Prisma · 9º ano", "reforco", "G96RY725W1", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("se-liga-6", "Se Liga 2026 — 6º ano + Extraordinário", "reforco", "797Z4NGV0E", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("se-liga-7", "Se Liga 2026 — 7º ano + Extraordinário", "reforco", "8WPNKR3Y0P", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("se-liga-8", "Se Liga 2026 — 8º ano + Extraordinário", "reforco", "89AX8YDG0D", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("se-liga-9", "Se Liga 2026 — 9º ano + Extraordinário", "reforco", "60E2KY73W3", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("se-liga-1em", "Se Liga 2026 — 1ª série EM + Extraordinário", "reforco", "Z0B1XY879A", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("se-liga-2em", "Se Liga 2026 — 2ª série EM + Extraordinário", "reforco", "E9OG7N4KWB", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("se-liga-3em", "Se Liga 2026 — 3ª série EM + Extraordinário", "reforco", "KW8Z5RAO01", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("saeb-9", "Simulado SAEB — 9º ano", "reforco", "69K16VV8WO", 10, "50 questões de Matemática com gabarito e resoluções."),
- ("saeb-3em", "Simulado SAEB — 3ª série EM", "reforco", "8WPNKOEN0P", 10, "50 questões de Matemática com gabarito e resoluções."),
+ ("", "Matemática · Volume do Cone · 9º ano", "reforco", "39YN13DQWO", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("", "Matemática · Volume do Cubo · 9º ano", "reforco", "E9OG7NO5WB", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("", "Matemática · Volume do Paralelepípedo · 9º ano", "reforco", "R9JXP1J80X", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("", "Matemática · Volume do Prisma · 9º ano", "reforco", "KW8Z5RKD01", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("", "Matemática · Volume da Esfera · 9º ano", "reforco", "7WXGXJQY0A", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("", "Matemática · Volume da Pirâmide · 9º ano", "reforco", "KW8Z557B01", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("", "Matemática · Volume do Cilindro (com π) · 9º ano", "reforco", "G92KQR5KWE", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("", "Matemática · Volume — Cubo, Bloco e Prisma · 9º ano", "reforco", "G96RY725W1", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("se-liga-6", "Se Liga 2026 · Matemática — 6º ano + Extraordinário", "reforco", "797Z4NGV0E", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
+ ("se-liga-7", "Se Liga 2026 · Matemática — 7º ano + Extraordinário", "reforco", "8WPNKR3Y0P", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
+ ("se-liga-8", "Se Liga 2026 · Matemática — 8º ano + Extraordinário", "reforco", "89AX8YDG0D", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
+ ("se-liga-9", "Se Liga 2026 · Matemática — 9º ano + Extraordinário", "reforco", "60E2KY73W3", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
+ ("se-liga-1em", "Se Liga 2026 · Matemática — 1ª série EM + Extraordinário", "reforco", "Z0B1XY879A", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
+ ("se-liga-2em", "Se Liga 2026 · Matemática — 2ª série EM + Extraordinário", "reforco", "E9OG7N4KWB", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
+ ("se-liga-3em", "Se Liga 2026 · Matemática — 3ª série EM + Extraordinário", "reforco", "KW8Z5RAO01", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
+ ("saeb-9", "Simulado SAEB de Matemática — 9º ano", "reforco", "69K16VV8WO", 10, "50 questões de Matemática com gabarito e resoluções."),
+ ("saeb-3em", "Simulado SAEB de Matemática — 3ª série EM", "reforco", "8WPNKOEN0P", 10, "50 questões de Matemática com gabarito e resoluções."),
 ]
 GRUPOS = {"pss": "PSS SEED-PR 2027", "cisop": "CISOP Cascavel 2026", "prefeitura": "Prefeitura de Cascavel 2026", "simulado": "Simulados", "reforco": "Reforço e recomposição", "outros": "Outros concursos"}
 items = []
@@ -122,7 +122,7 @@ section.grupo h2:after{content:"";flex:1;height:2px;background:linear-gradient(9
 .price{font-family:'Playfair Display',serif;font-weight:700;font-size:24px;color:var(--navy)}
 .price span{font-size:14px;margin-right:2px}
 .btn{display:inline-block;text-decoration:none;font:700 14px 'Source Sans 3';padding:10px 16px;border-radius:10px;border:0;cursor:pointer;transition:.15s}
-.btn.buy{background:var(--gold);color:#2b2200}.btn.buy:hover{background:#b48f1c}
+.btn.buy{background:var(--navy-deep);color:#fff;box-shadow:0 0 0 2px var(--gold) inset}.btn.buy:hover{background:#000;color:#fff}
 .btn.wa{background:#1f9d57;color:#fff}.btn.wa:hover{background:#188047}
 .btn.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--line)}
 .empty{display:none;text-align:center;padding:50px 0;color:var(--mut)}
