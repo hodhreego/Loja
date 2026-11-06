@@ -585,10 +585,11 @@ function cPedido(){
   const total=itens.reduce((s,i)=>s+i.preco*i.q,0);
   return {criado:new Date().toISOString(),itens:itens,total:Math.round(total*100)/100};
 }
-function cTexto(p,cod){
+function cTexto(p){
   const cods=[];p.itens.forEach(i=>{for(let k=0;k<i.q;k++)cods.push(i.av)});
   const base=location.origin+location.pathname.replace(/index\.html$/,"");
-  return cods.join(" ")+"\n\nAbrir o carrinho na loja: "+base+"?c="+cods.join(",");
+  const L=p.itens.map(i=>i.av+(i.q>1?" ("+i.q+"x)":"")+" "+i.nome+" — R$ "+brl(i.preco*i.q));
+  return "O meu email é: "+"\n"+"\n"+"Tenho interesse em adquirir os itens a seguir:"+"\n"+"\n"+L.join("\n")+"\n"+"\n"+"Total: R$ "+brl(p.total)+"\n"+"\n"+"Abrir o carrinho na loja: "+base+"?c="+cods.join(",")+"\n"+"\n"+"Pix: +55 45 99969-9444 (Rodrigo Gonçalves Pereira)"+"\n"+"A entrega será feita assim que o Prof. Rodrigo estiver online.";
 }
 async function cfinal(){
   if(!CART.length){toast("Carrinho vazio");return}
