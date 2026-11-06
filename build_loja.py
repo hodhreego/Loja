@@ -53,6 +53,34 @@ P = [
  ("sei-2em", "Semanas de Estudos · Matemática — 2ª série EM", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (2ª série EM) · revisão semanal com gabarito e resoluções."),
  ("sei-3em", "Semanas de Estudos · Matemática — 3ª série EM", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (3ª série EM) · revisão semanal com gabarito e resoluções."),
 ]
+# ---- descrições melhoradas (sobrescrevem o subtítulo acima) ----
+_VOL = {"cone": "Volume do cone: V = ⅓·π·r²·h. 12 questões com figuras, do cálculo direto a problemas do dia a dia.",
+ "cubo": "Volume do cubo: V = a³. 12 questões com figuras, do cálculo direto a problemas do dia a dia.",
+ "paralelepipedo": "Volume do paralelepípedo: V = a·b·c. 12 questões com figuras, caixas, piscinas e reservatórios.",
+ "prisma": "Volume do prisma: V = área da base × altura. 12 questões com figuras de prismas de bases variadas.",
+ "esfera": "Volume da esfera: V = 4⁄3·π·r³. 12 questões com figuras, bolas, cúpulas e reservatórios.",
+ "piramide": "Volume da pirâmide: V = ⅓·área da base × altura. 12 questões com figuras e comparações com o prisma.",
+ "cilindro": "Volume do cilindro: V = π·r²·h. 12 questões com figuras, latas, tubos e caixas-d'água.",
+ "cubo-bloco-prisma": "Cubo, bloco retangular e prisma em uma só atividade: 12 questões com figuras para comparar as fórmulas."}
+_VOLFIM = " Gabarito resolvido incluso. PDF em A4, pronto para imprimir."
+_SERIE = lambda n: n.split("— ")[-1].replace(" + Extraordinário", "")
+def _desc(slug, nome, sub):
+    if slug.startswith("volume-"): return _VOL.get(slug[7:], sub) + _VOLFIM
+    if slug.startswith("se-liga-"):
+        return ("Revisão completa para as avaliações finais de Matemática do %s. "
+                "Inclui a versão extraordinária (recuperação) e gabarito. A4 pronto para imprimir.") % _SERIE(nome)
+    if slug.startswith("saeb-"):
+        return ("Simulado no estilo SAEB para o %s: 50 questões de Matemática por descritor, folha de respostas (ZipGrade), "
+                "gabarito e resoluções. PDF em A4 para imprimir.") % _SERIE(nome)
+    if slug.startswith("sei-"):
+        return ("Semanas de Estudos Intensivos para o %s: um plano de revisão semana a semana, com atividades, gabarito e resoluções. "
+                "Ideal para recomposição de aprendizagem.") % _SERIE(nome)
+    if slug.startswith("cisop-") and "Prefeitura" in sub:
+        return sub.rstrip(".") + ". Apostila focada no edital: conteúdo organizado por disciplina, com resumos objetivos e questões para treinar."
+    if slug.startswith("cisop-"):
+        return sub.rstrip(".") + ". Apostila focada no edital: conteúdo organizado por disciplina, com resumos objetivos e questões para treinar."
+    return sub
+P = [(a, b, c, d, e, _desc(a, b, f)) for a, b, c, d, e, f in P]
 GRUPOS = {"pss": "PSS SEED-PR 2027", "cisop": "CISOP Cascavel 2026", "prefeitura": "Prefeitura de Cascavel 2026", "simulado": "Simulados", "reforco": "Reforço e recomposição", "outros": "Outros concursos"}
 items = []
 def tipo_de(slug):
