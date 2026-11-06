@@ -100,8 +100,14 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .cq button{width:24px;height:24px;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:700;color:var(--navy);line-height:1}
 .cfoot{padding:12px 14px;border-top:1px solid #eef2f9;display:flex;flex-direction:column;gap:8px;background:#fafcff}
 .cfoot .tot{display:flex;justify-content:space-between;font-weight:700;color:var(--navy-deep)}
-.btn.add{background:#eef3fd;color:var(--navy);border:1px solid #d5e0f5;font-weight:700;padding:8px 10px}
-.btn.add:hover{background:#dfe9fb}
+.btn.add{background:#00a650;color:#fff;border:1px solid #009247;font-weight:800;padding:10px 14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 3px 10px rgba(0,166,80,.28)}
+.btn.add:hover{background:#009247;transform:translateY(-1px)}
+.btn.add:active{transform:translateY(0)}
+.btn.add svg{width:19px;height:19px;flex:none}
+.actions{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.actions .btn{width:100%;min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-align:center;font-size:15px}
+.btn.buy{background:var(--navy-deep);color:#fff;box-shadow:0 0 0 2px var(--gold) inset;font-weight:800}
+.btn.buy:hover{background:#000;color:#fff}
 .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--navy-deep);color:#fff;padding:10px 18px;border-radius:99px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 .wpanel{position:fixed;right:16px;bottom:74px;z-index:45;width:min(360px,calc(100vw - 32px));background:#fff;border-radius:18px;box-shadow:0 18px 44px rgba(10,20,40,.35);display:none;overflow:hidden}
@@ -288,15 +294,16 @@ const brl=n=>n.toFixed(2).replace(".",",");
 function card(it){
   const soon=!it.link;
   const act=soon?`<button class="btn wa" onclick="wabre('${it.slug}',5)">Avisar-me</button>`
-                 :`<a class="btn buy" target="_blank" rel="noopener" href="${it.link}">Comprar</a>`;
-  const add=`<button class="btn add" onclick="addCart('${it.slug}')" title="Adicionar ao carrinho" aria-label="Adicionar ${it.nome} ao carrinho">🛒 +</button>`;
+                 :`<a class="btn buy" target="_blank" rel="noopener" href="${it.link}">Comprar agora</a>`;
+  const add=`<button class="btn add" onclick="addCart('${it.slug}')" title="Adicionar ao carrinho" aria-label="Adicionar ${it.nome} ao carrinho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg><span>Adicionar ao carrinho</span></button>`;
   const n=it.imgs.length;
   const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i></div>`;
   const strip=it.imgs.map(leaf).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt=""></div>`;
   const dots=it.imgs.length>1?`<div class="dots">${it.imgs.map((_,k)=>`<i class="${k?'':'on'}"></i>`).join("")}</div>`:"";
   return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><span class="peek">👁 ver páginas</span></div>
   <div class="info" onmouseenter="const cv=this.parentElement.querySelector('.cover');if(cv&&cv._reset)cv._reset()"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
-  <div class="row"><div class="price"><span>R$</span>${brl(it.preco)}</div>${add}${act}</div></div></article>`;
+  <div class="price"><span>R$</span>${brl(it.preco)}</div>
+  <div class="actions">${add}${act}</div></div></article>`;
 }
 const CERT={
  pss:{nome:"PSS SEED-PR 2027",orgao:"Secretaria de Estado da Educação do Paraná (SEED-PR) · organização: NC/UFPR",edital:"Edital nº 52/2026 – GS/SEED",insc:["2026-07-27","2026-08-24"],prova:"2026-10-18",
@@ -431,7 +438,7 @@ const WOPT=[
  ["Já paguei e não recebi o PDF","Olá, Prof. Rodrigo! Já fiz o pagamento{P}, mas ainda não recebi o PDF.\nNome completo: \nE-mail usado na compra: \nForma de pagamento (Pix, cartão ou boleto): \nJá olhei o spam/promoções: ",
   "<b>Antes de enviar, confira (resolve na maioria dos casos):</b><br>1. Olhe a caixa de <b>spam</b>, <b>lixo eletrônico</b> e <b>promoções</b> do e-mail usado na compra.<br>2. Veja se você digitou <b>o e-mail certo</b> no checkout.<br>3. Pix e cartão costumam liberar em poucos minutos; <b>boleto</b> só libera após a compensação, que pode levar alguns dias úteis.<br>4. Entre na sua conta Eduzz (<b>Minhas compras</b>) e baixe o arquivo por lá.<br><b>Se não resolver</b>, envie a mensagem abaixo com os dados preenchidos e, se puder, anexe o <b>comprovante</b> depois."],
  ["Quero comprar vários materiais juntos","Olá, Prof. Rodrigo! Montei um pedido no carrinho da loja{P}.\nCódigo do pedido: \nQuero pagar tudo junto.",
-  "<b>Como funciona:</b><br>• Toque em <b>🛒 +</b> nos materiais e abra o <b>Carrinho</b>.<br>• Em <b>Enviar pedido</b>, o site gera um <b>código</b> (ex.: PED-261106-A7K2) e manda a lista organizada para o WhatsApp.<br>• Eu confiro os valores, envio o link de pagamento e, após o pagamento, o material chega no seu <b>e-mail</b> com os links do Drive."],
+  "<b>Como funciona:</b><br>• Toque em <b>Adicionar ao carrinho</b> nos materiais e abra o <b>Carrinho</b>.<br>• Em <b>Enviar pedido</b>, o site gera um <b>código</b> (ex.: PED-261106-A7K2) e manda a lista organizada para o WhatsApp.<br>• Eu confiro os valores, envio o link de pagamento e, após o pagamento, o material chega no seu <b>e-mail</b> com os links do Drive."],
  ["Quero a versão JUMBO (letra grande)","Olá, Prof. Rodrigo! Gostaria da versão JUMBO (letra grande){P}. Pode me orientar?",
   "<b>O que é:</b> a versão <b>JUMBO</b> tem o mesmo conteúdo da apostila, com letra maior, mais confortável para ler na tela ou imprimir.<br>Em alguns materiais ela já vem junto na compra. Se não vier no seu, é só pedir pela mensagem abaixo."],
  ["Pedir um material de outra disciplina ou concurso","Olá, Prof. Rodrigo! Gostaria de pedir um material de outra disciplina/concurso.\nConcurso: \nCargo/disciplina: \nBanca (se souber): \nEdital (link ou nome): ",
@@ -472,7 +479,7 @@ function cPaint(){
   $("#ctot").textContent="R$ "+brl(cTotal());
   $("#cbody").innerHTML=CART.length?CART.map(x=>{const i=cFind(x.slug);if(!i)return"";
     return `<div class="citem"><img src="${i.imgs[0]||''}" alt=""><div class="cn">${i.nome}<small>${i.grupoNome} · R$ ${brl(i.preco)}</small></div><div class="cq"><button onclick="qtyCart('${i.slug}',-1)" aria-label="Menos">−</button><span>${x.q}</span><button onclick="qtyCart('${i.slug}',1)" aria-label="Mais">+</button></div></div>`}).join("")
-    :`<p style="color:var(--mut);font-size:14px">Carrinho vazio. Toque em <b>🛒 +</b> no material que quiser.</p>`;
+    :`<p style="color:var(--mut);font-size:14px">Carrinho vazio. Toque em <b>Adicionar ao carrinho</b> no material que quiser.</p>`;
 }
 function cPedido(){
   const itens=CART.map(x=>{const i=cFind(x.slug);return i?{slug:i.slug,nome:i.nome,grupo:i.grupoNome,preco:i.preco,q:x.q}:null}).filter(Boolean);
