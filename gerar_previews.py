@@ -129,7 +129,10 @@ def gerar(slug, pdf, capa=None):
         im = render(doc, 0)
         if im.width > LARG:
             im = im.resize((LARG, int(im.height * LARG / im.width)), Image.LANCZOS)
-    im.save(os.path.join(DEST, '%s-1.jpg' % slug), 'JPEG', quality=86, optimize=True)
+    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'CAPAS_TRAVADAS.txt')) and '--forcar-capas' not in __import__('sys').argv:
+        print('   capa -1 travada (CAPAS_TRAVADAS.txt): mantida')
+    else:
+        im.save(os.path.join(DEST, '%s-1.jpg' % slug), 'JPEG', quality=86, optimize=True)
     n = 1
     escolhidas = escolher(doc)
     gab_txt = 'GABARITO'

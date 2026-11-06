@@ -62,7 +62,7 @@ def gerar(slug):
     c = bg.convert('RGB')
     pasta = {'5': '5-ano', '9': '9-ano', '3em': '3-ano-EM'}[slug]   # copia p/ catalogo WhatsApp (1a imagem, sem faixa)
     w = os.path.join(B, pasta, 'whatsapp'); os.makedirs(w, exist_ok=True); c.save(os.path.join(w, '01-capa.jpg'), quality=92)
-    if slug != '5':   # 5o ano nao esta no site
+    if slug != '5' and (not os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'CAPAS_TRAVADAS.txt')) or '--forcar-capas' in __import__('sys').argv):   # 5o ano nao esta no site; travado por CAPAS_TRAVADAS.txt
         c.save(os.path.join(OUT, 'saeb-%s-1.jpg' % slug), quality=92); c.save(os.path.join(OUT, 'saeb-%s-1.webp' % slug), quality=88)
     print('ok', slug, q1, q2, len(doc))
 if __name__ == '__main__':
