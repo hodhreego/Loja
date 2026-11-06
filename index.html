@@ -228,7 +228,7 @@ function card(it){
   const strip=it.imgs.map(leaf).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt=""></div>`;
   const dots=it.imgs.length>1?`<div class="dots">${it.imgs.map((_,k)=>`<i class="${k?'':'on'}"></i>`).join("")}</div>`:"";
   return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><span class="peek">👁 ver páginas</span></div>
-  <div class="info"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
+  <div class="info" onmouseenter="const cv=this.parentElement.querySelector('.cover');if(cv&&cv._reset)cv._reset()"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
   <div class="row"><div class="price"><span>R$</span>${brl(it.preco)}</div>${act}</div></div></article>`;
 }
 const CERT={
@@ -306,7 +306,7 @@ const todas=()=>[...document.querySelectorAll(".cover")];
 addEventListener("scroll",()=>{
   rolando=true;clearTimeout(tRol);
   todas().forEach(cv=>{if(cv._reset)cv._reset()});          /* rolando: só a capa aparece */
-  tRol=setTimeout(()=>{rolando=false;todas().forEach(cv=>{if(cv._vis&&cv._start)cv._start(250+Math.random()*2200)})},140);   /* parou: anima já */
+  tRol=setTimeout(()=>{rolando=false},140);   /* parou: nao inicia sozinho; so no hover da imagem */
 },{passive:true});
 function anima(){
   if(io)io.disconnect();
@@ -318,21 +318,17 @@ function anima(){
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
     if(matchMedia("(hover:hover)").matches){cv.onmouseenter=()=>cv._p=1;cv.onmouseleave=()=>cv._p=0}
     cv._reset=()=>{clearTimeout(cv._t);cv._t=null;if(k||bk.querySelector(".flip")){bk.classList.add("nt");pgs.forEach(p=>p.classList.remove("flip"));void bk.offsetHeight;bk.classList.remove("nt")}k=0;dot(0)};
+    /* a previa so aparece quando o mouse esta sobre a imagem */
+    cv.onmouseenter=()=>{cv._start(0)};
+    cv.onmouseleave=()=>{cv._reset()};
     const passo=()=>{cv._t=null;
-      if(rolando||!cv._vis)return;
-      if(cv._p){cv._t=setTimeout(passo,300);return}
+      if(rolando)return;
       if(k<n){pgs[k].classList.add("flip");k++;dot(k);
         if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(p=>p.classList.remove("flip"));void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA)},1500);return}}
       cv._t=setTimeout(passo,PAG)};
     cv._start=d=>{clearTimeout(cv._t);cv._t=setTimeout(passo,d)};
     cv._reset();
   });
-  io=new IntersectionObserver(es=>es.forEach(e=>{const cv=e.target;cv._vis=e.isIntersecting;
-    if(!cv._start)return;
-    if(e.isIntersecting){if(!rolando)cv._start(300+Math.random()*2600)}else cv._reset()}),{threshold:.4});
-  todas().forEach(cv=>io.observe(cv));
-  /* loop: se a página está parada e a miniatura visível sem timer, retoma sozinha */
-  clearInterval(window._wd);window._wd=setInterval(()=>{if(rolando)return;todas().forEach(cv=>{if(cv._vis&&cv._start&&!cv._t&&!cv._p)cv._start(300+Math.random()*1800)})},1500);
 }
 const NOMES=["Capa","Índice","Página interna","Página interna"];
 let cur=null;
