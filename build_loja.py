@@ -28,14 +28,14 @@ P = [
  ("cisop-monitor-biblioteca", "Monitor de Biblioteca", "prefeitura", "njnvex3v", 20, "Prefeitura de Cascavel 2026 · teste seletivo · banca Fafipa · prova 29/11/2026."),
  ("cisop-professor-ed-infantil", "Professor de Educação Infantil", "prefeitura", "enxexhh2", 20, "Prefeitura de Cascavel 2026 · teste seletivo · banca Fafipa · prova 29/11/2026."),
  ("cisop-professor-temporario", "Professor Temporário", "prefeitura", "55drvhe3", 20, "Prefeitura de Cascavel 2026 · teste seletivo · banca Fafipa · prova 29/11/2026."),
- ("", "Matemática · Volume do Cone · 9º ano", "reforco", "39YN13DQWO", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("", "Matemática · Volume do Cubo · 9º ano", "reforco", "E9OG7NO5WB", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("", "Matemática · Volume do Paralelepípedo · 9º ano", "reforco", "R9JXP1J80X", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("", "Matemática · Volume do Prisma · 9º ano", "reforco", "KW8Z5RKD01", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("", "Matemática · Volume da Esfera · 9º ano", "reforco", "7WXGXJQY0A", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("", "Matemática · Volume da Pirâmide · 9º ano", "reforco", "KW8Z557B01", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("", "Matemática · Volume do Cilindro (com π) · 9º ano", "reforco", "G92KQR5KWE", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("", "Matemática · Volume — Cubo, Bloco e Prisma · 9º ano", "reforco", "G96RY725W1", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("volume-cone", "Matemática · Volume do Cone · 9º ano", "reforco", "39YN13DQWO", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("volume-cubo", "Matemática · Volume do Cubo · 9º ano", "reforco", "E9OG7NO5WB", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("volume-paralelepipedo", "Matemática · Volume do Paralelepípedo · 9º ano", "reforco", "R9JXP1J80X", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("volume-prisma", "Matemática · Volume do Prisma · 9º ano", "reforco", "KW8Z5RKD01", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("volume-esfera", "Matemática · Volume da Esfera · 9º ano", "reforco", "7WXGXJQY0A", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("volume-piramide", "Matemática · Volume da Pirâmide · 9º ano", "reforco", "KW8Z557B01", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("volume-cilindro", "Matemática · Volume do Cilindro (com π) · 9º ano", "reforco", "G92KQR5KWE", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
+ ("volume-cubo-bloco-prisma", "Matemática · Volume — Cubo, Bloco e Prisma · 9º ano", "reforco", "G96RY725W1", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
  ("se-liga-6", "Se Liga 2026 · Matemática — 6º ano + Extraordinário", "reforco", "797Z4NGV0E", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
  ("se-liga-7", "Se Liga 2026 · Matemática — 7º ano + Extraordinário", "reforco", "8WPNKR3Y0P", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
  ("se-liga-8", "Se Liga 2026 · Matemática — 8º ano + Extraordinário", "reforco", "89AX8YDG0D", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
@@ -45,17 +45,25 @@ P = [
  ("se-liga-3em", "Se Liga 2026 · Matemática — 3ª série EM + Extraordinário", "reforco", "KW8Z5RAO01", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
  ("saeb-9", "Simulado SAEB de Matemática — 9º ano", "reforco", "69K16VV8WO", 10, "50 questões de Matemática com gabarito e resoluções."),
  ("saeb-3em", "Simulado SAEB de Matemática — 3ª série EM", "reforco", "8WPNKOEN0P", 10, "50 questões de Matemática com gabarito e resoluções."),
+ ("sei-6", "Semanas de Estudos · Matemática — 6º ano", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (6º ano) · revisão semanal com gabarito e resoluções."),
+ ("sei-7", "Semanas de Estudos · Matemática — 7º ano", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (7º ano) · revisão semanal com gabarito e resoluções."),
+ ("sei-8", "Semanas de Estudos · Matemática — 8º ano", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (8º ano) · revisão semanal com gabarito e resoluções."),
+ ("sei-9", "Semanas de Estudos · Matemática — 9º ano", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (9º ano) · revisão semanal com gabarito e resoluções."),
+ ("sei-1em", "Semanas de Estudos · Matemática — 1ª série EM", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (1ª série EM) · revisão semanal com gabarito e resoluções."),
+ ("sei-2em", "Semanas de Estudos · Matemática — 2ª série EM", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (2ª série EM) · revisão semanal com gabarito e resoluções."),
+ ("sei-3em", "Semanas de Estudos · Matemática — 3ª série EM", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (3ª série EM) · revisão semanal com gabarito e resoluções."),
 ]
 GRUPOS = {"pss": "PSS SEED-PR 2027", "cisop": "CISOP Cascavel 2026", "prefeitura": "Prefeitura de Cascavel 2026", "simulado": "Simulados", "reforco": "Reforço e recomposição", "outros": "Outros concursos"}
 items = []
 def tipo_de(slug):
     if slug.startswith('volume-'): return 'volumes'
+    if slug.startswith('sei-'): return 'sei'
     if slug.startswith('se-liga-'): return 'se-liga'
     if slug.startswith('saeb-'): return 'saeb'
     return 'apostilas'
 
 for slug, nome, g, code, preco, sub in P:
-    imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 5) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
+    imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 9) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
     items.append({"slug": slug, "nome": nome, "grupo": g, "grupoNome": GRUPOS[g], "link": (CHK + code) if code else None,
                   "preco": preco, "sub": sub, "imgs": imgs, "tipo": tipo_de(slug),
                   "de": 15 if slug in ('saeb-9', 'saeb-3em') else None,
@@ -146,6 +154,27 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 /* whatsapp */
 .fab{white-space:nowrap;position:fixed;right:16px;bottom:16px;z-index:40;background:#1f9d57;color:#fff;border:0;border-radius:99px;padding:13px 20px;font:700 15px 'Source Sans 3';box-shadow:0 8px 22px rgba(0,0,0,.28);cursor:pointer;display:flex;gap:8px;align-items:center}
 .fab:hover{background:#188047}
+/* carrinho */
+.cartfab{position:fixed;right:16px;bottom:74px;z-index:41;background:var(--navy);color:#fff;border:0;border-radius:99px;padding:12px 18px;font:700 15px 'Source Sans 3';box-shadow:0 8px 22px rgba(0,0,0,.28);cursor:pointer;display:none;gap:8px;align-items:center}
+.cartfab.on{display:flex}
+.cartfab b{background:#fff;color:var(--navy);border-radius:99px;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:13px}
+.cpanel{position:fixed;right:16px;bottom:132px;z-index:46;width:min(380px,calc(100vw - 32px));max-height:64vh;background:#fff;border-radius:18px;box-shadow:0 18px 44px rgba(10,20,40,.35);display:none;flex-direction:column;overflow:hidden}
+.cpanel.open{display:flex}
+.cpanel header{background:var(--navy);color:#fff;padding:13px 16px;display:flex;justify-content:space-between;align-items:center}
+.cpanel header b{font-size:16px}.cpanel header button{background:none;border:0;color:#fff;font-size:24px;cursor:pointer;line-height:1}
+.cbody{padding:12px 14px;overflow:auto;display:flex;flex-direction:column;gap:8px}
+.citem{display:flex;gap:10px;align-items:center;border-bottom:1px solid #eef2f9;padding-bottom:8px}
+.citem img{width:38px;height:50px;object-fit:cover;object-position:top;border-radius:4px;background:#eef2f9}
+.citem .cn{flex:1;min-width:0;font-size:13px;font-weight:600;line-height:1.25}
+.citem .cn small{display:block;color:var(--mut);font-weight:500}
+.cq{display:flex;align-items:center;gap:5px}
+.cq button{width:24px;height:24px;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:700;color:var(--navy);line-height:1}
+.cfoot{padding:12px 14px;border-top:1px solid #eef2f9;display:flex;flex-direction:column;gap:8px;background:#fafcff}
+.cfoot .tot{display:flex;justify-content:space-between;font-weight:700;color:var(--navy-deep)}
+.btn.add{background:#eef3fd;color:var(--navy);border:1px solid #d5e0f5;font-weight:700;padding:8px 10px}
+.btn.add:hover{background:#dfe9fb}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--navy-deep);color:#fff;padding:10px 18px;border-radius:99px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60}
+.toast.on{opacity:1;transform:translate(-50%,0)}
 .wpanel{position:fixed;right:16px;bottom:74px;z-index:45;width:min(360px,calc(100vw - 32px));background:#fff;border-radius:18px;box-shadow:0 18px 44px rgba(10,20,40,.35);display:none;overflow:hidden}
 .wpanel.open{display:block}
 .wpanel header{background:#1f9d57;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
@@ -170,7 +199,7 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .indice a:hover{background:#eef3fb}
 .indice hr{border:0;border-top:1px solid var(--line);margin:8px 0}
 @media(max-width:900px){.conteudo{grid-template-columns:1fr}.indice{position:static;display:flex;flex-wrap:wrap;gap:4px;align-items:center}.indice b{width:100%;margin:0}.indice a{padding:5px 8px}.indice hr{display:none}}
-.cert{flex:0 0 auto;min-width:150px;max-width:210px;scroll-snap-align:start;text-align:left;background:#fff;border:2px solid var(--line);border-radius:14px;padding:10px 14px;cursor:pointer;font:600 14px 'Source Sans 3';color:var(--navy);transition:.15s}
+.cert{flex:0 0 auto;min-width:150px;max-width:210px;scroll-snap-align:start;text-align:left;background:#fff;border:1px solid #e3eaf6;border-radius:14px;padding:9px 13px;cursor:pointer;font:600 14px 'Source Sans 3';color:var(--navy);transition:.15s}
 .cert b{display:block;font-size:15px;line-height:1.2}.cert small{display:block;color:var(--mut);font-weight:600;margin-top:3px;font-size:12px}
 .cert{display:flex;align-items:center;gap:10px}
 .cert .ct{display:block;min-width:0}
@@ -304,6 +333,17 @@ section.grupo h2{font-size:22px}
   <div class="wfoot"><a class="btn wa" id="wgo" target="_blank" rel="noopener" href="#">Abrir WhatsApp</a>
   <small>Você será levado ao WhatsApp com a mensagem pronta (o link da loja vai junto no final); só precisa tocar em enviar.</small></div>
  </div></div>
+<button class="cartfab" id="cartfab" onclick="ctoggle()"><span>🛒 Carrinho</span><b id="cartn">0</b></button>
+<div class="cpanel" id="cp" role="dialog" aria-label="Carrinho">
+ <header><b>Seu carrinho</b><button onclick="ctoggle()" aria-label="Fechar">×</button></header>
+ <div class="cbody" id="cbody"></div>
+ <div class="cfoot">
+  <div class="tot"><span>Total</span><span id="ctot">R$ 0,00</span></div>
+  <button class="btn buy" onclick="cfinal()">Enviar pedido no WhatsApp</button>
+  <small style="color:var(--mut);font-size:12px">O pedido vira um código (ex.: PED-261106-A7K2). O Prof. Rodrigo recebe a lista organizada e devolve o link de pagamento.</small>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
 <div class="modal" id="modal" onclick="if(event.target===this)fecha()"><button class="x" onclick="fecha()" aria-label="Fechar">×</button>
   <div class="box"><div class="stage"><img class="big" id="big" alt=""><div class="thumbs" id="th"></div><div class="lab" id="lab"></div></div>
   <div class="side" id="side"></div></div></div>
@@ -312,7 +352,7 @@ section.grupo h2{font-size:22px}
 const ITENS=__DATA__;
 const WA="__WA__";
 const GR=[["reforco","Reforço e recomposição"],["pss","PSS SEED-PR 2027"],["cisop","CISOP Cascavel 2026"],["prefeitura","Prefeitura de Cascavel 2026"],["outros","Outros concursos"]];
-const TIPOS=[["todos","Todas as atividades"],["se-liga","Se Liga"],["saeb","Simulados SAEB"],["volumes","Volumes"],["apostilas","Apostilas"]];
+const TIPOS=[["todos","Todas as atividades"],["se-liga","Se Liga"],["sei","Semanas de Estudos"],["saeb","Simulados SAEB"],["volumes","Volumes"],["apostilas","Apostilas"]];
 let filtro="todos",busca="",filtroTipo="todos";{const h=location.hash.slice(1);if(["pss","cisop","prefeitura","simulado","outros"].includes(h))filtro=h}
 const $=s=>document.querySelector(s);
 const brl=n=>n.toFixed(2).replace(".",",");
@@ -320,13 +360,14 @@ function card(it){
   const soon=!it.link;
   const act=soon?`<button class="btn wa" onclick="wabre('${it.slug}',5)">Avisar-me</button>`
                  :`<a class="btn buy" target="_blank" rel="noopener" href="${it.link}">Comprar</a>`;
+  const add=`<button class="btn add" onclick="addCart('${it.slug}')" title="Adicionar ao carrinho" aria-label="Adicionar ${it.nome} ao carrinho">🛒 +</button>`;
   const n=it.imgs.length;
   const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i></div>`;
   const strip=it.imgs.map(leaf).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt=""></div>`;
   const dots=it.imgs.length>1?`<div class="dots">${it.imgs.map((_,k)=>`<i class="${k?'':'on'}"></i>`).join("")}</div>`:"";
   return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><span class="peek">👁 ver páginas</span></div>
   <div class="info" onmouseenter="const cv=this.parentElement.querySelector('.cover');if(cv&&cv._reset)cv._reset()"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
-  <div class="row"><div class="price"><span>R$</span>${brl(it.preco)}</div>${act}</div></div></article>`;
+  <div class="row"><div class="price"><span>R$</span>${brl(it.preco)}</div>${add}${act}</div></div></article>`;
 }
 const CERT={
  pss:{nome:"PSS SEED-PR 2027",orgao:"Secretaria de Estado da Educação do Paraná (SEED-PR) · organização: NC/UFPR",edital:"Edital nº 52/2026 – GS/SEED",insc:["2026-07-27","2026-08-24"],prova:"2026-10-18",
@@ -400,31 +441,39 @@ function setGrupo(g){filtro=g;chips();render();document.getElementById('infoc').
 /* miniaturas animadas: as páginas sobem (scroll vertical) enquanto o card está visível */
 let io=null,rolando=false,tRol=null;
 const todas=()=>[...document.querySelectorAll(".cover")];
-addEventListener("scroll",()=>{
-  rolando=true;clearTimeout(tRol);
-  todas().forEach(cv=>{if(cv._reset)cv._reset()});          /* rolando: só a capa aparece */
-  tRol=setTimeout(()=>{rolando=false},140);   /* parou: nao inicia sozinho; so no hover da imagem */
-},{passive:true});
+function pararTodas(){todas().forEach(cv=>{if(cv._pause)cv._pause()})}
+function voltarTodas(){todas().forEach(cv=>{if(cv._play&&cv._vis&&!cv._p)cv._play(500+Math.random()*900)})}
+function rolandoAgora(ms){rolando=true;clearTimeout(tRol);pararTodas();tRol=setTimeout(()=>{rolando=false;voltarTodas()},ms)}
+addEventListener("scroll",()=>rolandoAgora(260),{passive:true});
+addEventListener("touchmove",()=>rolandoAgora(340),{passive:true});
+addEventListener("touchstart",()=>rolandoAgora(340),{passive:true});
 function anima(){
   if(io)io.disconnect();
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  io=new IntersectionObserver(es=>{
+    es.forEach(e=>{const cv=e.target;
+      if(e.isIntersecting){cv._vis=1;if(!cv._p&&!rolando)cv._play&&cv._play(600+Math.random()*2600)}
+      else{cv._vis=0;cv._pause&&cv._pause()}});
+  },{threshold:.18});
   todas().forEach(cv=>{const n=+cv.dataset.n;if(n<2)return;let k=0;
     /* cada card tem seu proprio ritmo: nada de animacoes sincronizadas */
     const CAPA=3200+Math.random()*4200, PAG=1500+Math.random()*2100;
     const bk=cv.querySelector(".book"),pgs=[...bk.querySelectorAll(".pg:not(.base)")],ds=cv.querySelectorAll(".dots i");
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
-    if(matchMedia("(hover:hover)").matches){cv.onmouseenter=()=>cv._p=1;cv.onmouseleave=()=>cv._p=0}
     cv._reset=()=>{clearTimeout(cv._t);cv._t=null;if(k||bk.querySelector(".flip")){bk.classList.add("nt");pgs.forEach(p=>p.classList.remove("flip"));void bk.offsetHeight;bk.classList.remove("nt")}k=0;dot(0)};
-    /* a previa so aparece quando o mouse esta sobre a imagem */
-    cv.onmouseenter=()=>{cv._start(0)};
-    cv.onmouseleave=()=>{cv._reset()};
+    cv._pause=()=>{cv._p=1;cv._reset();cv._vis=cv._vis};
+    cv._play=d=>{cv._p=0;clearTimeout(cv._t);cv._t=setTimeout(passo,d===undefined?400:d)};
     const passo=()=>{cv._t=null;
-      if(rolando)return;
+      if(rolando||cv._p||!cv._vis)return;
       if(k<n){pgs[k].classList.add("flip");k++;dot(k);
         if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(p=>p.classList.remove("flip"));void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA)},1500);return}}
       cv._t=setTimeout(passo,PAG)};
-    cv._start=d=>{clearTimeout(cv._t);cv._t=setTimeout(passo,d)};
+    /* mouse em cima (card inteiro): congela a animacao */
+    const cardEl=cv.closest(".card")||cv;
+    cardEl.addEventListener("mouseenter",()=>cv._pause(),{passive:true});
+    cardEl.addEventListener("mouseleave",()=>{if(cv._vis&&!rolando)cv._play(400)},{passive:true});
     cv._reset();
+    io.observe(cv);
   });
 }
 const NOMES=["Capa","Índice","Página interna","Página interna"];
@@ -447,11 +496,13 @@ chips();tipos();render();
 const WNUM="5545999699444";
 const WOPT=[
  ["Tenho uma dúvida sobre um material","Olá, Prof. Rodrigo! Tenho uma dúvida sobre o material{P}.\nMinha dúvida é: ",
-  "<b>Talvez já esteja respondido:</b><br>• Todos os materiais são <b>PDF digital</b>, para ler no celular, tablet ou computador.<br>• Antes de comprar, toque em <b>“ver páginas”</b> no card para conferir capa, índice e páginas internas.<br>• A versão <b>JUMBO</b> tem o mesmo conteúdo com letra maior.<br>Se ainda restar dúvida, escreva-a na mensagem abaixo."],
+  "<b>Talvez já esteja respondido:</b><br>• Todos os materiais são <b>PDF digital</b>, para ler no celular, tablet ou computador.<br>• Antes de comprar, toque em <b>“ver páginas”</b> no card para conferir capa, índice e páginas internas.<br>• A versão <b>JUMBO</b> tem o mesmo conteúdo com letra maior.<br>• Para levar <b>vários materiais</b>, use o <b>🛒 carrinho</b>: ele gera um código de pedido e envia a lista pronta para o WhatsApp.<br>• A entrega é por <b>e-mail</b>, com os links da pasta do Drive, após a confirmação do pagamento.<br>Se ainda restar dúvida, escreva-a na mensagem abaixo."],
  ["Quero ajuda para escolher o material certo para o meu cargo","Olá, Prof. Rodrigo! Quero ajuda para escolher o material certo.\nConcurso: \nCargo/disciplina: ",
   "<b>Para eu indicar o material certo, informe:</b><br>• o <b>concurso</b> (PSS SEED-PR 2027, CISOP Cascavel, Prefeitura de Cascavel ou outro);<br>• o <b>cargo ou disciplina</b>;<br>• Dica: no PSS, a apostila <b>Conhecimentos Básicos</b> serve para todos os cargos, e a específica do seu cargo complementa."],
  ["Já paguei e não recebi o PDF","Olá, Prof. Rodrigo! Já fiz o pagamento{P}, mas ainda não recebi o PDF.\nNome completo: \nE-mail usado na compra: \nForma de pagamento (Pix, cartão ou boleto): \nJá olhei o spam/promoções: ",
   "<b>Antes de enviar, confira (resolve na maioria dos casos):</b><br>1. Olhe a caixa de <b>spam</b>, <b>lixo eletrônico</b> e <b>promoções</b> do e-mail usado na compra.<br>2. Veja se você digitou <b>o e-mail certo</b> no checkout.<br>3. Pix e cartão costumam liberar em poucos minutos; <b>boleto</b> só libera após a compensação, que pode levar alguns dias úteis.<br>4. Entre na sua conta Eduzz (<b>Minhas compras</b>) e baixe o arquivo por lá.<br><b>Se não resolver</b>, envie a mensagem abaixo com os dados preenchidos e, se puder, anexe o <b>comprovante</b> depois."],
+ ["Quero comprar vários materiais juntos","Olá, Prof. Rodrigo! Montei um pedido no carrinho da loja{P}.\nCódigo do pedido: \nQuero pagar tudo junto.",
+  "<b>Como funciona:</b><br>• Toque em <b>🛒 +</b> nos materiais e abra o <b>Carrinho</b>.<br>• Em <b>Enviar pedido</b>, o site gera um <b>código</b> (ex.: PED-261106-A7K2) e manda a lista organizada para o WhatsApp.<br>• Eu confiro os valores, envio o link de pagamento e, após o pagamento, o material chega no seu <b>e-mail</b> com os links do Drive."],
  ["Quero a versão JUMBO (letra grande)","Olá, Prof. Rodrigo! Gostaria da versão JUMBO (letra grande){P}. Pode me orientar?",
   "<b>O que é:</b> a versão <b>JUMBO</b> tem o mesmo conteúdo da apostila, com letra maior, mais confortável para ler na tela ou imprimir.<br>Em alguns materiais ela já vem junto na compra. Se não vier no seu, é só pedir pela mensagem abaixo."],
  ["Pedir um material de outra disciplina ou concurso","Olá, Prof. Rodrigo! Gostaria de pedir um material de outra disciplina/concurso.\nConcurso: \nCargo/disciplina: \nBanca (se souber): \nEdital (link ou nome): ",
@@ -472,6 +523,56 @@ function winit(){
   $("#wprod").onchange=wbuild;$("#wmsg").oninput=wlink;wbuild();}
 function wtoggle(force){const p=$("#wp");const on=force===undefined?!p.classList.contains("open"):force;p.classList.toggle("open",on);}
 function wabre(slug,op){const it=ITENS.find(i=>i.slug===slug);if(it)$("#wprod").value="Apostila "+it.nome+" · "+it.grupoNome;const r=document.querySelector('input[name=wo][value="'+(op||0)+'"]');if(r)r.checked=true;wbuild();wtoggle(true);const w=document.querySelector(".wbody");if(w)w.scrollTop=0;}
+/* ================= carrinho ================= */
+const CKEY="loja.carrinho.v1";
+/* URL do Web App do Apps Script (cole aqui depois de publicar); vazio = modo local */
+const API_PEDIDOS="";
+function cLoad(){try{return JSON.parse(localStorage.getItem(CKEY)||"[]")||[]}catch(e){return []}}
+let CART=cLoad();
+function cSave(){try{localStorage.setItem(CKEY,JSON.stringify(CART))}catch(e){}}
+function cFind(s){return ITENS.find(i=>i.slug===s)}
+function cCount(){return CART.reduce((s,x)=>s+x.q,0)}
+function cTotal(){return CART.reduce((s,x)=>{const i=cFind(x.slug);return s+(i?i.preco*x.q:0)},0)}
+function toast(t){const el=$("#toast");if(!el)return;el.textContent=t;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),1900)}
+function addCart(s){const i=cFind(s);if(!i)return;const e=CART.find(x=>x.slug===s);if(e)e.q++;else CART.push({slug:s,q:1});cSave();cPaint();toast(i.nome+" no carrinho")}
+function rmCart(s){CART=CART.filter(x=>x.slug!==s);cSave();cPaint()}
+function qtyCart(s,d){const e=CART.find(x=>x.slug===s);if(!e)return;e.q+=d;if(e.q<1)CART=CART.filter(x=>x.slug!==s);cSave();cPaint()}
+function ctoggle(f){const p=$("#cp");if(!p)return;const on=f===undefined?!p.classList.contains("open"):f;p.classList.toggle("open",on)}
+function cPaint(){
+  const n=cCount();const fb=$("#cartfab");if(fb){$("#cartn").textContent=n;fb.classList.toggle("on",n>0)}
+  $("#ctot").textContent="R$ "+brl(cTotal());
+  $("#cbody").innerHTML=CART.length?CART.map(x=>{const i=cFind(x.slug);if(!i)return"";
+    return `<div class="citem"><img src="${i.imgs[0]||''}" alt=""><div class="cn">${i.nome}<small>${i.grupoNome} · R$ ${brl(i.preco)}</small></div><div class="cq"><button onclick="qtyCart('${i.slug}',-1)" aria-label="Menos">−</button><span>${x.q}</span><button onclick="qtyCart('${i.slug}',1)" aria-label="Mais">+</button></div></div>`}).join("")
+    :`<p style="color:var(--mut);font-size:14px">Carrinho vazio. Toque em <b>🛒 +</b> no material que quiser.</p>`;
+}
+function cPedido(){
+  const itens=CART.map(x=>{const i=cFind(x.slug);return i?{slug:i.slug,nome:i.nome,grupo:i.grupoNome,preco:i.preco,q:x.q}:null}).filter(Boolean);
+  const total=itens.reduce((s,i)=>s+i.preco*i.q,0);
+  return {criado:new Date().toISOString(),itens:itens,total:Math.round(total*100)/100};
+}
+function cTexto(p,cod){
+  let t="🛒 *PEDIDO "+cod+"*\n\n";
+  p.itens.forEach(i=>{t+="• "+i.q+"x "+i.nome+" — R$ "+brl(i.preco*i.q)+"\n"});
+  t+="\n*Total: R$ "+brl(p.total)+"*\n\nConfira e me envie o link de pagamento. Depois do pagamento o material vai para o seu e-mail.";
+  return t;
+}
+async function cfinal(){
+  if(!CART.length){toast("Carrinho vazio");return}
+  const p=cPedido();let cod="";
+  if(API_PEDIDOS){
+    try{
+      const r=await fetch(API_PEDIDOS,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({acao:"novo",pedido:p})});
+      const j=await r.json();cod=j.codigo||"";
+    }catch(e){}
+  }
+  if(!cod)cod="PED-"+new Date().toISOString().slice(2,10).replace(/-/g,"")+"-"+Math.random().toString(36).slice(2,6).toUpperCase();
+  const base=location.origin+location.pathname.replace(/index\.html$/,"");
+  const link=base+"pedido.html?p="+encodeURIComponent(cod);
+  const txt=cTexto(p,cod)+"\n\n🧾 Pedido: "+link;
+  window.open("https://wa.me/"+WNUM+"?text="+encodeURIComponent(txt),"_blank");
+  toast("Pedido "+cod+" enviado");
+}
+cPaint();
 winit();
 </script>
 </body>
