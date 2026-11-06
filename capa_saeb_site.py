@@ -5,7 +5,8 @@ import os, fitz
 from bs4 import BeautifulSoup
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageChops
 B = r'A:\Claude.ai\Materiais\Matematica\Simulados-SAEB'; OUT = r'A:\Claude.ai\Loja\img'
-SER = {'9': (B + r'\9-ano\simulado-saeb-matematica-9-ano', '9º', 'ANO', '9º ano'),
+SER = {'5': (os.path.join(B, '5-ano', 'simulado-saeb-matematica-5ano'), '5º', 'ANO', '5º ano'),
+       '9': (B + r'\9-ano\simulado-saeb-matematica-9-ano', '9º', 'ANO', '9º ano'),
        '3em': (B + r'\3-ano-EM\simulado-saeb-matematica-3-ano-em', '3ª', 'SÉRIE EM', '3ª série EM')}
 S = 1000; GOLD = (255, 200, 40); CY = (34, 211, 238); MG = (236, 40, 120)
 def F(sz): return ImageFont.truetype('C:/Windows/Fonts/arialbd.ttf', sz)
@@ -58,7 +59,11 @@ def gerar(slug):
     d.text((500, 907), '50 questões  •  gabarito  •  resoluções passo a passo  •  %d páginas' % len(doc), font=F(25), fill='white', anchor='mm')
     d.text((500, 960), 'Prof. Rodrigo  •  PDF pronto para imprimir', font=F(28), fill=GOLD, anchor='mm')
     d.text((500, 988), 'Veja as páginas por dentro  >>', font=F(19), fill=(220, 232, 255), anchor='mm')
-    c = bg.convert('RGB'); c.save(os.path.join(OUT, 'saeb-%s-1.jpg' % slug), quality=92); c.save(os.path.join(OUT, 'saeb-%s-1.webp' % slug), quality=88)
+    c = bg.convert('RGB')
+    pasta = {'5': '5-ano', '9': '9-ano', '3em': '3-ano-EM'}[slug]   # copia p/ catalogo WhatsApp (1a imagem, sem faixa)
+    w = os.path.join(B, pasta, 'whatsapp'); os.makedirs(w, exist_ok=True); c.save(os.path.join(w, '01-capa.jpg'), quality=92)
+    if slug != '5':   # 5o ano nao esta no site
+        c.save(os.path.join(OUT, 'saeb-%s-1.jpg' % slug), quality=92); c.save(os.path.join(OUT, 'saeb-%s-1.webp' % slug), quality=88)
     print('ok', slug, q1, q2, len(doc))
 if __name__ == '__main__':
     import sys

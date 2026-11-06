@@ -3,7 +3,7 @@
 import os
 from PIL import Image, ImageDraw, ImageFont
 HERE = os.path.dirname(os.path.abspath(__file__))
-CAPAS = [('se-liga-6',1), ('se-liga-8',1), ('se-liga-3em',1), ('volume-prisma',1)]
+CAPAS = [('se-liga-6',1), ('se-liga-8',1), ('saeb-9',1), ('volume-prisma',1)]
 W, H = 1200, 630
 bg = Image.new('RGB', (W, H), '#0f2547')
 d = ImageDraw.Draw(bg)
