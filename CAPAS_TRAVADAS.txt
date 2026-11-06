@@ -1,0 +1,5 @@
+As capas img/<slug>-1.jpg/.webp (Se Liga, SEI, SAEB, Volumes) foram restauradas em 06/11/2026
+a partir das originais do catalogo do WhatsApp (Materiais/Matematica/.../whatsapp/01-capa.jpg
+e Simulados-SAEB/loja/*/whatsapp/01-capa.jpg). Backup do estado anterior: img_backup_2026-11-06/.
+gerar_previews.py e capa_saeb_site.py NAO sobrescrevem mais essas capas enquanto este arquivo existir.
+Para regenerar de proposito: rode o script com --forcar-capas.

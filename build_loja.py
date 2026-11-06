@@ -92,6 +92,8 @@ def tipo_de(slug):
 
 for slug, nome, g, code, preco, sub in P:
     imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 9) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
+    if tipo_de(slug) in ('se-liga', 'sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
+        imgs = [(i + '?v=5') if i.endswith('-1.jpg') else i for i in imgs]
     items.append({"slug": slug, "nome": nome, "grupo": g, "grupoNome": GRUPOS[g], "link": (CHK + code) if code else None,
                   "preco": preco, "sub": sub, "imgs": imgs, "tipo": tipo_de(slug),
                   "de": 15 if slug in ('saeb-9', 'saeb-3em') else None,
@@ -108,7 +110,7 @@ HTML = r'''<!DOCTYPE html>
 <meta name="description" content="Atividades educativas prontas para imprimir (Se Liga, volumes, simulados SAEB) com gabarito, e apostilas para concursos como PSS SEED-PR 2027. Veja as páginas antes de comprar.">
 <meta property="og:title" content="Loja de Matemática — Atividades Educativas, Simulados e Apostilas">
 <meta property="og:description" content="Atividades educativas prontas para imprimir, simulados SAEB e apostilas para concursos (PSS SEED-PR 2027 e mais).">
-<meta property="og:image" content="https://hodhreego.github.io/Loja/og.jpg?v=4">
+<meta property="og:image" content="https://hodhreego.github.io/Loja/og.jpg?v=5">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:type" content="website">
