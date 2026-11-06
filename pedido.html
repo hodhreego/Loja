@@ -57,7 +57,7 @@ footer{text-align:center;color:var(--mut);font-size:12.5px;margin-top:18px}
 <script>
 /* cole aqui a MESMA URL do Web App usada no site */
 const API_PEDIDOS="";
-const WA="";
+const WA="5545999699444";
 const brl=n=>(Number(n)||0).toFixed(2).replace(".",",");
 const $=s=>document.querySelector(s);
 const cod=new URLSearchParams(location.search).get("p")||"";
@@ -90,7 +90,7 @@ function manual(){
 
 async function carrega(){
   if(!cod){manual();return}
-  if(!API_PEDIDOS){mostra({ok:true,codigo:cod,status:'pendente',itens:[],total:0});return}
+  if(!API_PEDIDOS){mostra(null);return}
   try{
     const r=await fetch(API_PEDIDOS+"?p="+encodeURIComponent(cod));
     mostra(await r.json());

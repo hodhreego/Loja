@@ -568,7 +568,7 @@ async function cfinal(){
   if(!cod)cod="PED-"+new Date().toISOString().slice(2,10).replace(/-/g,"")+"-"+Math.random().toString(36).slice(2,6).toUpperCase();
   const base=location.origin+location.pathname.replace(/index\.html$/,"");
   const link=base+"pedido.html?p="+encodeURIComponent(cod);
-  const txt=cTexto(p,cod)+"\n\n🧾 Pedido: "+link;
+  const txt=cTexto(p,cod)+(API_PEDIDOS?"\n\n🧾 Pedido: "+link:"");
   window.open("https://wa.me/"+WNUM+"?text="+encodeURIComponent(txt),"_blank");
   toast("Pedido "+cod+" enviado");
 }
