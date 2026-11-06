@@ -162,7 +162,7 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .tip{background:#fff8e1;border:1.5px solid #ecd58a;border-radius:10px;padding:10px 12px;font-size:13.5px;line-height:1.5;color:#4a3d00}.wbody small{color:var(--mut);font-size:12px}
 
 /* certames */
-.certs{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px;scroll-snap-type:x proximity;flex:1 1 100%}
+.certs{display:flex;flex-wrap:wrap;gap:10px;padding:2px 2px 6px;flex:1 1 100%}
 .conteudo{display:grid;grid-template-columns:190px 1fr;gap:24px;align-items:start;margin-top:10px}
 .indice{position:sticky;top:18px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 6px 18px rgba(15,37,71,.06)}
 .indice b{display:block;font:700 12px 'Source Sans 3';text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin:2px 0 8px}
@@ -216,7 +216,7 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .cover:before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,transparent 70%,rgba(15,37,71,.35));pointer-events:none}
 .badge,.peek{z-index:2}
 @media(prefers-reduced-motion:reduce){.pg.flip{animation:none;transform:rotateY(-180deg)}}
-@media(max-width:720px){.certs{display:flex;overflow-x:auto;gap:8px}.cert{min-width:0;max-width:none;min-height:42px;padding:8px 14px;border-radius:99px}.cert .ic,.cert small{display:none}.cert b{font-size:14px;white-space:nowrap}.box{grid-template-columns:1fr}.stage img.big{max-height:52vh}.grid{grid-template-columns:repeat(2,1fr);gap:12px}.info h3{font-size:15px}.price{font-size:20px}.row{flex-direction:column;align-items:stretch;gap:6px}.row .btn{text-align:center}.info{padding:12px}#q{width:100%}.fab{padding:11px 16px}}
+@media(max-width:720px){.certs{display:flex;flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;gap:8px}.cert{flex:none}.cert{min-width:0;max-width:none;min-height:42px;padding:8px 14px;border-radius:99px}.cert .ic,.cert small{display:none}.cert b{font-size:14px;white-space:nowrap}.box{grid-template-columns:1fr}.stage img.big{max-height:52vh}.grid{grid-template-columns:repeat(2,1fr);gap:12px}.info h3{font-size:15px}.price{font-size:20px}.row{flex-direction:column;align-items:stretch;gap:6px}.row .btn{text-align:center}.info{padding:12px}#q{width:100%}.fab{padding:11px 16px}}
 
 /* ---- redesign: topo compacto, catálogo logo na primeira tela, visual mais sóbrio ---- */
 header.hero{padding:44px 0 56px}
@@ -312,7 +312,7 @@ section.grupo h2{font-size:22px}
 const ITENS=__DATA__;
 const WA="__WA__";
 const GR=[["reforco","Reforço e recomposição"],["pss","PSS SEED-PR 2027"],["cisop","CISOP Cascavel 2026"],["prefeitura","Prefeitura de Cascavel 2026"],["outros","Outros concursos"]];
-const TIPOS=[["todos","Todas as atividades"],["volumes","Volumes"],["se-liga","Se Liga"],["saeb","Simulados SAEB"],["apostilas","Apostilas"]];
+const TIPOS=[["todos","Todas as atividades"],["se-liga","Se Liga"],["saeb","Simulados SAEB"],["volumes","Volumes"],["apostilas","Apostilas"]];
 let filtro="todos",busca="",filtroTipo="todos";{const h=location.hash.slice(1);if(["pss","cisop","prefeitura","simulado","outros"].includes(h))filtro=h}
 const $=s=>document.querySelector(s);
 const brl=n=>n.toFixed(2).replace(".",",");
@@ -363,7 +363,7 @@ function render(){
   const q=busca.toLowerCase();let total=0;
   $("#main").innerHTML=GR.map(([g,nome])=>{
     if(filtro!=="todos"&&filtro!==g)return "";
-    const l=ITENS.filter(i=>(filtroTipo==="todos"||i.tipo===filtroTipo)&&i.grupo===g&&(i.nome+" "+i.grupoNome).toLowerCase().includes(q));
+    const RK={"se-liga":0,"saeb":1};const l=ITENS.filter(i=>(filtroTipo==="todos"||i.tipo===filtroTipo)&&i.grupo===g&&(i.nome+" "+i.grupoNome).toLowerCase().includes(q)).map((x,n)=>[x,n]).sort((a,b)=>((RK[a[0].tipo]??2)-(RK[b[0].tipo]??2))||a[1]-b[1]).map(x=>x[0]);
     total+=l.length;if(!l.length)return "";
     return `<section class="grupo"><h2>${nome}</h2><div class="grid">${l.map(card).join("")}</div></section>`;}).join("");
   $("#empty").style.display=total?"none":"block";
