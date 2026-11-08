@@ -162,8 +162,9 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .pg>.b{transform:rotateY(180deg);background:linear-gradient(90deg,#d9d2c2,#f6f1e6 18%,#fbf8f0)}
 .pg .sh{position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.05) 70%)}
 .pg>.f::after{content:none}
-.pg.flip{animation:turn 1.5s cubic-bezier(.45,.05,.3,1) forwards}
-.pg.flip .f+.sh{animation:shf 1.5s ease-in forwards}
+.pg.flip{animation:turn 1.2s cubic-bezier(.45,.05,.3,1) forwards}
+.pg.flip .f+.sh{animation:shf 1.2s ease-in forwards}
+.rol .pg.flip,.rol .pg.flip .f+.sh{animation-play-state:paused}
 @keyframes turn{
  0%{transform:rotateY(0) skewY(0);box-shadow:0 0 0 rgba(0,0,0,0)}
  25%{transform:rotateY(-40deg) skewY(-1.2deg);box-shadow:14px 0 26px rgba(0,0,0,.28)}
@@ -376,37 +377,35 @@ function setGrupo(g){filtro=g;chips();render();document.getElementById('infoc').
 /* miniaturas animadas: as páginas sobem (scroll vertical) enquanto o card está visível */
 let io=null,rolando=false,tRol=null;
 const todas=()=>[...document.querySelectorAll(".cover")];
-function pararTodas(){todas().forEach(cv=>{if(cv._pause)cv._pause()})}
-function voltarTodas(){todas().forEach(cv=>{if(cv._play&&cv._vis&&!cv._p)cv._play(500+Math.random()*900)})}
-function rolandoAgora(ms){rolando=true;clearTimeout(tRol);pararTodas();tRol=setTimeout(()=>{rolando=false;voltarTodas()},ms)}
+function rolandoAgora(ms){rolando=true;document.documentElement.classList.add("rol");clearTimeout(tRol);tRol=setTimeout(()=>{rolando=false;document.documentElement.classList.remove("rol")},ms)}
 addEventListener("scroll",()=>rolandoAgora(260),{passive:true});
 addEventListener("touchmove",()=>rolandoAgora(340),{passive:true});
-addEventListener("touchstart",()=>rolandoAgora(340),{passive:true});
 function anima(){
   if(io)io.disconnect();
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   io=new IntersectionObserver(es=>{
     es.forEach(e=>{const cv=e.target;
-      if(e.isIntersecting){cv._vis=1;if(!cv._p&&!rolando)cv._play&&cv._play(600+Math.random()*2600)}
+      if(e.isIntersecting){cv._vis=1;if(!cv._p)cv._play&&cv._play(250+Math.random()*1100)}
       else{cv._vis=0;cv._pause&&cv._pause()}});
   },{threshold:.18});
   todas().forEach(cv=>{const n=+cv.dataset.n;if(n<2)return;let k=0;
     /* cada card tem seu proprio ritmo: nada de animacoes sincronizadas */
-    const CAPA=3200+Math.random()*4200, PAG=1500+Math.random()*2100;
+    const CAPA=1800+Math.random()*2200, PAG=1250+Math.random()*1100;
     const bk=cv.querySelector(".book"),pgs=[...bk.querySelectorAll(".pg:not(.base)")],ds=cv.querySelectorAll(".dots i");
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
     cv._reset=()=>{clearTimeout(cv._t);cv._t=null;if(k||bk.querySelector(".flip")){bk.classList.add("nt");pgs.forEach(p=>p.classList.remove("flip"));void bk.offsetHeight;bk.classList.remove("nt")}k=0;dot(0)};
     cv._pause=()=>{cv._p=1;cv._reset();cv._vis=cv._vis};
     cv._play=d=>{cv._p=0;clearTimeout(cv._t);cv._t=setTimeout(passo,d===undefined?400:d)};
     const passo=()=>{cv._t=null;
-      if(rolando||cv._p||!cv._vis)return;
+      if(rolando){cv._t=setTimeout(passo,200);return}
+      if(cv._p||!cv._vis)return;
       if(k<n){pgs[k].classList.add("flip");k++;dot(k);
         if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(p=>p.classList.remove("flip"));void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA)},1500);return}}
       cv._t=setTimeout(passo,PAG)};
     /* mouse em cima (card inteiro): congela a animacao */
     const cardEl=cv.closest(".card")||cv;
-    cardEl.addEventListener("mouseenter",()=>cv._pause(),{passive:true});
-    cardEl.addEventListener("mouseleave",()=>{if(cv._vis&&!rolando)cv._play(400)},{passive:true});
+    cardEl.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse")cv._pause()},{passive:true});
+    cardEl.addEventListener("pointerleave",e=>{if(e.pointerType==="mouse"&&cv._vis)cv._play(400)},{passive:true});
     cv._reset();
     io.observe(cv);
   });
