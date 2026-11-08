@@ -158,6 +158,7 @@ section.grupo h2:after{content:"";flex:1;height:2px;background:linear-gradient(9
 .badge.soon{background:var(--gold);color:#3b2f00}
 .pills{position:absolute;bottom:10px;right:10px;display:flex;gap:6px;align-items:center;z-index:3}
 .pills .peek{position:static}
+.pills{gap:10px;bottom:12px;right:12px}.pills .peek{font-size:19px;padding:8px 18px}.cartpeek svg{width:26px;height:26px}
 .cartpeek{background:#16a34a!important;color:#fff!important;display:inline-flex;align-items:center;gap:5px;border:0;cursor:pointer;font-family:inherit;font-weight:800!important}
 .peek{position:absolute;bottom:10px;right:10px;background:rgba(15,37,71,.85);color:#fff;font-size:12px;font-weight:600;padding:5px 11px;border-radius:99px}
 .info{padding:14px 15px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
