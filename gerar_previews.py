@@ -140,6 +140,8 @@ def gerar(slug, pdf, capa=None):
         im = render(doc, idx)
         if im.width > LARG:
             im = im.resize((LARG, int(im.height * LARG / im.width)), Image.LANCZOS)
+        os.makedirs(os.path.join(DEST, 'limpa'), exist_ok=True)
+        im.save(os.path.join(DEST, 'limpa', '%s-%d.jpg' % (slug, k)), 'JPEG', quality=84, optimize=True)
         if eh_gabarito(doc[idx].get_text()):
             im = persianas(im)
         else:
