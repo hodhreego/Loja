@@ -181,6 +181,10 @@ ITENS['saeb-9'] = (os.path.join(SAEB, '9-ano', 'simulado-saeb-matematica-9-ano.p
 ITENS['saeb-3em'] = (os.path.join(SAEB, '3-ano-EM', 'simulado-saeb-matematica-3-ano-em.pdf'),
                      os.path.join(PROD, 'saeb', '3-ano-EM', 'arte-1.png'))
 
+ITENS['album-multiplicacao'] = (
+    r'I:\Meu Drive\##Aulas @hodhreego\#$old1\Av62 Album Multiplicação\Multiplicação - pinturas - Mini Álbuns @hodhreego.pdf',
+    os.path.join(PROD, 'albuns-multiplicacao', 'capa.png'))
+
 if __name__ == '__main__':
     alvos = [a for a in sys.argv[1:] if not a.startswith('--')]
     lista = [(s, p, c) for s, (p, c) in ITENS.items() if not alvos or s in alvos]
