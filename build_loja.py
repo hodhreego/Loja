@@ -156,6 +156,9 @@ section.grupo h2:after{content:"";flex:1;height:2px;background:linear-gradient(9
 .cover{position:relative;aspect-ratio:3/4;background:#dfe7f5;cursor:pointer;overflow:hidden}
 .badge{position:absolute;top:10px;left:10px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--ok);color:#fff}
 .badge.soon{background:var(--gold);color:#3b2f00}
+.pills{position:absolute;bottom:10px;right:10px;display:flex;gap:6px;align-items:center;z-index:3}
+.pills .peek{position:static}
+.cartpeek{background:var(--gold)!important;color:var(--navy-deep)!important;border:0;cursor:pointer;font-family:inherit;font-weight:800!important}
 .peek{position:absolute;bottom:10px;right:10px;background:rgba(15,37,71,.85);color:#fff;font-size:12px;font-weight:600;padding:5px 11px;border-radius:99px}
 .info{padding:14px 15px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
 .info small{color:var(--mut);font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
@@ -187,10 +190,10 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .lab{font-size:12px;color:var(--mut);text-align:center}
 
 /* whatsapp */
-.fab{white-space:nowrap;position:fixed;right:16px;bottom:16px;z-index:40;background:#1f9d57;color:#fff;border:0;border-radius:99px;padding:13px 20px;font:700 15px 'Source Sans 3';box-shadow:0 8px 22px rgba(0,0,0,.28);cursor:pointer;display:flex;gap:8px;align-items:center}
+.fab{white-space:nowrap;position:fixed;right:16px;bottom:16px;z-index:40;background:#1f9d57;color:#fff;border:0;border-radius:99px;padding:13px 20px;font:700 15px 'Source Sans 3';box-shadow:0 8px 22px rgba(0,0,0,.28);cursor:pointer;display:none;gap:8px;align-items:center}
 .fab:hover{background:#188047}
 /* carrinho */
-.cartfab{position:fixed;right:16px;bottom:74px;z-index:41;background:var(--navy);color:#fff;border:0;border-radius:99px;padding:12px 18px;font:700 15px 'Source Sans 3';box-shadow:0 8px 22px rgba(0,0,0,.28);cursor:pointer;display:none;gap:8px;align-items:center}
+.cartfab{position:fixed;right:16px;bottom:74px;z-index:41;background:var(--navy);color:#fff;border:0;border-radius:99px;padding:12px 18px;font:700 15px 'Source Sans 3';box-shadow:0 8px 22px rgba(0,0,0,.28);cursor:pointer;display:flex;gap:8px;align-items:center}
 .cartfab.on{display:flex}
 .cartfab b{background:#fff;color:var(--navy);border-radius:99px;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:13px}
 .cpanel{position:fixed;right:16px;bottom:132px;z-index:46;width:min(380px,calc(100vw - 32px));max-height:64vh;background:#fff;border-radius:18px;box-shadow:0 18px 44px rgba(10,20,40,.35);display:none;flex-direction:column;overflow:hidden}
@@ -404,9 +407,9 @@ function card(it){
   const add=`<button class="btn add" onclick="addCart('${it.slug}')" title="Adicionar ao carrinho" aria-label="Adicionar ${it.nome} ao carrinho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg><span>Adicionar ao carrinho</span></button>`;
   const n=it.imgs.length;
   const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i></div>`;
-  const strip=it.imgs.map(leaf).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt=""></div>`;
-  const dots=it.imgs.length>1?`<div class="dots">${it.imgs.map((_,k)=>`<i class="${k?'':'on'}"></i>`).join("")}</div>`:"";
-  return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><span class="peek">👁 ver páginas</span></div>
+  const strip=it.imgs.map((u,k)=>leaf(k?u.replace("img/","img/limpa/"):u,k)).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt=""></div>`;
+  const dots="";
+  return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><div class="pills"><button type="button" class="peek cartpeek" onclick="event.stopPropagation();addCart('${it.slug}')" aria-label="Adicionar ao carrinho">🛒 +</button><span class="peek">👁 ver páginas</span></div></div>
   <div class="info" onmouseenter="const cv=this.parentElement.querySelector('.cover');if(cv&&cv._reset)cv._reset()"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
   <div class="price"><span>R$</span>${brl(it.preco)}</div>
   <div class="actions">${add}${act}</div></div></article>`;
@@ -483,7 +486,7 @@ function setGrupo(g){filtro=g;chips();render();document.getElementById('infoc').
 /* miniaturas animadas: as páginas sobem (scroll vertical) enquanto o card está visível */
 let io=null,rolando=false,tRol=null;
 const todas=()=>[...document.querySelectorAll(".cover")];
-function rolandoAgora(ms){rolando=true;document.documentElement.classList.add("rol");clearTimeout(tRol);tRol=setTimeout(()=>{rolando=false;document.documentElement.classList.remove("rol")},ms)}
+function rolandoAgora(ms){if(!rolando)todas().forEach(cv=>{if(cv._reset){clearTimeout(cv._t);cv._t=null;cv._reset()}});rolando=true;clearTimeout(tRol);tRol=setTimeout(()=>{rolando=false;todas().forEach(cv=>{if(cv._play&&cv._vis&&!cv._p)cv._play(250+Math.random()*3200)})},ms)}
 addEventListener("scroll",()=>rolandoAgora(260),{passive:true});
 addEventListener("touchmove",()=>rolandoAgora(340),{passive:true});
 function anima(){
@@ -491,7 +494,7 @@ function anima(){
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   io=new IntersectionObserver(es=>{
     es.forEach(e=>{const cv=e.target;
-      if(e.isIntersecting){cv._vis=1;if(!cv._p)cv._play&&cv._play(250+Math.random()*1100)}
+      if(e.isIntersecting){cv._vis=1;if(!cv._p&&!rolando)cv._play&&cv._play(250+Math.random()*3200)}
       else{cv._vis=0;cv._pause&&cv._pause()}});
   },{threshold:.18});
   todas().forEach(cv=>{const n=+cv.dataset.n;if(n<2)return;let k=0;
@@ -503,8 +506,7 @@ function anima(){
     cv._pause=()=>{cv._p=1;cv._reset();cv._vis=cv._vis};
     cv._play=d=>{cv._p=0;clearTimeout(cv._t);cv._t=setTimeout(passo,d===undefined?400:d)};
     const passo=()=>{cv._t=null;
-      if(rolando){cv._t=setTimeout(passo,200);return}
-      if(cv._p||!cv._vis)return;
+      if(rolando||cv._p||!cv._vis)return;
       if(k<n){pgs[k].classList.add("flip");k++;dot(k);
         if(k===n){cv._t=setTimeout(()=>{bk.classList.add("nt");pgs.forEach(p=>p.classList.remove("flip"));void bk.offsetHeight;bk.classList.remove("nt");k=0;dot(0);cv._t=setTimeout(passo,CAPA)},1500);return}}
       cv._t=setTimeout(passo,PAG)};
