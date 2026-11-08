@@ -53,7 +53,8 @@ P = [
  ("sei-1em", "Semanas de Estudos · Matemática — 1ª série EM", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (1ª série EM) · revisão semanal com gabarito e resoluções."),
  ("sei-2em", "Semanas de Estudos · Matemática — 2ª série EM", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (2ª série EM) · revisão semanal com gabarito e resoluções."),
  ("sei-3em", "Semanas de Estudos · Matemática — 3ª série EM", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (3ª série EM) · revisão semanal com gabarito e resoluções."),
- ("album-multiplicacao", "Álbum de Multiplicação — Mini Álbuns", "reforco", "qk7mdtp4", 10, "Coleção de mini álbuns de multiplicação com atividades ilustradas e gabarito · entrega pelos links da pasta do Drive."),
+ ("album-multiplicacao", "Álbum de Multiplicação — Mini Álbuns", "reforco", "qk7mdtp4", 5, "Coleção de mini álbuns de multiplicação com atividades ilustradas e gabarito · entrega pelos links da pasta do Drive."),
+ ("consciencia-negra", "Consciência Negra — Álbuns de Matemática", "reforco", "kfyorb7z", 5, "Mini álbuns, equações e bingos afro com gabarito · entrega pelos links da pasta do Drive."),
 ]
 # ---- descrições melhoradas (sobrescrevem o subtítulo acima) ----
 _VOL = {"cone": "Volume do cone: V = ⅓·π·r²·h. 12 questões com figuras, do cálculo direto a problemas do dia a dia.",

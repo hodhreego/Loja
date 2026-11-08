@@ -185,6 +185,10 @@ ITENS['album-multiplicacao'] = (
     r'I:\Meu Drive\##Aulas @hodhreego\#$old1\Av62 Album Multiplicação\Multiplicação - pinturas - Mini Álbuns @hodhreego.pdf',
     os.path.join(PROD, 'albuns-multiplicacao', 'capa.png'))
 
+ITENS['consciencia-negra'] = (
+    r'I:\Meu Drive\##Aulas @hodhreego\#$old1\Av62 Album Multiplicação\👦🏿Dia da consciência negra especial\Dia da Consciência Negra Multiplicação.pdf',
+    os.path.join(PROD, 'consciencia-negra', 'capa.png'))
+
 if __name__ == '__main__':
     alvos = [a for a in sys.argv[1:] if not a.startswith('--')]
     lista = [(s, p, c) for s, (p, c) in ITENS.items() if not alvos or s in alvos]
