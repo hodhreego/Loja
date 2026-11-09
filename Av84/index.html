@@ -3,38 +3,117 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>História - Loja de Matematica</title>
+<title>História — Loja de Matemática</title>
 <meta name="description" content="Conteúdo específico do cargo de Professor de História.">
 <link rel="canonical" href="https://hodhreego.github.io/Loja/Av84/">
-<meta property="og:title" content="História - Loja de Matematica">
+<meta property="og:site_name" content="Loja de Matemática">
+<meta property="og:title" content="História — PSS SEED-PR 2027">
 <meta property="og:description" content="Conteúdo específico do cargo de Professor de História.">
 <meta property="og:image" content="https://hodhreego.github.io/Loja/img/historia-1.jpg">
 <meta property="og:url" content="https://hodhreego.github.io/Loja/Av84/">
 <meta property="og:type" content="product">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="../produto.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "História", "sku": "Av84", "description": "Conteúdo específico do cargo de Professor de História.", "image": ["https://hodhreego.github.io/Loja/img/historia-1.jpg", "https://hodhreego.github.io/Loja/img/historia-2.jpg"], "brand": {"@type": "Brand", "name": "Prof. Rodrigo Gonçalves Pereira"}, "offers": {"@type": "Offer", "price": "15.00", "priceCurrency": "BRL", "availability": "https://schema.org/InStock", "url": "https://chk.eduzz.com/xi3bwjtm"}}</script>
 </head>
 <body>
-<header>
-  <a class="voltar" href="../index.html">&larr; Voltar para a loja</a>
-  <span class="grupo">PSS SEED-PR 2027</span>
-</header>
-<main>
-  <div class="foto">
-    <img id="big" src="../img/historia-1.jpg" alt="História">
+<header class="topo">
+  <a class="voltar" href="../index.html">← Loja de Matemática</a>
+  <div class="topo-dir">
+    <span class="grupo">PSS SEED-PR 2027</span>
+    <button class="ico" type="button" onclick="compartilhar()" title="Compartilhar" aria-label="Compartilhar">⤴</button>
   </div>
-  <aside>
+</header>
+
+<nav class="migalha" aria-label="Você está em">
+  <a href="../index.html">Loja</a> <span>/</span> <span>PSS SEED-PR 2027</span> <span>/</span> <b>História</b>
+</nav>
+
+<main>
+  <section class="galeria">
+    <div class="foto" onclick="lightbox(true)">
+      <img id="big" src="../img/historia-1.jpg" alt="História">
+      <span class="zoom">🔍 ampliar</span>
+    </div>
+    <div class="mini"><button type="button" class="mini-img on" onclick="troca(0)"><img src="../img/historia-1.jpg" alt="História - imagem 1" loading="lazy"></button><button type="button" class="mini-img" onclick="troca(1)"><img src="../img/historia-2.jpg" alt="História - imagem 2" loading="lazy"></button></div>
+  </section>
+
+  <aside class="info">
     <p class="cod">Av84</p>
     <h1>História</h1>
     <p class="sub">Conteúdo específico do cargo de Professor de História.</p>
-    <p class="preco"><b>R$ 15,00</b></p>
-    <div class="acoes"><a class="btn comprar" href="https://chk.eduzz.com/xi3bwjtm" target="_blank" rel="noopener">Comprar na Eduzz</a><a class="btn zap" href="https://wa.me/5545999699444?text=Av84 - História" target="_blank" rel="noopener">Tirar duvida no WhatsApp</a></div>
-    <p class="aviso">PDF digital. Entrega imediata apos a confirmacao do pagamento.</p>
-    <div class="mini"><img src="../img/historia-2.jpg" alt="História - pagina 2" loading="lazy" onclick="ver(this.src)"></div>
+
+    <p class="preco">R$ 15,00</p>
+    <div class="acoes">
+      <a class="btn comprar" href="https://chk.eduzz.com/xi3bwjtm" target="_blank" rel="noopener">Comprar na Eduzz</a>
+      <a class="btn zap" href="https://wa.me/5545999699444?text=Av84 - História" target="_blank" rel="noopener">Tirar dúvida no WhatsApp</a>
+    </div>
+    <p class="seguro">🔒 Pagamento seguro pela Eduzz · PDF digital · entrega após a confirmação</p>
+
+    <ul class="inclui">
+      <li>Material em PDF, com gabarito quando aplicável</li>
+      <li>Páginas de amostra com tarja para conferir antes de comprar</li>
+      <li>Suporte pelo WhatsApp com o professor</li>
+    </ul>
+
+    <p class="mini-titulo">Conteúdo</p>
+    <p class="desc">Conteúdo específico do cargo de Professor de História.</p>
   </aside>
 </main>
-<footer>Av84 &middot; PSS SEED-PR 2027 &middot; Prof. Rodrigo Goncalves Pereira</footer>
+
+<section class="relacionados">
+  <h2>Também pode interessar</h2>
+  <div class="rel-grid"><a class="rel" href="../Av81/"><img src="../img/conhecimentos-basicos-1.jpg" alt="Conhecimentos Básicos" loading="lazy"><span class="rel-nome">Conhecimentos Básicos</span><span class="rel-preco">R$ 10,00</span></a><a class="rel" href="../Av79/"><img src="../img/simulado-matematica-1.jpg" alt="Simulado de Matemática" loading="lazy"><span class="rel-nome">Simulado de Matemática</span><span class="rel-preco">R$ 10,00</span></a><a class="rel" href="../Av89/"><img src="../img/gestao-negocios-1.jpg" alt="Administração, Gestão e Negócios" loading="lazy"><span class="rel-nome">Administração, Gestão e Negócios</span><span class="rel-preco">R$ 15,00</span></a></div>
+</section>
+
+<footer>
+  Av84 · PSS SEED-PR 2027 · Prof. Rodrigo Gonçalves Pereira<br>
+  <a href="../index.html">Voltar para a loja</a>
+</footer>
+
+<div class="barra">
+  <div><small>História</small><b>R$ 15,00</b></div>
+  <a href="https://chk.eduzz.com/xi3bwjtm" target="_blank" rel="noopener">Comprar</a>
+</div>
+
+<div class="lb" id="lb" onclick="if(event.target===this)lightbox(false)">
+  <button class="lb-x" type="button" onclick="lightbox(false)" aria-label="Fechar">✕</button>
+  <button class="lb-prev" type="button" onclick="passo(-1)" aria-label="Anterior">‹</button>
+  <img id="lbimg" src="" alt="">
+  <button class="lb-next" type="button" onclick="passo(1)" aria-label="Próxima">›</button>
+</div>
+
 <script>
-function ver(u){document.getElementById('big').src=u;window.scrollTo({top:0,behavior:'smooth'})}
+const IMGS=["../img/historia-1.jpg", "../img/historia-2.jpg"];
+let atual=0;
+function troca(k){
+  atual=k;
+  document.getElementById('big').src=IMGS[k];
+  document.querySelectorAll('.mini-img').forEach((b,i)=>b.classList.toggle('on',i===k));
+}
+function lightbox(abrir){
+  const lb=document.getElementById('lb');
+  if(!abrir){lb.classList.remove('on');return}
+  document.getElementById('lbimg').src=IMGS[atual];
+  lb.classList.add('on');
+}
+function passo(d){
+  atual=(atual+d+IMGS.length)%IMGS.length;
+  troca(atual);
+  document.getElementById('lbimg').src=IMGS[atual];
+}
+document.addEventListener('keydown',e=>{
+  const lb=document.getElementById('lb');
+  if(!lb.classList.contains('on'))return;
+  if(e.key==='Escape')lightbox(false);
+  if(e.key==='ArrowRight')passo(1);
+  if(e.key==='ArrowLeft')passo(-1);
+});
+function compartilhar(){
+  const u=location.href, t=document.title;
+  if(navigator.share){navigator.share({title:t,url:u}).catch(()=>{});return}
+  navigator.clipboard.writeText(u).then(()=>alert('Link copiado!')).catch(()=>alert(u));
+}
 </script>
 </body>
 </html>
