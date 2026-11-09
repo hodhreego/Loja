@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+  <g fill="none" stroke="#ffffff" stroke-opacity="0.075" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- mais -->
+    <path d="M28 36h24M40 24v24"/>
+    <!-- menos -->
+    <path d="M76 52h20"/>
+    <!-- vezes -->
+    <path d="M124 30l14 14M138 30l-14 14"/>
+    <!-- igual -->
+    <path d="M176 36h22M176 46h22"/>
+    <!-- dividir -->
+    <path d="M232 32h20"/>
+    <circle cx="242" cy="24" r="2.4" fill="#ffffff" fill-opacity="0.075" stroke="none"/>
+    <circle cx="242" cy="44" r="2.4" fill="#ffffff" fill-opacity="0.075" stroke="none"/>
+    <!-- pi -->
+    <path d="M266 30h20M272 30v20M280 30v20"/>
+    <!-- raiz -->
+    <path d="M24 122l8 0 6 18 10-32h18"/>
+    <!-- infinito -->
+    <path d="M84 130c8-12 22-12 26 0 4 12-18 14-26 0-8-14-22-12-26 0-4 12 18 14 26 0z"/>
+    <!-- triangulo -->
+    <path d="M150 138l16-26 16 26z"/>
+    <!-- planeta com anel -->
+    <circle cx="232" cy="132" r="11"/>
+    <ellipse cx="232" cy="132" rx="22" ry="6" transform="rotate(-18 232 132)"/>
+    <!-- pi menor -->
+    <path d="M272 120h18M277 120v18M286 120v18"/>
+    <!-- estrela -->
+    <path d="M44 214l5 11 12 2-9 8 2 12-10-6-10 6 2-12-9-8 12-2z"/>
+    <!-- orbita -->
+    <ellipse cx="132" cy="222" rx="34" ry="13" transform="rotate(-24 132 222)"/>
+    <circle cx="132" cy="222" r="4" fill="#ffffff" fill-opacity="0.075" stroke="none"/>
+    <circle cx="160" cy="210" r="2" fill="#ffffff" fill-opacity="0.075" stroke="none"/>
+    <!-- lua -->
+    <path d="M212 244a13 13 0 1 0 0-26 16 16 0 0 1 0 26z"/>
+    <!-- soma -->
+    <path d="M262 208l16 16-16 16M278 208h-16"/>
+    <!-- pontos -->
+    <circle cx="96" cy="80" r="1.6" fill="#ffffff" fill-opacity="0.075" stroke="none"/>
+    <circle cx="196" cy="96" r="1.2" fill="#ffffff" fill-opacity="0.075" stroke="none"/>
+    <circle cx="64" cy="176" r="1.4" fill="#ffffff" fill-opacity="0.075" stroke="none"/>
+    <circle cx="252" cy="180" r="1.2" fill="#ffffff" fill-opacity="0.075" stroke="none"/>
+    <circle cx="186" cy="266" r="1.4" fill="#ffffff" fill-opacity="0.075" stroke="none"/>
+    <!-- cometa -->
+    <path d="M18 268c10-8 20-8 30 0"/>
+    <circle cx="52" cy="266" r="2" fill="#ffffff" fill-opacity="0.075" stroke="none"/>
+  </g>
+</svg>
