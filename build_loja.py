@@ -606,7 +606,10 @@ let CART=cLoad();
 function cSave(){try{localStorage.setItem(CKEY,JSON.stringify(CART))}catch(e){}}
 function cFind(s){return ITENS.find(i=>i.slug===s)}
 function cCount(){return CART.reduce((s,x)=>s+x.q,0)}
-function cTotal(){return CART.reduce((s,x)=>{const i=cFind(x.slug);return s+(i?i.preco*x.q:0)},0)}
+function cSubtotal(){return CART.reduce((s,x)=>{const i=cFind(x.slug);return s+(i?i.preco*x.q:0)},0)}
+function cDescPct(){const n=CART.length;if(n<=1)return 0;const p=4+0.1*(n-2);return Math.min(40,Math.round(p*10)/10)}
+function cDesconto(){return Math.round(cSubtotal()*cDescPct())/100}
+function cTotal(){return Math.round((cSubtotal()-cDesconto())*100)/100}
 function toast(t){const el=$("#toast");if(!el)return;el.textContent=t;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),1900)}
 function addCart(s){const i=cFind(s);if(!i)return;const e=CART.find(x=>x.slug===s);if(e)e.q++;else CART.push({slug:s,q:1});cSave();cPaint();toast(i.nome+" no carrinho")}
 function rmCart(s){CART=CART.filter(x=>x.slug!==s);cSave();cPaint()}
@@ -614,21 +617,23 @@ function qtyCart(s,d){const e=CART.find(x=>x.slug===s);if(!e)return;e.q+=d;if(e.
 function ctoggle(f){const p=$("#cp");if(!p)return;const on=f===undefined?!p.classList.contains("open"):f;p.classList.toggle("open",on)}
 function cPaint(){
   const n=cCount();const fb=$("#cartfab");if(fb){$("#cartn").textContent=n;fb.classList.toggle("on",n>0)}
-  $("#ctot").textContent="R$ "+brl(cTotal());
-  $("#cbody").innerHTML=CART.length?CART.map(x=>{const i=cFind(x.slug);if(!i)return"";
+  const pct=cDescPct(),sub=cSubtotal(),desc=cDesconto();
+  $("#ctot").innerHTML="R$ "+brl(cTotal())+(pct>0?` <small style="color:#86efac;font-weight:800">−${brl(pct)}%</small>`:"");
+  const linhaDesc=pct>0?`<div style="font-size:13px;color:var(--mut);margin:0 0 8px">Subtotal R$ ${brl(sub)} · desconto de ${brl(pct)}% (−R$ ${brl(desc)})</div>`:"";
+  $("#cbody").innerHTML=linhaDesc+(CART.length?CART.map(x=>{const i=cFind(x.slug);if(!i)return"";
     return `<div class="citem"><img src="${i.imgs[0]||''}" alt=""><div class="cn">${i.nome}<small>${i.grupoNome} · R$ ${brl(i.preco)}</small></div><div class="cq"><button onclick="qtyCart('${i.slug}',-1)" aria-label="Menos">−</button><span>${x.q}</span><button onclick="qtyCart('${i.slug}',1)" aria-label="Mais">+</button></div></div>`}).join("")
-    :`<p style="color:var(--mut);font-size:14px">Carrinho vazio. Toque em <b>Adicionar ao carrinho</b> no material que quiser.</p>`;
+    :`<p style="color:var(--mut);font-size:14px">Carrinho vazio. Toque em <b>Adicionar ao carrinho</b> no material que quiser.</p>`);
 }
 function cPedido(){
   const itens=CART.map(x=>{const i=cFind(x.slug);return i?{slug:i.slug,av:i.av,nome:i.nome,grupo:i.grupoNome,preco:i.preco,q:x.q}:null}).filter(Boolean);
-  const total=itens.reduce((s,i)=>s+i.preco*i.q,0);
-  return {criado:new Date().toISOString(),itens:itens,total:Math.round(total*100)/100};
+  return {criado:new Date().toISOString(),itens:itens,subtotal:cSubtotal(),pct:cDescPct(),desconto:cDesconto(),total:cTotal()};
 }
 function cTexto(p){
   const cods=[];p.itens.forEach(i=>{for(let k=0;k<i.q;k++)cods.push(i.av)});
   const base=location.origin+location.pathname.replace(/index\.html$/,"");
   const L=p.itens.map(i=>i.av+(i.q>1?" ("+i.q+"x)":"")+" "+i.nome+" — R$ "+brl(i.preco*i.q));
-  return "O meu email é: "+"\n"+"\n"+"Tenho interesse em adquirir os itens a seguir:"+"\n"+"\n"+L.join("\n")+"\n"+"\n"+"Total: R$ "+brl(p.total)+"\n"+"\n"+"Abrir o carrinho na loja: "+base+"?c="+cods.join(",")+"\n"+"\n"+"Pix: +55 45 99969-9444 (Rodrigo Gonçalves Pereira)"+"\n"+"A entrega será feita assim que o Prof. Rodrigo estiver online.";
+  const desc=p.pct>0?("\nSubtotal: R$ "+brl(p.subtotal)+"\nDesconto ("+brl(p.pct)+"%): −R$ "+brl(p.desconto)):"";
+  return "O meu email é: "+"\n"+"\n"+"Tenho interesse em adquirir os itens a seguir:"+"\n"+"\n"+L.join("\n")+"\n"+desc+"\n"+"\n"+"Total: R$ "+brl(p.total)+"\n"+"\n"+"Abrir o carrinho na loja: "+base+"?c="+cods.join(",")+"\n"+"\n"+"Pix: +55 45 99969-9444 (Rodrigo Gonçalves Pereira)"+"\n"+"A entrega será feita assim que o Prof. Rodrigo estiver online.";
 }
 async function cfinal(){
   if(!CART.length){toast("Carrinho vazio");return}
@@ -645,6 +650,30 @@ function cDoLink(){
 }
 cPaint();
 cDoLink();
+function tornaArrastavel(el){
+  if(!el)return;
+  const h=el.querySelector("header");if(!h)return;
+  h.style.cursor="move";h.style.touchAction="none";
+  let d=false,sx=0,sy=0,ox=0,oy=0;
+  h.addEventListener("pointerdown",e=>{
+    if(e.target.closest("button"))return;
+    const r=el.getBoundingClientRect();
+    el.style.left=r.left+"px";el.style.top=r.top+"px";el.style.right="auto";el.style.bottom="auto";
+    d=true;sx=e.clientX;sy=e.clientY;ox=r.left;oy=r.top;
+    try{h.setPointerCapture(e.pointerId)}catch(x){}
+    e.preventDefault();
+  });
+  h.addEventListener("pointermove",e=>{
+    if(!d)return;
+    const x=Math.min(Math.max(4,ox+e.clientX-sx),innerWidth-el.offsetWidth-4);
+    const y=Math.min(Math.max(4,oy+e.clientY-sy),innerHeight-el.offsetHeight-4);
+    el.style.left=x+"px";el.style.top=y+"px";
+  });
+  const fim=()=>{d=false};
+  h.addEventListener("pointerup",fim);h.addEventListener("pointercancel",fim);
+}
+tornaArrastavel(document.getElementById("wp"));
+tornaArrastavel(document.getElementById("cp"));
 winit();
 (function(){var mb=document.getElementById("minibar"),h=document.querySelector("header.hero");if(!mb||!h)return;var on=false;function t(){var lim=h.offsetHeight-40,y=window.scrollY||document.documentElement.scrollTop;var n=on?y>lim-60:y>lim;if(n!==on){on=n;mb.classList.toggle("on",on);mb.setAttribute("aria-hidden",on?"false":"true")}}addEventListener("scroll",t,{passive:true});addEventListener("resize",t);t()})();
 </script>
