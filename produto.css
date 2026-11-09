@@ -29,8 +29,8 @@ h1{font-size:clamp(1.7rem,3.2vw,2.6rem);line-height:1.12;margin-bottom:10px;lett
 .acoes{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
 .btn{display:block;text-align:center;text-decoration:none;font-weight:900;border-radius:12px;padding:15px 16px;font-size:1rem;transition:transform .15s,filter .15s}
 .btn:active{transform:scale(.98)}
-.comprar{background:#16a34a;color:#fff}
-.comprar:hover{filter:brightness(1.08)}
+.comprar{background:#ffbc00;color:#3a2500}
+.comprar:hover{filter:brightness(1.06)}
 .zap{background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.5);color:#bbf7d0}
 .seguro{font-size:.8rem;color:var(--dim);margin-bottom:18px}
 .inclui{list-style:none;display:grid;gap:8px;margin-bottom:20px}
@@ -46,6 +46,17 @@ h1{font-size:clamp(1.7rem,3.2vw,2.6rem);line-height:1.12;margin-bottom:10px;lett
 .rel img{width:100%;height:auto;border-radius:8px;background:#fff}
 .rel-nome{font-size:.88rem;font-weight:800;line-height:1.25}
 .rel-preco{font-size:.85rem;color:var(--gold);font-weight:800}
+.carrinho{background:rgba(255,255,255,.10);border:1px solid var(--bd);color:var(--tx)}
+.carrinho:hover{background:rgba(255,255,255,.16)}
+.faq{max-width:1120px;margin:40px auto 0}
+.faq h2{font-size:1.2rem;margin-bottom:12px}
+.faq details{background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.faq summary{cursor:pointer;font-weight:800;font-size:.95rem}
+.faq p{color:var(--dim);font-size:.9rem;line-height:1.55;margin-top:8px}
+.rel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.rel-head h2{margin:0}
+.ver-todos{color:var(--dim);font-size:.86rem;font-weight:700;text-decoration:none}
+.ver-todos:hover{color:#fff}
 footer{max-width:1120px;margin:44px auto 0;color:#7c88ab;font-size:.82rem;text-align:center;line-height:1.7}
 footer a{color:var(--dim)}
 .barra{display:none}
@@ -63,7 +74,7 @@ footer a{color:var(--dim)}
   .barra div{display:flex;flex-direction:column;line-height:1.2;min-width:0}
   .barra small{font-size:.72rem;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw}
   .barra b{color:var(--gold);font-size:1.05rem}
-  .barra a{background:#16a34a;color:#fff;text-decoration:none;font-weight:900;border-radius:10px;padding:12px 18px;white-space:nowrap}
+  .barra a{background:#ffbc00;color:#3a2500;text-decoration:none;font-weight:900;border-radius:10px;padding:12px 18px;white-space:nowrap}
   .foto{border-radius:16px}
 }
 @media print{.barra,.lb,.acoes,.ico{display:none!important}}
