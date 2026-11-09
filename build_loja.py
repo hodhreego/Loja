@@ -131,7 +131,7 @@ HTML = r'''<!DOCTYPE html>
 :root{--navy:#1B3A6B;--navy-deep:#0F2547;--gold:#C9A227;--gold-light:#E9D48E;--bg:#000;--ink:#1B2733;--mut:#5b6b80;--card:#fff;--ok:#1f7a4d;--line:#d9e2f1}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Source Sans 3',system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.45}
+body{font-family:'Source Sans 3',system-ui,sans-serif;color:var(--ink);background:#000 url("fundo-matematica.svg") repeat;background-size:300px 300px;line-height:1.45}
 .wrap{max-width:1180px;margin:0 auto;padding:0 18px}
 header.hero{background:linear-gradient(135deg,var(--navy-deep),var(--navy) 60%,#27508f);color:#fff;padding:84px 0 64px;position:relative;overflow:hidden}
 .minibar .mbb{background:var(--gold);color:#2b2100;font-size:16px;padding:8px 16px}
@@ -262,10 +262,13 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 /* certames */
 .certs{display:flex;flex-wrap:wrap;gap:10px;padding:2px 2px 6px;flex:1 1 100%}
 .conteudo{display:grid;grid-template-columns:190px 1fr;gap:24px;align-items:start;margin-top:10px}
+.resumo{margin:6px 0 0;font:600 14px 'Source Sans 3';color:var(--mut)}
+.resumo b{color:var(--navy)}
 .indice{position:sticky;top:18px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 6px 18px rgba(15,37,71,.06)}
 .indice b{display:block;font:700 12px 'Source Sans 3';text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin:2px 0 8px}
 .indice a{display:block;padding:7px 9px;border-radius:8px;color:var(--navy);font:600 13.5px 'Source Sans 3';cursor:pointer}
 .indice a:hover{background:#eef3fb}
+.indice a.on{background:var(--navy);color:#fff}
 .indice hr{border:0;border-top:1px solid var(--line);margin:8px 0}
 @media(max-width:900px){.conteudo{grid-template-columns:1fr}.indice{position:static;display:flex;flex-wrap:wrap;gap:4px;align-items:center}.indice b{width:100%;margin:0}.indice a{padding:5px 8px}.indice hr{display:none}}
 .cert{flex:0 0 auto;min-width:150px;max-width:210px;scroll-snap-align:start;text-align:left;background:#fff;border:1px solid #e3eaf6;border-radius:14px;padding:9px 13px;cursor:pointer;font:600 14px 'Source Sans 3';color:var(--navy);transition:.15s}
@@ -368,20 +371,21 @@ section.grupo h2{font-size:22px}
 <div class="conteudo wrap">
   <aside class="indice">
     <b>Índice</b>
-    <a onclick="setTipo('todos')">Todas as atividades</a>
-    <a onclick="setTipo('volumes')">Volumes</a>
-    <a onclick="setTipo('se-liga')">Se Liga</a>
-    <a onclick="setTipo('saeb')">Simulados SAEB</a>
-    <a onclick="setTipo('apostilas')">Apostilas</a>
+    <a data-tipo="todos" onclick="setTipo('todos')">Todas as atividades</a>
+    <a data-tipo="volumes" onclick="setTipo('volumes')">Volumes</a>
+    <a data-tipo="se-liga" onclick="setTipo('se-liga')">Se Liga</a>
+    <a data-tipo="saeb" onclick="setTipo('saeb')">Simulados SAEB</a>
+    <a data-tipo="apostilas" onclick="setTipo('apostilas')">Apostilas</a>
     <hr>
     <b>Certames</b>
-    <a onclick="setGrupo('pss')">PSS SEED-PR</a>
-    <a onclick="setGrupo('cisop')">CISOP Cascavel</a>
-    <a onclick="setGrupo('prefeitura')">Prefeitura de Cascavel</a>
-    <a onclick="setGrupo('reforco')">Reforço e recomposição</a>
+    <a data-grupo="pss" onclick="setGrupo('pss')">PSS SEED-PR</a>
+    <a data-grupo="cisop" onclick="setGrupo('cisop')">CISOP Cascavel</a>
+    <a data-grupo="prefeitura" onclick="setGrupo('prefeitura')">Prefeitura de Cascavel</a>
+    <a data-grupo="reforco" onclick="setGrupo('reforco')">Reforço e recomposição</a>
     <a onclick="setGrupo('outros')">Outros concursos</a>
   </aside>
-  <main id="main"></main>
+  <p class="resumo" id="resumo"></p>
+<main id="main"></main>
 </div>
 <div class="wrap empty" id="empty">Nenhum material encontrado.</div>
 
@@ -481,6 +485,13 @@ function render(){
     total+=l.length;if(!l.length)return "";
     return `<section class="grupo"><h2>${nome}</h2><div class="grid">${l.map(card).join("")}</div></section>`;}).join("");
   $("#empty").style.display=total?"none":"block";
+  const rot={
+    todos:"Todos os materiais",volumes:"Volumes",'se-liga':"Se Liga",sei:"Semanas de Estudos Intensivos",saeb:"Simulados SAEB",apostilas:"Apostilas"
+  };
+  const nomeFiltro=filtroTipo!=="todos"?rot[filtroTipo]:(filtro!=="todos"?(GR.find(g=>g[0]===filtro)||["","Todos os materiais"])[1]:"Todos os materiais");
+  const rs=$("#resumo");if(rs)rs.innerHTML=`<b>${total}</b> ${total===1?"material":"materiais"} em <b>${nomeFiltro}</b>${busca?" para “"+busca+"”":""}`;
+  document.querySelectorAll(".indice a[data-tipo]").forEach(a=>a.classList.toggle("on",a.dataset.tipo===filtroTipo&&filtro==="todos"));
+  document.querySelectorAll(".indice a[data-grupo]").forEach(a=>a.classList.toggle("on",a.dataset.grupo===filtro));
   infoCert();anima();
   try{history.replaceState(null,"",filtro==="todos"?location.pathname:"#"+filtro)}catch(e){}
 }
@@ -512,8 +523,8 @@ function tipos(){
 }
 function mbTog(v){var t=document.getElementById("mbt"),b=document.getElementById("mbb");if(!t)return;var o=(v===undefined)?t.hidden:v;t.hidden=!o;b.setAttribute("aria-expanded",o?"true":"false")}
 document.addEventListener("click",function(e){if(!e.target.closest(".minibar"))mbTog(false)});
-function setTipo(t){filtroTipo=t;tipos();render();document.getElementById('main').scrollIntoView({behavior:'smooth',block:'start'})}
-function setGrupo(g){filtro=g;chips();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function setTipo(t){filtroTipo=t;filtro="todos";tipos();chips();render();document.getElementById('main').scrollIntoView({behavior:'smooth',block:'start'})}
+function setGrupo(g){filtro=g;filtroTipo="todos";chips();tipos();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'nearest'})}
 /* miniaturas animadas: as páginas sobem (scroll vertical) enquanto o card está visível */
 let io=null,rolando=false,tRol=null;
 const todas=()=>[...document.querySelectorAll(".cover")];
