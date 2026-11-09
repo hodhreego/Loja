@@ -11,6 +11,7 @@ import io
 import json
 import os
 import re
+from urllib.parse import quote
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BASE = "https://hodhreego.github.io/Loja"
@@ -37,7 +38,6 @@ def codigo(it):
 
 
 def rel(it, todos):
-    """Sugestoes: primeiro o mesmo grupo, depois o mesmo tipo (volumes, se-liga, saeb...)."""
     mesmo_grupo = [x for x in todos if x is not it and x.get("grupo") == it.get("grupo")]
     mesmo_tipo = [x for x in todos if x is not it and x.get("tipo") == it.get("tipo") and x.get("grupo") != it.get("grupo")]
     out, vistos = [], {it["slug"]}
@@ -51,13 +51,45 @@ def rel(it, todos):
     return out
 
 
+def combo(it, todos):
+    """Parceiro(s) de combo, com 15% de desconto sobre a soma."""
+    por = {x["slug"]: x for x in todos}
+    s = it["slug"]
+    par = []
+    m = re.match(r"^(se-liga|sei)-(.+)$", s)
+    if m:
+        outro = ("sei-" if m.group(1) == "se-liga" else "se-liga-") + m.group(2)
+        if outro in por:
+            par = [por[outro]]
+    elif s.startswith("volume-"):
+        par = [x for x in todos if x["slug"].startswith("volume-") and x["slug"] != s][:6]
+    elif s == "matematica" and "simulado-matematica" in por:
+        par = [por["simulado-matematica"]]
+    elif s == "simulado-matematica" and "matematica" in por:
+        par = [por["matematica"]]
+    elif s in ("album-multiplicacao", "consciencia-negra"):
+        outro = "consciencia-negra" if s == "album-multiplicacao" else "album-multiplicacao"
+        if outro in por:
+            par = [por[outro]]
+    elif it.get("grupo") == "pss" and s != "conhecimentos-basicos" and "conhecimentos-basicos" in por:
+        par = [por["conhecimentos-basicos"]]
+    par = [p for p in par if p and p["slug"] != s]
+    if not par:
+        par = rel(it, todos)[:1]
+    total = (float(it.get("preco") or 0) + sum(float(p.get("preco") or 0) for p in par)) * 0.85
+    return par, round(total, 2)
+
+
 def card_rel(x):
     cod = codigo(x)
     capa = x["imgs"][0].split("?")[0] if x["imgs"] else ""
-    return (f'<a class="rel" href="../{cod}/">'
+    return (f'<div class="rel">'
+            f'<a class="rel-link" href="../{cod}/">'
             f'<img src="../{capa}" alt="{x["nome"]}" loading="lazy">'
-            f'<span class="rel-nome">{x["nome"]}</span>'
-            f'<span class="rel-preco">R$ {brl(x.get("preco") or 0)}</span></a>')
+            f'<span class="rel-nome">{x["nome"]}</span></a>'
+            f'<div class="rel-foot"><span class="rel-preco">R$ {brl(x.get("preco") or 0)}</span>'
+            f'<button type="button" class="rel-add" onclick="addCart(\'{x["slug"]}\')" '
+            f'aria-label="Adicionar {x["nome"]} ao carrinho">+ 🛒</button></div></div>')
 
 
 def pagina(it, todos):
@@ -87,8 +119,25 @@ def pagina(it, todos):
         comprar = f'<a class="btn comprar" href="{whats}" target="_blank" rel="noopener">Pedir pelo WhatsApp</a>'
         pagamento = "Atendimento direto pelo WhatsApp"
     zap = f'<a class="btn zap" href="{whats}" target="_blank" rel="noopener">Tirar dúvida no WhatsApp</a>'
-    carrinho = f'<a class="btn carrinho" href="../index.html?c={cod}">Adicionar ao carrinho</a>'
+    carrinho = f'<button type="button" class="btn carrinho" onclick="addCart(\'{it["slug"]}\')">Adicionar ao carrinho</button>'
     relacionados = "".join(card_rel(x) for x in rel(it, todos))
+
+    parceiros, total_combo = combo(it, todos)
+    combo_html = ""
+    if parceiros:
+        nomes = " + ".join([nome] + [p["nome"] for p in parceiros])
+        cheio = float(preco) + sum(float(p.get("preco") or 0) for p in parceiros)
+        texto = f"Quero o combo: {nomes} - R$ {brl(total_combo)} (15% de desconto)"
+        wa_combo = "https://wa.me/%s?text=%s" % (WA, quote(texto))
+        lista = ", ".join("'%s'" % x for x in [it["slug"]] + [p["slug"] for p in parceiros])
+        combo_html = (f'<div class="combo-txt"><span class="selo">-15%</span>'
+                      f'<h2>Leve junto e economize</h2>'
+                      f'<p><b>{nomes}</b> por <b class="preco-combo">R$ {brl(total_combo)}</b></p>'
+                      f'<p class="combo-sub">Separado sairia R$ {brl(cheio)}. O desconto é aplicado no pedido pelo WhatsApp.</p></div>'
+                      f'<div class="combo-acoes">'
+                      f'<a class="btn comprar" href="{wa_combo}" target="_blank" rel="noopener">Pedir combo no WhatsApp</a>'
+                      f'<button type="button" class="btn carrinho" onclick="addCombo([{lista}])">'
+                      f'Adicionar os {len(parceiros) + 1} ao carrinho</button></div>')
 
     ld = {
         "@context": "https://schema.org",
@@ -133,6 +182,7 @@ def pagina(it, todos):
   <a class="voltar" href="../index.html">← Loja de Matemática</a>
   <div class="topo-dir">
     <span class="grupo">{grupo}</span>
+    <a class="cart" href="../index.html" title="Ver carrinho">🛒<b id="cartn">0</b></a>
     <button class="ico" type="button" onclick="compartilhar()" title="Compartilhar" aria-label="Compartilhar">⤴</button>
   </div>
 </header>
@@ -174,6 +224,10 @@ def pagina(it, todos):
   </aside>
 </main>
 
+<section class="combo">
+  {combo_html}
+</section>
+
 <section class="faq">
   <h2>Perguntas frequentes</h2>
   <details><summary>Como recebo o material?</summary><p>É um arquivo em PDF. A entrega é feita após a confirmação do pagamento, pelo mesmo canal da compra.</p></details>
@@ -206,8 +260,30 @@ def pagina(it, todos):
   <button class="lb-next" type="button" onclick="passo(1)" aria-label="Próxima">›</button>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
 const IMGS={json.dumps(['../' + u for u in novas], ensure_ascii=False)};
+const CKEY='loja.carrinho.v1';
+function cartRead(){{try{{return JSON.parse(localStorage.getItem(CKEY)||'[]')||[]}}catch(e){{return []}}}}
+function cartBadge(){{const e=document.getElementById('cartn');if(e)e.textContent=cartRead().reduce((s,x)=>s+(Number(x.q)||1),0)}}
+function toast(t){{
+  const el=document.getElementById('toast');
+  el.textContent=t;el.classList.add('on');
+  clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('on'),1800);
+}}
+function addCart(slug,quiet){{
+  const c=cartRead();const f=c.find(x=>x.slug===slug);
+  if(f)f.q=(Number(f.q)||1)+1;else c.push({{slug:slug,q:1}});
+  try{{localStorage.setItem(CKEY,JSON.stringify(c))}}catch(e){{}}
+  cartBadge();
+  if(!quiet)toast('Adicionado ao carrinho');
+}}
+function addCombo(lista){{
+  lista.forEach(s=>addCart(s,true));
+  toast(lista.length+' itens no carrinho');
+}}
+cartBadge();
 let atual=0;
 function troca(k){{
   atual=k;
@@ -290,6 +366,20 @@ h1{font-size:clamp(1.7rem,3.2vw,2.6rem);line-height:1.12;margin-bottom:10px;lett
 .rel img{width:100%;height:auto;border-radius:8px;background:#fff}
 .rel-nome{font-size:.88rem;font-weight:800;line-height:1.25}
 .rel-preco{font-size:.85rem;color:var(--gold);font-weight:800}
+.rel-link{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit}
+.rel-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:2px}
+.rel-add{background:#ffbc00;color:#3a2500;border:0;border-radius:9px;padding:6px 10px;font-weight:900;cursor:pointer;font-size:.95rem;line-height:1}
+.cart{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid var(--bd);border-radius:10px;padding:0 10px;height:34px;text-decoration:none;font-size:.9rem}
+.cart b{color:#ffbc00;font-size:.95rem}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#111a33;border:1px solid var(--bd);color:#fff;padding:11px 18px;border-radius:12px;font-weight:800;opacity:0;pointer-events:none;transition:.25s;z-index:90;box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.combo{max-width:1120px;margin:34px auto 0;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:linear-gradient(120deg,rgba(251,191,36,.14),rgba(244,114,182,.10));border:1px solid rgba(251,191,36,.35);border-radius:18px;padding:18px 20px}
+.combo h2{font-size:1.15rem;margin-bottom:6px}
+.combo p{font-size:.95rem;color:#e6ebfb;line-height:1.45}
+.selo{display:inline-block;background:#ffbc00;color:#3a2500;font-weight:900;border-radius:99px;padding:3px 10px;font-size:.78rem;margin-bottom:8px}
+.preco-combo{color:#ffbc00}
+.combo-sub{color:var(--dim)!important;font-size:.82rem!important;margin-top:4px}
+.combo-acoes{display:flex;flex-direction:column;gap:8px;min-width:250px}
 .carrinho{background:rgba(255,255,255,.10);border:1px solid var(--bd);color:var(--tx)}
 .carrinho:hover{background:rgba(255,255,255,.16)}
 .faq{max-width:1120px;margin:40px auto 0}

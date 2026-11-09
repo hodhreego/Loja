@@ -21,6 +21,7 @@
   <a class="voltar" href="../index.html">← Loja de Matemática</a>
   <div class="topo-dir">
     <span class="grupo">Reforço e recomposição</span>
+    <a class="cart" href="../index.html" title="Ver carrinho">🛒<b id="cartn">0</b></a>
     <button class="ico" type="button" onclick="compartilhar()" title="Compartilhar" aria-label="Compartilhar">⤴</button>
   </div>
 </header>
@@ -46,7 +47,7 @@
     <p class="preco">R$ 10,00</p>
     <div class="acoes">
       <a class="btn comprar" href="https://wa.me/5545999699444?text=Av134 - Semanas de Estudos · Matemática — 8º ano" target="_blank" rel="noopener">Pedir pelo WhatsApp</a>
-      <a class="btn carrinho" href="../index.html?c=Av134">Adicionar ao carrinho</a>
+      <button type="button" class="btn carrinho" onclick="addCart('sei-8')">Adicionar ao carrinho</button>
       <a class="btn zap" href="https://wa.me/5545999699444?text=Av134 - Semanas de Estudos · Matemática — 8º ano" target="_blank" rel="noopener">Tirar dúvida no WhatsApp</a>
     </div>
     <p class="seguro">🔒 Atendimento direto pelo WhatsApp · PDF digital · entrega após a confirmação</p>
@@ -62,6 +63,10 @@
   </aside>
 </main>
 
+<section class="combo">
+  <div class="combo-txt"><span class="selo">-15%</span><h2>Leve junto e economize</h2><p><b>Semanas de Estudos · Matemática — 8º ano + Se Liga 2026 · Matemática — 8º ano + Extraordinário</b> por <b class="preco-combo">R$ 17,00</b></p><p class="combo-sub">Separado sairia R$ 20,00. O desconto é aplicado no pedido pelo WhatsApp.</p></div><div class="combo-acoes"><a class="btn comprar" href="https://wa.me/5545999699444?text=Quero%20o%20combo%3A%20Semanas%20de%20Estudos%20%C2%B7%20Matem%C3%A1tica%20%E2%80%94%208%C2%BA%20ano%20%2B%20Se%20Liga%202026%20%C2%B7%20Matem%C3%A1tica%20%E2%80%94%208%C2%BA%20ano%20%2B%20Extraordin%C3%A1rio%20-%20R%24%2017%2C00%20%2815%25%20de%20desconto%29" target="_blank" rel="noopener">Pedir combo no WhatsApp</a><button type="button" class="btn carrinho" onclick="addCombo(['sei-8', 'se-liga-8'])">Adicionar os 2 ao carrinho</button></div>
+</section>
+
 <section class="faq">
   <h2>Perguntas frequentes</h2>
   <details><summary>Como recebo o material?</summary><p>É um arquivo em PDF. A entrega é feita após a confirmação do pagamento, pelo mesmo canal da compra.</p></details>
@@ -74,7 +79,7 @@
     <h2>Também pode interessar</h2>
     <a class="ver-todos" href="../index.html">Ver todos os materiais →</a>
   </div>
-  <div class="rel-grid"><a class="rel" href="../Av137/"><img src="../img/volume-cone-1.jpg" alt="Matemática · Volume do Cone · 9º ano" loading="lazy"><span class="rel-nome">Matemática · Volume do Cone · 9º ano</span><span class="rel-preco">R$ 5,00</span></a><a class="rel" href="../Av138/"><img src="../img/volume-cubo-1.jpg" alt="Matemática · Volume do Cubo · 9º ano" loading="lazy"><span class="rel-nome">Matemática · Volume do Cubo · 9º ano</span><span class="rel-preco">R$ 5,00</span></a><a class="rel" href="../Av141/"><img src="../img/volume-paralelepipedo-1.jpg" alt="Matemática · Volume do Paralelepípedo · 9º ano" loading="lazy"><span class="rel-nome">Matemática · Volume do Paralelepípedo · 9º ano</span><span class="rel-preco">R$ 5,00</span></a><a class="rel" href="../Av143/"><img src="../img/volume-prisma-1.jpg" alt="Matemática · Volume do Prisma · 9º ano" loading="lazy"><span class="rel-nome">Matemática · Volume do Prisma · 9º ano</span><span class="rel-preco">R$ 5,00</span></a><a class="rel" href="../Av140/"><img src="../img/volume-esfera-1.jpg" alt="Matemática · Volume da Esfera · 9º ano" loading="lazy"><span class="rel-nome">Matemática · Volume da Esfera · 9º ano</span><span class="rel-preco">R$ 5,00</span></a><a class="rel" href="../Av142/"><img src="../img/volume-piramide-1.jpg" alt="Matemática · Volume da Pirâmide · 9º ano" loading="lazy"><span class="rel-nome">Matemática · Volume da Pirâmide · 9º ano</span><span class="rel-preco">R$ 5,00</span></a></div>
+  <div class="rel-grid"><div class="rel"><a class="rel-link" href="../Av137/"><img src="../img/volume-cone-1.jpg" alt="Matemática · Volume do Cone · 9º ano" loading="lazy"><span class="rel-nome">Matemática · Volume do Cone · 9º ano</span></a><div class="rel-foot"><span class="rel-preco">R$ 5,00</span><button type="button" class="rel-add" onclick="addCart('volume-cone')" aria-label="Adicionar Matemática · Volume do Cone · 9º ano ao carrinho">+ 🛒</button></div></div><div class="rel"><a class="rel-link" href="../Av138/"><img src="../img/volume-cubo-1.jpg" alt="Matemática · Volume do Cubo · 9º ano" loading="lazy"><span class="rel-nome">Matemática · Volume do Cubo · 9º ano</span></a><div class="rel-foot"><span class="rel-preco">R$ 5,00</span><button type="button" class="rel-add" onclick="addCart('volume-cubo')" aria-label="Adicionar Matemática · Volume do Cubo · 9º ano ao carrinho">+ 🛒</button></div></div><div class="rel"><a class="rel-link" href="../Av141/"><img src="../img/volume-paralelepipedo-1.jpg" alt="Matemática · Volume do Paralelepípedo · 9º ano" loading="lazy"><span class="rel-nome">Matemática · Volume do Paralelepípedo · 9º ano</span></a><div class="rel-foot"><span class="rel-preco">R$ 5,00</span><button type="button" class="rel-add" onclick="addCart('volume-paralelepipedo')" aria-label="Adicionar Matemática · Volume do Paralelepípedo · 9º ano ao carrinho">+ 🛒</button></div></div><div class="rel"><a class="rel-link" href="../Av143/"><img src="../img/volume-prisma-1.jpg" alt="Matemática · Volume do Prisma · 9º ano" loading="lazy"><span class="rel-nome">Matemática · Volume do Prisma · 9º ano</span></a><div class="rel-foot"><span class="rel-preco">R$ 5,00</span><button type="button" class="rel-add" onclick="addCart('volume-prisma')" aria-label="Adicionar Matemática · Volume do Prisma · 9º ano ao carrinho">+ 🛒</button></div></div><div class="rel"><a class="rel-link" href="../Av140/"><img src="../img/volume-esfera-1.jpg" alt="Matemática · Volume da Esfera · 9º ano" loading="lazy"><span class="rel-nome">Matemática · Volume da Esfera · 9º ano</span></a><div class="rel-foot"><span class="rel-preco">R$ 5,00</span><button type="button" class="rel-add" onclick="addCart('volume-esfera')" aria-label="Adicionar Matemática · Volume da Esfera · 9º ano ao carrinho">+ 🛒</button></div></div><div class="rel"><a class="rel-link" href="../Av142/"><img src="../img/volume-piramide-1.jpg" alt="Matemática · Volume da Pirâmide · 9º ano" loading="lazy"><span class="rel-nome">Matemática · Volume da Pirâmide · 9º ano</span></a><div class="rel-foot"><span class="rel-preco">R$ 5,00</span><button type="button" class="rel-add" onclick="addCart('volume-piramide')" aria-label="Adicionar Matemática · Volume da Pirâmide · 9º ano ao carrinho">+ 🛒</button></div></div></div>
 </section>
 
 <footer>
@@ -94,8 +99,30 @@
   <button class="lb-next" type="button" onclick="passo(1)" aria-label="Próxima">›</button>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
 const IMGS=["../img/sei-8-1.jpg", "../img/sei-8-2.jpg", "../img/sei-8-3.jpg", "../img/sei-8-4.jpg", "../img/sei-8-5.jpg", "../img/sei-8-6.jpg", "../img/sei-8-7.jpg"];
+const CKEY='loja.carrinho.v1';
+function cartRead(){try{return JSON.parse(localStorage.getItem(CKEY)||'[]')||[]}catch(e){return []}}
+function cartBadge(){const e=document.getElementById('cartn');if(e)e.textContent=cartRead().reduce((s,x)=>s+(Number(x.q)||1),0)}
+function toast(t){
+  const el=document.getElementById('toast');
+  el.textContent=t;el.classList.add('on');
+  clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('on'),1800);
+}
+function addCart(slug,quiet){
+  const c=cartRead();const f=c.find(x=>x.slug===slug);
+  if(f)f.q=(Number(f.q)||1)+1;else c.push({slug:slug,q:1});
+  try{localStorage.setItem(CKEY,JSON.stringify(c))}catch(e){}
+  cartBadge();
+  if(!quiet)toast('Adicionado ao carrinho');
+}
+function addCombo(lista){
+  lista.forEach(s=>addCart(s,true));
+  toast(lista.length+' itens no carrinho');
+}
+cartBadge();
 let atual=0;
 function troca(k){
   atual=k;
