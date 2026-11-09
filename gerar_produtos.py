@@ -37,10 +37,18 @@ def codigo(it):
 
 
 def rel(it, todos):
-    """Outros produtos do mesmo grupo."""
-    mesmos = [x for x in todos if x is not it and x.get("grupo") == it.get("grupo")]
-    mesmos.sort(key=lambda x: (x.get("preco") or 0, x["nome"]))
-    return mesmos[:3]
+    """Sugestoes: primeiro o mesmo grupo, depois o mesmo tipo (volumes, se-liga, saeb...)."""
+    mesmo_grupo = [x for x in todos if x is not it and x.get("grupo") == it.get("grupo")]
+    mesmo_tipo = [x for x in todos if x is not it and x.get("tipo") == it.get("tipo") and x.get("grupo") != it.get("grupo")]
+    out, vistos = [], {it["slug"]}
+    for x in mesmo_grupo + mesmo_tipo:
+        if x["slug"] in vistos:
+            continue
+        vistos.add(x["slug"])
+        out.append(x)
+        if len(out) >= 6:
+            break
+    return out
 
 
 def card_rel(x):
@@ -79,6 +87,7 @@ def pagina(it, todos):
         comprar = f'<a class="btn comprar" href="{whats}" target="_blank" rel="noopener">Pedir pelo WhatsApp</a>'
         pagamento = "Atendimento direto pelo WhatsApp"
     zap = f'<a class="btn zap" href="{whats}" target="_blank" rel="noopener">Tirar dúvida no WhatsApp</a>'
+    carrinho = f'<a class="btn carrinho" href="../index.html?c={cod}">Adicionar ao carrinho</a>'
     relacionados = "".join(card_rel(x) for x in rel(it, todos))
 
     ld = {
@@ -149,6 +158,7 @@ def pagina(it, todos):
     <p class="preco">{preco_html}</p>
     <div class="acoes">
       {comprar}
+      {carrinho}
       {zap}
     </div>
     <p class="seguro">🔒 {pagamento} · PDF digital · entrega após a confirmação</p>
@@ -164,8 +174,18 @@ def pagina(it, todos):
   </aside>
 </main>
 
+<section class="faq">
+  <h2>Perguntas frequentes</h2>
+  <details><summary>Como recebo o material?</summary><p>É um arquivo em PDF. A entrega é feita após a confirmação do pagamento, pelo mesmo canal da compra.</p></details>
+  <details><summary>As páginas de amostra são o material completo?</summary><p>Não. As imagens acima são amostras com tarja, para você conferir o estilo e o nível do conteúdo antes de comprar.</p></details>
+  <details><summary>Posso tirar dúvidas antes?</summary><p>Sim. Use o botão do WhatsApp nesta página e fale direto com o professor.</p></details>
+</section>
+
 <section class="relacionados">
-  <h2>Também pode interessar</h2>
+  <div class="rel-head">
+    <h2>Também pode interessar</h2>
+    <a class="ver-todos" href="../index.html">Ver todos os materiais →</a>
+  </div>
   <div class="rel-grid">{relacionados}</div>
 </section>
 
@@ -253,8 +273,8 @@ h1{font-size:clamp(1.7rem,3.2vw,2.6rem);line-height:1.12;margin-bottom:10px;lett
 .acoes{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
 .btn{display:block;text-align:center;text-decoration:none;font-weight:900;border-radius:12px;padding:15px 16px;font-size:1rem;transition:transform .15s,filter .15s}
 .btn:active{transform:scale(.98)}
-.comprar{background:#16a34a;color:#fff}
-.comprar:hover{filter:brightness(1.08)}
+.comprar{background:#ffbc00;color:#3a2500}
+.comprar:hover{filter:brightness(1.06)}
 .zap{background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.5);color:#bbf7d0}
 .seguro{font-size:.8rem;color:var(--dim);margin-bottom:18px}
 .inclui{list-style:none;display:grid;gap:8px;margin-bottom:20px}
@@ -270,6 +290,17 @@ h1{font-size:clamp(1.7rem,3.2vw,2.6rem);line-height:1.12;margin-bottom:10px;lett
 .rel img{width:100%;height:auto;border-radius:8px;background:#fff}
 .rel-nome{font-size:.88rem;font-weight:800;line-height:1.25}
 .rel-preco{font-size:.85rem;color:var(--gold);font-weight:800}
+.carrinho{background:rgba(255,255,255,.10);border:1px solid var(--bd);color:var(--tx)}
+.carrinho:hover{background:rgba(255,255,255,.16)}
+.faq{max-width:1120px;margin:40px auto 0}
+.faq h2{font-size:1.2rem;margin-bottom:12px}
+.faq details{background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.faq summary{cursor:pointer;font-weight:800;font-size:.95rem}
+.faq p{color:var(--dim);font-size:.9rem;line-height:1.55;margin-top:8px}
+.rel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.rel-head h2{margin:0}
+.ver-todos{color:var(--dim);font-size:.86rem;font-weight:700;text-decoration:none}
+.ver-todos:hover{color:#fff}
 footer{max-width:1120px;margin:44px auto 0;color:#7c88ab;font-size:.82rem;text-align:center;line-height:1.7}
 footer a{color:var(--dim)}
 .barra{display:none}
@@ -287,11 +318,21 @@ footer a{color:var(--dim)}
   .barra div{display:flex;flex-direction:column;line-height:1.2;min-width:0}
   .barra small{font-size:.72rem;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw}
   .barra b{color:var(--gold);font-size:1.05rem}
-  .barra a{background:#16a34a;color:#fff;text-decoration:none;font-weight:900;border-radius:10px;padding:12px 18px;white-space:nowrap}
+  .barra a{background:#ffbc00;color:#3a2500;text-decoration:none;font-weight:900;border-radius:10px;padding:12px 18px;white-space:nowrap}
   .foto{border-radius:16px}
 }
 @media print{.barra,.lb,.acoes,.ico{display:none!important}}
 """
+
+
+def sitemap(its):
+    urls = [BASE + "/"] + [f"{BASE}/{codigo(x)}/" for x in its]
+    body = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    body += "".join(f"  <url><loc>{u}</loc></url>\n" for u in urls)
+    body += "</urlset>\n"
+    io.open(os.path.join(HERE, "sitemap.xml"), "w", encoding="utf-8").write(body)
+    io.open(os.path.join(HERE, "robots.txt"), "w", encoding="utf-8").write(
+        "User-agent: *\nAllow: /\nSitemap: " + BASE + "/sitemap.xml\n")
 
 
 def main():
@@ -304,6 +345,7 @@ def main():
         os.makedirs(d, exist_ok=True)
         io.open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(pagina(it, its))
         n += 1
+    sitemap(its)
     print("paginas geradas:", n)
 
 
