@@ -1,20 +1,24 @@
 {
  "pedagogo-abaetetuba": {
-  "paginas": 335,
+  "paginas": 277,
   "usadas": [
-   1,
-   7,
-   111,
+   34,
+   70,
+   106,
+   145,
+   183,
    222
   ]
  },
  "simulado-matematica": {
   "paginas": 101,
   "usadas": [
-   1,
-   2,
-   34,
-   67
+   13,
+   26,
+   39,
+   53,
+   67,
+   81
   ]
  },
  "turismo": {
@@ -24,6 +28,204 @@
    2,
    23,
    49
+  ]
+ },
+ "pedagogo": {
+  "paginas": 52,
+  "usadas": [
+   7,
+   14,
+   20,
+   28,
+   35,
+   42
+  ]
+ },
+ "matematica": {
+  "paginas": 69,
+  "usadas": [
+   9,
+   18,
+   27,
+   36,
+   46,
+   56
+  ]
+ },
+ "conhecimentos-basicos": {
+  "paginas": 37,
+  "usadas": [
+   5,
+   10,
+   15,
+   20,
+   25,
+   30
+  ]
+ },
+ "educacao-especial": {
+  "paginas": 48,
+  "usadas": [
+   6,
+   14,
+   19,
+   25,
+   32,
+   40
+  ]
+ },
+ "geografia": {
+  "paginas": 82,
+  "usadas": [
+   5,
+   21,
+   32,
+   43,
+   66,
+   67
+  ]
+ },
+ "artes": {
+  "paginas": 44,
+  "usadas": [
+   6,
+   12,
+   17,
+   23,
+   30,
+   36
+  ]
+ },
+ "lingua-inglesa": {
+  "paginas": 55,
+  "usadas": [
+   7,
+   14,
+   21,
+   29,
+   37,
+   45
+  ]
+ },
+ "educacao-fisica": {
+  "paginas": 48,
+  "usadas": [
+   6,
+   13,
+   19,
+   25,
+   32,
+   39
+  ]
+ },
+ "informacao-comunicacao": {
+  "paginas": 26,
+  "usadas": [
+   4,
+   7,
+   10,
+   14,
+   18,
+   21
+  ]
+ },
+ "quimica": {
+  "paginas": 66,
+  "usadas": [
+   7,
+   17,
+   25,
+   38,
+   44,
+   58
+  ]
+ },
+ "cisop-artesao": {
+  "paginas": 185,
+  "usadas": [
+   24,
+   49,
+   73,
+   98,
+   125,
+   149
+  ]
+ },
+ "cisop-agente-administrativo": {
+  "paginas": 130,
+  "usadas": [
+   16,
+   33,
+   50,
+   68,
+   86,
+   105
+  ]
+ },
+ "cisop-tecnico-enfermagem": {
+  "paginas": 140,
+  "usadas": [
+   17,
+   36,
+   54,
+   73,
+   93,
+   113
+  ]
+ },
+ "cisop-monitor-biblioteca": {
+  "paginas": 77,
+  "usadas": [
+   10,
+   20,
+   30,
+   41,
+   51,
+   62
+  ]
+ },
+ "cisop-professor-ed-infantil": {
+  "paginas": 86,
+  "usadas": [
+   11,
+   22,
+   33,
+   45,
+   57,
+   69
+  ]
+ },
+ "cisop-professor-temporario": {
+  "paginas": 89,
+  "usadas": [
+   11,
+   23,
+   34,
+   47,
+   59,
+   72
+  ]
+ },
+ "lingua-portuguesa": {
+  "paginas": 71,
+  "usadas": [
+   9,
+   18,
+   27,
+   37,
+   47,
+   57
+  ]
+ },
+ "gestao-negocios": {
+  "paginas": 58,
+  "usadas": [
+   7,
+   15,
+   23,
+   31,
+   39,
+   47
   ]
  }
 }
