@@ -2,7 +2,9 @@
 """Gera uma subpagina por produto da loja: /Loja/<codigo>/index.html
 
 O codigo e o campo "av" do item (ex.: Av82 -> /Loja/Av82/). Itens sem codigo usam o slug.
-Cada pagina tem galeria (7 imagens), preco, descricao, botao da Eduzz e volta para a loja.
+Cada pagina tem galeria com lightbox, preco, descricao, botoes de compra, itens
+relacionados, dados estruturados (SEO) e volta para a loja.
+
 Roda depois de build_loja.py (le os itens direto do index.html).
 """
 import io
@@ -34,11 +36,26 @@ def codigo(it):
     return it["slug"]
 
 
-def pagina(it):
+def rel(it, todos):
+    """Outros produtos do mesmo grupo."""
+    mesmos = [x for x in todos if x is not it and x.get("grupo") == it.get("grupo")]
+    mesmos.sort(key=lambda x: (x.get("preco") or 0, x["nome"]))
+    return mesmos[:3]
+
+
+def card_rel(x):
+    cod = codigo(x)
+    capa = x["imgs"][0].split("?")[0] if x["imgs"] else ""
+    return (f'<a class="rel" href="../{cod}/">'
+            f'<img src="../{capa}" alt="{x["nome"]}" loading="lazy">'
+            f'<span class="rel-nome">{x["nome"]}</span>'
+            f'<span class="rel-preco">R$ {brl(x.get("preco") or 0)}</span></a>')
+
+
+def pagina(it, todos):
     cod = codigo(it)
     imgs = [u.split("?")[0] for u in it["imgs"]]
     capa = imgs[0] if imgs else ""
-    interno = imgs[1:]
     preco = it.get("preco") or 0
     de = it.get("de") or None
     link = it.get("link") or ""
@@ -46,98 +63,246 @@ def pagina(it):
     sub = it.get("sub") or ""
     grupo = it.get("grupoNome") or ""
     cod_wa = f"{cod} - {nome}"
+    whats = f"https://wa.me/{WA}?text={cod_wa}"
 
-    previa = "".join(
-        f'<img src="../{u}" alt="{nome} - pagina {k+2}" loading="lazy" onclick="ver(this.src)">'
-        for k, u in enumerate(interno)
+    novas = [u for u in imgs if u]
+    mini = "".join(
+        f'<button type="button" class="mini-img{" on" if k == 0 else ""}" onclick="troca({k})">'
+        f'<img src="../{u}" alt="{nome} - imagem {k+1}" loading="lazy"></button>'
+        for k, u in enumerate(novas)
     )
-    preco_html = (f'<span class="de">R$ {brl(de)}</span> ' if de else "") + f'<b>R$ {brl(preco)}</b>'
+    preco_html = (f'<span class="de">R$ {brl(de)}</span> ' if de else "") + f'R$ {brl(preco)}'
     if link:
         comprar = f'<a class="btn comprar" href="{link}" target="_blank" rel="noopener">Comprar na Eduzz</a>'
+        pagamento = "Pagamento seguro pela Eduzz"
     else:
-        comprar = f'<a class="btn comprar" href="https://wa.me/{WA}?text={cod_wa}" target="_blank" rel="noopener">Falar no WhatsApp</a>'
-    zap = f'<a class="btn zap" href="https://wa.me/{WA}?text={cod_wa}" target="_blank" rel="noopener">Tirar duvida no WhatsApp</a>'
+        comprar = f'<a class="btn comprar" href="{whats}" target="_blank" rel="noopener">Pedir pelo WhatsApp</a>'
+        pagamento = "Atendimento direto pelo WhatsApp"
+    zap = f'<a class="btn zap" href="{whats}" target="_blank" rel="noopener">Tirar dúvida no WhatsApp</a>'
+    relacionados = "".join(card_rel(x) for x in rel(it, todos))
+
+    ld = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": nome,
+        "sku": cod,
+        "description": sub,
+        "image": [f"{BASE}/{u}" for u in novas],
+        "brand": {"@type": "Brand", "name": "Prof. Rodrigo Gonçalves Pereira"},
+        "offers": {
+            "@type": "Offer",
+            "price": f"{float(preco):.2f}",
+            "priceCurrency": "BRL",
+            "availability": "https://schema.org/InStock",
+            "url": f"{BASE}/{cod}/",
+        },
+    }
+    if link:
+        ld["offers"]["url"] = link
+    ld_json = json.dumps(ld, ensure_ascii=False).replace("</", "<\\/")
 
     return f"""<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{nome} - Loja de Matematica</title>
-<meta name="description" content="{sub[:150]}">
+<title>{nome} — Loja de Matemática</title>
+<meta name="description" content="{sub[:155]}">
 <link rel="canonical" href="{BASE}/{cod}/">
-<meta property="og:title" content="{nome} - Loja de Matematica">
-<meta property="og:description" content="{sub[:150]}">
-<meta property="og:image" content="{BASE}/img/{os.path.basename(capa)}">
+<meta property="og:site_name" content="Loja de Matemática">
+<meta property="og:title" content="{nome} — {grupo}">
+<meta property="og:description" content="{sub[:155]}">
+<meta property="og:image" content="{BASE}/{capa}">
 <meta property="og:url" content="{BASE}/{cod}/">
 <meta property="og:type" content="product">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="../produto.css">
+<script type="application/ld+json">{ld_json}</script>
 </head>
 <body>
-<header>
-  <a class="voltar" href="../index.html">&larr; Voltar para a loja</a>
-  <span class="grupo">{grupo}</span>
-</header>
-<main>
-  <div class="foto">
-    <img id="big" src="../{capa}" alt="{nome}">
+<header class="topo">
+  <a class="voltar" href="../index.html">← Loja de Matemática</a>
+  <div class="topo-dir">
+    <span class="grupo">{grupo}</span>
+    <button class="ico" type="button" onclick="compartilhar()" title="Compartilhar" aria-label="Compartilhar">⤴</button>
   </div>
-  <aside>
+</header>
+
+<nav class="migalha" aria-label="Você está em">
+  <a href="../index.html">Loja</a> <span>/</span> <span>{grupo}</span> <span>/</span> <b>{nome}</b>
+</nav>
+
+<main>
+  <section class="galeria">
+    <div class="foto" onclick="lightbox(true)">
+      <img id="big" src="../{capa}" alt="{nome}">
+      <span class="zoom">🔍 ampliar</span>
+    </div>
+    <div class="mini">{mini}</div>
+  </section>
+
+  <aside class="info">
     <p class="cod">{cod}</p>
     <h1>{nome}</h1>
     <p class="sub">{sub}</p>
+
     <p class="preco">{preco_html}</p>
-    <div class="acoes">{comprar}{zap}</div>
-    <p class="aviso">PDF digital. Entrega imediata apos a confirmacao do pagamento.</p>
-    <div class="mini">{previa}</div>
+    <div class="acoes">
+      {comprar}
+      {zap}
+    </div>
+    <p class="seguro">🔒 {pagamento} · PDF digital · entrega após a confirmação</p>
+
+    <ul class="inclui">
+      <li>Material em PDF, com gabarito quando aplicável</li>
+      <li>Páginas de amostra com tarja para conferir antes de comprar</li>
+      <li>Suporte pelo WhatsApp com o professor</li>
+    </ul>
+
+    <p class="mini-titulo">Conteúdo</p>
+    <p class="desc">{sub}</p>
   </aside>
 </main>
-<footer>{cod} &middot; {grupo} &middot; Prof. Rodrigo Goncalves Pereira</footer>
+
+<section class="relacionados">
+  <h2>Também pode interessar</h2>
+  <div class="rel-grid">{relacionados}</div>
+</section>
+
+<footer>
+  {cod} · {grupo} · Prof. Rodrigo Gonçalves Pereira<br>
+  <a href="../index.html">Voltar para a loja</a>
+</footer>
+
+<div class="barra">
+  <div><small>{nome}</small><b>R$ {brl(preco)}</b></div>
+  {'<a href="' + link + '" target="_blank" rel="noopener">Comprar</a>' if link else '<a href="' + whats + '" target="_blank" rel="noopener">WhatsApp</a>'}
+</div>
+
+<div class="lb" id="lb" onclick="if(event.target===this)lightbox(false)">
+  <button class="lb-x" type="button" onclick="lightbox(false)" aria-label="Fechar">✕</button>
+  <button class="lb-prev" type="button" onclick="passo(-1)" aria-label="Anterior">‹</button>
+  <img id="lbimg" src="" alt="">
+  <button class="lb-next" type="button" onclick="passo(1)" aria-label="Próxima">›</button>
+</div>
+
 <script>
-function ver(u){{document.getElementById('big').src=u;window.scrollTo({{top:0,behavior:'smooth'}})}}
+const IMGS={json.dumps(['../' + u for u in novas], ensure_ascii=False)};
+let atual=0;
+function troca(k){{
+  atual=k;
+  document.getElementById('big').src=IMGS[k];
+  document.querySelectorAll('.mini-img').forEach((b,i)=>b.classList.toggle('on',i===k));
+}}
+function lightbox(abrir){{
+  const lb=document.getElementById('lb');
+  if(!abrir){{lb.classList.remove('on');return}}
+  document.getElementById('lbimg').src=IMGS[atual];
+  lb.classList.add('on');
+}}
+function passo(d){{
+  atual=(atual+d+IMGS.length)%IMGS.length;
+  troca(atual);
+  document.getElementById('lbimg').src=IMGS[atual];
+}}
+document.addEventListener('keydown',e=>{{
+  const lb=document.getElementById('lb');
+  if(!lb.classList.contains('on'))return;
+  if(e.key==='Escape')lightbox(false);
+  if(e.key==='ArrowRight')passo(1);
+  if(e.key==='ArrowLeft')passo(-1);
+}});
+function compartilhar(){{
+  const u=location.href, t=document.title;
+  if(navigator.share){{navigator.share({{title:t,url:u}}).catch(()=>{{}});return}}
+  navigator.clipboard.writeText(u).then(()=>alert('Link copiado!')).catch(()=>alert(u));
+}}
 </script>
 </body>
 </html>"""
 
 
 CSS = """*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:#0b1226;color:#f4f6ff;min-height:100vh;padding:0 16px 40px}
-header{max-width:1100px;margin:0 auto;padding:18px 0 10px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.voltar{color:#a9b4d6;text-decoration:none;font-weight:700;font-size:.95rem}
+:root{--bg:#0b1226;--bg2:#121a33;--bd:rgba(255,255,255,.14);--tx:#f4f6ff;--dim:#a9b4d6;--ac:#f472b6;--gold:#fbbf24}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(900px 420px at 15% -10%,#27408f55,transparent),var(--bg);color:var(--tx);min-height:100vh;padding:0 16px 96px}
+a{color:inherit}
+.topo{max-width:1120px;margin:0 auto;padding:16px 0 8px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.voltar{color:var(--dim);text-decoration:none;font-weight:800;font-size:.95rem}
 .voltar:hover{color:#fff}
-.grupo{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#a9b4d6;border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:5px 12px}
-main{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:26px;align-items:start}
-.foto{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:10px}
-.foto img{width:100%;height:auto;display:block;border-radius:10px;background:#fff}
-aside{padding-top:8px}
-.cod{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:#f472b6;font-weight:900;margin-bottom:6px}
-h1{font-size:clamp(1.6rem,3vw,2.4rem);line-height:1.15;margin-bottom:10px}
-.sub{color:#c7d0ea;line-height:1.5;margin-bottom:16px}
-.preco{font-size:1.6rem;margin-bottom:16px}
-.preco .de{color:#a9b4d6;text-decoration:line-through;font-size:1rem;margin-right:8px}
-.preco b{color:#fbbf24}
-.acoes{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
-.btn{display:block;text-align:center;text-decoration:none;font-weight:900;border-radius:12px;padding:14px 16px;font-size:1rem}
+.topo-dir{display:flex;align-items:center;gap:10px}
+.grupo{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);border:1px solid var(--bd);border-radius:99px;padding:5px 12px;background:rgba(255,255,255,.05)}
+.ico{background:rgba(255,255,255,.08);border:1px solid var(--bd);color:var(--tx);width:34px;height:34px;border-radius:10px;cursor:pointer;font-size:1rem}
+.migalha{max-width:1120px;margin:0 auto 14px;font-size:.82rem;color:var(--dim);display:flex;gap:8px;flex-wrap:wrap}
+.migalha a{text-decoration:none;color:var(--dim)}
+.migalha a:hover{color:#fff}
+.migalha b{color:var(--tx);font-weight:700}
+main{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:28px;align-items:start}
+.foto{position:relative;background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:20px;padding:10px;cursor:zoom-in}
+.foto img{width:100%;height:auto;display:block;border-radius:12px;background:#fff}
+.zoom{position:absolute;right:20px;bottom:20px;background:rgba(11,18,38,.82);border:1px solid var(--bd);border-radius:99px;padding:6px 12px;font-size:.76rem;font-weight:700;color:#fff}
+.mini{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:10px}
+.mini-img{padding:0;border:2px solid transparent;border-radius:10px;background:none;cursor:pointer;overflow:hidden}
+.mini-img img{width:100%;height:100%;display:block;border-radius:8px;background:#fff}
+.mini-img.on{border-color:var(--ac)}
+.info{padding-top:4px}
+.cod{font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ac);font-weight:900;margin-bottom:6px}
+h1{font-size:clamp(1.7rem,3.2vw,2.6rem);line-height:1.12;margin-bottom:10px;letter-spacing:-.01em}
+.sub{color:var(--dim);line-height:1.55;margin-bottom:16px}
+.preco{font-size:2rem;font-weight:900;margin-bottom:14px}
+.preco .de{color:var(--dim);text-decoration:line-through;font-size:1rem;font-weight:600;margin-right:10px}
+.acoes{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.btn{display:block;text-align:center;text-decoration:none;font-weight:900;border-radius:12px;padding:15px 16px;font-size:1rem;transition:transform .15s,filter .15s}
+.btn:active{transform:scale(.98)}
 .comprar{background:#16a34a;color:#fff}
-.zap{background:#22c55e;color:#052e16}
-.aviso{font-size:.82rem;color:#a9b4d6;margin-bottom:18px}
-.mini{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px}
-.mini img{width:100%;height:auto;border-radius:8px;border:1px solid rgba(255,255,255,.2);cursor:pointer;background:#fff}
-footer{max-width:1100px;margin:34px auto 0;color:#7c88ab;font-size:.82rem;text-align:center}
-@media(max-width:820px){main{grid-template-columns:1fr}.foto{order:-1}}
+.comprar:hover{filter:brightness(1.08)}
+.zap{background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.5);color:#bbf7d0}
+.seguro{font-size:.8rem;color:var(--dim);margin-bottom:18px}
+.inclui{list-style:none;display:grid;gap:8px;margin-bottom:20px}
+.inclui li{position:relative;padding-left:24px;font-size:.92rem;color:#dbe2f5;line-height:1.4}
+.inclui li::before{content:"✓";position:absolute;left:0;color:#34d399;font-weight:900}
+.mini-titulo{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;font-weight:800}
+.desc{color:#cdd6ee;line-height:1.6;font-size:.95rem}
+.relacionados{max-width:1120px;margin:40px auto 0}
+.relacionados h2{font-size:1.2rem;margin-bottom:14px}
+.rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.rel{display:flex;flex-direction:column;gap:6px;text-decoration:none;background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:14px;padding:10px;transition:transform .15s,background .15s}
+.rel:hover{transform:translateY(-2px);background:rgba(255,255,255,.09)}
+.rel img{width:100%;height:auto;border-radius:8px;background:#fff}
+.rel-nome{font-size:.88rem;font-weight:800;line-height:1.25}
+.rel-preco{font-size:.85rem;color:var(--gold);font-weight:800}
+footer{max-width:1120px;margin:44px auto 0;color:#7c88ab;font-size:.82rem;text-align:center;line-height:1.7}
+footer a{color:var(--dim)}
+.barra{display:none}
+.lb{position:fixed;inset:0;z-index:99;background:rgba(3,7,18,.94);display:none;align-items:center;justify-content:center;padding:20px}
+.lb.on{display:flex}
+.lb img{max-width:92vw;max-height:90vh;border-radius:8px;background:#fff}
+.lb-x,.lb-prev,.lb-next{position:absolute;background:rgba(255,255,255,.12);border:1px solid var(--bd);color:#fff;width:46px;height:46px;border-radius:50%;font-size:1.3rem;cursor:pointer}
+.lb-x{top:18px;right:18px}
+.lb-prev{left:14px;top:50%;transform:translateY(-50%)}
+.lb-next{right:14px;top:50%;transform:translateY(-50%)}
+@media(max-width:860px){
+  main{grid-template-columns:1fr}
+  body{padding-bottom:110px}
+  .barra{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(11,18,38,.96);border-top:1px solid var(--bd);padding:10px 16px;align-items:center;justify-content:space-between;gap:12px;backdrop-filter:blur(10px)}
+  .barra div{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+  .barra small{font-size:.72rem;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw}
+  .barra b{color:var(--gold);font-size:1.05rem}
+  .barra a{background:#16a34a;color:#fff;text-decoration:none;font-weight:900;border-radius:10px;padding:12px 18px;white-space:nowrap}
+  .foto{border-radius:16px}
+}
+@media print{.barra,.lb,.acoes,.ico{display:none!important}}
 """
 
 
 def main():
     its = itens()
-    css_path = os.path.join(HERE, "produto.css")
-    io.open(css_path, "w", encoding="utf-8").write(CSS)
+    io.open(os.path.join(HERE, "produto.css"), "w", encoding="utf-8").write(CSS)
     n = 0
     for it in its:
         cod = codigo(it)
         d = os.path.join(HERE, cod)
         os.makedirs(d, exist_ok=True)
-        io.open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(pagina(it))
+        io.open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(pagina(it, its))
         n += 1
     print("paginas geradas:", n)
 
