@@ -264,6 +264,8 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .conteudo{display:grid;grid-template-columns:190px 1fr;gap:24px;align-items:start;margin-top:10px}
 .resumo{margin:6px 0 0;font:600 14px 'Source Sans 3';color:var(--mut)}
 .resumo b{color:var(--navy)}
+.subtipo{margin:16px 0 10px;font:800 13px 'Source Sans 3';letter-spacing:.08em;text-transform:uppercase;color:var(--navy);display:flex;align-items:center;gap:8px}
+.subtipo small{font-weight:600;color:var(--mut);letter-spacing:0}
 .indice{position:sticky;top:18px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 6px 18px rgba(15,37,71,.06)}
 .indice b{display:block;font:700 12px 'Source Sans 3';text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin:2px 0 8px}
 .indice a{display:block;padding:7px 9px;border-radius:8px;color:var(--navy);font:600 13.5px 'Source Sans 3';cursor:pointer}
@@ -374,6 +376,7 @@ section.grupo h2{font-size:22px}
     <a data-tipo="todos" onclick="setTipo('todos')">Todas as atividades</a>
     <a data-tipo="volumes" onclick="setTipo('volumes')">Volumes</a>
     <a data-tipo="se-liga" onclick="setTipo('se-liga')">Se Liga</a>
+    <a data-tipo="sei" onclick="setTipo('sei')">Semanas de Estudos</a>
     <a data-tipo="saeb" onclick="setTipo('saeb')">Simulados SAEB</a>
     <a data-tipo="apostilas" onclick="setTipo('apostilas')">Apostilas</a>
     <hr>
@@ -481,9 +484,12 @@ function render(){
   const q=busca.toLowerCase();let total=0;
   $("#main").innerHTML=GR.map(([g,nome])=>{
     if(filtro!=="todos"&&filtro!==g)return "";
-    const RK={"se-liga":0,"saeb":1};const l=ITENS.filter(i=>(filtroTipo==="todos"||i.tipo===filtroTipo)&&i.grupo===g&&(i.nome+" "+i.grupoNome).toLowerCase().includes(q)).map((x,n)=>[x,n]).sort((a,b)=>((RK[a[0].tipo]??2)-(RK[b[0].tipo]??2))||a[1]-b[1]).map(x=>x[0]);
+    const ORDEM={"se-liga":0,"sei":1,"saeb":2,"volumes":3,"apostilas":4};const l=ITENS.filter(i=>(filtroTipo==="todos"||i.tipo===filtroTipo)&&i.grupo===g&&(i.nome+" "+i.grupoNome).toLowerCase().includes(q)).map((x,n)=>[x,n]).sort((a,b)=>((ORDEM[a[0].tipo]??9)-(ORDEM[b[0].tipo]??9))||a[1]-b[1]).map(x=>x[0]);
     total+=l.length;if(!l.length)return "";
-    return `<section class="grupo"><h2>${nome}</h2><div class="grid">${l.map(card).join("")}</div></section>`;}).join("");
+    const NOMES={"se-liga":"Se Liga","sei":"Semanas de Estudos Intensivos","saeb":"Simulados SAEB","volumes":"Volumes","apostilas":"Apostilas"};
+    const porTipo={};l.forEach(i=>{(porTipo[i.tipo]=porTipo[i.tipo]||[]).push(i)});
+    const dentro=Object.keys(porTipo).map(tp=>`<h3 class="subtipo">${NOMES[tp]||tp} <small>${porTipo[tp].length}</small></h3><div class="grid">${porTipo[tp].map(card).join("")}</div>`).join("");
+    return `<section class="grupo"><h2>${nome}</h2>${dentro}</section>`;}).join("");
   $("#empty").style.display=total?"none":"block";
   const rot={
     todos:"Todos os materiais",volumes:"Volumes",'se-liga':"Se Liga",sei:"Semanas de Estudos Intensivos",saeb:"Simulados SAEB",apostilas:"Apostilas"
