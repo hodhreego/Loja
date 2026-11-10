@@ -151,6 +151,7 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 /* certames */
 .certs{display:flex;flex-wrap:wrap;gap:10px;padding:2px 2px 6px;flex:1 1 100%}
 .conteudo{display:grid;grid-template-columns:190px 1fr;gap:24px;align-items:start;margin-top:10px}
+.lista{min-width:0}
 .resumo{margin:6px 0 0;font:600 14px 'Source Sans 3';color:var(--mut)}
 .resumo b{color:var(--navy)}
 .subtipo{margin:16px 0 10px;font:800 13px 'Source Sans 3';letter-spacing:.08em;text-transform:uppercase;color:var(--navy);display:flex;align-items:center;gap:8px}
@@ -276,8 +277,10 @@ section.grupo h2{font-size:22px}
     <a data-grupo="reforco" onclick="setGrupo('reforco')">Reforço e recomposição</a>
     <a onclick="setGrupo('outros')">Outros concursos</a>
   </aside>
-  <p class="resumo" id="resumo"></p>
-<main id="main"></main>
+  <div class="lista">
+    <p class="resumo" id="resumo"></p>
+    <main id="main"></main>
+  </div>
 </div>
 <div class="wrap empty" id="empty">Nenhum material encontrado.</div>
 
