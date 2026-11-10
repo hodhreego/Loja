@@ -3,13 +3,13 @@
     <filter id="giz" x="-10%" y="-10%" width="120%" height="120%">
       <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="n"/>
       <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/>
-      <feGaussianBlur stdDeviation="0.35"/>
+      <feGaussianBlur stdDeviation="0.2"/>
     </filter>
   </defs>
 
-  <g filter="url(#giz)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="6">
+  <g filter="url(#giz)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="7">
     <!-- giz branco -->
-    <g stroke="#ffffff" stroke-opacity="0.14">
+    <g stroke="#ffffff" stroke-opacity="0.27">
       <path d="M40 70h44M62 48v44"/>
       <path d="M140 66h40M140 88h40"/>
       <path d="M240 62h22M240 74h22"/>
@@ -24,7 +24,7 @@
     </g>
 
     <!-- giz verde -->
-    <g stroke="#86efac" stroke-opacity="0.16">
+    <g stroke="#86efac" stroke-opacity="0.30">
       <path d="M486 58l16 34 36 5-27 25 7 36-32-19-32 19 7-36-27-25 36-5z"/>
       <ellipse cx="392" cy="286" rx="72" ry="26" transform="rotate(-24 392 286)"/>
       <circle cx="392" cy="286" r="9"/>
@@ -35,7 +35,7 @@
     </g>
 
     <!-- giz amarelo -->
-    <g stroke="#fde68a" stroke-opacity="0.16">
+    <g stroke="#fde68a" stroke-opacity="0.30">
       <path d="M270 296a44 44 0 1 0 0-88 50 50 0 0 1 0 88z"/>
       <path d="M470 470h28M484 456v28"/>
       <path d="M534 470h28M548 456v28M534 484h28"/>
