@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pedido — Loja de Matemática</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='80' font-size='84' text-anchor='middle'%3E🏛️%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1B3A6B;--navy-deep:#0F2547;--gold:#C9A227;--bg:#EEF3FB;--ink:#1B2733;--mut:#5b6b80;--line:#d9e2f1;--ok:#1f7a4d}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.45;padding:24px 16px}
+.wrap{max-width:680px;margin:0 auto}
+.card{background:#fff;border-radius:18px;box-shadow:0 10px 30px rgba(15,37,71,.12);overflow:hidden}
+header{background:var(--navy-deep);color:#fff;padding:22px 24px}
+header h1{font-family:'Playfair Display',serif;font-size:24px;font-weight:700}
+header p{opacity:.8;font-size:13.5px;margin-top:4px}
+.body{padding:20px 24px 24px}
+.cod{font:700 15px 'Source Sans 3';letter-spacing:.06em;color:var(--navy);background:#eef3fd;border:1px solid #d5e0f5;border-radius:10px;padding:10px 14px;display:inline-block;margin-bottom:18px}
+.st{display:inline-block;font-size:12.5px;font-weight:700;padding:4px 11px;border-radius:99px;margin-left:8px;vertical-align:2px}
+.st.pendente{background:#fff3d6;color:#7a5c00}
+.st.pago{background:#e2f5ea;color:var(--ok)}
+.st.entregue{background:#e2f5ea;color:var(--ok)}
+.st.cancelado{background:#fde8e8;color:#a1262a}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{text-align:left;padding:10px 6px;border-bottom:1px solid #eef2f9}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+td.r,th.r{text-align:right}
+.tot{display:flex;justify-content:space-between;font-weight:700;font-size:18px;color:var(--navy-deep);padding-top:14px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.btn{display:inline-block;border-radius:99px;padding:11px 18px;font:700 14.5px 'Source Sans 3';text-decoration:none;border:0;cursor:pointer}
+.btn.wa{background:#1f9d57;color:#fff}
+.btn.alt{background:#fff;color:var(--navy);border:1.5px solid var(--line)}
+.note{margin-top:16px;background:#f4f8ff;border-left:4px solid var(--gold);border-radius:10px;padding:12px 14px;font-size:13.5px;color:#3d4c60}
+.msg{padding:34px 8px;text-align:center;color:var(--mut)}
+.msg b{display:block;color:var(--navy-deep);font-size:17px;margin-bottom:6px}
+input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;font:500 15px 'Source Sans 3';outline:none}
+input:focus{border-color:var(--navy)}
+label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);display:block;margin:14px 0 6px}
+footer{text-align:center;color:var(--mut);font-size:12.5px;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="card">
+  <header>
+   <h1>Pedido da Loja de Matemática</h1>
+   <p>Prof. Rodrigo Gonçalves Pereira</p>
+  </header>
+  <div class="body" id="corpo">
+   <div class="msg"><b>Carregando…</b></div>
+  </div>
+ </div>
+ <footer>Os materiais são digitais (PDF) e a entrega é feita por e-mail após a confirmação do pagamento.</footer>
+</div>
+
+<script>
+/* cole aqui a MESMA URL do Web App usada no site */
+const API_PEDIDOS="";
+const WA="5545999699444";
+const brl=n=>(Number(n)||0).toFixed(2).replace(".",",");
+const $=s=>document.querySelector(s);
+const cod=new URLSearchParams(location.search).get("p")||"";
+
+function waLink(t){return "https://wa.me/"+WA+"?text="+encodeURIComponent(t)}
+
+function mostra(d){
+  if(!d||!d.ok){
+    $("#corpo").innerHTML=`<div class="msg"><b>Pedido não encontrado</b>Confira o código ou fale com o Prof. Rodrigo.<div class="bar" style="justify-content:center"><a class="btn wa" target="_blank" rel="noopener" href="${waLink("Olá! Sobre o meu pedido "+cod)}">Falar no WhatsApp</a></div></div>`;
+    return;
+  }
+  const itens=d.itens||[];
+  const linhas=itens.map(i=>`<tr><td>${i.q}x ${i.nome}<br><small style="color:var(--mut)">${i.grupo||''}</small></td><td class="r">R$ ${brl(i.preco*i.q)}</td></tr>`).join("");
+  const st=(d.status||'pendente').toLowerCase();
+  const txt={pendente:"Aguardando pagamento",pago:"Pagamento confirmado",entregue:"Material entregue",cancelado:"Pedido cancelado"}[st]||st;
+  $("#corpo").innerHTML=`
+   <div class="cod">${d.codigo||cod}</div><span class="st ${st}">${txt}</span>
+   <table style="margin-top:16px"><thead><tr><th>Item</th><th class="r">Valor</th></tr></thead><tbody>${linhas}</tbody></table>
+   <div class="tot"><span>Total</span><span>R$ ${brl(d.total)}</span></div>
+   <div class="bar">
+     <a class="btn wa" target="_blank" rel="noopener" href="${waLink("Olá! Sobre o pedido "+d.codigo+": ")}">Falar no WhatsApp</a>
+     <a class="btn alt" href="./">Voltar para a loja</a>
+   </div>
+   <div class="note">${st==='entregue'?'O material foi enviado para o seu e-mail. Confira também a caixa de spam.':(st==='pago'?'Pagamento confirmado! O e-mail com os links do Drive está sendo enviado.':'Assim que o pagamento for confirmado, os links do Drive chegam no seu e-mail.')}</div>`;
+}
+
+function manual(){
+  $("#corpo").innerHTML=`<label for="cod">Código do pedido</label><input id="cod" placeholder="PED-261106-A7K2" value="${cod}"><div class="bar"><button class="btn wa" onclick="location.search='?p='+encodeURIComponent(document.getElementById('cod').value.trim())">Consultar</button></div>`;
+}
+
+async function carrega(){
+  if(!cod){manual();return}
+  if(!API_PEDIDOS){mostra(null);return}
+  try{
+    const r=await fetch(API_PEDIDOS+"?p="+encodeURIComponent(cod));
+    mostra(await r.json());
+  }catch(e){mostra(null)}
+}
+carrega();
+</script>
+</body>
+</html>
