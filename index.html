@@ -318,7 +318,7 @@ section.grupo h2{font-size:22px}
  <div class="cfoot">
   <div class="cup">
    <div class="cupbal">💬 <a target="_blank" rel="noopener" href="https://wa.me/5545999699444?text=Ol%C3%A1%2C%20Prof.%20Rodrigo!%20Como%20fa%C3%A7o%20para%20ganhar%20o%20cupom%20de%2015%25%20de%20desconto%3F">Pergunte ao Prof. Rodrigo como ganhar o cupom</a></div>
-   <div class="cuprow"><input id="cupIn" type="text" placeholder="Cupom de +15%" autocomplete="off" autocapitalize="characters" aria-label="Cupom de desconto"><button type="button" class="btn ghost" onclick="cupAplicar()">Aplicar</button></div>
+   <div class="cuprow"><input id="cupIn" type="text" placeholder="Cupom de +15%" inputmode="tel" autocomplete="off" aria-label="Cupom de desconto"><button type="button" class="btn ghost" onclick="cupAplicar()">Aplicar</button></div>
    <div id="cupSt" class="cupst"></div>
   </div>
   <div class="tot"><span>Total</span><span id="ctot">R$ 0,00</span></div>
@@ -530,13 +530,13 @@ function cFind(s){return ITENS.find(i=>i.slug===s)}
 function cCount(){return CART.reduce((s,x)=>s+x.q,0)}
 function cSubtotal(){return CART.reduce((s,x)=>{const i=cFind(x.slug);return s+(i?i.preco*x.q:0)},0)}
 /* Política de descontos (materiais diferentes no carrinho). Tabela progressiva até 35% (10 ou mais); o cupom soma +15% e o total nunca passa de 50%. */
-const DESC_TAB=[0,0,2,4,10,25,27,29,31,33],DESC_MAX=35,TOTAL_MAX=50,CUPOM_COD="LOJA10",CUPOM_PCT=15,CUPOM_KEY="loja.cupom.v1";
+const DESC_TAB=[0,0,2,4,10,25,27,29,31,33],DESC_MAX=35,TOTAL_MAX=50,CUPOM_COD="45999699444",CUPOM_PCT=15,CUPOM_KEY="loja.cupom.v1";
 let CUPOM="";try{CUPOM=localStorage.getItem(CUPOM_KEY)||""}catch(e){}
 const cupomOk=()=>CUPOM!==""&&CUPOM===CUPOM_COD;
 function cBasePct(n){n=n===undefined?CART.length:n;return n>=10?DESC_MAX:DESC_TAB[Math.max(0,n)]||0}
 function cDescPct(){if(!CART.length)return 0;return Math.min(TOTAL_MAX,cBasePct()+(cupomOk()?CUPOM_PCT:0))}
 function cDica(){const n=CART.length;if(!n)return"";const b=cBasePct(n);if(n>=10)return cupomOk()?"🎉 Desconto máximo ativo: 35% + 15% do cupom = 50%!":"🎉 Desconto máximo de 35% ativo! Com o cupom você chega a 50%.";return"Desconto de "+b+"% ativo. Com mais 1 material ("+(n+1)+") sobe para "+cBasePct(n+1)+(n+1>=10?"%, o máximo sem cupom.":"%.")}
-function cupAplicar(){const i=$("#cupIn");if(!i)return;const v=i.value.trim().toUpperCase();if(v===CUPOM_COD){CUPOM=v;try{localStorage.setItem(CUPOM_KEY,v)}catch(e){}toast("Cupom aplicado: +"+CUPOM_PCT+"% de desconto")}else{toast(v?"Cupom inválido":"Digite o cupom")}cPaint()}
+function cupAplicar(){const i=$("#cupIn");if(!i)return;const v=i.value.replace(/\D/g,"").replace(/^55(?=\d{11}$)/,"");if(v===CUPOM_COD){CUPOM=v;try{localStorage.setItem(CUPOM_KEY,v)}catch(e){}toast("Cupom aplicado: +"+CUPOM_PCT+"% de desconto")}else{toast(v?"Cupom inválido":"Digite o cupom")}cPaint()}
 function cupRemover(){CUPOM="";try{localStorage.removeItem(CUPOM_KEY)}catch(e){}cPaint()}
 function cDesconto(){return Math.round(cSubtotal()*cDescPct())/100}
 function cTotal(){return Math.round((cSubtotal()-cDesconto())*100)/100}
@@ -551,7 +551,7 @@ function cPaint(){
   const pct=cDescPct(),sub=cSubtotal(),desc=cDesconto();
   $("#ctot").innerHTML="R$ "+brl(cTotal())+(pct>0?` <small style="color:#86efac;font-weight:800">−${brl(pct).replace(",00","")}%</small>`:"");
   const ci=$("#cupIn");if(ci&&!ci._on){ci._on=1;ci.addEventListener("keydown",e=>{if(e.key==="Enter")cupAplicar()})}
-  const cs=$("#cupSt");if(cs)cs.innerHTML=cupomOk()?`✅ Cupom <b>${CUPOM}</b> aplicado (+${CUPOM_PCT}%) <button type="button" class="cupx" onclick="cupRemover()">remover</button>`:"";
+  const cs=$("#cupSt");if(cs)cs.innerHTML=cupomOk()?`✅ Cupom aplicado (+${CUPOM_PCT}%) <button type="button" class="cupx" onclick="cupRemover()">remover</button>`:"";
   const linhaDesc=(pct>0?`<div style="font-size:13px;color:var(--mut);margin:0 0 4px">Subtotal R$ ${brl(sub)} · desconto de ${brl(pct).replace(',00','')}% (−R$ ${brl(desc)})</div>`:"")+(CART.length?`<div style="font-size:13px;font-weight:700;color:#14683d;background:#eaf7f0;border-radius:8px;padding:6px 9px;margin:0 0 8px">${cDica()}</div>`:"")+cTabela();
   $("#cbody").innerHTML=linhaDesc+(CART.length?CART.map(x=>{const i=cFind(x.slug);if(!i)return"";
     return `<div class="citem"><img src="${i.imgs[0]||''}" alt=""><div class="cn">${i.nome}<small>${i.grupoNome} · R$ ${brl(i.preco)}</small></div><div class="cq"><button onclick="qtyCart('${i.slug}',-1)" aria-label="Menos">−</button><span>${x.q}</span><button onclick="qtyCart('${i.slug}',1)" aria-label="Mais">+</button></div></div>`}).join("")
@@ -565,7 +565,7 @@ function cTexto(p){
   const cods=[];p.itens.forEach(i=>{for(let k=0;k<i.q;k++)cods.push(i.av)});
   const base=location.origin+location.pathname.replace(/index\.html$/,"");
   const L=p.itens.map(i=>i.av+(i.q>1?" ("+i.q+"x)":"")+" "+i.nome+" — R$ "+brl(i.preco*i.q));
-  const desc=p.pct>0?("\nSubtotal: R$ "+brl(p.subtotal)+"\nDesconto ("+brl(p.pct).replace(",00","")+"%"+(p.cupom?", com o cupom "+p.cupom:"")+"): −R$ "+brl(p.desconto)):"";
+  const desc=p.pct>0?("\nSubtotal: R$ "+brl(p.subtotal)+"\nDesconto ("+brl(p.pct).replace(",00","")+"%"+(p.cupom?", com cupom":"")+"): −R$ "+brl(p.desconto)):"";
   return "O meu email é: "+"\n"+"\n"+"Tenho interesse em adquirir os itens a seguir:"+"\n"+"\n"+L.join("\n")+"\n"+desc+"\n"+"\n"+"Total: R$ "+brl(p.total)+"\n"+"\n"+"Abrir o carrinho na loja: "+base+"?c="+cods.join(",")+"\n"+"\n"+"Pix: +55 45 99969-9444 (Rodrigo Gonçalves Pereira)"+"\n"+"A entrega será feita assim que o Prof. Rodrigo estiver online.";
 }
 async function cfinal(){
