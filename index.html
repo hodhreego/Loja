@@ -150,6 +150,23 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .badge,.peek{z-index:2}
 @media(prefers-reduced-motion:reduce){.pg.flip{animation:none;transform:rotateY(-180deg)}}
 @media(max-width:720px){.certs{display:grid;grid-template-columns:1fr 1fr;overflow:visible;gap:8px}.cert{min-width:0;max-width:none;min-height:56px;padding:12px;display:flex;flex-direction:column;justify-content:center}.cert:first-child{grid-column:1/-1}.cert b{font-size:15px}.box{grid-template-columns:1fr}.stage img.big{max-height:52vh}.grid{grid-template-columns:repeat(2,1fr);gap:12px}.info h3{font-size:15px}.price{font-size:20px}.row{flex-direction:column;align-items:stretch;gap:6px}.row .btn{text-align:center}.info{padding:12px}#q{width:100%}.fab{padding:11px 16px}}
+
+/* carrinho */
+.btn.cart{background:#fff;color:var(--navy);border:1.5px solid var(--navy);width:100%;margin-top:6px;text-align:center}.btn.cart:hover{background:#eef3fb}
+.btn.cart.in{background:var(--navy);color:#fff}
+.promo{background:linear-gradient(90deg,var(--gold),#e9c04a);color:#2b2200;font-weight:700;text-align:center;padding:9px 14px;font-size:15px}
+.cfab{white-space:nowrap;position:fixed;left:16px;bottom:16px;z-index:40;background:var(--navy);color:#fff;border:0;border-radius:99px;padding:13px 20px;font:700 15px 'Source Sans 3';box-shadow:0 8px 22px rgba(0,0,0,.28);cursor:pointer;display:flex;gap:8px;align-items:center}
+.cfab b{background:var(--gold);color:#2b2200;border-radius:99px;padding:1px 9px}
+.cpanel{position:fixed;left:16px;bottom:74px;z-index:45;width:min(380px,calc(100vw - 32px));background:#fff;border-radius:18px;box-shadow:0 18px 44px rgba(10,20,40,.35);display:none;overflow:hidden}
+.cpanel.open{display:block}
+.cpanel header{background:var(--navy);color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.cpanel header button{background:none;border:0;color:#fff;font-size:26px;cursor:pointer;line-height:1}
+.cbody{padding:12px 16px 16px;display:flex;flex-direction:column;gap:8px;max-height:72vh;overflow:auto}
+.cit{display:flex;gap:8px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0;font-size:14px}
+.cit span{flex:1}.cit button{border:0;background:none;color:#a1262a;font-size:20px;cursor:pointer}
+.ctot{font-size:15px;display:flex;flex-direction:column;gap:3px}.ctot .tt{font:700 20px 'Playfair Display',serif;color:var(--navy)}
+.cmeta{background:#fff8e1;border:1.5px solid #ecd58a;border-radius:10px;padding:8px 10px;font-size:13.5px;color:#4a3d00}
+@media(max-width:720px){.cfab{padding:11px 16px}}
 </style>
 </head>
 <body>
@@ -161,6 +178,7 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
   <button class="hero-wa" onclick="wtoggle(true)"><svg class="wai" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Falar no WhatsApp <small>tire dúvidas · peça seu material</small></button>
 </div></header>
 
+<div class="promo">🛒 Monte seu carrinho: <b>5 itens = 25% de desconto</b> · <b>10 ou mais = 50% de desconto</b> em qualquer material</div>
 <div class="wrap tools"><div class="bar">
   <div class="certs" id="chips"></div>
   <div class="certs" id="tipos" style="margin-top:10px"></div>
@@ -194,6 +212,8 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 </div></footer>
 
 
+<button class="cfab" id="cfab" onclick="ctoggle()" aria-label="Abrir carrinho">🛒 Carrinho <b id="cn">0</b></button>
+<div class="cpanel" id="cp" role="dialog" aria-label="Carrinho"><header><b>Seu carrinho</b><button onclick="ctoggle(false)" aria-label="Fechar">×</button></header><div class="cbody" id="cbody"></div></div>
 <button class="fab" id="fab" onclick="wtoggle()"><svg class="wai" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Falar no WhatsApp</button>
 <div class="wpanel" id="wp" role="dialog" aria-label="Falar no WhatsApp"><header><b>Fale com o Prof. Rodrigo</b><button onclick="wtoggle()" aria-label="Fechar">×</button></header>
  <div class="wbody">
@@ -229,7 +249,7 @@ function card(it){
   const dots=it.imgs.length>1?`<div class="dots">${it.imgs.map((_,k)=>`<i class="${k?'':'on'}"></i>`).join("")}</div>`:"";
   return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><span class="peek">👁 ver páginas</span></div>
   <div class="info" onmouseenter="const cv=this.parentElement.querySelector('.cover');if(cv&&cv._reset)cv._reset()"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
-  <div class="row"><div class="price"><span>R$</span>${brl(it.preco)}</div>${act}</div></div></article>`;
+  <div class="row"><div class="price"><span>R$</span>${brl(it.preco)}</div>${act}</div>${soon?'':`<button class="btn cart" data-s="${it.slug}" onclick="cartToggle('${it.slug}')">🛒 Adicionar ao carrinho</button>`}</div></article>`;
 }
 const CERT={
  pss:{nome:"PSS SEED-PR 2027",orgao:"Secretaria de Estado da Educação do Paraná (SEED-PR) · organização: NC/UFPR",edital:"Edital nº 52/2026 – GS/SEED",insc:["2026-07-27","2026-08-24"],prova:"2026-10-18",
@@ -337,8 +357,8 @@ function abre(s){cur=ITENS.find(i=>i.slug===s);
   const soon=!cur.link;
   $("#side").innerHTML=`<small style="color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.06em">${cur.grupoNome}</small><h3>${cur.nome}</h3><p>${cur.sub}</p>
    <p style="font-size:14px;color:var(--mut)">${cur.paginas?cur.paginas+' páginas · ':''}PDF digital${cur.slug.startsWith('cisop')||cur.grupo==='pss'||cur.grupo==='prefeitura'?' · inclui versão JUMBO (letra grande) quando disponível':''}</p>
-   <div class="row"><div class="price"><span>R$</span>${brl(cur.preco)}</div>${soon?`<button class="btn wa" onclick="fecha();wabre('${cur.slug}')">Falar no WhatsApp</button>`:`<a class="btn buy" target="_blank" rel="noopener" href="${cur.link}">Comprar agora</a>`}</div>`;
-  foto(0);$("#modal").classList.add("open");document.body.style.overflow="hidden";}
+   <div class="row"><div class="price"><span>R$</span>${brl(cur.preco)}</div>${soon?`<button class="btn wa" onclick="fecha();wabre('${cur.slug}')">Falar no WhatsApp</button>`:`<a class="btn buy" target="_blank" rel="noopener" href="${cur.link}">Comprar agora</a>`}</div>${soon?'':`<button class="btn cart" data-s="${cur.slug}" onclick="cartToggle('${cur.slug}')">🛒 Adicionar ao carrinho</button>`}`;
+  foto(0);cartSync();$("#modal").classList.add("open");document.body.style.overflow="hidden";}
 function foto(k){$("#big").src=cur.imgs[k];$("#lab").textContent=(cur.imgs.length>2?NOMES[k]:(k?"Índice":"Capa"))+" · "+(k+1)+"/"+cur.imgs.length;
   [...$("#th").children].forEach((e,i)=>e.classList.toggle("on",i===k));}
 function fecha(){$("#modal").classList.remove("open");document.body.style.overflow=""}
@@ -376,6 +396,27 @@ function winit(){
 function wtoggle(force){const p=$("#wp");const on=force===undefined?!p.classList.contains("open"):force;p.classList.toggle("open",on);}
 function wabre(slug,op){const it=ITENS.find(i=>i.slug===slug);if(it)$("#wprod").value="Apostila "+it.nome+" · "+it.grupoNome;const r=document.querySelector('input[name=wo][value="'+(op||0)+'"]');if(r)r.checked=true;wbuild();wtoggle(true);const w=document.querySelector(".wbody");if(w)w.scrollTop=0;}
 winit();
+/* ===== carrinho: 5 itens = 25% · 10+ itens = 50% (teto) · pedido vai para o WhatsApp ===== */
+const DESC=[[10,50],[5,25]],DESC_MAX=50;
+let CART=[];try{CART=JSON.parse(localStorage.getItem("cartLoja")||"[]")}catch(e){}
+CART=CART.filter(s=>ITENS.some(i=>i.slug===s&&i.link));
+function cartSave(){try{localStorage.setItem("cartLoja",JSON.stringify(CART))}catch(e){}}
+function cartPct(n){for(const [q,p] of DESC)if(n>=q)return Math.min(p,DESC_MAX);return 0}
+function cartCalc(){const its=CART.map(s=>ITENS.find(i=>i.slug===s)),sub=its.reduce((a,i)=>a+i.preco,0),pct=cartPct(its.length),dsc=Math.round(sub*pct)/100;return{its,sub,pct,dsc,tot:sub-dsc}}
+function cartToggle(s){const k=CART.indexOf(s);if(k<0)CART.push(s);else CART.splice(k,1);cartSave();cartSync();cartDraw()}
+function cartSync(){document.querySelectorAll(".btn.cart").forEach(b=>{const on=CART.includes(b.dataset.s);b.classList.toggle("in",on);b.textContent=on?"✓ No carrinho (remover)":"🛒 Adicionar ao carrinho"});$("#cn").textContent=CART.length}
+function cartMsg(){const c=cartCalc();let m="Olá, Prof. Rodrigo! Quero comprar estes materiais:\n"+c.its.map((i,k)=>(k+1)+". "+i.nome+" · "+i.grupoNome+" — R$ "+brl(i.preco)).join("\n")+"\n\nSubtotal: R$ "+brl(c.sub);if(c.pct)m+="\nDesconto ("+c.pct+"%): − R$ "+brl(c.dsc);m+="\nTotal: R$ "+brl(c.tot)+"\n\nNome completo: \nE-mail para receber os PDFs: \n\n🛒 Enviado pela loja: "+LOJA;return m}
+function cartDraw(){const c=cartCalc(),n=c.its.length,b=$("#cbody");
+  if(!n){b.innerHTML='<p class="note">Seu carrinho está vazio. Toque em <b>“Adicionar ao carrinho”</b> nos materiais.</p><div class="cmeta">5 itens = <b>25%</b> de desconto · 10 ou mais = <b>50%</b> de desconto, em qualquer material.</div>';return}
+  const falta=n<5?`Adicione mais <b>${5-n}</b> ${5-n===1?'item':'itens'} para ganhar <b>25%</b> de desconto.`:n<10?`Desconto de <b>25%</b> ativo! Adicione mais <b>${10-n}</b> ${10-n===1?'item':'itens'} para chegar a <b>50%</b>.`:`🎉 Desconto máximo de <b>50%</b> ativo!`;
+  const lista=c.its.map(i=>`<div class="cit"><span>${i.nome}<br><small>${i.grupoNome}</small></span><b>R$ ${brl(i.preco)}</b><button onclick="cartToggle('${i.slug}')" aria-label="Remover">×</button></div>`).join("");
+  b.innerHTML=`<div class="cmeta">${falta}</div><div class="ctot"><div>${n} ${n===1?'item':'itens'} · Subtotal: R$ ${brl(c.sub)}</div>${c.pct?`<div style="color:var(--ok)">Desconto (${c.pct}%): − R$ ${brl(c.dsc)}</div>`:""}<div class="tt">Total: R$ ${brl(c.tot)}</div></div>
+   <a class="btn wa" target="_blank" rel="noopener" style="text-align:center;padding:12px" href="https://wa.me/${WNUM}?text=${encodeURIComponent(cartMsg())}">Finalizar pelo WhatsApp</a>
+   <small style="color:var(--mut)">O pedido vai pronto para o WhatsApp do professor, que envia a cobrança com o desconto e os PDFs. Para comprar um item sem desconto, use o botão “Comprar”.</small>
+   <div>${lista}</div><button class="btn ghost" onclick="CART=[];cartSave();cartSync();cartDraw()">Esvaziar carrinho</button>`}
+function ctoggle(force){const p=$("#cp");const on=force===undefined?!p.classList.contains("open"):force;p.classList.toggle("open",on);if(on)cartDraw()}
+{const _r=render;render=function(){_r();cartSync()}}
+cartSync();cartDraw();
 </script>
 </body>
 </html>
