@@ -317,8 +317,8 @@ section.grupo h2{font-size:22px}
  <div class="cbody" id="cbody"></div>
  <div class="cfoot">
   <div class="cup">
-   <div class="cupbal">💬 <a target="_blank" rel="noopener" href="https://wa.me/5545999699444?text=Ol%C3%A1%2C%20Prof.%20Rodrigo!%20Como%20fa%C3%A7o%20para%20ganhar%20o%20cupom%20de%2010%25%20de%20desconto%3F">Pergunte ao Prof. Rodrigo como ganhar o cupom</a></div>
-   <div class="cuprow"><input id="cupIn" type="text" placeholder="Cupom de +10%" autocomplete="off" autocapitalize="characters" aria-label="Cupom de desconto"><button type="button" class="btn ghost" onclick="cupAplicar()">Aplicar</button></div>
+   <div class="cupbal">💬 <a target="_blank" rel="noopener" href="https://wa.me/5545999699444?text=Ol%C3%A1%2C%20Prof.%20Rodrigo!%20Como%20fa%C3%A7o%20para%20ganhar%20o%20cupom%20de%2015%25%20de%20desconto%3F">Pergunte ao Prof. Rodrigo como ganhar o cupom</a></div>
+   <div class="cuprow"><input id="cupIn" type="text" placeholder="Cupom de +15%" autocomplete="off" autocapitalize="characters" aria-label="Cupom de desconto"><button type="button" class="btn ghost" onclick="cupAplicar()">Aplicar</button></div>
    <div id="cupSt" class="cupst"></div>
   </div>
   <div class="tot"><span>Total</span><span id="ctot">R$ 0,00</span></div>
@@ -529,13 +529,13 @@ function cSave(){try{localStorage.setItem(CKEY,JSON.stringify(CART))}catch(e){}}
 function cFind(s){return ITENS.find(i=>i.slug===s)}
 function cCount(){return CART.reduce((s,x)=>s+x.q,0)}
 function cSubtotal(){return CART.reduce((s,x)=>{const i=cFind(x.slug);return s+(i?i.preco*x.q:0)},0)}
-/* Política de descontos (materiais diferentes no carrinho). Tabela progressiva até 40% (10 ou mais); o cupom soma +10% e o total nunca passa de 50%. */
-const DESC_TAB=[0,0,2,4,10,25,28,31,34,37],DESC_MAX=40,TOTAL_MAX=50,CUPOM_COD="LOJA10",CUPOM_PCT=10,CUPOM_KEY="loja.cupom.v1";
+/* Política de descontos (materiais diferentes no carrinho). Tabela progressiva até 35% (10 ou mais); o cupom soma +15% e o total nunca passa de 50%. */
+const DESC_TAB=[0,0,2,4,10,25,27,29,31,33],DESC_MAX=35,TOTAL_MAX=50,CUPOM_COD="LOJA10",CUPOM_PCT=15,CUPOM_KEY="loja.cupom.v1";
 let CUPOM="";try{CUPOM=localStorage.getItem(CUPOM_KEY)||""}catch(e){}
 const cupomOk=()=>CUPOM!==""&&CUPOM===CUPOM_COD;
 function cBasePct(n){n=n===undefined?CART.length:n;return n>=10?DESC_MAX:DESC_TAB[Math.max(0,n)]||0}
 function cDescPct(){if(!CART.length)return 0;return Math.min(TOTAL_MAX,cBasePct()+(cupomOk()?CUPOM_PCT:0))}
-function cDica(){const n=CART.length;if(!n)return"";const b=cBasePct(n);if(n>=10)return cupomOk()?"🎉 Desconto máximo ativo: 40% + 10% do cupom = 50%!":"🎉 Desconto máximo de 40% ativo! Com o cupom você chega a 50%.";return"Desconto de "+b+"% ativo. Com mais 1 material ("+(n+1)+") sobe para "+cBasePct(n+1)+(n+1>=10?"%, o máximo sem cupom.":"%.")}
+function cDica(){const n=CART.length;if(!n)return"";const b=cBasePct(n);if(n>=10)return cupomOk()?"🎉 Desconto máximo ativo: 35% + 15% do cupom = 50%!":"🎉 Desconto máximo de 35% ativo! Com o cupom você chega a 50%.";return"Desconto de "+b+"% ativo. Com mais 1 material ("+(n+1)+") sobe para "+cBasePct(n+1)+(n+1>=10?"%, o máximo sem cupom.":"%.")}
 function cupAplicar(){const i=$("#cupIn");if(!i)return;const v=i.value.trim().toUpperCase();if(v===CUPOM_COD){CUPOM=v;try{localStorage.setItem(CUPOM_KEY,v)}catch(e){}toast("Cupom aplicado: +"+CUPOM_PCT+"% de desconto")}else{toast(v?"Cupom inválido":"Digite o cupom")}cPaint()}
 function cupRemover(){CUPOM="";try{localStorage.removeItem(CUPOM_KEY)}catch(e){}cPaint()}
 function cDesconto(){return Math.round(cSubtotal()*cDescPct())/100}
@@ -545,7 +545,7 @@ function addCart(s){const i=cFind(s);if(!i)return;const e=CART.find(x=>x.slug===
 function rmCart(s){CART=CART.filter(x=>x.slug!==s);cSave();cPaint()}
 function qtyCart(s,d){const e=CART.find(x=>x.slug===s);if(!e)return;e.q+=d;if(e.q<1)CART=CART.filter(x=>x.slug!==s);cSave();cPaint()}
 function ctoggle(f){const p=$("#cp");if(!p)return;const on=f===undefined?!p.classList.contains("open"):f;p.classList.toggle("open",on)}
-function cTabela(){const l=[];for(let n=1;n<=10;n++)l.push(`<tr${CART.length>=10?(n===10?' style="font-weight:800;color:#14683d"':''):(n===CART.length?' style="font-weight:800;color:#14683d"':'')}><td>${n}${n===10?" ou mais":n===1?" material":" materiais"}</td><td style="text-align:right">${cBasePct(n)}%</td></tr>`);return `<details style="margin:0 0 8px;font-size:13px"><summary style="cursor:pointer;font-weight:700;color:var(--navy)">Ver tabela de descontos</summary><table style="width:100%;margin-top:4px;border-collapse:collapse">${l.join("")}</table><div style="color:var(--mut);margin-top:4px">Máximo de 40% pela quantidade. O cupom soma +10%, chegando a 50%.</div></details>`}
+function cTabela(){const l=[];for(let n=1;n<=10;n++)l.push(`<tr${CART.length>=10?(n===10?' style="font-weight:800;color:#14683d"':''):(n===CART.length?' style="font-weight:800;color:#14683d"':'')}><td>${n}${n===10?" ou mais":n===1?" material":" materiais"}</td><td style="text-align:right">${cBasePct(n)}%</td></tr>`);return `<details style="margin:0 0 8px;font-size:13px"><summary style="cursor:pointer;font-weight:700;color:var(--navy)">Ver tabela de descontos</summary><table style="width:100%;margin-top:4px;border-collapse:collapse">${l.join("")}</table><div style="color:var(--mut);margin-top:4px">Máximo de 35% pela quantidade. O cupom soma +15%, chegando a 50%.</div></details>`}
 function cPaint(){
   const n=cCount();const fb=$("#cartfab");if(fb){$("#cartn").textContent=n;fb.classList.toggle("on",n>0)}
   const pct=cDescPct(),sub=cSubtotal(),desc=cDesconto();
