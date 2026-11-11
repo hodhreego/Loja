@@ -516,7 +516,10 @@ function cSave(){try{localStorage.setItem(CKEY,JSON.stringify(CART))}catch(e){}}
 function cFind(s){return ITENS.find(i=>i.slug===s)}
 function cCount(){return CART.reduce((s,x)=>s+x.q,0)}
 function cSubtotal(){return CART.reduce((s,x)=>{const i=cFind(x.slug);return s+(i?i.preco*x.q:0)},0)}
-function cDescPct(){const n=CART.length;if(n<=1)return 0;const p=4+0.1*(n-2);return Math.min(40,Math.round(p*10)/10)}
+/* Política: 5 a 9 materiais = 25%; 10 ou mais = 50%; 50% é o teto. Conta materiais diferentes no carrinho. */
+const DESC_FAIXAS=[[10,50],[5,25]],DESC_MAX=50;
+function cDescPct(){const n=CART.length;for(const [q,p] of DESC_FAIXAS)if(n>=q)return Math.min(p,DESC_MAX);return 0}
+function cDica(){const n=CART.length;if(!n)return"";if(n<5)return"Adicione mais "+(5-n)+(5-n===1?" material":" materiais")+" e ganhe 25% de desconto.";if(n<10)return"Desconto de 25% ativo! Com mais "+(10-n)+(10-n===1?" material":" materiais")+" chega a 50% (o máximo).";return"🎉 Desconto máximo de 50% ativo!"}
 function cDesconto(){return Math.round(cSubtotal()*cDescPct())/100}
 function cTotal(){return Math.round((cSubtotal()-cDesconto())*100)/100}
 function toast(t){const el=$("#toast");if(!el)return;el.textContent=t;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),1900)}
@@ -528,7 +531,7 @@ function cPaint(){
   const n=cCount();const fb=$("#cartfab");if(fb){$("#cartn").textContent=n;fb.classList.toggle("on",n>0)}
   const pct=cDescPct(),sub=cSubtotal(),desc=cDesconto();
   $("#ctot").innerHTML="R$ "+brl(cTotal())+(pct>0?` <small style="color:#86efac;font-weight:800">−${brl(pct)}%</small>`:"");
-  const linhaDesc=pct>0?`<div style="font-size:13px;color:var(--mut);margin:0 0 8px">Subtotal R$ ${brl(sub)} · desconto de ${brl(pct)}% (−R$ ${brl(desc)})</div>`:"";
+  const linhaDesc=(pct>0?`<div style="font-size:13px;color:var(--mut);margin:0 0 4px">Subtotal R$ ${brl(sub)} · desconto de ${brl(pct)}% (−R$ ${brl(desc)})</div>`:"")+(CART.length?`<div style="font-size:13px;font-weight:700;color:#14683d;background:#eaf7f0;border-radius:8px;padding:6px 9px;margin:0 0 8px">${cDica()}</div>`:"");
   $("#cbody").innerHTML=linhaDesc+(CART.length?CART.map(x=>{const i=cFind(x.slug);if(!i)return"";
     return `<div class="citem"><img src="${i.imgs[0]||''}" alt=""><div class="cn">${i.nome}<small>${i.grupoNome} · R$ ${brl(i.preco)}</small></div><div class="cq"><button onclick="qtyCart('${i.slug}',-1)" aria-label="Menos">−</button><span>${x.q}</span><button onclick="qtyCart('${i.slug}',1)" aria-label="Mais">+</button></div></div>`}).join("")
     :`<p style="color:var(--mut);font-size:14px">Carrinho vazio. Toque em <b>Adicionar ao carrinho</b> no material que quiser.</p>`);
