@@ -104,14 +104,6 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 /* whatsapp */
 .fab{white-space:nowrap;position:fixed;right:16px;bottom:16px;z-index:40;background:#1f9d57;color:#fff;border:0;border-radius:99px;padding:13px 20px;font:700 15px 'Source Sans 3';box-shadow:0 8px 22px rgba(0,0,0,.28);cursor:pointer;display:none;gap:8px;align-items:center}
 .fab:hover{background:#188047}
-/* cupom */
-.cup{margin:0 0 8px}
-.cupbal{position:relative;background:#fff8e1;border:1.5px solid #ecd58a;border-radius:12px;padding:7px 10px;font-size:12.5px;line-height:1.3;color:#4a3d00;margin:0 0 9px}
-.cupbal:after{content:"";position:absolute;left:26px;bottom:-8px;width:12px;height:12px;background:#fff8e1;border-right:1.5px solid #ecd58a;border-bottom:1.5px solid #ecd58a;transform:rotate(45deg)}
-.cupbal a{color:#7a5a00;font-weight:800}
-.cuprow{display:flex;gap:6px}.cuprow input{flex:1;min-width:0;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;font:600 14px 'Source Sans 3';text-transform:uppercase}
-.cuprow .btn{padding:8px 14px}
-.cupst{font-size:12.5px;color:#14683d;margin-top:4px}.cupx{border:0;background:none;color:#a1262a;text-decoration:underline;cursor:pointer;font:inherit}
 /* carrinho */
 .cartfab{position:fixed;right:16px;bottom:74px;z-index:41;background:var(--navy);color:#fff;border:0;border-radius:99px;padding:12px 18px;font:700 15px 'Source Sans 3';box-shadow:0 8px 22px rgba(0,0,0,.28);cursor:pointer;display:flex;gap:8px;align-items:center}
 .cartfab{background:linear-gradient(#22c55e,#15803d)!important;border:3px solid #fff!important;font-size:18px!important;padding:14px 22px!important;box-shadow:0 0 0 3px #000,0 8px 24px rgba(0,0,0,.6)!important;animation:cfp 2.2s ease-in-out infinite}
@@ -316,11 +308,6 @@ section.grupo h2{font-size:22px}
  <header><b>Seu carrinho</b><button onclick="ctoggle()" aria-label="Fechar">×</button></header>
  <div class="cbody" id="cbody"></div>
  <div class="cfoot">
-  <div class="cup">
-   <div class="cupbal">💬 <a target="_blank" rel="noopener" href="https://wa.me/5545999699444?text=Ol%C3%A1%2C%20Prof.%20Rodrigo!%20Como%20fa%C3%A7o%20para%20ganhar%20o%20cupom%20de%2015%25%20de%20desconto%3F">Pergunte ao Prof. Rodrigo como ganhar o cupom</a></div>
-   <div class="cuprow"><input id="cupIn" type="text" placeholder="Cupom de +15%" inputmode="tel" autocomplete="off" aria-label="Cupom de desconto"><button type="button" class="btn ghost" onclick="cupAplicar()">Aplicar</button></div>
-   <div id="cupSt" class="cupst"></div>
-  </div>
   <div class="tot"><span>Total</span><span id="ctot">R$ 0,00</span></div>
   <button class="btn buy" onclick="cfinal()">Enviar pedido no WhatsApp</button>
   <small style="color:var(--mut);font-size:12px">O pedido vira um código (ex.: PED-261106-A7K2). O Prof. Rodrigo recebe a lista organizada e devolve o link de pagamento.</small>
@@ -529,15 +516,7 @@ function cSave(){try{localStorage.setItem(CKEY,JSON.stringify(CART))}catch(e){}}
 function cFind(s){return ITENS.find(i=>i.slug===s)}
 function cCount(){return CART.reduce((s,x)=>s+x.q,0)}
 function cSubtotal(){return CART.reduce((s,x)=>{const i=cFind(x.slug);return s+(i?i.preco*x.q:0)},0)}
-/* Política de descontos (materiais diferentes no carrinho). Tabela progressiva até 35% (10 ou mais); o cupom soma +15% e o total nunca passa de 50%. */
-const DESC_TAB=[0,0,2,4,10,25,27,29,31,33],DESC_MAX=35,TOTAL_MAX=50,CUPOM_COD="45999699444",CUPOM_PCT=15,CUPOM_KEY="loja.cupom.v1";
-let CUPOM="";try{CUPOM=localStorage.getItem(CUPOM_KEY)||""}catch(e){}
-const cupomOk=()=>CUPOM!==""&&CUPOM===CUPOM_COD;
-function cBasePct(n){n=n===undefined?CART.length:n;return n>=10?DESC_MAX:DESC_TAB[Math.max(0,n)]||0}
-function cDescPct(){if(!CART.length)return 0;return Math.min(TOTAL_MAX,cBasePct()+(cupomOk()?CUPOM_PCT:0))}
-function cDica(){const n=CART.length;if(!n)return"";const b=cBasePct(n);if(n>=10)return cupomOk()?"🎉 Desconto máximo ativo: 35% + 15% do cupom = 50%!":"🎉 Desconto máximo de 35% ativo! Com o cupom você chega a 50%.";return"Desconto de "+b+"% ativo. Com mais 1 material ("+(n+1)+") sobe para "+cBasePct(n+1)+(n+1>=10?"%, o máximo sem cupom.":"%.")}
-function cupAplicar(){const i=$("#cupIn");if(!i)return;const v=i.value.replace(/\D/g,"").replace(/^55(?=\d{11}$)/,"");if(v===CUPOM_COD){CUPOM=v;try{localStorage.setItem(CUPOM_KEY,v)}catch(e){}toast("Cupom aplicado: +"+CUPOM_PCT+"% de desconto")}else{toast(v?"Cupom inválido":"Digite o cupom")}cPaint()}
-function cupRemover(){CUPOM="";try{localStorage.removeItem(CUPOM_KEY)}catch(e){}cPaint()}
+function cDescPct(){const n=CART.length;if(n<=1)return 0;const p=4+0.1*(n-2);return Math.min(40,Math.round(p*10)/10)}
 function cDesconto(){return Math.round(cSubtotal()*cDescPct())/100}
 function cTotal(){return Math.round((cSubtotal()-cDesconto())*100)/100}
 function toast(t){const el=$("#toast");if(!el)return;el.textContent=t;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),1900)}
@@ -545,27 +524,24 @@ function addCart(s){const i=cFind(s);if(!i)return;const e=CART.find(x=>x.slug===
 function rmCart(s){CART=CART.filter(x=>x.slug!==s);cSave();cPaint()}
 function qtyCart(s,d){const e=CART.find(x=>x.slug===s);if(!e)return;e.q+=d;if(e.q<1)CART=CART.filter(x=>x.slug!==s);cSave();cPaint()}
 function ctoggle(f){const p=$("#cp");if(!p)return;const on=f===undefined?!p.classList.contains("open"):f;p.classList.toggle("open",on)}
-function cTabela(){const l=[];for(let n=1;n<=10;n++)l.push(`<tr${CART.length>=10?(n===10?' style="font-weight:800;color:#14683d"':''):(n===CART.length?' style="font-weight:800;color:#14683d"':'')}><td>${n}${n===10?" ou mais":n===1?" material":" materiais"}</td><td style="text-align:right">${cBasePct(n)}%</td></tr>`);return `<details style="margin:0 0 8px;font-size:13px"><summary style="cursor:pointer;font-weight:700;color:var(--navy)">Ver tabela de descontos</summary><table style="width:100%;margin-top:4px;border-collapse:collapse">${l.join("")}</table><div style="color:var(--mut);margin-top:4px">Máximo de 35% pela quantidade. O cupom soma +15%, chegando a 50%.</div></details>`}
 function cPaint(){
   const n=cCount();const fb=$("#cartfab");if(fb){$("#cartn").textContent=n;fb.classList.toggle("on",n>0)}
   const pct=cDescPct(),sub=cSubtotal(),desc=cDesconto();
-  $("#ctot").innerHTML="R$ "+brl(cTotal())+(pct>0?` <small style="color:#86efac;font-weight:800">−${brl(pct).replace(",00","")}%</small>`:"");
-  const ci=$("#cupIn");if(ci&&!ci._on){ci._on=1;ci.addEventListener("keydown",e=>{if(e.key==="Enter")cupAplicar()})}
-  const cs=$("#cupSt");if(cs)cs.innerHTML=cupomOk()?`✅ Cupom aplicado (+${CUPOM_PCT}%) <button type="button" class="cupx" onclick="cupRemover()">remover</button>`:"";
-  const linhaDesc=(pct>0?`<div style="font-size:13px;color:var(--mut);margin:0 0 4px">Subtotal R$ ${brl(sub)} · desconto de ${brl(pct).replace(',00','')}% (−R$ ${brl(desc)})</div>`:"")+(CART.length?`<div style="font-size:13px;font-weight:700;color:#14683d;background:#eaf7f0;border-radius:8px;padding:6px 9px;margin:0 0 8px">${cDica()}</div>`:"")+cTabela();
+  $("#ctot").innerHTML="R$ "+brl(cTotal())+(pct>0?` <small style="color:#86efac;font-weight:800">−${brl(pct)}%</small>`:"");
+  const linhaDesc=pct>0?`<div style="font-size:13px;color:var(--mut);margin:0 0 8px">Subtotal R$ ${brl(sub)} · desconto de ${brl(pct)}% (−R$ ${brl(desc)})</div>`:"";
   $("#cbody").innerHTML=linhaDesc+(CART.length?CART.map(x=>{const i=cFind(x.slug);if(!i)return"";
     return `<div class="citem"><img src="${i.imgs[0]||''}" alt=""><div class="cn">${i.nome}<small>${i.grupoNome} · R$ ${brl(i.preco)}</small></div><div class="cq"><button onclick="qtyCart('${i.slug}',-1)" aria-label="Menos">−</button><span>${x.q}</span><button onclick="qtyCart('${i.slug}',1)" aria-label="Mais">+</button></div></div>`}).join("")
     :`<p style="color:var(--mut);font-size:14px">Carrinho vazio. Toque em <b>Adicionar ao carrinho</b> no material que quiser.</p>`);
 }
 function cPedido(){
   const itens=CART.map(x=>{const i=cFind(x.slug);return i?{slug:i.slug,av:i.av,nome:i.nome,grupo:i.grupoNome,preco:i.preco,q:x.q}:null}).filter(Boolean);
-  return {criado:new Date().toISOString(),itens:itens,subtotal:cSubtotal(),pct:cDescPct(),desconto:cDesconto(),total:cTotal(),cupom:cupomOk()?CUPOM:""};
+  return {criado:new Date().toISOString(),itens:itens,subtotal:cSubtotal(),pct:cDescPct(),desconto:cDesconto(),total:cTotal()};
 }
 function cTexto(p){
   const cods=[];p.itens.forEach(i=>{for(let k=0;k<i.q;k++)cods.push(i.av)});
   const base=location.origin+location.pathname.replace(/index\.html$/,"");
   const L=p.itens.map(i=>i.av+(i.q>1?" ("+i.q+"x)":"")+" "+i.nome+" — R$ "+brl(i.preco*i.q));
-  const desc=p.pct>0?("\nSubtotal: R$ "+brl(p.subtotal)+"\nDesconto ("+brl(p.pct).replace(",00","")+"%"+(p.cupom?", com cupom":"")+"): −R$ "+brl(p.desconto)):"";
+  const desc=p.pct>0?("\nSubtotal: R$ "+brl(p.subtotal)+"\nDesconto ("+brl(p.pct)+"%): −R$ "+brl(p.desconto)):"";
   return "O meu email é: "+"\n"+"\n"+"Tenho interesse em adquirir os itens a seguir:"+"\n"+"\n"+L.join("\n")+"\n"+desc+"\n"+"\n"+"Total: R$ "+brl(p.total)+"\n"+"\n"+"Abrir o carrinho na loja: "+base+"?c="+cods.join(",")+"\n"+"\n"+"Pix: +55 45 99969-9444 (Rodrigo Gonçalves Pereira)"+"\n"+"A entrega será feita assim que o Prof. Rodrigo estiver online.";
 }
 async function cfinal(){
