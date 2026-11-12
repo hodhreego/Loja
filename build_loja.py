@@ -43,6 +43,13 @@ P = [
  ("se-liga-1em", "Se Liga 2026 · Matemática — 1ª série EM + Extraordinário", "reforco", "Z0B1XY879A", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
  ("se-liga-2em", "Se Liga 2026 · Matemática — 2ª série EM + Extraordinário", "reforco", "E9OG7N4KWB", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
  ("se-liga-3em", "Se Liga 2026 · Matemática — 3ª série EM + Extraordinário", "reforco", "KW8Z5RAO01", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
+ ("ef-6", "Se Liga 2026 · Educação Financeira — 6º ano", "reforco", None, 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
+ ("ef-7", "Se Liga 2026 · Educação Financeira — 7º ano", "reforco", None, 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
+ ("ef-8", "Se Liga 2026 · Educação Financeira — 8º ano", "reforco", None, 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
+ ("ef-9", "Se Liga 2026 · Educação Financeira — 9º ano", "reforco", None, 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
+ ("ef-1em", "Se Liga 2026 · Educação Financeira — 1ª série EM", "reforco", None, 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
+ ("ef-2em", "Se Liga 2026 · Educação Financeira — 2ª série EM", "reforco", None, 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
+ ("ef-3em", "Se Liga 2026 · Educação Financeira — 3ª série EM", "reforco", None, 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
  ("saeb-5", "Simulado SAEB de Matemática — 5º ano", "reforco", "", 10, "50 questões de Matemática com gabarito e resoluções."),
  ("saeb-9", "Simulado SAEB de Matemática — 9º ano", "reforco", "69K16VV8WO", 10, "50 questões de Matemática com gabarito e resoluções."),
  ("saeb-3em", "Simulado SAEB de Matemática — 3ª série EM", "reforco", "8WPNKOEN0P", 10, "50 questões de Matemática com gabarito e resoluções."),
@@ -94,6 +101,7 @@ def tipo_de(slug):
     if slug.startswith('volume-'): return 'volumes'
     if slug.startswith('sei-'): return 'sei'
     if slug.startswith('se-liga-'): return 'se-liga'
+    if slug.startswith('ef-'): return 'se-liga'
     if slug.startswith('saeb-'): return 'saeb'
     return 'apostilas'
 
