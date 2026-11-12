@@ -9,7 +9,7 @@
 <meta name="description" content="Atividades educativas prontas para imprimir (Se Liga, volumes, simulados SAEB) com gabarito, e apostilas para concursos como PSS SEED-PR 2027. Veja as páginas antes de comprar.">
 <meta property="og:title" content="Loja de Matemática — Atividades Educativas, Simulados e Apostilas">
 <meta property="og:description" content="Atividades educativas prontas para imprimir, simulados SAEB e apostilas para concursos (PSS SEED-PR 2027 e mais).">
-<meta property="og:image" content="https://hodhreego.github.io/Loja/og.jpg?v=5">
+<meta property="og:image" content="https://eduloja.com/og.jpg?v=6">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:type" content="website">
@@ -498,7 +498,7 @@ const WOPT=[
   "Escreva sua mensagem abaixo. Se for sobre uma compra, inclua o <b>nome</b> e o <b>e-mail usado</b> no pedido para agilizar."]];
 function wprod(){const v=$("#wprod").value;return v?" "+v:""}
 function wbuild(){const i=+(document.querySelector('input[name=wo]:checked')||{value:0}).value;$("#wmsg").value=WOPT[i][1].replace("{P}",wprod()?" ("+wprod().trim()+")":"");$("#wtip").innerHTML=WOPT[i][2];wlink()}
-const LOJA="https://hodhreego.github.io/Loja/";
+const LOJA="https://eduloja.com/";
 function wlink(){const m=$("#wmsg").value.trim()+"\n\n🛒 Enviado pela loja: "+LOJA;$("#wgo").href="https://wa.me/"+WNUM+"?text="+encodeURIComponent(m)}
 function winit(){
   $("#wopts").innerHTML=WOPT.map((o,i)=>`<label class="opt"><input type="radio" name="wo" value="${i}" ${i?'':'checked'} onchange="wbuild()"><span>${o[0]}</span></label>`).join("");

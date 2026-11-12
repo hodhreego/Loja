@@ -22,6 +22,6 @@ for i, (c, pg) in enumerate(CAPAS):
     bg.paste(im, (x, y))
 d.text((W // 2, 478), 'Se Liga  ·  Simulados SAEB  ·  Volumes  —  A4 com gabarito', font=F('segoeuib.ttf', 30), fill='#ffffff', anchor='mm')
 d.text((W // 2, 530), 'Veja as páginas antes de comprar  ·  pagamento seguro pela Eduzz', font=F('segoeui.ttf', 26), fill='#e3c25a', anchor='mm')
-d.text((W // 2, 584), 'hodhreego.github.io/Loja', font=F('segoeui.ttf', 24), fill='#9fb3d6', anchor='mm')
+d.text((W // 2, 584), 'eduloja.com', font=F('segoeui.ttf', 24), fill='#9fb3d6', anchor='mm')
 bg.save(os.path.join(HERE, 'og.jpg'), quality=88)
 print('ok og.jpg')
