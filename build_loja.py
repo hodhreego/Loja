@@ -62,11 +62,11 @@ P = [
  ("sei-3em", "Semanas de Estudos · Matemática — 3ª série EM", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (3ª série EM) · revisão semanal com gabarito e resoluções."),
  ("album-multiplicacao", "Álbum de Multiplicação — Mini Álbuns", "reforco", "qk7mdtp4", 5, "Coleção de mini álbuns de multiplicação com atividades ilustradas e gabarito · entrega pelos links da pasta do Drive."),
  ("consciencia-negra", "Consciência Negra — Álbuns de Matemática", "reforco", "kfyorb7z", 5, "Mini álbuns, equações e bingos afro com gabarito · entrega pelos links da pasta do Drive."),
-("cn-raizes-africanas", "Consciência Negra · Matemática com raízes africanas", "reforco", "7emt4dqe", 5, "Atividade para imprimir: simetria, padrões, Oware e osso de Ishango · 6º ao 9º ano · com gabarito."),
- ("cn-numeros-historia", "Consciência Negra · Os números contam a história", "reforco", "yi5etofu", 5, "Atividade para imprimir: dados do Censo, porcentagens e gráficos sobre a história afro-brasileira · com gabarito."),
- ("cn-quem-sou-eu", "Consciência Negra · Quem sou eu?", "reforco", "cvy7x7tn", 5, "Atividade para imprimir: personalidades negras brasileiras, caça-palavras e pesquisa · com gabarito."),
- ("cn-gazeta-quilombos", "Consciência Negra · Gazeta dos Quilombos (inglês)", "reforco", "x6yvavqj", 5, "Atividade para imprimir: leitura em inglês com tradução e compreensão · com gabarito."),
- ("cn-palavras-herdadas", "Consciência Negra · Palavras que o Brasil herdou", "reforco", "dmlkmhbj", 5, "Atividade para imprimir: palavras de origem africana, caça-palavras e atividades · com gabarito."),
+("cn-raizes-africanas", "Consciência Negra · Matemática com raízes africanas", "reforco", "7emt4dqe", 5, "Atividade para imprimir: simetria, padrões, Oware e osso de Ishango · 6º ao 9º ano · com gabarito · inclui versão em letra grande."),
+ ("cn-numeros-historia", "Consciência Negra · Os números contam a história", "reforco", "yi5etofu", 5, "Atividade para imprimir: dados do Censo, porcentagens e gráficos sobre a história afro-brasileira · com gabarito · inclui versão em letra grande."),
+ ("cn-quem-sou-eu", "Consciência Negra · Quem sou eu?", "reforco", "cvy7x7tn", 5, "Atividade para imprimir: personalidades negras brasileiras, caça-palavras e pesquisa · com gabarito · inclui versão em letra grande."),
+ ("cn-gazeta-quilombos", "Consciência Negra · Gazeta dos Quilombos (inglês)", "reforco", "x6yvavqj", 5, "Atividade para imprimir: leitura em inglês com tradução e compreensão · com gabarito · inclui versão em letra grande."),
+ ("cn-palavras-herdadas", "Consciência Negra · Palavras que o Brasil herdou", "reforco", "dmlkmhbj", 5, "Atividade para imprimir: palavras de origem africana, caça-palavras e atividades · com gabarito · inclui versão em letra grande."),
 ]
 # ---- descrições melhoradas (sobrescrevem o subtítulo acima) ----
 _VOL = {"cone": "Volume do cone: V = ⅓·π·r²·h. 12 questões com figuras, do cálculo direto a problemas do dia a dia.",
