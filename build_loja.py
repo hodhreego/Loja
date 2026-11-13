@@ -101,16 +101,16 @@ def tipo_de(slug):
     if slug.startswith('volume-'): return 'volumes'
     if slug.startswith('sei-'): return 'sei'
     if slug.startswith('se-liga-'): return 'se-liga'
-    if slug.startswith('ef-'): return 'se-liga'
+    if slug.startswith('ef-'): return 'se-liga-ef'
     if slug.startswith('saeb-'): return 'saeb'
     return 'apostilas'
 
 for slug, nome, g, code, preco, sub in P:
     imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 9) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
     if tipo_de(slug) == 'se-liga':   # prévias novas: páginas internas de questões, sem tarja (12/11/2026)
-        imgs = [i + '?v=8' for i in imgs]
-    elif slug.startswith('ef-'):   # capa Se Liga EF no mesmo molde do Se Liga Matematica (12/11/2026)
         imgs = [i + '?v=9' for i in imgs]
+    elif slug.startswith('ef-'):   # capa Se Liga EF no mesmo molde do Se Liga Matematica (12/11/2026)
+        imgs = [i + '?v=10' for i in imgs]
     elif tipo_de(slug) in ('sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
         imgs = [(i + '?v=6') if i.endswith('-1.jpg') else i for i in imgs]
     else:   # previas novas em alta resolucao com faixa AMOSTRA (08/11/2026)
@@ -237,12 +237,26 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 /* whatsapp */
 .fab{white-space:nowrap;position:fixed;right:16px;bottom:16px;z-index:40;background:#1f9d57;color:#fff;border:0;border-radius:99px;padding:13px 20px;font:700 15px 'Source Sans 3';box-shadow:0 8px 22px rgba(0,0,0,.28);cursor:pointer;display:none;gap:8px;align-items:center}
 .fab:hover{background:#188047}
+/* cupom */
+.cup{margin:0 0 8px}
+.cupbal{position:relative;background:#fff8e1;border:1.5px solid #ecd58a;border-radius:12px;padding:7px 10px;font-size:12.5px;line-height:1.3;color:#4a3d00;margin:0 0 9px}
+.cupbal:after{content:"";position:absolute;left:26px;bottom:-8px;width:12px;height:12px;background:#fff8e1;border-right:1.5px solid #ecd58a;border-bottom:1.5px solid #ecd58a;transform:rotate(45deg)}
+.cupbal a{color:#7a5a00;font-weight:800}
+.cuprow{display:flex;gap:6px}.cuprow input{flex:1;min-width:0;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;font:600 14px 'Source Sans 3';text-transform:uppercase}
+.cuprow .btn{padding:8px 14px}
+.cupst{font-size:12.5px;color:#14683d;margin-top:4px}.cupx{border:0;background:none;color:#a1262a;text-decoration:underline;cursor:pointer;font:inherit}
 /* carrinho */
 .cartfab{position:fixed;right:16px;bottom:74px;z-index:41;background:var(--navy);color:#fff;border:0;border-radius:99px;padding:12px 18px;font:700 15px 'Source Sans 3';box-shadow:0 8px 22px rgba(0,0,0,.28);cursor:pointer;display:flex;gap:8px;align-items:center}
 .cartfab{background:linear-gradient(#22c55e,#15803d)!important;border:3px solid #fff!important;font-size:18px!important;padding:14px 22px!important;box-shadow:0 0 0 3px #000,0 8px 24px rgba(0,0,0,.6)!important;animation:cfp 2.2s ease-in-out infinite}
 .cartfab:hover{filter:brightness(1.1)}.cartfab svg{width:24px;height:24px}
 @keyframes cfp{50%{box-shadow:0 0 0 3px #000,0 0 22px 6px rgba(34,197,94,.75)}}
 @media(prefers-reduced-motion:reduce){.cartfab{animation:none}}
+.flyimg{position:fixed;z-index:200;border-radius:8px;box-shadow:0 10px 26px rgba(0,0,0,.4);pointer-events:none;border:3px solid #fff;object-fit:cover;aspect-ratio:1/1.3}
+.cartring{position:fixed;z-index:199;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:3px solid #22c55e;pointer-events:none;animation:cring .65s ease-out forwards}
+@keyframes cring{to{transform:scale(5);opacity:0}}
+.addok{animation:addok .9s ease}@keyframes addok{30%{transform:scale(.9);background:#16a34a;color:#fff}100%{transform:scale(1)}}
+
+@media(prefers-reduced-motion:reduce){.flyimg,.cartring{display:none}}
 .cartfab.on{display:flex}
 .cartfab b{background:#fff;color:var(--navy);border-radius:99px;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:13px}
 .cpanel{position:fixed;right:16px;bottom:132px;z-index:46;width:min(380px,calc(100vw - 32px));max-height:64vh;background:#fff;border-radius:18px;box-shadow:0 18px 44px rgba(10,20,40,.35);display:none;flex-direction:column;overflow:hidden}
@@ -290,7 +304,7 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .subtipo{margin:16px 0 10px;font:800 13px 'Source Sans 3';letter-spacing:.08em;text-transform:uppercase;color:var(--navy);display:flex;align-items:center;gap:8px}
 .subtipo small{font-weight:600;color:var(--mut);letter-spacing:0}
 .indice{position:sticky;top:18px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 6px 18px rgba(15,37,71,.06)}
-.indice b{display:block;font:700 12px 'Source Sans 3';text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin:2px 0 8px}
+.indice small{font-weight:600;color:var(--mut);font-size:11px}.indice hr{border:0;border-top:1px solid #0001;margin:10px 0}.indice b{display:block;font:700 12px 'Source Sans 3';text-transform:uppercase;letter-spacing:.08em;color:var(--mut);margin:2px 0 8px}
 .indice a{display:block;padding:7px 9px;border-radius:8px;color:var(--navy);font:600 13.5px 'Source Sans 3';cursor:pointer}
 .indice a:hover{background:#eef3fb}
 .indice a.on{background:var(--navy);color:#fff}
@@ -397,11 +411,19 @@ section.grupo h2{font-size:22px}
   <aside class="indice">
     <b>Índice</b>
     <a data-tipo="todos" onclick="setTipo('todos')">Todas as atividades</a>
-    <a data-tipo="volumes" onclick="setTipo('volumes')">Volumes</a>
-    <a data-tipo="se-liga" onclick="setTipo('se-liga')">Se Liga</a>
+    <hr>
+    <b>Se Liga · provas finais</b>
+    <a data-tipo="se-liga" onclick="setTipo('se-liga')">Se Liga de Matemática</a>
+    <a data-tipo="se-liga-ef" onclick="setTipo('se-liga-ef')">Se Liga de Educação Financeira</a>
+    <a data-tipo="se-liga-ing" onclick="setTipo('se-liga-ing')">Se Liga de Inglês <small>(em breve)</small></a>
+    <hr>
+    <b>Matemática</b>
     <a data-tipo="sei" onclick="setTipo('sei')">Semanas de Estudos</a>
     <a data-tipo="saeb" onclick="setTipo('saeb')">Simulados SAEB</a>
-    <a data-tipo="apostilas" onclick="setTipo('apostilas')">Apostilas</a>
+    <a data-tipo="volumes" onclick="setTipo('volumes')">Volumes</a>
+    <hr>
+    <b>Apostilas</b>
+    <a data-tipo="apostilas" onclick="setTipo('apostilas')">Todas as apostilas</a>
     <hr>
     <b>Certames</b>
     <a data-grupo="pss" onclick="setGrupo('pss')">PSS SEED-PR</a>
@@ -441,6 +463,11 @@ section.grupo h2{font-size:22px}
  <header><b>Seu carrinho</b><button onclick="ctoggle()" aria-label="Fechar">×</button></header>
  <div class="cbody" id="cbody"></div>
  <div class="cfoot">
+  <div class="cup">
+   <div class="cupbal">💬 <a target="_blank" rel="noopener" href="https://wa.me/5545999699444?text=Ol%C3%A1%2C%20Prof.%20Rodrigo!%20Como%20fa%C3%A7o%20para%20ganhar%20o%20cupom%20de%2015%25%20de%20desconto%3F">Pergunte ao Prof. Rodrigo como ganhar o cupom</a></div>
+   <div class="cuprow"><input id="cupIn" type="text" placeholder="Cupom de +15%" inputmode="tel" autocomplete="off" aria-label="Cupom de desconto"><button type="button" class="btn ghost" onclick="cupAplicar()">Aplicar</button></div>
+   <div id="cupSt" class="cupst"></div>
+  </div>
   <div class="tot"><span>Total</span><span id="ctot">R$ 0,00</span></div>
   <button class="btn buy" onclick="cfinal()">Enviar pedido no WhatsApp</button>
   <small style="color:var(--mut);font-size:12px">O pedido vira um código (ex.: PED-261106-A7K2). O Prof. Rodrigo recebe a lista organizada e devolve o link de pagamento.</small>
@@ -457,7 +484,7 @@ const QC=(function(){try{return new URLSearchParams(location.search).get("c")}ca
 const ITENS=__DATA__;
 const WA="__WA__";
 const GR=[["reforco","Reforço e recomposição"],["pss","PSS SEED-PR 2027"],["cisop","CISOP Cascavel 2026"],["prefeitura","Prefeitura de Cascavel 2026"],["outros","Outros concursos"]];
-const TIPOS=[["todos","Todas as atividades"],["se-liga","Se Liga"],["sei","Semanas de Estudos"],["saeb","Simulados SAEB"],["volumes","Volumes"],["apostilas","Apostilas"]];
+const TIPOS=[["todos","Todas as atividades"],["se-liga","Se Liga de Matemática"],["se-liga-ef","Se Liga de Educação Financeira"],["se-liga-ing","Se Liga de Inglês"],["sei","Semanas de Estudos"],["saeb","Simulados SAEB"],["volumes","Volumes"],["apostilas","Apostilas"]];
 let filtro="todos",busca="",filtroTipo="todos";{const h=location.hash.slice(1);if(["pss","cisop","prefeitura","simulado","outros"].includes(h))filtro=h}
 const $=s=>document.querySelector(s);
 const brl=n=>n.toFixed(2).replace(".",",");
@@ -510,15 +537,15 @@ function render(){
   const q=busca.toLowerCase();let total=0;
   $("#main").innerHTML=GR.map(([g,nome])=>{
     if(filtro!=="todos"&&filtro!==g)return "";
-    const ORDEM={"se-liga":0,"sei":1,"saeb":2,"volumes":3,"apostilas":4};const l=ITENS.filter(i=>(filtroTipo==="todos"||i.tipo===filtroTipo)&&i.grupo===g&&(i.nome+" "+i.grupoNome).toLowerCase().includes(q)).map((x,n)=>[x,n]).sort((a,b)=>((ORDEM[a[0].tipo]??9)-(ORDEM[b[0].tipo]??9))||a[1]-b[1]).map(x=>x[0]);
+    const ORDEM={"se-liga":0,"se-liga-ef":1,"se-liga-ing":2,"sei":3,"saeb":4,"volumes":5,"apostilas":6};const l=ITENS.filter(i=>(filtroTipo==="todos"||i.tipo===filtroTipo)&&i.grupo===g&&(i.nome+" "+i.grupoNome).toLowerCase().includes(q)).map((x,n)=>[x,n]).sort((a,b)=>((ORDEM[a[0].tipo]??9)-(ORDEM[b[0].tipo]??9))||a[1]-b[1]).map(x=>x[0]);
     total+=l.length;if(!l.length)return "";
-    const NOMES={"se-liga":"Se Liga","sei":"Semanas de Estudos Intensivos","saeb":"Simulados SAEB","volumes":"Volumes","apostilas":"Apostilas"};
+    const NOMES={"se-liga":"Se Liga de Matemática","se-liga-ef":"Se Liga de Educação Financeira","se-liga-ing":"Se Liga de Inglês","sei":"Semanas de Estudos Intensivos","saeb":"Simulados SAEB","volumes":"Volumes","apostilas":"Apostilas"};
     const porTipo={};l.forEach(i=>{(porTipo[i.tipo]=porTipo[i.tipo]||[]).push(i)});
     const dentro=Object.keys(porTipo).map(tp=>`<h3 class="subtipo">${NOMES[tp]||tp} <small>${porTipo[tp].length}</small></h3><div class="grid">${porTipo[tp].map(card).join("")}</div>`).join("");
     return `<section class="grupo"><h2>${nome}</h2>${dentro}</section>`;}).join("");
   $("#empty").style.display=total?"none":"block";
   const rot={
-    todos:"Todos os materiais",volumes:"Volumes",'se-liga':"Se Liga",sei:"Semanas de Estudos Intensivos",saeb:"Simulados SAEB",apostilas:"Apostilas"
+    todos:"Todos os materiais",volumes:"Volumes",'se-liga':"Se Liga de Matemática",'se-liga-ef':"Se Liga de Educação Financeira",'se-liga-ing':"Se Liga de Inglês",sei:"Semanas de Estudos Intensivos",saeb:"Simulados SAEB",apostilas:"Apostilas"
   };
   const nomeFiltro=filtroTipo!=="todos"?rot[filtroTipo]:(filtro!=="todos"?(GR.find(g=>g[0]===filtro)||["","Todos os materiais"])[1]:"Todos os materiais");
   const rs=$("#resumo");if(rs)rs.innerHTML=`<b>${total}</b> ${total===1?"material":"materiais"} em <b>${nomeFiltro}</b>${busca?" para “"+busca+"”":""}`;
@@ -545,6 +572,8 @@ function tipos(){
   const I={
     todos:svg('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
     volumes:svg('<path d="M21 8 12 3 3 8v8l9 5 9-5V8Z"/><path d="m3 8 9 5 9-5"/><path d="M12 13v8"/>'),
+    'se-liga-ef':svg('<circle cx="12" cy="12" r="9"/><path d="M14.5 8.5c-.6-.8-1.5-1.2-2.6-1.2-1.6 0-2.7.8-2.7 2s1 1.7 2.8 2.1c1.8.4 2.8.9 2.8 2.1 0 1.2-1.1 2-2.8 2-1.2 0-2.2-.5-2.9-1.3M12 5.8v1.5M12 16.7v1.5"/>'),
+    'se-liga-ing':svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>'),
     'se-liga':svg('<path d="M12 6c-2-2-5-2-8-1v13c3-1 6-1 8 1 2-2 5-2 8-1V5c-3-1-6-1-8 1Z"/><path d="M12 6v13"/>'),
     saeb:svg('<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 11h6M9 15h6"/>'),
     apostilas:svg('<path d="M4 19V5a2 2 0 0 1 2-2h3v16H6a2 2 0 0 0-2 2Z"/><path d="M9 3h4v16H9z"/><path d="m13 5 3-1 4 15-3 1z"/>')
@@ -660,32 +689,64 @@ function cSave(){try{localStorage.setItem(CKEY,JSON.stringify(CART))}catch(e){}}
 function cFind(s){return ITENS.find(i=>i.slug===s)}
 function cCount(){return CART.reduce((s,x)=>s+x.q,0)}
 function cSubtotal(){return CART.reduce((s,x)=>{const i=cFind(x.slug);return s+(i?i.preco*x.q:0)},0)}
-function cDescPct(){const n=CART.length;if(n<=1)return 0;const p=4+0.1*(n-2);return Math.min(40,Math.round(p*10)/10)}
+/* Política de descontos (materiais diferentes no carrinho). Tabela progressiva até 35% (10 ou mais); o cupom soma +15% e o total nunca passa de 50%. */
+const DESC_TAB=[0,0,2,4,10,25,27,29,31,33],DESC_MAX=35,TOTAL_MAX=50,CUPOM_COD="45999699444",CUPOM_PCT=15,CUPOM_KEY="loja.cupom.v1";
+let CUPOM="";try{CUPOM=localStorage.getItem(CUPOM_KEY)||""}catch(e){}
+const cupomOk=()=>CUPOM!==""&&CUPOM===CUPOM_COD;
+function cBasePct(n){n=n===undefined?CART.length:n;return n>=10?DESC_MAX:DESC_TAB[Math.max(0,n)]||0}
+function cDescPct(){if(!CART.length)return 0;return Math.min(TOTAL_MAX,cBasePct()+(cupomOk()?CUPOM_PCT:0))}
+function cDica(){const n=CART.length;if(!n)return"";const b=cBasePct(n);if(n>=10)return cupomOk()?"🎉 Desconto máximo ativo: 35% + 15% do cupom = 50%!":"🎉 Desconto máximo de 35% ativo! Com o cupom você chega a 50%.";return"Desconto de "+b+"% ativo. Com mais 1 material ("+(n+1)+") sobe para "+cBasePct(n+1)+(n+1>=10?"%, o máximo sem cupom.":"%.")}
+function cupAplicar(){const i=$("#cupIn");if(!i)return;const v=i.value.replace(/\D/g,"").replace(/^55(?=\d{11}$)/,"");if(v===CUPOM_COD){CUPOM=v;try{localStorage.setItem(CUPOM_KEY,v)}catch(e){}toast("Cupom aplicado: +"+CUPOM_PCT+"% de desconto")}else{toast(v?"Cupom inválido":"Digite o cupom")}cPaint()}
+function cupRemover(){CUPOM="";try{localStorage.removeItem(CUPOM_KEY)}catch(e){}cPaint()}
 function cDesconto(){return Math.round(cSubtotal()*cDescPct())/100}
 function cTotal(){return Math.round((cSubtotal()-cDesconto())*100)/100}
 function toast(t){const el=$("#toast");if(!el)return;el.textContent=t;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),1900)}
-function addCart(s){const i=cFind(s);if(!i)return;const e=CART.find(x=>x.slug===s);if(e)e.q++;else CART.push({slug:s,q:1});cSave();cPaint();toast(i.nome+" no carrinho")}
+function addCart(s){const i=cFind(s);if(!i)return;const e=CART.find(x=>x.slug===s);if(e)e.q++;else CART.push({slug:s,q:1});cSave();cPaint();voaCart(s);toast(i.nome+" no carrinho")}
+function voaCart(s){try{
+  const fb=$("#cartfab");if(!fb)return;const reduz=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  const ev=window.event,alvo=ev&&ev.target&&ev.target.closest?ev.target:null,it=cFind(s);
+  const card=alvo&&alvo.closest(".card"),im0=card&&card.querySelector(".cover img");
+  const url=(im0&&(im0.currentSrc||im0.src))||(it&&it.imgs&&it.imgs[0])||"";
+  const bt=alvo&&(alvo.closest("button,a")||alvo);
+  if(bt&&bt.classList){bt.classList.add("addok");setTimeout(()=>bt.classList.remove("addok"),900)}
+  const fr=fb.getBoundingClientRect(),tx=fr.left+fr.width/2,ty=fr.top+fr.height/2;
+  const sr=(im0||bt||document.body).getBoundingClientRect();
+  const w=Math.min(110,Math.max(70,sr.width*.5)),sx=sr.left+sr.width/2,sy=sr.top+Math.min(sr.height,200)/2;
+  const bump=()=>{fb.animate([{transform:"scale(1)"},{transform:"scale(1.22) rotate(-6deg)"},{transform:"scale(.95) rotate(3deg)"},{transform:"scale(1)"}],{duration:520,easing:"ease-out"});
+    const n=$("#cartn");if(n)n.animate([{transform:"scale(1)"},{transform:"scale(1.7)"},{transform:"scale(1)"}],{duration:480});
+    const r=document.createElement("span");r.className="cartring";r.style.left=tx+"px";r.style.top=ty+"px";document.body.appendChild(r);setTimeout(()=>r.remove(),700)};
+  if(reduz||!url){bump();return}
+  const f=document.createElement("img");f.src=url;f.className="flyimg";f.style.width=w+"px";f.style.left=(sx-w/2)+"px";f.style.top=(sy-w*0.7)+"px";document.body.appendChild(f);
+  const dx=tx-sx,dy=ty-sy,alto=Math.min(160,Math.abs(dy)*.5+70);
+  const a=f.animate([{transform:"translate(0,0) scale(1) rotate(0)",opacity:1},
+    {transform:`translate(${dx*.35}px,${dy*.35-alto}px) scale(.8) rotate(-9deg)`,opacity:1,offset:.4},
+    {transform:`translate(${dx}px,${dy}px) scale(.14) rotate(16deg)`,opacity:.7}],{duration:820,easing:"cubic-bezier(.45,.05,.55,.95)"});
+  a.onfinish=()=>{f.remove();bump()};a.oncancel=()=>f.remove();
+ }catch(e){}}
 function rmCart(s){CART=CART.filter(x=>x.slug!==s);cSave();cPaint()}
 function qtyCart(s,d){const e=CART.find(x=>x.slug===s);if(!e)return;e.q+=d;if(e.q<1)CART=CART.filter(x=>x.slug!==s);cSave();cPaint()}
 function ctoggle(f){const p=$("#cp");if(!p)return;const on=f===undefined?!p.classList.contains("open"):f;p.classList.toggle("open",on)}
+function cTabela(){const l=[];for(let n=1;n<=10;n++)l.push(`<tr${CART.length>=10?(n===10?' style="font-weight:800;color:#14683d"':''):(n===CART.length?' style="font-weight:800;color:#14683d"':'')}><td>${n}${n===10?" ou mais":n===1?" material":" materiais"}</td><td style="text-align:right">${cBasePct(n)}%</td></tr>`);return `<details style="margin:0 0 8px;font-size:13px"><summary style="cursor:pointer;font-weight:700;color:var(--navy)">Ver tabela de descontos</summary><table style="width:100%;margin-top:4px;border-collapse:collapse">${l.join("")}</table><div style="color:var(--mut);margin-top:4px">Máximo de 35% pela quantidade. O cupom soma +15%, chegando a 50%.</div></details>`}
 function cPaint(){
   const n=cCount();const fb=$("#cartfab");if(fb){$("#cartn").textContent=n;fb.classList.toggle("on",n>0)}
   const pct=cDescPct(),sub=cSubtotal(),desc=cDesconto();
-  $("#ctot").innerHTML="R$ "+brl(cTotal())+(pct>0?` <small style="color:#86efac;font-weight:800">−${brl(pct)}%</small>`:"");
-  const linhaDesc=pct>0?`<div style="font-size:13px;color:var(--mut);margin:0 0 8px">Subtotal R$ ${brl(sub)} · desconto de ${brl(pct)}% (−R$ ${brl(desc)})</div>`:"";
+  $("#ctot").innerHTML="R$ "+brl(cTotal())+(pct>0?` <small style="color:#86efac;font-weight:800">−${brl(pct).replace(",00","")}%</small>`:"");
+  const ci=$("#cupIn");if(ci&&!ci._on){ci._on=1;ci.addEventListener("keydown",e=>{if(e.key==="Enter")cupAplicar()})}
+  const cs=$("#cupSt");if(cs)cs.innerHTML=cupomOk()?`✅ Cupom aplicado (+${CUPOM_PCT}%) <button type="button" class="cupx" onclick="cupRemover()">remover</button>`:"";
+  const linhaDesc=(pct>0?`<div style="font-size:13px;color:var(--mut);margin:0 0 4px">Subtotal R$ ${brl(sub)} · desconto de ${brl(pct).replace(',00','')}% (−R$ ${brl(desc)})</div>`:"")+(CART.length?`<div style="font-size:13px;font-weight:700;color:#14683d;background:#eaf7f0;border-radius:8px;padding:6px 9px;margin:0 0 8px">${cDica()}</div>`:"")+cTabela();
   $("#cbody").innerHTML=linhaDesc+(CART.length?CART.map(x=>{const i=cFind(x.slug);if(!i)return"";
     return `<div class="citem"><img src="${i.imgs[0]||''}" alt=""><div class="cn">${i.nome}<small>${i.grupoNome} · R$ ${brl(i.preco)}</small></div><div class="cq"><button onclick="qtyCart('${i.slug}',-1)" aria-label="Menos">−</button><span>${x.q}</span><button onclick="qtyCart('${i.slug}',1)" aria-label="Mais">+</button></div></div>`}).join("")
     :`<p style="color:var(--mut);font-size:14px">Carrinho vazio. Toque em <b>Adicionar ao carrinho</b> no material que quiser.</p>`);
 }
 function cPedido(){
   const itens=CART.map(x=>{const i=cFind(x.slug);return i?{slug:i.slug,av:i.av,nome:i.nome,grupo:i.grupoNome,preco:i.preco,q:x.q}:null}).filter(Boolean);
-  return {criado:new Date().toISOString(),itens:itens,subtotal:cSubtotal(),pct:cDescPct(),desconto:cDesconto(),total:cTotal()};
+  return {criado:new Date().toISOString(),itens:itens,subtotal:cSubtotal(),pct:cDescPct(),desconto:cDesconto(),total:cTotal(),cupom:cupomOk()?CUPOM:""};
 }
 function cTexto(p){
   const cods=[];p.itens.forEach(i=>{for(let k=0;k<i.q;k++)cods.push(i.av)});
   const base=location.origin+location.pathname.replace(/index\.html$/,"");
   const L=p.itens.map(i=>i.av+(i.q>1?" ("+i.q+"x)":"")+" "+i.nome+" — R$ "+brl(i.preco*i.q));
-  const desc=p.pct>0?("\nSubtotal: R$ "+brl(p.subtotal)+"\nDesconto ("+brl(p.pct)+"%): −R$ "+brl(p.desconto)):"";
+  const desc=p.pct>0?("\nSubtotal: R$ "+brl(p.subtotal)+"\nDesconto ("+brl(p.pct).replace(",00","")+"%"+(p.cupom?", com cupom":"")+"): −R$ "+brl(p.desconto)):"";
   return "O meu email é: "+"\n"+"\n"+"Tenho interesse em adquirir os itens a seguir:"+"\n"+"\n"+L.join("\n")+"\n"+desc+"\n"+"\n"+"Total: R$ "+brl(p.total)+"\n"+"\n"+"Abrir o carrinho na loja: "+base+"?c="+cods.join(",")+"\n"+"\n"+"Pix: +55 45 99969-9444 (Rodrigo Gonçalves Pereira)"+"\n"+"A entrega será feita assim que o Prof. Rodrigo estiver online.";
 }
 async function cfinal(){
