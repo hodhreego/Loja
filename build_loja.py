@@ -189,13 +189,11 @@ section.grupo h2:after{content:"";flex:1;height:2px;background:linear-gradient(9
 .card{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(15,37,71,.09);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
 .card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(15,37,71,.18)}
 .cover{position:relative;aspect-ratio:3/4;background:#dfe7f5;cursor:pointer;overflow:hidden}
-/* neon SAEB: brilho colorido das bordas para dentro, esmaecendo */
+/* neon SAEB: brilho fino nas bordas, muda de cor com a rolagem (--h) e pulsa de leve */
 .cover.neon::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:inherit;
- box-shadow:inset 0 0 6px 3px #ff1fd2,inset 0 0 22px 8px #00e5ff,inset 0 0 46px 14px rgba(255,238,0,.55),inset 0 0 80px 22px rgba(120,60,255,.40);
- animation:neonhue 6s linear infinite}
-@keyframes neonhue{to{filter:hue-rotate(360deg)}}
-.cover.neon::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
- background:linear-gradient(90deg,rgba(255,31,210,.35),transparent 18%,transparent 82%,rgba(0,229,255,.35)),linear-gradient(180deg,rgba(255,238,0,.28),transparent 14%,transparent 86%,rgba(57,255,20,.30))}
+ box-shadow:inset 0 0 3px 1px #ff1fd2,inset 0 0 10px 3px rgba(0,229,255,.85),inset 0 0 20px 5px rgba(255,238,0,.35);
+ filter:hue-rotate(var(--h,0deg));transition:filter .25s linear;animation:neonpulse 3.2s ease-in-out infinite}
+@keyframes neonpulse{0%,100%{opacity:.75}50%{opacity:1}}
 @media(prefers-reduced-motion:reduce){.cover.neon::after{animation:none}}
 .badge{position:absolute;top:10px;left:10px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--ok);color:#fff}
 .badge.soon{background:var(--gold);color:#3b2f00}
@@ -696,6 +694,10 @@ const CKEY="loja.carrinho.v1";
 const API_PEDIDOS="";
 function cLoad(){try{return JSON.parse(localStorage.getItem(CKEY)||"[]")||[]}catch(e){return []}}
 let CART=cLoad();CART=CART.filter((x,k)=>CART.findIndex(y=>y.slug===x.slug)===k).map(x=>({slug:x.slug,q:1}));
+
+(function(){const cv=()=>document.querySelectorAll(".cover.neon");let t=0;
+function up(){t=0;const H=innerHeight;cv().forEach(c=>{const r=c.getBoundingClientRect();if(r.bottom<0||r.top>H)return;c.style.setProperty("--h",((scrollY*.35+r.top*.5+r.left*.2)%360).toFixed(0)+"deg")})}
+addEventListener("scroll",()=>{if(!t)t=requestAnimationFrame(up)},{passive:true});addEventListener("resize",up);setInterval(up,1500);up()})();
 function cSave(){try{localStorage.setItem(CKEY,JSON.stringify(CART))}catch(e){}}
 function cFind(s){return ITENS.find(i=>i.slug===s)}
 function cCount(){return CART.reduce((s,x)=>s+x.q,0)}
