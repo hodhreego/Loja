@@ -212,6 +212,14 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 /* modal */
 .modal{position:fixed;inset:0;background:rgba(10,20,40,.82);display:none;align-items:center;justify-content:center;z-index:50;padding:14px}
 .modal.open{display:flex}
+.pm{position:fixed;inset:0;background:rgba(10,20,40,.86);display:none;align-items:center;justify-content:center;z-index:60;padding:12px}
+.pm.open{display:flex}
+.pmbox{background:#0b1226;border-radius:16px;width:min(1120px,100%);height:min(94vh,900px);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px #0008}
+.pmbar{display:flex;gap:8px;align-items:center;padding:10px 12px;background:#121a33;border-bottom:1px solid #ffffff22}
+.pmbar input{flex:1;min-width:0;background:#0b1226;border:1px solid #ffffff33;color:#f4f6ff;border-radius:10px;padding:9px 11px;font-size:14px}
+.pmbar button{background:#fbbf24;color:#1a1a1a;border:0;border-radius:10px;padding:9px 14px;font-weight:800;cursor:pointer;white-space:nowrap}
+.pmbar .pmx{background:#ffffff18;color:#fff;width:38px;padding:9px 0;font-size:20px;line-height:1}
+.pmbox iframe{flex:1;width:100%;border:0;background:#0b1226}
 .box{background:#fff;border-radius:18px;max-width:880px;width:100%;max-height:94vh;overflow:auto;display:grid;grid-template-columns:1.1fr 1fr}
 .stage{background:#e6ecf7;padding:14px;display:flex;flex-direction:column;gap:10px;align-items:center}
 .stage img.big{width:100%;max-height:68vh;object-fit:contain;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.2);background:#fff}
@@ -437,6 +445,7 @@ section.grupo h2{font-size:22px}
  </div>
 </div>
 <div class="toast" id="toast"></div>
+<div class="pm" id="pm" onclick="if(event.target===this)pmFecha()"><div class="pmbox"><div class="pmbar"><input id="pmUrl" readonly onclick="this.select()" aria-label="Link do produto"><button type="button" id="pmCp" onclick="pmCopia()">Copiar link</button><button type="button" class="pmx" onclick="pmFecha()" aria-label="Fechar">×</button></div><iframe id="pmFr" title="Produto"></iframe></div></div>
 <div class="modal" id="modal" onclick="if(event.target===this)fecha()"><button class="x" onclick="fecha()" aria-label="Fechar">×</button>
   <div class="box"><div class="stage"><img class="big" id="big" alt=""><div class="thumbs" id="th"></div><div class="lab" id="lab"></div></div>
   <div class="side" id="side"></div></div></div>
@@ -583,7 +592,17 @@ function anima(){
 }
 const NOMES=["Capa","Questões","Questões — página 2","Gabarito","Resoluções","Página interna","Página interna"];
 let cur=null;
-function abre(s){cur=ITENS.find(i=>i.slug===s);
+function pmLink(s){const it=ITENS.find(i=>i.slug===s);return "https://eduloja.com/"+(it.pag||it.slug)+"/"}
+function abre(s){cur=ITENS.find(i=>i.slug===s);if(!cur)return;const c=cur.pag||cur.slug;
+  $("#pmFr").src=c+"/?embed=1";$("#pmUrl").value=pmLink(s);$("#pmCp").textContent="Copiar link";
+  $("#pm").classList.add("open");document.body.style.overflow="hidden";
+  try{history.replaceState(null,"","#"+c)}catch(e){}}
+function pmFecha(){$("#pm").classList.remove("open");$("#pmFr").src="about:blank";document.body.style.overflow="";
+  try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
+function pmCopia(){const u=$("#pmUrl").value,b=$("#pmCp"),ok=()=>{b.textContent="Link copiado ✓"};
+  try{navigator.clipboard.writeText(u).then(ok,()=>{$("#pmUrl").select();document.execCommand("copy");ok()})}catch(e){$("#pmUrl").select();document.execCommand("copy");ok()}}
+{const h=location.hash.slice(1),it=ITENS.find(i=>(i.pag||i.slug)===h);if(it)setTimeout(()=>abre(it.slug),50)}
+function abreAntigo(s){cur=ITENS.find(i=>i.slug===s);
   $("#th").innerHTML=cur.imgs.map((u,k)=>`<img src="${u}" onclick="foto(${k})" alt="">`).join("");
   const soon=!cur.link;
   $("#side").innerHTML=`<small style="color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.06em">${cur.grupoNome}</small><h3>${cur.nome}</h3><p>${cur.sub}</p>
@@ -593,7 +612,7 @@ function abre(s){cur=ITENS.find(i=>i.slug===s);
   foto(0);$("#modal").classList.add("open");document.body.style.overflow="hidden";}
 function foto(k){$("#big").src=cur.imgs[k];$("#lab").textContent=(cur.imgs.length>2?NOMES[k]:(k?"Índice":"Capa"))+" · "+(k+1)+"/"+cur.imgs.length;
   [...$("#th").children].forEach((e,i)=>e.classList.toggle("on",i===k));}
-function fecha(){$("#modal").classList.remove("open");document.body.style.overflow=""}
+function fecha(){if($("#pm").classList.contains("open")){pmFecha();return}$("#modal").classList.remove("open");document.body.style.overflow=""}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")fecha();
   if($("#modal").classList.contains("open")&&cur){const on=[...$("#th").children].findIndex(x=>x.classList.contains("on"));
     if(e.key==="ArrowRight")foto(Math.min(on+1,cur.imgs.length-1));if(e.key==="ArrowLeft")foto(Math.max(on-1,0));}});

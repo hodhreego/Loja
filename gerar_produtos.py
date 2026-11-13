@@ -175,6 +175,8 @@ def pagina(it, todos):
 <meta property="og:type" content="product">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="../produto.css">
+<script>try{{if(/[?&]embed=1/.test(location.search))document.documentElement.className="emb"}}catch(e){{}}</script>
+<base target="_top">
 <script type="application/ld+json">{ld_json}</script>
 </head>
 <body>
@@ -323,6 +325,8 @@ CSS = """*{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(900px 420px at 15% -10%,#27408f55,transparent),#0b1226 url("fundo-matematica.svg") repeat;background-size:auto,auto,600px 600px;color:var(--tx);min-height:100vh;padding:0 16px 96px}
 a{color:inherit}
 .topo{max-width:1120px;margin:0 auto;padding:16px 0 8px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+html.emb .topo,html.emb .migalha,html.emb footer{display:none!important}
+html.emb body{padding-top:14px;background-color:#0b1226}
 .voltar{color:var(--dim);text-decoration:none;font-weight:800;font-size:.95rem}
 .voltar:hover{color:#fff}
 .topo-dir{display:flex;align-items:center;gap:10px}
