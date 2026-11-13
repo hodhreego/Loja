@@ -108,7 +108,7 @@
 const IMGS=["../img/cisop-agente-administrativo-1.jpg", "../img/cisop-agente-administrativo-2.jpg", "../img/cisop-agente-administrativo-3.jpg", "../img/cisop-agente-administrativo-4.jpg", "../img/cisop-agente-administrativo-5.jpg", "../img/cisop-agente-administrativo-6.jpg", "../img/cisop-agente-administrativo-7.jpg"];
 const CKEY='loja.carrinho.v1';
 function cartRead(){try{return JSON.parse(localStorage.getItem(CKEY)||'[]')||[]}catch(e){return []}}
-function cartBadge(){const e=document.getElementById('cartn');if(e)e.textContent=cartRead().reduce((s,x)=>s+(Number(x.q)||1),0)}
+function cartBadge(){const e=document.getElementById('cartn');if(e)e.textContent=cartRead().length}
 function toast(t){
   const el=document.getElementById('toast');
   el.textContent=t;el.classList.add('on');
@@ -116,7 +116,7 @@ function toast(t){
 }
 function addCart(slug,quiet){
   const c=cartRead();const f=c.find(x=>x.slug===slug);
-  if(f)f.q=(Number(f.q)||1)+1;else c.push({slug:slug,q:1});
+  if(f){if(!quiet)toast('Este material já está no carrinho');return}c.push({slug:slug,q:1});
   try{localStorage.setItem(CKEY,JSON.stringify(c))}catch(e){}
   cartBadge();
   if(!quiet)toast('Adicionado ao carrinho');

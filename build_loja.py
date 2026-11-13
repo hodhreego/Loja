@@ -695,7 +695,7 @@ const CKEY="loja.carrinho.v1";
 /* URL do Web App do Apps Script (cole aqui depois de publicar); vazio = modo local */
 const API_PEDIDOS="";
 function cLoad(){try{return JSON.parse(localStorage.getItem(CKEY)||"[]")||[]}catch(e){return []}}
-let CART=cLoad();
+let CART=cLoad();CART=CART.filter((x,k)=>CART.findIndex(y=>y.slug===x.slug)===k).map(x=>({slug:x.slug,q:1}));
 function cSave(){try{localStorage.setItem(CKEY,JSON.stringify(CART))}catch(e){}}
 function cFind(s){return ITENS.find(i=>i.slug===s)}
 function cCount(){return CART.reduce((s,x)=>s+x.q,0)}
@@ -712,7 +712,7 @@ function cupRemover(){CUPOM="";try{localStorage.removeItem(CUPOM_KEY)}catch(e){}
 function cDesconto(){return Math.round(cSubtotal()*cDescPct())/100}
 function cTotal(){return Math.round((cSubtotal()-cDesconto())*100)/100}
 function toast(t){const el=$("#toast");if(!el)return;el.textContent=t;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),1900)}
-function addCart(s){const i=cFind(s);if(!i)return;const e=CART.find(x=>x.slug===s);if(e)e.q++;else CART.push({slug:s,q:1});cSave();cPaint();voaCart(s);toast(i.nome+" no carrinho")}
+function addCart(s){const i=cFind(s);if(!i)return;const e=CART.find(x=>x.slug===s);if(e){toast("Este material já está no carrinho 🙂 Cada um só pode ser comprado uma vez.");ctoggle(true);return}CART.push({slug:s,q:1});cSave();cPaint();voaCart(s);toast(i.nome+" no carrinho")}
 function voaCart(s){try{
   const fb=$("#cartfab");if(!fb)return;const reduz=matchMedia("(prefers-reduced-motion:reduce)").matches;
   const ev=window.event,alvo=ev&&ev.target&&ev.target.closest?ev.target:null,it=cFind(s);
@@ -735,7 +735,7 @@ function voaCart(s){try{
   a.onfinish=()=>{f.remove();bump()};a.oncancel=()=>f.remove();
  }catch(e){}}
 function rmCart(s){CART=CART.filter(x=>x.slug!==s);cSave();cPaint()}
-function qtyCart(s,d){const e=CART.find(x=>x.slug===s);if(!e)return;e.q+=d;if(e.q<1)CART=CART.filter(x=>x.slug!==s);cSave();cPaint()}
+function qtyCart(s,d){rmCart(s)}
 function ctoggle(f){const p=$("#cp");if(!p)return;const on=f===undefined?!p.classList.contains("open"):f;p.classList.toggle("open",on)}
 function cTabela(){const l=[];for(let n=1;n<=10;n++)l.push(`<tr${CART.length>=10?(n===10?' style="font-weight:800;color:#14683d"':''):(n===CART.length?' style="font-weight:800;color:#14683d"':'')}><td>${n}${n===10?" ou mais":n===1?" material":" materiais"}</td><td style="text-align:right">${cBasePct(n)}%</td></tr>`);return `<details style="margin:0 0 8px;font-size:13px"><summary style="cursor:pointer;font-weight:700;color:var(--navy)">Ver tabela de descontos</summary><table style="width:100%;margin-top:4px;border-collapse:collapse">${l.join("")}</table><div style="color:var(--mut);margin-top:4px">Máximo de 35% pela quantidade. O cupom soma +15%, chegando a 50%.</div></details>`}
 function cPaint(){
@@ -746,7 +746,7 @@ function cPaint(){
   const cs=$("#cupSt");if(cs)cs.innerHTML=cupomOk()?`✅ Cupom aplicado (+${CUPOM_PCT}%) <button type="button" class="cupx" onclick="cupRemover()">remover</button>`:"";
   const linhaDesc=(pct>0?`<div style="font-size:13px;color:var(--mut);margin:0 0 4px">Subtotal R$ ${brl(sub)} · desconto de ${brl(pct).replace(',00','')}% (−R$ ${brl(desc)})</div>`:"")+(CART.length?`<div style="font-size:13px;font-weight:700;color:#14683d;background:#eaf7f0;border-radius:8px;padding:6px 9px;margin:0 0 8px">${cDica()}</div>`:"")+cTabela();
   $("#cbody").innerHTML=linhaDesc+(CART.length?CART.map(x=>{const i=cFind(x.slug);if(!i)return"";
-    return `<div class="citem"><img src="${i.imgs[0]||''}" alt=""><div class="cn">${i.nome}<small>${i.grupoNome} · R$ ${brl(i.preco)}</small></div><div class="cq"><button onclick="qtyCart('${i.slug}',-1)" aria-label="Menos">−</button><span>${x.q}</span><button onclick="qtyCart('${i.slug}',1)" aria-label="Mais">+</button></div></div>`}).join("")
+    return `<div class="citem"><img src="${i.imgs[0]||''}" alt=""><div class="cn">${i.nome}<small>${i.grupoNome} · R$ ${brl(i.preco)}</small></div><div class="cq"><button onclick="rmCart('${i.slug}')" aria-label="Remover" style="width:auto;padding:0 10px;color:#b91c1c">Remover</button></div></div>`}).join("")
     :`<p style="color:var(--mut);font-size:14px">Carrinho vazio. Toque em <b>Adicionar ao carrinho</b> no material que quiser.</p>`);
 }
 function cPedido(){
@@ -769,7 +769,7 @@ async function cfinal(){
 function cDoLink(){
   try{
     const c=QC;if(!c)return;
-    const novo=[];c.split(/[,\s]+/).filter(Boolean).forEach(t=>{const i=ITENS.find(x=>x.av.toLowerCase()===t.toLowerCase()||x.slug===t);if(!i)return;const e=novo.find(x=>x.slug===i.slug);if(e)e.q++;else novo.push({slug:i.slug,q:1})});
+    const novo=[];c.split(/[,\s]+/).filter(Boolean).forEach(t=>{const i=ITENS.find(x=>x.av.toLowerCase()===t.toLowerCase()||x.slug===t);if(!i)return;const e=novo.find(x=>x.slug===i.slug);if(!e)novo.push({slug:i.slug,q:1})});
     if(novo.length){CART=novo;cSave();cPaint();ctoggle(true)}
   }catch(e){}
 }
