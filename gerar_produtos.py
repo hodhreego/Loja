@@ -164,10 +164,10 @@ def pagina(it, todos):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{nome} — Loja de Matemática</title>
+<title>{nome} — Loja de Educação e Matemática</title>
 <meta name="description" content="{sub[:155]}">
 <link rel="canonical" href="{BASE}/{cod}/">
-<meta property="og:site_name" content="Loja de Matemática">
+<meta property="og:site_name" content="Loja de Educação e Matemática">
 <meta property="og:title" content="{nome} — {grupo}">
 <meta property="og:description" content="{sub[:155]}">
 <meta property="og:image" content="{BASE}/{capa}">
@@ -180,7 +180,7 @@ def pagina(it, todos):
 <script type="application/ld+json">{ld_json}</script>
 </head>
 <body>
-<div class="wbar" role="banner"><span class="wtit">{nome} — Loja de Matemática</span><span class="wbtns"><span class="wb" aria-hidden="true" title="Minimizar"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 5.5h10" stroke="currentColor" stroke-width="1"/></svg></span><span class="wb" aria-hidden="true" title="Maximizar"><svg width="10" height="10" viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1"/></svg></span><a class="wb wx" href="../index.html" title="Fechar e voltar para a loja" aria-label="Fechar e voltar para a loja"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor" stroke-width="1.1"/></svg></a></span></div>
+<div class="wbar" role="banner"><span class="wtit">{nome} — Loja de Educação e Matemática</span><span class="wbtns"><span class="wb" aria-hidden="true" title="Minimizar"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 5.5h10" stroke="currentColor" stroke-width="1"/></svg></span><span class="wb" aria-hidden="true" title="Maximizar"><svg width="10" height="10" viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1"/></svg></span><a class="wb wx" href="../index.html" title="Fechar e voltar para a loja" aria-label="Fechar e voltar para a loja"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor" stroke-width="1.1"/></svg></a></span></div>
 <header class="topo">
   <a class="voltar" href="../index.html">← Voltar para a loja</a>
   <div class="topo-dir">

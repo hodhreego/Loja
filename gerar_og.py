@@ -11,7 +11,7 @@ for y in range(H):
     t = y / H
     d.line([(0, y), (W, y)], fill=(int(15 + 12 * t), int(37 + 28 * t), int(71 + 50 * t)))
 F = lambda n, s: ImageFont.truetype(r'C:\Windows\Fonts\%s' % n, s)
-d.text((W // 2, 46), 'Loja de Matemática', font=F('georgiab.ttf', 46), fill='#ffffff', anchor='mm')
+d.text((W // 2, 46), 'Loja de Educação e Matemática', font=F('georgiab.ttf', 46), fill='#ffffff', anchor='mm')
 d.text((W // 2, 94), 'Atividades educativas prontas para imprimir  ·  Simulados  ·  Apostilas', font=F('segoeui.ttf', 28), fill='#e3c25a', anchor='mm')
 S, G = 270, 22
 x0 = (W - (len(CAPAS) * S + (len(CAPAS) - 1) * G)) // 2
