@@ -14,7 +14,7 @@ import re
 from urllib.parse import quote
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-BASE = "https://hodhreego.github.io/Loja"
+BASE = "https://eduloja.com"
 WA = "5545999699444"
 
 

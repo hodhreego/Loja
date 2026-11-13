@@ -107,7 +107,9 @@ def tipo_de(slug):
 
 for slug, nome, g, code, preco, sub in P:
     imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 9) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
-    if tipo_de(slug) in ('se-liga', 'sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
+    if tipo_de(slug) == 'se-liga':   # prévias novas: páginas internas de questões, sem tarja (12/11/2026)
+        imgs = [i + '?v=8' for i in imgs]
+    elif tipo_de(slug) in ('sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
         imgs = [(i + '?v=6') if i.endswith('-1.jpg') else i for i in imgs]
     else:   # previas novas em alta resolucao com faixa AMOSTRA (08/11/2026)
         imgs = [i + '?v=6' for i in imgs]
@@ -125,6 +127,8 @@ HTML = r'''<!DOCTYPE html>
 <title>Loja de Matemática — Atividades Educativas, Simulados e Apostilas</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='80' font-size='84' text-anchor='middle'%3E🏛️%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" content="#1B3A6B">
+<link rel="canonical" href="https://eduloja.com/">
+<meta property="og:url" content="https://eduloja.com/">
 <meta name="description" content="Atividades educativas prontas para imprimir (Se Liga, volumes, simulados SAEB) com gabarito, e apostilas para concursos como PSS SEED-PR 2027. Veja as páginas antes de comprar.">
 <meta property="og:title" content="Loja de Matemática — Atividades Educativas, Simulados e Apostilas">
 <meta property="og:description" content="Atividades educativas prontas para imprimir, simulados SAEB e apostilas para concursos (PSS SEED-PR 2027 e mais).">
@@ -577,7 +581,7 @@ function anima(){
     io.observe(cv);
   });
 }
-const NOMES=["Capa","Índice","Página interna","Página interna"];
+const NOMES=["Capa","Questões","Questões — página 2","Gabarito","Resoluções","Página interna","Página interna"];
 let cur=null;
 function abre(s){cur=ITENS.find(i=>i.slug===s);
   $("#th").innerHTML=cur.imgs.map((u,k)=>`<img src="${u}" onclick="foto(${k})" alt="">`).join("");
