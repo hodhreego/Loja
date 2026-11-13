@@ -220,7 +220,8 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .pmbar{display:flex;gap:8px;align-items:center;padding:10px 12px;background:#121a33;border-bottom:1px solid #ffffff22}
 .pmbar input{flex:1;min-width:0;background:#0b1226;border:1px solid #ffffff33;color:#f4f6ff;border-radius:10px;padding:9px 11px;font-size:14px}
 .pmbar button{background:#fbbf24;color:#1a1a1a;border:0;border-radius:10px;padding:9px 14px;font-weight:800;cursor:pointer;white-space:nowrap}
-.pmbar .pmx{background:#ffffff18;color:#fff;width:38px;padding:9px 0;font-size:20px;line-height:1}
+.pmbar .pmx{background:#e81123;color:#000;width:42px;padding:9px 0;font-size:22px;font-weight:900;line-height:1;border:2px solid #000}
+.pmbar .pmx:hover{background:#ff3b4d}
 .pmbox iframe{flex:1;width:100%;border:0;background:#0b1226}
 .box{background:#fff;border-radius:18px;max-width:880px;width:100%;max-height:94vh;overflow:auto;display:grid;grid-template-columns:1.1fr 1fr}
 .stage{background:#e6ecf7;padding:14px;display:flex;flex-direction:column;gap:10px;align-items:center}
