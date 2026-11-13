@@ -19,35 +19,22 @@ var NOME_LOJA = 'Loja de Matemática — Prof. Rodrigo';
 var WHATSAPP = '5541999999999';                 // só para o botão de suporte
 var DIAS_BUSCA = 10;                            // janela de busca no Gmail
 
-// Pasta do Drive de cada produto (a mesma lista usada no site)
-var LINKS = {
-  'se-liga-6': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'se-liga-7': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'se-liga-8': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'se-liga-9': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'se-liga-1em': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'se-liga-2em': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'se-liga-3em': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'sei-6': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'sei-7': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'sei-8': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'sei-9': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'sei-1em': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'sei-2em': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'sei-3em': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'saeb-5': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'saeb-9': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'saeb-3em': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'volume-cilindro': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'volume-cone': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'volume-cubo': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'volume-cubo-bloco-prisma': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'volume-esfera': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'volume-paralelepipedo': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'volume-piramide': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'volume-prisma': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT',
-  'album-multiplicacao': 'https://drive.google.com/drive/folders/LINK_MOVIDO_PARA_PROPRIEDADES_DO_SCRIPT'
-};
+// Pasta do Drive de cada produto.
+// IMPORTANTE (privacidade): este arquivo fica no repositório PÚBLICO da loja.
+// Por isso os links NÃO ficam aqui. Cadastre cada um em:
+//   Apps Script → Configurações do projeto → Propriedades do script
+//   link_se-liga-6 = https://drive.google.com/drive/folders/...
+// O nome da propriedade é "link_" + o slug usado no site.
+var LINKS = (function () {
+  var mapa = {};
+  try {
+    var props = PropertiesService.getScriptProperties().getProperties();
+    Object.keys(props).forEach(function (k) {
+      if (k.indexOf('link_') === 0) mapa[k.slice(5)] = props[k];
+    });
+  } catch (e) { /* fora do Apps Script, fica vazio */ }
+  return mapa;
+})();
 
 var REMETENTES_PAGAMENTO = [
   'mercadopago', 'mercadolivre', 'eduzz', 'pagseguro', 'pagarme',
@@ -61,7 +48,9 @@ function doPost(e) {
   var acao = dados.acao || '';
   if (acao === 'novo') return saida({ ok: true, codigo: novoPedido(dados.pedido || {}, dados) });
   if (acao === 'consultar') return saida(consultar(dados.codigo || ''));
-  if (acao === 'entregar') return saida(entregar(dados.codigo || ''));
+  // A entrega NÃO é exposta pela internet: só acontece pelo próprio script
+  // (menu/planilha ou conferência automática do Gmail). Expor essa ação
+  // permitiria que qualquer pessoa disparasse a entrega de um pedido alheio.
   return saida({ ok: false, erro: 'acao desconhecida' });
 }
 

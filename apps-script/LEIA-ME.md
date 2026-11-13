@@ -21,7 +21,12 @@ Três peças:
    - `SS_ID` → o ID da planilha;
    - `EMAIL_LOJA` → seu Gmail;
    - `WHATSAPP` → seu número com DDI (ex.: `5541999999999`).
-4. Salve (Ctrl+S) e rode a função `teste` uma vez para autorizar as permissões
+4. **Pastas de entrega (privacidade).** Este arquivo fica no repositório público,
+   então os links do Drive **não** ficam nele. Em **Configurações do projeto →
+   Propriedades do script**, crie uma propriedade por produto:
+   `link_se-liga-6` = `https://drive.google.com/drive/folders/...` (o nome é
+   `link_` + o slug usado no site). Sem isso, a entrega sai como "em produção".
+5. Salve (Ctrl+S) e rode a função `teste` uma vez para autorizar as permissões
    (Gmail, Planilha, E-mail). Ele cria um pedido de teste na planilha.
 
 ## 3. Publicar como Web App
