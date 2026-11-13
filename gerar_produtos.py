@@ -181,7 +181,7 @@ def pagina(it, todos):
 </head>
 <body>
 <header class="topo">
-  <a class="voltar" href="../index.html">← Loja de Matemática</a>
+  <a class="voltar" href="../index.html">← Voltar para a loja</a>
   <div class="topo-dir">
     <span class="grupo">{grupo}</span>
     <a class="cart" href="../index.html">VER CARRINHO <b id="cartn">0</b></a>
@@ -327,8 +327,9 @@ a{color:inherit}
 .topo{max-width:1120px;margin:0 auto;padding:16px 0 8px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 html.emb .topo,html.emb .migalha,html.emb footer{display:none!important}
 html.emb body{padding-top:14px;background-color:#0b1226}
-.voltar{color:var(--dim);text-decoration:none;font-weight:800;font-size:.95rem}
-.voltar:hover{color:#fff}
+.voltar{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(#fcd34d,#f59e0b);color:#1a1200;text-decoration:none;font-weight:900;font-size:1rem;padding:11px 20px;border-radius:99px;border:2px solid #fff;box-shadow:0 0 0 2px #000,0 6px 18px rgba(0,0,0,.45);transition:transform .15s,filter .15s}
+.voltar:hover{transform:translateX(-3px);filter:brightness(1.08);color:#1a1200}
+@media(max-width:520px){.voltar{font-size:.92rem;padding:10px 16px}}
 .topo-dir{display:flex;align-items:center;gap:10px}
 .grupo{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);border:1px solid var(--bd);border-radius:99px;padding:5px 12px;background:rgba(255,255,255,.05)}
 .ico{background:rgba(255,255,255,.08);border:1px solid var(--bd);color:var(--tx);width:34px;height:34px;border-radius:10px;cursor:pointer;font-size:1rem}
