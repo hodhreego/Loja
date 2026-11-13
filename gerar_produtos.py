@@ -174,13 +174,13 @@ def pagina(it, todos):
 <meta property="og:url" content="{BASE}/{cod}/">
 <meta property="og:type" content="product">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="../produto.css?v=wn2">
+<link rel="stylesheet" href="../produto.css?v=wn3">
 <script>try{{if(/[?&]embed=1/.test(location.search))document.documentElement.className="emb"}}catch(e){{}}</script>
 <base target="_top">
 <script type="application/ld+json">{ld_json}</script>
 </head>
 <body>
-<div class="wbar" role="banner"><span class="wic" aria-hidden="true">📚</span><span class="wtit">{nome} — Loja de Matemática</span><span class="wbtns"><span class="wb" aria-hidden="true" title="Minimizar"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 5.5h10" stroke="currentColor" stroke-width="1"/></svg></span><span class="wb" aria-hidden="true" title="Maximizar"><svg width="10" height="10" viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1"/></svg></span><a class="wb wx" href="../index.html" title="Fechar e voltar para a loja" aria-label="Fechar e voltar para a loja"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor" stroke-width="1.1"/></svg></a></span></div>
+<div class="wbar" role="banner"><span class="wtit">{nome} — Loja de Matemática</span><span class="wbtns"><span class="wb" aria-hidden="true" title="Minimizar"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 5.5h10" stroke="currentColor" stroke-width="1"/></svg></span><span class="wb" aria-hidden="true" title="Maximizar"><svg width="10" height="10" viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1"/></svg></span><a class="wb wx" href="../index.html" title="Fechar e voltar para a loja" aria-label="Fechar e voltar para a loja"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor" stroke-width="1.1"/></svg></a></span></div>
 <header class="topo">
   <a class="voltar" href="../index.html">← Voltar para a loja</a>
   <div class="topo-dir">
@@ -326,7 +326,7 @@ CSS = """*{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(900px 420px at 15% -10%,#27408f55,transparent),#0b1226 url("fundo-matematica.svg") repeat;background-size:auto,auto,600px 600px;color:var(--tx);min-height:100vh;padding:0 16px 96px}
 a{color:inherit}
 .topo{max-width:1120px;margin:0 auto;padding:16px 0 8px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.wbar{position:sticky;top:0;z-index:60;display:flex;align-items:stretch;height:34px;margin:0 -16px 10px;padding:0 0 0 12px;background:#202020;border-bottom:1px solid #3a3a3a;box-shadow:0 3px 10px rgba(0,0,0,.4);user-select:none;font-family:"Segoe UI",system-ui,sans-serif}
+.wbar{position:sticky;top:0;z-index:60;display:flex;align-items:stretch;height:34px;margin:0 -16px 10px;padding:0 0 0 12px;background:#202020;border-bottom:1px solid #3a3a3a;user-select:none;font-family:"Segoe UI",system-ui,sans-serif}
 .wic{align-self:center;font-size:14px;margin-right:9px}
 .wtit{flex:1;min-width:0;align-self:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:400;color:#fff}
 .wbtns{display:flex;align-items:stretch}
@@ -337,9 +337,8 @@ a{color:inherit}
 html.emb .wbar{display:none!important}
 html.emb .topo,html.emb .migalha,html.emb footer{display:none!important}
 html.emb body{padding-top:14px;background-color:#0b1226}
-.voltar{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(#fcd34d,#f59e0b);color:#1a1200;text-decoration:none;font-weight:900;font-size:1rem;padding:11px 20px;border-radius:99px;border:2px solid #fff;box-shadow:0 0 0 2px #000,0 6px 18px rgba(0,0,0,.45);transition:transform .15s,filter .15s}
-.voltar:hover{transform:translateX(-3px);filter:brightness(1.08);color:#1a1200}
-@media(max-width:520px){.voltar{font-size:.92rem;padding:10px 16px}}
+.voltar{display:inline-block;background:#fbbf24;color:#111;text-decoration:none;font-weight:700;font-size:1rem;padding:9px 16px;border-radius:6px}
+.voltar:hover{background:#f59e0b;color:#111}
 .topo-dir{display:flex;align-items:center;gap:10px}
 .grupo{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);border:1px solid var(--bd);border-radius:99px;padding:5px 12px;background:rgba(255,255,255,.05)}
 .ico{background:rgba(255,255,255,.08);border:1px solid var(--bd);color:var(--tx);width:34px;height:34px;border-radius:10px;cursor:pointer;font-size:1rem}
