@@ -82,7 +82,7 @@ def gera(slug, pasta):
         passo = max(1, len(depois) // 2)
         aleatorias = [depois[0], depois[min(len(depois) - 1, passo)]]
 
-    salva(render(doc, 0), slug, 1)
+    # imagem 1 é a CAPA (gerada por capa_se_liga_ef.py) — não sobrescrever aqui
     k = 1
     for i in ilustradas:
         k += 1

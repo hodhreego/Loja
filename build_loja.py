@@ -107,10 +107,10 @@ def tipo_de(slug):
 
 for slug, nome, g, code, preco, sub in P:
     imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 9) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
-    if tipo_de(slug) == 'se-liga':   # prévias novas: páginas internas de questões, sem tarja (12/11/2026)
-        imgs = [i + '?v=9' for i in imgs]
-    elif slug.startswith('ef-'):   # capa Se Liga EF no mesmo molde do Se Liga Matematica (12/11/2026)
+    if slug.startswith('ef-'):   # capa Se Liga EF no mesmo molde do Se Liga Matematica (12/11/2026)
         imgs = [i + '?v=10' for i in imgs]
+    elif tipo_de(slug) == 'se-liga':   # prévias novas: páginas internas de questões, sem tarja (12/11/2026)
+        imgs = [i + '?v=9' for i in imgs]
     elif tipo_de(slug) in ('sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
         imgs = [(i + '?v=6') if i.endswith('-1.jpg') else i for i in imgs]
     else:   # previas novas em alta resolucao com faixa AMOSTRA (08/11/2026)
