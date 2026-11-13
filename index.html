@@ -66,6 +66,14 @@ section.grupo h2:after{content:"";flex:1;height:2px;background:linear-gradient(9
 .card{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(15,37,71,.09);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
 .card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(15,37,71,.18)}
 .cover{position:relative;aspect-ratio:3/4;background:#dfe7f5;cursor:pointer;overflow:hidden}
+/* neon SAEB: brilho colorido das bordas para dentro, esmaecendo */
+.cover.neon::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:inherit;
+ box-shadow:inset 0 0 6px 3px #ff1fd2,inset 0 0 22px 8px #00e5ff,inset 0 0 46px 14px rgba(255,238,0,.55),inset 0 0 80px 22px rgba(120,60,255,.40);
+ animation:neonhue 6s linear infinite}
+@keyframes neonhue{to{filter:hue-rotate(360deg)}}
+.cover.neon::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+ background:linear-gradient(90deg,rgba(255,31,210,.35),transparent 18%,transparent 82%,rgba(0,229,255,.35)),linear-gradient(180deg,rgba(255,238,0,.28),transparent 14%,transparent 86%,rgba(57,255,20,.30))}
+@media(prefers-reduced-motion:reduce){.cover.neon::after{animation:none}}
 .badge{position:absolute;top:10px;left:10px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--ok);color:#fff}
 .badge.soon{background:var(--gold);color:#3b2f00}
 .pills{position:absolute;bottom:10px;right:10px;display:flex;gap:6px;align-items:center;z-index:3}
@@ -377,7 +385,7 @@ function card(it){
   const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i></div>`;
   const strip=it.imgs.map((u,k)=>leaf(u,k)).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt=""></div>`;
   const dots="";
-  return `<article class="card" data-s="${it.slug}"><div class="cover" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><div class="pills"><button type="button" class="peek cartpeek" onclick="event.stopPropagation();addCart('${it.slug}')" aria-label="Adicionar ao carrinho"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg> +</button><span class="peek">👁 ver</span></div></div>
+  return `<article class="card" data-s="${it.slug}"><div class="cover${it.tipo==='saeb'?' neon':''}" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><div class="pills"><button type="button" class="peek cartpeek" onclick="event.stopPropagation();addCart('${it.slug}')" aria-label="Adicionar ao carrinho"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg> +</button><span class="peek">👁 ver</span></div></div>
   <div class="info" onmouseenter="const cv=this.parentElement.querySelector('.cover');if(cv&&cv._reset)cv._reset()"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
   <div class="price"><span>R$</span>${brl(it.preco)}</div>
   <div class="actions">${add}${act}</div></div></article>`;
