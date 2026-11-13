@@ -174,13 +174,13 @@ def pagina(it, todos):
 <meta property="og:url" content="{BASE}/{cod}/">
 <meta property="og:type" content="product">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="../produto.css">
+<link rel="stylesheet" href="../produto.css?v=wn2">
 <script>try{{if(/[?&]embed=1/.test(location.search))document.documentElement.className="emb"}}catch(e){{}}</script>
 <base target="_top">
 <script type="application/ld+json">{ld_json}</script>
 </head>
 <body>
-<div class="wbar" role="banner"><span class="wic" aria-hidden="true">📚</span><span class="wtit">{nome} — Loja de Matemática</span><span class="wbtns"><button type="button" class="wb" tabindex="-1" aria-hidden="true" title="Minimizar">&#8211;</button><button type="button" class="wb" tabindex="-1" aria-hidden="true" title="Maximizar">&#9633;</button><a class="wb wx" href="../index.html" title="Fechar e voltar para a loja" aria-label="Fechar e voltar para a loja">&#10005;</a></span></div>
+<div class="wbar" role="banner"><span class="wic" aria-hidden="true">📚</span><span class="wtit">{nome} — Loja de Matemática</span><span class="wbtns"><span class="wb" aria-hidden="true" title="Minimizar"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 5.5h10" stroke="currentColor" stroke-width="1"/></svg></span><span class="wb" aria-hidden="true" title="Maximizar"><svg width="10" height="10" viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1"/></svg></span><a class="wb wx" href="../index.html" title="Fechar e voltar para a loja" aria-label="Fechar e voltar para a loja"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor" stroke-width="1.1"/></svg></a></span></div>
 <header class="topo">
   <a class="voltar" href="../index.html">← Voltar para a loja</a>
   <div class="topo-dir">
@@ -326,13 +326,14 @@ CSS = """*{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(900px 420px at 15% -10%,#27408f55,transparent),#0b1226 url("fundo-matematica.svg") repeat;background-size:auto,auto,600px 600px;color:var(--tx);min-height:100vh;padding:0 16px 96px}
 a{color:inherit}
 .topo{max-width:1120px;margin:0 auto;padding:16px 0 8px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.wbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:10px;height:42px;margin:0 -16px 8px;padding:0 0 0 14px;background:linear-gradient(#1d2f66,#14224d);border-bottom:1px solid #ffffff2b;box-shadow:0 4px 14px rgba(0,0,0,.35);user-select:none}
-.wic{font-size:16px}.wtit{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:600 13px "Segoe UI",system-ui,sans-serif;color:#e8eeff}
-.wbtns{display:flex;height:100%}
-.wb{width:48px;height:100%;display:flex;align-items:center;justify-content:center;border:0;background:transparent;color:#e8eeff;font:400 16px "Segoe UI Symbol","Segoe UI",system-ui,sans-serif;text-decoration:none;cursor:default}
-.wb:hover{background:#ffffff22}
-.wx{cursor:pointer;font-size:15px}.wx:hover{background:#e81123;color:#fff}.wx:focus-visible{outline:2px solid #fff;outline-offset:-3px;background:#e81123}
-@media(max-width:520px){.wb{width:42px}}
+.wbar{position:sticky;top:0;z-index:60;display:flex;align-items:stretch;height:34px;margin:0 -16px 10px;padding:0 0 0 12px;background:#202020;border-bottom:1px solid #3a3a3a;box-shadow:0 3px 10px rgba(0,0,0,.4);user-select:none;font-family:"Segoe UI",system-ui,sans-serif}
+.wic{align-self:center;font-size:14px;margin-right:9px}
+.wtit{flex:1;min-width:0;align-self:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:400;color:#fff}
+.wbtns{display:flex;align-items:stretch}
+.wb{width:46px;display:flex;align-items:center;justify-content:center;background:transparent;border:0;color:#fff;text-decoration:none;cursor:default;line-height:0}
+.wb:hover{background:rgba(255,255,255,.1)}
+.wx{cursor:pointer}.wx:hover,.wx:focus-visible{background:#c42b1c;color:#fff;outline:0}
+@media(max-width:520px){.wb{width:40px}}
 html.emb .wbar{display:none!important}
 html.emb .topo,html.emb .migalha,html.emb footer{display:none!important}
 html.emb body{padding-top:14px;background-color:#0b1226}
