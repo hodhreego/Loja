@@ -112,12 +112,40 @@ AV = {"cn-da-africa-ao-brasil":159,"cn-portugues-autoria-negra":160,"cn-cientist
  "sei-1em":129,"sei-2em":130,"sei-3em":131,"sei-6":132,"sei-7":133,"sei-8":134,"sei-9":135,"saeb-5":112,"saeb-9":113,"saeb-3em":114}
 items = []
 def tipo_de(slug):
+    if slug.startswith('cn-') or slug == 'consciencia-negra': return 'cn'
+    if slug == 'album-multiplicacao': return 'album'
     if slug.startswith('volume-'): return 'volumes'
     if slug.startswith('sei-'): return 'sei'
     if slug.startswith('se-liga-'): return 'se-liga'
     if slug.startswith('ef-'): return 'se-liga-ef'
     if slug.startswith('saeb-'): return 'saeb'
     return 'apostilas'
+
+
+import re as _re
+CAT_DISC = {
+ 'cn-da-africa-ao-brasil': ['historia'], 'cn-negros-mundo': ['historia'], 'cn-direitos-civis-eua': ['historia'],
+ 'cn-apartheid': ['historia'], 'cn-historia-3ano': ['historia'], 'cn-quem-sou-eu': ['historia'],
+ 'cn-portugues-autoria-negra': ['portugues'], 'cn-portugues-3ano': ['portugues'], 'cn-palavras-herdadas': ['portugues'],
+ 'cn-gazeta-quilombos': ['ingles'], 'cn-cientistas-negras': ['ciencias'],
+ 'cn-raizes-africanas': ['matematica'], 'cn-numeros-historia': ['matematica'], 'cn-matematica-3ano': ['matematica'],
+ 'consciencia-negra': ['matematica'], 'album-multiplicacao': ['matematica']}
+SERIE_CN = {'cn-da-africa-ao-brasil': '789', 'cn-negros-mundo': '789', 'cn-direitos-civis-eua': '789', 'cn-apartheid': '789',
+ 'cn-portugues-autoria-negra': '6789', 'cn-cientistas-negras': '6789', 'cn-raizes-africanas': '6789', 'cn-numeros-historia': '6789',
+ 'cn-quem-sou-eu': '6789', 'cn-gazeta-quilombos': '6789', 'cn-palavras-herdadas': '6789'}
+def cats_de(slug):
+    c = list(CAT_DISC.get(slug, []))
+    if slug.startswith(('volume-', 'se-liga-', 'sei-', 'saeb-')): c = ['matematica']
+    if slug.startswith('ef-'): c = ['financeira']
+    if slug.startswith('cn-') or slug == 'consciencia-negra': c.append('consciencia')
+    return c
+def series_de(slug, nome):
+    if slug.endswith('3ano'): return ['3']
+    if slug in SERIE_CN: return list(SERIE_CN[slug])
+    m = _re.search(r'(\d)º ano', nome)
+    if m: return [m.group(1)]
+    if _re.search(r'série EM', nome): return ['em']
+    return []
 
 for slug, nome, g, code, preco, sub in P:
     imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 9) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
@@ -132,7 +160,7 @@ for slug, nome, g, code, preco, sub in P:
     else:   # previas novas em alta resolucao com faixa AMOSTRA (08/11/2026)
         imgs = [i + '?v=6' for i in imgs]
     items.append({"slug": slug, "av": ("Av%d" % AV[slug]) if slug in AV else slug, "nome": nome, "grupo": g, "grupoNome": GRUPOS[g], "link": (CHK + code) if code else None,
-                  "preco": preco, "sub": sub, "imgs": imgs, "tipo": tipo_de(slug),
+                  "preco": preco, "sub": sub, "imgs": imgs, "tipo": tipo_de(slug), "cat": cats_de(slug), "serie": series_de(slug, nome),
                   "pag": (("Av%d" % AV[slug]) if slug in AV else slug),
                   "de": 15 if slug in ('saeb-5', 'saeb-9', 'saeb-3em') else None,
                   "paginas": pag.get(slug, {}).get("paginas")})
@@ -142,14 +170,14 @@ HTML = r'''<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Loja de Educação e Matemática — Atividades Educativas, Simulados e Apostilas</title>
+<title>__TITLE__</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='80' font-size='84' text-anchor='middle'%3E🏛️%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" content="#1B3A6B">
-<link rel="canonical" href="https://eduloja.com/">
-<meta property="og:url" content="https://eduloja.com/">
-<meta name="description" content="Atividades educativas prontas para imprimir (Se Liga, volumes, simulados SAEB) com gabarito, e apostilas para concursos como PSS SEED-PR 2027. Veja as páginas antes de comprar.">
-<meta property="og:title" content="Loja de Educação e Matemática — Atividades Educativas, Simulados e Apostilas">
-<meta property="og:description" content="Atividades educativas prontas para imprimir, simulados SAEB e apostilas para concursos (PSS SEED-PR 2027 e mais).">
+<link rel="canonical" href="__CANON__">
+<meta property="og:url" content="__CANON__">
+<meta name="description" content="__DESC__">
+<meta property="og:title" content="__TITLE__">
+<meta property="og:description" content="__DESC__">
 <meta property="og:image" content="https://eduloja.com/og.jpg?v=6">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -413,14 +441,21 @@ section.grupo h2{font-size:22px}
  section.grupo{margin-top:20px}
  section.grupo h2{font-size:19px}
 }
+.sec-link{display:inline-block;margin-top:2px;font:600 13px 'Source Sans 3';color:var(--gold-light,#fde68a);opacity:.9;text-decoration:underline;text-underline-offset:3px}
+.sec-link:hover{opacity:1}
+.rot{font:800 11px 'Source Sans 3';letter-spacing:.09em;text-transform:uppercase;color:var(--mut);align-self:center;min-width:62px}
+#series .chip,#tipos .chip{font-size:13.5px;padding:6px 12px}
+.foot-sec{margin:0 0 8px}.foot-sec a{color:var(--gold-light);font-weight:700}
+@media(max-width:720px){.rot{display:none}#series .chip,#tipos .chip{flex:none}}
 </style>
 </head>
 <body>
 <div class="minibar" id="minibar" aria-hidden="true"><b>Loja de <em>Educação e Matemática</em></b><button type="button" id="mbb" class="mbb" aria-expanded="false" onclick="mbTog()">☰ <span id="mbn">Todas</span> ▾</button><span class="mbs"></span><div id="mbt" class="mbt" hidden></div><button type="button" onclick="wtoggle(true)">WhatsApp</button></div>
 <header class="hero"><div class="wrap">
   <div class="eyebrow">Prof. Rodrigo Gonçalves Pereira</div>
-  <h1>Loja de <em>Educação e Matemática</em><br>Atividades Educativas, Simulados &amp; Apostilas</h1>
-  <p>Atividades educativas prontas para imprimir, com gabarito, para professores e alunos do 6º ano ao Ensino Médio. E, para quem estuda para concurso, apostilas atualizadas com os editais. Confira as páginas antes de comprar.</p>
+  __H1__
+  <p>__HP__</p>
+  __NAVLINK__
   <div class="perks"><span class="perk">✓ Entrega digital em PDF</span><span class="perk">✓ Veja as páginas antes de comprar</span><span class="perk">✓ Versão JUMBO (letra grande)</span><span class="perk">✓ Pagamento seguro pela Eduzz</span></div>
   <button class="hero-wa" onclick="wtoggle(true)"><svg class="wai" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Falar no WhatsApp <small>tire dúvidas · peça seu material</small></button>
 </div></header>
@@ -428,34 +463,14 @@ section.grupo h2{font-size:22px}
 <div class="wrap tools"><div class="bar">
   <div class="certs" id="chips"></div>
   <div class="certs" id="tipos" style="margin-top:10px"></div>
-  <input id="q" type="search" placeholder="Buscar apostila…">
+  <div class="certs" id="series" style="margin-top:6px"></div>
+  <input id="q" type="search" placeholder="__BUSCA__">
 </div></div>
 
 <div class="wrap"><div class="info-cert" id="infoc"></div></div>
 <div class="conteudo wrap">
   <aside class="indice">
-    <b>Índice</b>
-    <a data-tipo="todos" onclick="setTipo('todos')">Todas as atividades</a>
-    <hr>
-    <b>Se Liga · provas finais</b>
-    <a data-tipo="se-liga" onclick="setTipo('se-liga')">Se Liga de Matemática</a>
-    <a data-tipo="se-liga-ef" onclick="setTipo('se-liga-ef')">Se Liga de Educação Financeira</a>
-    <a data-tipo="se-liga-ing" onclick="setTipo('se-liga-ing')">Se Liga de Inglês <small>(em breve)</small></a>
-    <hr>
-    <b>Matemática</b>
-    <a data-tipo="sei" onclick="setTipo('sei')">Semanas de Estudos</a>
-    <a data-tipo="saeb" onclick="setTipo('saeb')">Simulados SAEB</a>
-    <a data-tipo="volumes" onclick="setTipo('volumes')">Volumes</a>
-    <hr>
-    <b>Apostilas</b>
-    <a data-tipo="apostilas" onclick="setTipo('apostilas')">Todas as apostilas</a>
-    <hr>
-    <b>Certames</b>
-    <a data-grupo="pss" onclick="setGrupo('pss')">PSS SEED-PR</a>
-    <a data-grupo="cisop" onclick="setGrupo('cisop')">CISOP Cascavel</a>
-    <a data-grupo="prefeitura" onclick="setGrupo('prefeitura')">Prefeitura de Cascavel</a>
-    <a data-grupo="reforco" onclick="setGrupo('reforco')">Reforço e recomposição</a>
-    <a onclick="setGrupo('outros')">Outros concursos</a>
+__INDICE__
   </aside>
   <div class="lista">
     <p class="resumo" id="resumo"></p>
@@ -466,6 +481,7 @@ section.grupo h2{font-size:22px}
 
 <footer><div class="wrap">
   <p><b>Loja de Educação e Matemática</b> — Prof. Rodrigo Gonçalves Pereira. Dúvidas ou pedidos de novos materiais: <a style="color:var(--gold-light)" href="#" onclick="wtoggle(true);return false">WhatsApp (+55 45 99969-9444)</a>.</p>
+  __FOOTLINK__
   <p class="warn">Proibido o compartilhamento. Cópia não autorizada. Violação sujeita à pena de detenção e multa (Lei 9.610/98 e Art. 184 do Código Penal).</p>
 </div></footer>
 
@@ -507,10 +523,12 @@ section.grupo h2{font-size:22px}
 <script>
 const QC=(function(){try{return new URLSearchParams(location.search).get("c")}catch(e){return null}})();
 const ITENS=__DATA__;
+const MODO="__MODO__";
+const VIS=ITENS.filter(i=>MODO==="concursos"?i.grupo!=="reforco":i.grupo==="reforco");
 const WA="__WA__";
-const GR=[["reforco","Reforço e recomposição"],["pss","PSS SEED-PR 2027"],["cisop","CISOP Cascavel 2026"],["prefeitura","Prefeitura de Cascavel 2026"],["outros","Outros concursos"]];
+const GR=(MODO==="concursos"?[]:[["reforco","Atividades"]]).concat([["pss","PSS SEED-PR 2027"],["cisop","CISOP Cascavel 2026"],["prefeitura","Prefeitura de Cascavel 2026"],["outros","Outros concursos"]]);
 const TIPOS=[["todos","Todas as atividades"],["se-liga","Se Liga de Matemática"],["se-liga-ef","Se Liga de Educação Financeira"],["se-liga-ing","Se Liga de Inglês"],["sei","Semanas de Estudos"],["saeb","Simulados SAEB"],["volumes","Volumes"],["apostilas","Apostilas"]];
-let filtro="todos",busca="",filtroTipo="todos";{const h=location.hash.slice(1);if(["pss","cisop","prefeitura","simulado","outros"].includes(h))filtro=h}
+let filtro="todos",busca="",filtroTipo="todos";{const h=location.hash.slice(1);if(["pss","cisop","prefeitura","simulado","outros"].includes(h))filtro=h;if(MODO!=="concursos"&&["consciencia","matematica","financeira","historia","portugues","ingles","ciencias"].includes(h))filtro=h}
 const $=s=>document.querySelector(s);
 const brl=n=>n.toFixed(2).replace(".",",");
 function card(it){
@@ -558,7 +576,7 @@ function infoCert(){const el=$("#infoc");const c=CERT[filtro];
   el.innerHTML=`<h2>${c.nome}</h2>${status(c)}<p>${dt(c.desc)}</p><div class="facts">${f.map(x=>`<div class="fact ${x[2]?'hot':''}"><small>${x[0]}</small><span>${dt(x[1])}</span></div>`).join("")}</div>
    ${c.links.length?`<div class="links">${c.links.map(l=>`<a class="${l[2]?'':'alt'}" target="_blank" rel="noopener" href="${l[1]}">${l[0]} ↗</a>`).join("")}</div>`:""}
    ${c.nota?`<p class="note">ℹ️ ${dt(c.nota)}</p>`:""}`;}
-function render(){
+function renderC(){
   const q=busca.toLowerCase();let total=0;
   $("#main").innerHTML=GR.map(([g,nome])=>{
     if(filtro!=="todos"&&filtro!==g)return "";
@@ -579,8 +597,8 @@ function render(){
   infoCert();anima();
   try{history.replaceState(null,"",filtro==="todos"?location.pathname:"#"+filtro)}catch(e){}
 }
-function chips(){
-  const c=g=>ITENS.filter(i=>g==="todos"||i.grupo===g).length;
+function chipsC(){
+  const c=g=>VIS.filter(i=>g==="todos"||i.grupo===g).length;
   const svg=(p)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
   const IC={
     todos:svg('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
@@ -592,7 +610,7 @@ function chips(){
   };
   $("#chips").innerHTML=[["todos","Todos os certames"],...GR].map(([k,n])=>`<button class="cert ${filtro===k?'on':''}" onclick="filtro='${k}';chips();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'nearest'})"><span class="ic">${IC[k]||IC.outros}</span><span class="ct"><b>${n}</b><small>${c(k)} ${c(k)===1?'material':'materiais'}</small></span></button>`).join("");
 }
-function tipos(){
+function tiposC(){
   const svg=(p)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
   const I={
     todos:svg('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
@@ -609,8 +627,50 @@ function tipos(){
 }
 function mbTog(v){var t=document.getElementById("mbt"),b=document.getElementById("mbb");if(!t)return;var o=(v===undefined)?t.hidden:v;t.hidden=!o;b.setAttribute("aria-expanded",o?"true":"false")}
 document.addEventListener("click",function(e){if(!e.target.closest(".minibar"))mbTog(false)});
-function setTipo(t){filtroTipo=t;filtro="todos";tipos();chips();render();document.getElementById('main').scrollIntoView({behavior:'smooth',block:'start'})}
 function setGrupo(g){filtro=g;filtroTipo="todos";chips();tipos();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'nearest'})}
+
+/* ===== atividades (loja principal) x concursos (seção secundária) ===== */
+const CATS=[["todos","Todas as atividades","🗂️"],["consciencia","Dia da Consciência Negra","✊🏾"],["matematica","Matemática","➗"],["financeira","Educação Financeira","💰"],["historia","História","📜"],["portugues","Língua Portuguesa","📚"],["ingles","Inglês","🌍"],["ciencias","Ciências","🔬"]];
+const SERIES=[["todas","Todas as séries"],["3","3º ano"],["5","5º ano"],["6","6º ano"],["7","7º ano"],["8","8º ano"],["9","9º ano"],["em","Ensino Médio"]];
+const COLEC=[["todos","Todas as coleções"],["cn","Dia da Consciência Negra"],["se-liga","Se Liga de Matemática"],["se-liga-ef","Se Liga de Educação Financeira"],["sei","Semanas de Estudos"],["saeb","Simulados SAEB"],["volumes","Volumes"],["album","Álbuns"]];
+const NOMEST={"cn":"Dia da Consciência Negra","se-liga":"Se Liga de Matemática","se-liga-ef":"Se Liga de Educação Financeira","se-liga-ing":"Se Liga de Inglês","sei":"Semanas de Estudos Intensivos","saeb":"Simulados SAEB","volumes":"Volumes","album":"Álbuns de multiplicação"};
+const ORD={"cn":0,"se-liga":1,"se-liga-ef":2,"se-liga-ing":3,"sei":4,"saeb":5,"volumes":6,"album":7};
+let filtroSerie="todas";
+function renderA(){
+  const q=busca.toLowerCase();
+  const l=VIS.filter(i=>(filtro==="todos"||(i.cat||[]).includes(filtro))&&(filtroSerie==="todas"||(i.serie||[]).includes(filtroSerie))&&(filtroTipo==="todos"||i.tipo===filtroTipo)&&(i.nome+" "+i.sub).toLowerCase().includes(q))
+    .map((x,n)=>[x,n]).sort((a,b)=>((ORD[a[0].tipo]??9)-(ORD[b[0].tipo]??9))||a[1]-b[1]).map(x=>x[0]);
+  const porTipo={};l.forEach(i=>{(porTipo[i.tipo]=porTipo[i.tipo]||[]).push(i)});
+  $("#main").innerHTML=Object.keys(porTipo).map(tp=>`<section class="grupo"><h3 class="subtipo">${NOMEST[tp]||tp} <small>${porTipo[tp].length}</small></h3><div class="grid">${porTipo[tp].map(card).join("")}</div></section>`).join("");
+  $("#empty").style.display=l.length?"none":"block";
+  const nc=(CATS.find(c=>c[0]===filtro)||CATS[0])[1],ns=(SERIES.find(c=>c[0]===filtroSerie)||SERIES[0])[1];
+  const rs=$("#resumo");if(rs)rs.innerHTML=`<b>${l.length}</b> ${l.length===1?"atividade":"atividades"} · <b>${filtro==="todos"?"todas as disciplinas":nc}</b>${filtroSerie!=="todas"?" · <b>"+ns+"</b>":""}${busca?" · “"+busca+"”":""}`;
+  document.querySelectorAll(".indice a[data-cat]").forEach(a=>a.classList.toggle("on",a.dataset.cat===filtro));
+  document.querySelectorAll(".indice a[data-serie]").forEach(a=>a.classList.toggle("on",a.dataset.serie===filtroSerie));
+  document.querySelectorAll(".indice a[data-tipo]").forEach(a=>a.classList.toggle("on",a.dataset.tipo===filtroTipo));
+  const el=$("#infoc");if(el){el.className="info-cert";el.innerHTML=""}
+  anima();
+  try{history.replaceState(null,"",filtro==="todos"?location.pathname:"#"+filtro)}catch(e){}
+}
+function chipsA(){
+  const c=k=>VIS.filter(i=>k==="todos"||(i.cat||[]).includes(k)).length;
+  $("#chips").innerHTML=CATS.filter(x=>x[0]==="todos"||c(x[0])).map(([k,n,e])=>`<button class="cert ${filtro===k?'on':''}" onclick="setCat('${k}')"><span class="ic" style="font-size:19px">${e}</span><span class="ct"><b>${n}</b><small>${c(k)} ${c(k)===1?'atividade':'atividades'}</small></span></button>`).join("");
+  const mt=document.getElementById("mbt");if(mt){mt.innerHTML=CATS.filter(x=>x[0]==="todos"||c(x[0])).map(([k,n])=>`<button class="${filtro===k?"on":""}" onclick="mbTog(false);setCat('${k}')">${n}<small>${c(k)} ${c(k)===1?"atividade":"atividades"}</small></button>`).join("");const nn=document.getElementById("mbn");if(nn)nn.textContent=(CATS.find(x=>x[0]===filtro)||CATS[0])[1]}
+}
+function tiposA(){
+  const cs=k=>VIS.filter(i=>filtro==="todos"||(i.cat||[]).includes(filtro)).filter(i=>k==="todas"||(i.serie||[]).includes(k)).length;
+  $("#series").innerHTML='<span class="rot">Série</span>'+SERIES.filter(x=>x[0]==="todas"||cs(x[0])).map(([k,n])=>`<button class="chip ${filtroSerie===k?'on':''}" onclick="setSerie('${k}')">${n}<small>${cs(k)}</small></button>`).join("");
+  const ct=k=>VIS.filter(i=>k==="todos"||i.tipo===k).length;
+  $("#tipos").innerHTML='<span class="rot">Coleção</span>'+COLEC.filter(x=>x[0]==="todos"||ct(x[0])).map(([k,n])=>`<button class="chip ${filtroTipo===k?'on':''}" onclick="setTipo('${k}')">${n}<small>${ct(k)}</small></button>`).join("");
+}
+function chipsM(){chipsC();const mt=document.getElementById("mbt");if(mt){mt.innerHTML=GR.map(([k,n])=>`<button class="${filtro===k?"on":""}" onclick="mbTog(false);setGrupo('${k}')">${n}</button>`).join("");const nn=document.getElementById("mbn");if(nn)nn.textContent=(GR.find(x=>x[0]===filtro)||["","Todos"])[1]}}
+function render(){if(MODO==="concursos")renderC();else renderA()}
+function chips(){if(MODO==="concursos")chipsM();else chipsA()}
+function tipos(){if(MODO==="concursos"){const t=$("#tipos"),s=$("#series");if(t)t.style.display="none";if(s)s.style.display="none"}else tiposA()}
+function rola(id){const e=document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth',block:'nearest'})}
+function setCat(k){filtro=k;chips();tipos();render();rola('main')}
+function setSerie(k){filtroSerie=k;chips();tipos();render();rola('main')}
+function setTipo(t){filtroTipo=t;chips();tipos();render();rola('main')}
 /* miniaturas animadas: as páginas sobem (scroll vertical) enquanto o card está visível */
 let io=null,rolando=false,tRol=null;
 const todas=()=>[...document.querySelectorAll(".cover")];
@@ -822,6 +882,53 @@ winit();
 </script>
 </body>
 </html>'''
-out = HTML.replace("__DATA__", json.dumps(items, ensure_ascii=False)).replace("__WA__", WA)
-open(os.path.join(HERE, "index.html"), "w", encoding="utf-8").write(out)
-print("ok", len(items), "itens")
+def _indice_atividades():
+    r = ['    <b>Por disciplina</b>']
+    for k, n in [("todos", "Todas as atividades"), ("consciencia", "Dia da Consciência Negra"), ("matematica", "Matemática"), ("financeira", "Educação Financeira"), ("historia", "História"), ("portugues", "Língua Portuguesa"), ("ingles", "Inglês"), ("ciencias", "Ciências")]:
+        r.append('    <a data-cat="%s" onclick="setCat(\'%s\')">%s</a>' % (k, k, n))
+    r.append('    <hr>\n    <b>Por série</b>')
+    for k, n in [("todas", "Todas as séries"), ("3", "3º ano"), ("5", "5º ano"), ("6", "6º ano"), ("7", "7º ano"), ("8", "8º ano"), ("9", "9º ano"), ("em", "Ensino Médio")]:
+        r.append('    <a data-serie="%s" onclick="setSerie(\'%s\')">%s</a>' % (k, k, n))
+    r.append('    <hr>\n    <b>Coleções</b>')
+    for k, n in [("todos", "Todas as coleções"), ("cn", "Dia da Consciência Negra"), ("se-liga", "Se Liga de Matemática"), ("se-liga-ef", "Se Liga de Educação Financeira"), ("sei", "Semanas de Estudos"), ("saeb", "Simulados SAEB"), ("volumes", "Volumes"), ("album", "Álbuns")]:
+        r.append('    <a data-tipo="%s" onclick="setTipo(\'%s\')">%s</a>' % (k, k, n))
+    r.append('    <hr>\n    <a class="sec-link" style="font-size:12.5px;color:var(--mut);opacity:1" href="concursos.html">Apostilas para concursos →</a>')
+    return "\n".join(r)
+
+
+def _indice_concursos():
+    r = ['    <b>Certames</b>', '    <a data-grupo="todos" onclick="setGrupo(\'todos\')">Todos os certames</a>']
+    for k, n in [("pss", "PSS SEED-PR"), ("cisop", "CISOP Cascavel"), ("prefeitura", "Prefeitura de Cascavel"), ("outros", "Outros concursos")]:
+        r.append('    <a data-grupo="%s" onclick="setGrupo(\'%s\')">%s</a>' % (k, k, n))
+    r.append('    <hr>\n    <a class="sec-link" style="font-size:12.5px;color:var(--mut);opacity:1" href="index.html">← Atividades para imprimir</a>')
+    return "\n".join(r)
+
+
+MODOS = {
+    "atividades": dict(
+        arq="index.html", canon="https://eduloja.com/",
+        title="Loja de Educação e Matemática — Atividades Educativas para Imprimir",
+        desc="Atividades educativas prontas para imprimir, com gabarito, do 3º ano do Fundamental ao Ensino Médio: Matemática, Educação Financeira, História, Língua Portuguesa e mais. Veja as páginas antes de comprar.",
+        h1='<h1>Loja de <em>Educação e Matemática</em><br>Atividades Educativas para Imprimir</h1>',
+        hp="Atividades prontas para imprimir, com gabarito, para professores e alunos do 3º ano do Fundamental ao Ensino Médio: Matemática, Educação Financeira, História, Língua Portuguesa e mais. Escolha a disciplina ou a série e confira as páginas antes de comprar.",
+        nav='<a class="sec-link" href="concursos.html">Estuda para concurso? Veja as apostilas →</a>',
+        busca="Buscar atividade…", indice=_indice_atividades(),
+        foot='<p class="foot-sec">Estuda para concurso? <a href="concursos.html">Apostilas para concursos (PSS SEED-PR, CISOP e outros) →</a></p>'),
+    "concursos": dict(
+        arq="concursos.html", canon="https://eduloja.com/concursos",
+        title="Apostilas para Concursos — Loja de Educação e Matemática",
+        desc="Apostilas atualizadas com os editais para concursos e processos seletivos: PSS SEED-PR 2027, CISOP Cascavel, Prefeitura de Cascavel e outros. Veja as páginas antes de comprar.",
+        h1='<h1><em>Apostilas para Concursos</em><br>PSS SEED-PR, CISOP e Prefeituras</h1>',
+        hp="Apostilas atualizadas com os editais, para professores e candidatos: PSS SEED-PR 2027, CISOP Cascavel, Prefeitura de Cascavel e outros certames. Confira as páginas antes de comprar.",
+        nav='<a class="sec-link" href="index.html">← Atividades educativas para imprimir</a>',
+        busca="Buscar apostila…", indice=_indice_concursos(),
+        foot='<p class="foot-sec"><a href="index.html">← Voltar às atividades educativas para imprimir</a></p>'),
+}
+DADOS = json.dumps(items, ensure_ascii=False)
+for modo, m in MODOS.items():
+    out = (HTML.replace("__TITLE__", m["title"]).replace("__CANON__", m["canon"]).replace("__DESC__", m["desc"])
+           .replace("__H1__", m["h1"]).replace("__HP__", m["hp"]).replace("__NAVLINK__", m["nav"])
+           .replace("__BUSCA__", m["busca"]).replace("__INDICE__", m["indice"]).replace("__FOOTLINK__", m["foot"])
+           .replace("__MODO__", modo).replace("__DATA__", DADOS).replace("__WA__", WA))
+    open(os.path.join(HERE, m["arq"]), "w", encoding="utf-8").write(out)
+print("ok", len(items), "itens · index.html + concursos.html")

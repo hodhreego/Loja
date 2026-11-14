@@ -116,6 +116,7 @@ def pagina(it, todos):
     sub = it.get("sub") or ""
     grupo = it.get("grupoNome") or ""
     cod_wa = f"{cod} - {nome}"
+    volta = "../concursos.html" if it.get("grupo") != "reforco" else "../index.html"
     whats = f"https://wa.me/{WA}?text={cod_wa}"
 
     novas = [u for u in imgs if u]
@@ -193,18 +194,18 @@ def pagina(it, todos):
 <script type="application/ld+json">{ld_json}</script>
 </head>
 <body>
-<div class="wbar" role="banner"><span class="wtit">{nome} — Loja de Educação e Matemática</span><span class="wbtns"><span class="wb" aria-hidden="true" title="Minimizar"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 5.5h10" stroke="currentColor" stroke-width="1"/></svg></span><span class="wb" aria-hidden="true" title="Maximizar"><svg width="10" height="10" viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1"/></svg></span><a class="wb wx" href="../index.html" title="Fechar e voltar para a loja" aria-label="Fechar e voltar para a loja"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor" stroke-width="1.1"/></svg></a></span></div>
+<div class="wbar" role="banner"><span class="wtit">{nome} — Loja de Educação e Matemática</span><span class="wbtns"><span class="wb" aria-hidden="true" title="Minimizar"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 5.5h10" stroke="currentColor" stroke-width="1"/></svg></span><span class="wb" aria-hidden="true" title="Maximizar"><svg width="10" height="10" viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1"/></svg></span><a class="wb wx" href="{volta}" title="Fechar e voltar para a loja" aria-label="Fechar e voltar para a loja"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor" stroke-width="1.1"/></svg></a></span></div>
 <header class="topo">
-  <a class="voltar" href="../index.html">← Voltar para a loja</a>
+  <a class="voltar" href="{volta}">← Voltar para a loja</a>
   <div class="topo-dir">
     <span class="grupo">{grupo}</span>
-    <a class="cart" href="../index.html">VER CARRINHO <b id="cartn">0</b></a>
+    <a class="cart" href="{volta}">VER CARRINHO <b id="cartn">0</b></a>
     <button class="ico" type="button" onclick="compartilhar()" title="Compartilhar" aria-label="Compartilhar">⤴</button>
   </div>
 </header>
 
 <nav class="migalha" aria-label="Você está em">
-  <a href="../index.html">Loja</a> <span>/</span> <span>{grupo}</span> <span>/</span> <b>{nome}</b>
+  <a href="{volta}">Loja</a> <span>/</span> <span>{grupo}</span> <span>/</span> <b>{nome}</b>
 </nav>
 
 <main>
@@ -254,14 +255,14 @@ def pagina(it, todos):
 <section class="relacionados">
   <div class="rel-head">
     <h2>Também pode interessar</h2>
-    <a class="ver-todos" href="../index.html">Ver todos os materiais →</a>
+    <a class="ver-todos" href="{volta}">Ver todos os materiais →</a>
   </div>
   <div class="rel-grid">{relacionados}</div>
 </section>
 
 <footer>
   {cod} · {grupo} · Prof. Rodrigo Gonçalves Pereira<br>
-  <a href="../index.html">Voltar para a loja</a>
+  <a href="{volta}">Voltar para a loja</a>
 </footer>
 
 <div class="barra">
@@ -444,7 +445,7 @@ footer a{color:var(--dim)}
 
 
 def sitemap(its):
-    urls = [BASE + "/"] + [f"{BASE}/{codigo(x)}/" for x in its]
+    urls = [BASE + "/", BASE + "/concursos"] + [f"{BASE}/{codigo(x)}/" for x in its]
     body = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     body += "".join(f"  <url><loc>{u}</loc></url>\n" for u in urls)
     body += "</urlset>\n"
