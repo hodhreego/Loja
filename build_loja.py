@@ -171,7 +171,7 @@ HTML = r'''<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>__TITLE__</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='80' font-size='84' text-anchor='middle'%3E🏛️%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%231B3A6B'/%3E%3Cpath d='M18 80h64M24 80V44M42 80V44M58 80V44M76 80V44M14 40 50 20l36 20Z' fill='none' stroke='%23fcd34d' stroke-width='7' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#1B3A6B">
 <link rel="canonical" href="__CANON__">
 <meta property="og:url" content="__CANON__">
@@ -445,18 +445,19 @@ section.grupo h2{font-size:22px}
 .sec-link:hover{opacity:1}
 .rot{font:800 11px 'Source Sans 3';letter-spacing:.09em;text-transform:uppercase;color:var(--mut);align-self:center;min-width:62px}
 #series .chip,#tipos .chip{font-size:13.5px;padding:6px 12px}
+.indice{max-height:calc(100vh - 36px);overflow:auto}.indice a.sub{font-weight:500;font-size:12.5px;padding:4px 9px 4px 16px;color:var(--mut)}.ic16{vertical-align:-3px}.ck{vertical-align:-2px}
 .foot-sec{margin:0 0 8px}.foot-sec a{color:var(--gold-light);font-weight:700}
 @media(max-width:720px){.rot{display:none}#series .chip,#tipos .chip{flex:none}}
 </style>
 </head>
 <body>
-<div class="minibar" id="minibar" aria-hidden="true"><b>Loja de <em>Educação e Matemática</em></b><button type="button" id="mbb" class="mbb" aria-expanded="false" onclick="mbTog()">☰ <span id="mbn">Todas</span> ▾</button><span class="mbs"></span><div id="mbt" class="mbt" hidden></div><button type="button" onclick="wtoggle(true)">WhatsApp</button></div>
+<div class="minibar" id="minibar" aria-hidden="true"><b>Loja de <em>Educação e Matemática</em></b><button type="button" id="mbb" class="mbb" aria-expanded="false" onclick="mbTog()"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg> <span id="mbn">Todas</span> ▾</button><span class="mbs"></span><div id="mbt" class="mbt" hidden></div><button type="button" onclick="wtoggle(true)">WhatsApp</button></div>
 <header class="hero"><div class="wrap">
   <div class="eyebrow">Prof. Rodrigo Gonçalves Pereira</div>
   __H1__
   <p>__HP__</p>
   __NAVLINK__
-  <div class="perks"><span class="perk">✓ Entrega digital em PDF</span><span class="perk">✓ Veja as páginas antes de comprar</span><span class="perk">✓ Versão JUMBO (letra grande)</span><span class="perk">✓ Pagamento seguro pela Eduzz</span></div>
+  <div class="perks"><span class="perk"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Entrega digital em PDF</span><span class="perk"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Veja as páginas antes de comprar</span><span class="perk"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Versão JUMBO (letra grande)</span><span class="perk"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Pagamento seguro pela Eduzz</span></div>
   <button class="hero-wa" onclick="wtoggle(true)"><svg class="wai" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Falar no WhatsApp <small>tire dúvidas · peça seu material</small></button>
 </div></header>
 
@@ -499,13 +500,13 @@ __INDICE__
   <div class="wfoot"><a class="btn wa" id="wgo" target="_blank" rel="noopener" href="#">Abrir WhatsApp</a>
   <small>Você será levado ao WhatsApp com a mensagem pronta (o link da loja vai junto no final); só precisa tocar em enviar.</small></div>
  </div></div>
-<button class="cartfab" id="cartfab" onclick="ctoggle()"><span>🛒 Carrinho</span><b id="cartn">0</b></button>
+<button class="cartfab" id="cartfab" onclick="ctoggle()"><span><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg> Carrinho</span><b id="cartn">0</b></button>
 <div class="cpanel" id="cp" role="dialog" aria-label="Carrinho">
  <header><b>Seu carrinho</b><button onclick="ctoggle()" aria-label="Fechar">×</button></header>
  <div class="cbody" id="cbody"></div>
  <div class="cfoot">
   <div class="cup">
-   <div class="cupbal">💬 <a target="_blank" rel="noopener" href="https://wa.me/5545999699444?text=Ol%C3%A1%2C%20Prof.%20Rodrigo!%20Como%20fa%C3%A7o%20para%20ganhar%20o%20cupom%20de%2015%25%20de%20desconto%3F">Pergunte ao Prof. Rodrigo como ganhar o cupom</a></div>
+   <div class="cupbal"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/></svg> <a target="_blank" rel="noopener" href="https://wa.me/5545999699444?text=Ol%C3%A1%2C%20Prof.%20Rodrigo!%20Como%20fa%C3%A7o%20para%20ganhar%20o%20cupom%20de%2015%25%20de%20desconto%3F">Pergunte ao Prof. Rodrigo como ganhar o cupom</a></div>
    <div class="cuprow"><input id="cupIn" type="text" placeholder="Cupom de +15%" inputmode="tel" autocomplete="off" aria-label="Cupom de desconto"><button type="button" class="btn ghost" onclick="cupAplicar()">Aplicar</button></div>
    <div id="cupSt" class="cupst"></div>
   </div>
@@ -528,7 +529,7 @@ const VIS=ITENS.filter(i=>MODO==="concursos"?i.grupo!=="reforco":i.grupo==="refo
 const WA="__WA__";
 const GR=(MODO==="concursos"?[]:[["reforco","Atividades"]]).concat([["pss","PSS SEED-PR 2027"],["cisop","CISOP Cascavel 2026"],["prefeitura","Prefeitura de Cascavel 2026"],["outros","Outros concursos"]]);
 const TIPOS=[["todos","Todas as atividades"],["se-liga","Se Liga de Matemática"],["se-liga-ef","Se Liga de Educação Financeira"],["se-liga-ing","Se Liga de Inglês"],["sei","Semanas de Estudos"],["saeb","Simulados SAEB"],["volumes","Volumes"],["apostilas","Apostilas"]];
-let filtro="todos",busca="",filtroTipo="todos";{const h=location.hash.slice(1);if(["pss","cisop","prefeitura","simulado","outros"].includes(h))filtro=h;if(MODO!=="concursos"&&["consciencia","matematica","financeira","historia","portugues","ingles","ciencias"].includes(h))filtro=h}
+let filtro="todos",busca="",filtroTipo="todos";{const h=location.hash.slice(1);if(["pss","cisop","prefeitura","simulado","outros"].includes(h))filtro=h}
 const $=s=>document.querySelector(s);
 const brl=n=>n.toFixed(2).replace(".",",");
 function card(it){
@@ -540,7 +541,7 @@ function card(it){
   const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i></div>`;
   const strip=it.imgs.map((u,k)=>leaf(u,k)).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt=""></div>`;
   const dots="";
-  return `<article class="card" data-s="${it.slug}"><div class="cover${it.tipo==='saeb'?' neon':''}" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><div class="pills"><button type="button" class="peek cartpeek" onclick="event.stopPropagation();addCart('${it.slug}')" aria-label="Adicionar ao carrinho"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg> +</button><span class="peek">👁 ver</span></div></div>
+  return `<article class="card" data-s="${it.slug}"><div class="cover${it.tipo==='saeb'?' neon':''}" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><div class="pills"><button type="button" class="peek cartpeek" onclick="event.stopPropagation();addCart('${it.slug}')" aria-label="Adicionar ao carrinho"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg> +</button><span class="peek"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg> ver</span></div></div>
   <div class="info" onmouseenter="const cv=this.parentElement.querySelector('.cover');if(cv&&cv._reset)cv._reset()"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
   <div class="price"><span>R$</span>${brl(it.preco)}</div>
   <div class="actions">${add}${act}</div></div></article>`;
@@ -575,7 +576,7 @@ function infoCert(){const el=$("#infoc");const c=CERT[filtro];
   el.className="info-cert show";
   el.innerHTML=`<h2>${c.nome}</h2>${status(c)}<p>${dt(c.desc)}</p><div class="facts">${f.map(x=>`<div class="fact ${x[2]?'hot':''}"><small>${x[0]}</small><span>${dt(x[1])}</span></div>`).join("")}</div>
    ${c.links.length?`<div class="links">${c.links.map(l=>`<a class="${l[2]?'':'alt'}" target="_blank" rel="noopener" href="${l[1]}">${l[0]} ↗</a>`).join("")}</div>`:""}
-   ${c.nota?`<p class="note">ℹ️ ${dt(c.nota)}</p>`:""}`;}
+   ${c.nota?`<p class="note">ℹ ${dt(c.nota)}</p>`:""}`;}
 function renderC(){
   const q=busca.toLowerCase();let total=0;
   $("#main").innerHTML=GR.map(([g,nome])=>{
@@ -630,7 +631,16 @@ document.addEventListener("click",function(e){if(!e.target.closest(".minibar"))m
 function setGrupo(g){filtro=g;filtroTipo="todos";chips();tipos();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'nearest'})}
 
 /* ===== atividades (loja principal) x concursos (seção secundária) ===== */
-const CATS=[["todos","Todas as atividades","🗂️"],["consciencia","Dia da Consciência Negra","✊🏾"],["matematica","Matemática","➗"],["financeira","Educação Financeira","💰"],["historia","História","📜"],["portugues","Língua Portuguesa","📚"],["ingles","Inglês","🌍"],["ciencias","Ciências","🔬"]];
+const SVG=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const ICA={todos:SVG('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
+ consciencia:SVG('<path d="M12 3 21 12 12 21 3 12Z"/><path d="M12 8 16 12 12 16 8 12Z"/><circle cx="12" cy="12" r=".6" fill="currentColor"/>'),
+ matematica:SVG('<circle cx="12" cy="12" r="9"/><path d="M7.5 12h9"/><circle cx="12" cy="8.3" r=".9" fill="currentColor"/><circle cx="12" cy="15.7" r=".9" fill="currentColor"/>'),
+ financeira:SVG('<circle cx="12" cy="12" r="9"/><path d="M14.5 8.5c-.6-.8-1.5-1.2-2.6-1.2-1.6 0-2.7.8-2.7 2s1 1.7 2.8 2.1c1.8.4 2.8.9 2.8 2.1 0 1.2-1.1 2-2.8 2-1.2 0-2.2-.5-2.9-1.3M12 5.8v1.5M12 16.7v1.5"/>'),
+ historia:SVG('<path d="M7 3h11a2 2 0 0 1 2 2v13a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-1h4"/><path d="M7 3v14a2 2 0 0 1-2 2"/><path d="M11 8h5M11 12h5"/>'),
+ portugues:SVG('<path d="M12 6c-2-2-5-2-8-1v13c3-1 6-1 8 1 2-2 5-2 8-1V5c-3-1-6-1-8 1Z"/><path d="M12 6v13"/>'),
+ ingles:SVG('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>'),
+ ciencias:SVG('<path d="M9 3h6M10 3v6L4.5 19a1.6 1.6 0 0 0 1.4 2.4h12.2a1.6 1.6 0 0 0 1.4-2.4L14 9V3"/><path d="M7.5 15h9"/>')};
+const CATS=[["todos","Todas as atividades"],["consciencia","Dia da Consciência Negra"],["matematica","Matemática"],["financeira","Educação Financeira"],["historia","História"],["portugues","Língua Portuguesa"],["ingles","Inglês"],["ciencias","Ciências"]];
 const SERIES=[["todas","Todas as séries"],["3","3º ano"],["5","5º ano"],["6","6º ano"],["7","7º ano"],["8","8º ano"],["9","9º ano"],["em","Ensino Médio"]];
 const COLEC=[["todos","Todas as coleções"],["cn","Dia da Consciência Negra"],["se-liga","Se Liga de Matemática"],["se-liga-ef","Se Liga de Educação Financeira"],["sei","Semanas de Estudos"],["saeb","Simulados SAEB"],["volumes","Volumes"],["album","Álbuns"]];
 const NOMEST={"cn":"Dia da Consciência Negra","se-liga":"Se Liga de Matemática","se-liga-ef":"Se Liga de Educação Financeira","se-liga-ing":"Se Liga de Inglês","sei":"Semanas de Estudos Intensivos","saeb":"Simulados SAEB","volumes":"Volumes","album":"Álbuns de multiplicação"};
@@ -650,11 +660,11 @@ function renderA(){
   document.querySelectorAll(".indice a[data-tipo]").forEach(a=>a.classList.toggle("on",a.dataset.tipo===filtroTipo));
   const el=$("#infoc");if(el){el.className="info-cert";el.innerHTML=""}
   anima();
-  try{history.replaceState(null,"",filtro==="todos"?location.pathname:"#"+filtro)}catch(e){}
+  try{const hh=hashDe();history.replaceState(null,"",hh?"#"+hh:location.pathname)}catch(e){}
 }
 function chipsA(){
   const c=k=>VIS.filter(i=>k==="todos"||(i.cat||[]).includes(k)).length;
-  $("#chips").innerHTML=CATS.filter(x=>x[0]==="todos"||c(x[0])).map(([k,n,e])=>`<button class="cert ${filtro===k?'on':''}" onclick="setCat('${k}')"><span class="ic" style="font-size:19px">${e}</span><span class="ct"><b>${n}</b><small>${c(k)} ${c(k)===1?'atividade':'atividades'}</small></span></button>`).join("");
+  $("#chips").innerHTML=CATS.filter(x=>x[0]==="todos"||c(x[0])).map(([k,n])=>`<button class="cert ${filtro===k?'on':''}" onclick="setCat('${k}')"><span class="ic">${ICA[k]}</span><span class="ct"><b>${n}</b><small>${c(k)} ${c(k)===1?'atividade':'atividades'}</small></span></button>`).join("");
   const mt=document.getElementById("mbt");if(mt){mt.innerHTML=CATS.filter(x=>x[0]==="todos"||c(x[0])).map(([k,n])=>`<button class="${filtro===k?"on":""}" onclick="mbTog(false);setCat('${k}')">${n}<small>${c(k)} ${c(k)===1?"atividade":"atividades"}</small></button>`).join("");const nn=document.getElementById("mbn");if(nn)nn.textContent=(CATS.find(x=>x[0]===filtro)||CATS[0])[1]}
 }
 function tiposA(){
@@ -668,9 +678,16 @@ function render(){if(MODO==="concursos")renderC();else renderA()}
 function chips(){if(MODO==="concursos")chipsM();else chipsA()}
 function tipos(){if(MODO==="concursos"){const t=$("#tipos"),s=$("#series");if(t)t.style.display="none";if(s)s.style.display="none"}else tiposA()}
 function rola(id){const e=document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth',block:'nearest'})}
-function setCat(k){filtro=k;chips();tipos();render();rola('main')}
-function setSerie(k){filtroSerie=k;chips();tipos();render();rola('main')}
-function setTipo(t){filtroTipo=t;chips();tipos();render();rola('main')}
+function limpa(){filtro="todos";filtroSerie="todas";filtroTipo="todos"}
+function setCat(k){limpa();filtro=k;chips();tipos();render();rola('main')}
+function setSerie(k){limpa();filtroSerie=k;chips();tipos();render();rola('main')}
+function setTipo(t){limpa();filtroTipo=t;chips();tipos();render();rola('main')}
+function hashDe(){return filtro!=="todos"?"cat-"+filtro:filtroSerie!=="todas"?"serie-"+filtroSerie:filtroTipo!=="todos"?"col-"+filtroTipo:""}
+function aplicaHash(h){if(MODO==="concursos")return;limpa();
+  if(h.startsWith("cat-")&&CATS.some(c=>c[0]===h.slice(4)))filtro=h.slice(4);
+  else if(h.startsWith("serie-")&&SERIES.some(c=>c[0]===h.slice(6)))filtroSerie=h.slice(6);
+  else if(h.startsWith("col-")&&COLEC.some(c=>c[0]===h.slice(4)))filtroTipo=h.slice(4);}
+addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(/^(cat|serie|col)-/.test(h)){aplicaHash(h);chips();tipos();render();rola('main')}});
 /* miniaturas animadas: as páginas sobem (scroll vertical) enquanto o card está visível */
 let io=null,rolando=false,tRol=null;
 const todas=()=>[...document.querySelectorAll(".cover")];
@@ -715,7 +732,7 @@ function abre(s){cur=ITENS.find(i=>i.slug===s);if(!cur)return;const c=cur.pag||c
   try{history.replaceState(null,"","#"+c)}catch(e){}}
 function pmFecha(){$("#pm").classList.remove("open");$("#pmFr").src="about:blank";document.body.style.overflow="";
   try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
-function pmCopia(){const u=$("#pmUrl").value,b=$("#pmCp"),ok=()=>{b.textContent="Link copiado ✓"};
+function pmCopia(){const u=$("#pmUrl").value,b=$("#pmCp"),ok=()=>{b.innerHTML='Link copiado <svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>'};
   try{navigator.clipboard.writeText(u).then(ok,()=>{$("#pmUrl").select();document.execCommand("copy");ok()})}catch(e){$("#pmUrl").select();document.execCommand("copy");ok()}}
 {const h=location.hash.slice(1),it=ITENS.find(i=>(i.pag||i.slug)===h);if(it)setTimeout(()=>abre(it.slug),50)}
 function abreAntigo(s){cur=ITENS.find(i=>i.slug===s);
@@ -733,11 +750,11 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")fecha();
   if($("#modal").classList.contains("open")&&cur){const on=[...$("#th").children].findIndex(x=>x.classList.contains("on"));
     if(e.key==="ArrowRight")foto(Math.min(on+1,cur.imgs.length-1));if(e.key==="ArrowLeft")foto(Math.max(on-1,0));}});
 $("#q").addEventListener("input",e=>{busca=e.target.value;render()});
-chips();tipos();render();
+aplicaHash(location.hash.slice(1));chips();tipos();render();
 const WNUM="5545999699444";
 const WOPT=[
  ["Tenho uma dúvida sobre um material","Olá, Prof. Rodrigo! Tenho uma dúvida sobre o material{P}.\nMinha dúvida é: ",
-  "<b>Talvez já esteja respondido:</b><br>• Todos os materiais são <b>PDF digital</b>, para ler no celular, tablet ou computador.<br>• Antes de comprar, toque em <b>“ver páginas”</b> no card para conferir capa, índice e páginas internas.<br>• A versão <b>JUMBO</b> tem o mesmo conteúdo com letra maior.<br>• Para levar <b>vários materiais</b>, use o <b>🛒 carrinho</b>: ele gera um código de pedido e envia a lista pronta para o WhatsApp.<br>• A entrega é por <b>e-mail</b>, com os links da pasta do Drive, após a confirmação do pagamento.<br>Se ainda restar dúvida, escreva-a na mensagem abaixo."],
+  "<b>Talvez já esteja respondido:</b><br>• Todos os materiais são <b>PDF digital</b>, para ler no celular, tablet ou computador.<br>• Antes de comprar, toque em <b>“ver páginas”</b> no card para conferir capa, índice e páginas internas.<br>• A versão <b>JUMBO</b> tem o mesmo conteúdo com letra maior.<br>• Para levar <b>vários materiais</b>, use o <b>carrinho</b>: ele gera um código de pedido e envia a lista pronta para o WhatsApp.<br>• A entrega é por <b>e-mail</b>, com os links da pasta do Drive, após a confirmação do pagamento.<br>Se ainda restar dúvida, escreva-a na mensagem abaixo."],
  ["Quero ajuda para escolher o material certo para o meu cargo","Olá, Prof. Rodrigo! Quero ajuda para escolher o material certo.\nConcurso: \nCargo/disciplina: ",
   "<b>Para eu indicar o material certo, informe:</b><br>• o <b>concurso</b> (PSS SEED-PR 2027, CISOP Cascavel, Prefeitura de Cascavel ou outro);<br>• o <b>cargo ou disciplina</b>;<br>• Dica: no PSS, a apostila <b>Conhecimentos Básicos</b> serve para todos os cargos, e a específica do seu cargo complementa."],
  ["Já paguei e não recebi o PDF","Olá, Prof. Rodrigo! Já fiz o pagamento{P}, mas ainda não recebi o PDF.\nNome completo: \nE-mail usado na compra: \nForma de pagamento (Pix, cartão ou boleto): \nJá olhei o spam/promoções: ",
@@ -757,7 +774,7 @@ const WOPT=[
 function wprod(){const v=$("#wprod").value;return v?" "+v:""}
 function wbuild(){const i=+(document.querySelector('input[name=wo]:checked')||{value:0}).value;$("#wmsg").value=WOPT[i][1].replace("{P}",wprod()?" ("+wprod().trim()+")":"");$("#wtip").innerHTML=WOPT[i][2];wlink()}
 const LOJA="https://eduloja.com/";
-function wlink(){const m=$("#wmsg").value.trim()+"\n\n🛒 Enviado pela loja: "+LOJA;$("#wgo").href="https://wa.me/"+WNUM+"?text="+encodeURIComponent(m)}
+function wlink(){const m=$("#wmsg").value.trim()+"\n\nEnviado pela loja: "+LOJA;$("#wgo").href="https://wa.me/"+WNUM+"?text="+encodeURIComponent(m)}
 function winit(){
   $("#wopts").innerHTML=WOPT.map((o,i)=>`<label class="opt"><input type="radio" name="wo" value="${i}" ${i?'':'checked'} onchange="wbuild()"><span>${o[0]}</span></label>`).join("");
   $("#wprod").innerHTML='<option value="">— nenhum / não sei —</option>'+ITENS.map(i=>`<option value="Apostila ${i.nome} · ${i.grupoNome}">${i.nome} · ${i.grupoNome}</option>`).join("");
@@ -784,13 +801,13 @@ let CUPOM="";try{CUPOM=localStorage.getItem(CUPOM_KEY)||""}catch(e){}
 const cupomOk=()=>CUPOM!==""&&CUPOM===CUPOM_COD;
 function cBasePct(n){n=n===undefined?CART.length:n;return n>=10?DESC_MAX:DESC_TAB[Math.max(0,n)]||0}
 function cDescPct(){if(!CART.length)return 0;return Math.min(TOTAL_MAX,cBasePct()+(cupomOk()?CUPOM_PCT:0))}
-function cDica(){const n=CART.length;if(!n)return"";const b=cBasePct(n);if(n>=10)return cupomOk()?"🎉 Desconto máximo ativo: 35% + 15% do cupom = 50%!":"🎉 Desconto máximo de 35% ativo! Com o cupom você chega a 50%.";return"Desconto de "+b+"% ativo. Com mais 1 material ("+(n+1)+") sobe para "+cBasePct(n+1)+(n+1>=10?"%, o máximo sem cupom.":"%.")}
+function cDica(){const n=CART.length;if(!n)return"";const b=cBasePct(n);if(n>=10)return cupomOk()?"Desconto máximo ativo: 35% + 15% do cupom = 50%!":"Desconto máximo de 35% ativo! Com o cupom você chega a 50%.";return"Desconto de "+b+"% ativo. Com mais 1 material ("+(n+1)+") sobe para "+cBasePct(n+1)+(n+1>=10?"%, o máximo sem cupom.":"%.")}
 function cupAplicar(){const i=$("#cupIn");if(!i)return;const v=i.value.replace(/\D/g,"").replace(/^55(?=\d{11}$)/,"");if(v===CUPOM_COD){CUPOM=v;try{localStorage.setItem(CUPOM_KEY,v)}catch(e){}toast("Cupom aplicado: +"+CUPOM_PCT+"% de desconto")}else{toast(v?"Cupom inválido":"Digite o cupom")}cPaint()}
 function cupRemover(){CUPOM="";try{localStorage.removeItem(CUPOM_KEY)}catch(e){}cPaint()}
 function cDesconto(){return Math.round(cSubtotal()*cDescPct())/100}
 function cTotal(){return Math.round((cSubtotal()-cDesconto())*100)/100}
 function toast(t){const el=$("#toast");if(!el)return;el.textContent=t;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),1900)}
-function addCart(s){const i=cFind(s);if(!i)return;const e=CART.find(x=>x.slug===s);if(e){toast("Este material já está no carrinho 🙂 Cada um só pode ser comprado uma vez.");ctoggle(true);return}CART.push({slug:s,q:1});cSave();cPaint();voaCart(s);toast(i.nome+" no carrinho")}
+function addCart(s){const i=cFind(s);if(!i)return;const e=CART.find(x=>x.slug===s);if(e){toast("Este material já está no carrinho. Cada um só pode ser comprado uma vez.");ctoggle(true);return}CART.push({slug:s,q:1});cSave();cPaint();voaCart(s);toast(i.nome+" no carrinho")}
 function voaCart(s){try{
   const fb=$("#cartfab");if(!fb)return;const reduz=matchMedia("(prefers-reduced-motion:reduce)").matches;
   const ev=window.event,alvo=ev&&ev.target&&ev.target.closest?ev.target:null,it=cFind(s);
@@ -821,7 +838,7 @@ function cPaint(){
   const pct=cDescPct(),sub=cSubtotal(),desc=cDesconto();
   $("#ctot").innerHTML="R$ "+brl(cTotal())+(pct>0?` <small style="color:#86efac;font-weight:800">−${brl(pct).replace(",00","")}%</small>`:"");
   const ci=$("#cupIn");if(ci&&!ci._on){ci._on=1;ci.addEventListener("keydown",e=>{if(e.key==="Enter")cupAplicar()})}
-  const cs=$("#cupSt");if(cs)cs.innerHTML=cupomOk()?`✅ Cupom aplicado (+${CUPOM_PCT}%) <button type="button" class="cupx" onclick="cupRemover()">remover</button>`:"";
+  const cs=$("#cupSt");if(cs)cs.innerHTML=cupomOk()?`<svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Cupom aplicado (+${CUPOM_PCT}%) <button type="button" class="cupx" onclick="cupRemover()">remover</button>`:"";
   const linhaDesc=(pct>0?`<div style="font-size:13px;color:var(--mut);margin:0 0 4px">Subtotal R$ ${brl(sub)} · desconto de ${brl(pct).replace(',00','')}% (−R$ ${brl(desc)})</div>`:"")+(CART.length?`<div style="font-size:13px;font-weight:700;color:#14683d;background:#eaf7f0;border-radius:8px;padding:6px 9px;margin:0 0 8px">${cDica()}</div>`:"")+cTabela();
   $("#cbody").innerHTML=linhaDesc+(CART.length?CART.map(x=>{const i=cFind(x.slug);if(!i)return"";
     return `<div class="citem"><img src="${i.imgs[0]||''}" alt=""><div class="cn">${i.nome}<small>${i.grupoNome} · R$ ${brl(i.preco)}</small></div><div class="cq"><button onclick="rmCart('${i.slug}')" aria-label="Remover" style="width:auto;padding:0 10px;color:#b91c1c">Remover</button></div></div>`}).join("")
@@ -883,15 +900,20 @@ winit();
 </body>
 </html>'''
 def _indice_atividades():
-    r = ['    <b>Por disciplina</b>']
-    for k, n in [("todos", "Todas as atividades"), ("consciencia", "Dia da Consciência Negra"), ("matematica", "Matemática"), ("financeira", "Educação Financeira"), ("historia", "História"), ("portugues", "Língua Portuguesa"), ("ingles", "Inglês"), ("ciencias", "Ciências")]:
-        r.append('    <a data-cat="%s" onclick="setCat(\'%s\')">%s</a>' % (k, k, n))
+    cn = sorted([x for x in items if x["tipo"] in ("cn",)], key=lambda x: int(x["av"][2:]) if x["av"].startswith("Av") else 0)
+    r = ['    <b>Dia da Consciência Negra</b>', '    <a data-cat="consciencia" href="#cat-consciencia">Ver todas as atividades</a>']
+    for x in cn:
+        nm = x["nome"].replace("Consciência Negra · ", "").replace("Consciência Negra — ", "")
+        r.append('    <a class="sub" href="%s/">%s</a>' % (x["av"], nm))
+    r.append('    <hr>\n    <b>Por disciplina</b>')
+    for k, n in [("todos", "Todas as atividades"), ("matematica", "Matemática"), ("financeira", "Educação Financeira"), ("historia", "História"), ("portugues", "Língua Portuguesa"), ("ingles", "Inglês"), ("ciencias", "Ciências")]:
+        r.append('    <a data-cat="%s" href="%s">%s</a>' % (k, "#cat-" + k if k != "todos" else "#", n))
     r.append('    <hr>\n    <b>Por série</b>')
-    for k, n in [("todas", "Todas as séries"), ("3", "3º ano"), ("5", "5º ano"), ("6", "6º ano"), ("7", "7º ano"), ("8", "8º ano"), ("9", "9º ano"), ("em", "Ensino Médio")]:
-        r.append('    <a data-serie="%s" onclick="setSerie(\'%s\')">%s</a>' % (k, k, n))
+    for k, n in [("3", "3º ano"), ("5", "5º ano"), ("6", "6º ano"), ("7", "7º ano"), ("8", "8º ano"), ("9", "9º ano"), ("em", "Ensino Médio")]:
+        r.append('    <a data-serie="%s" href="#serie-%s">%s</a>' % (k, k, n))
     r.append('    <hr>\n    <b>Coleções</b>')
-    for k, n in [("todos", "Todas as coleções"), ("cn", "Dia da Consciência Negra"), ("se-liga", "Se Liga de Matemática"), ("se-liga-ef", "Se Liga de Educação Financeira"), ("sei", "Semanas de Estudos"), ("saeb", "Simulados SAEB"), ("volumes", "Volumes"), ("album", "Álbuns")]:
-        r.append('    <a data-tipo="%s" onclick="setTipo(\'%s\')">%s</a>' % (k, k, n))
+    for k, n in [("se-liga", "Se Liga de Matemática"), ("se-liga-ef", "Se Liga de Educação Financeira"), ("sei", "Semanas de Estudos"), ("saeb", "Simulados SAEB"), ("volumes", "Volumes"), ("album", "Álbuns")]:
+        r.append('    <a data-tipo="%s" href="#col-%s">%s</a>' % (k, k, n))
     r.append('    <hr>\n    <a class="sec-link" style="font-size:12.5px;color:var(--mut);opacity:1" href="concursos.html">Apostilas para concursos →</a>')
     return "\n".join(r)
 

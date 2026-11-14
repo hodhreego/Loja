@@ -102,7 +102,7 @@ def card_rel(x):
             f'<span class="rel-nome">{x["nome"]}</span></a>'
             f'<div class="rel-foot"><span class="rel-preco">R$ {brl(x.get("preco") or 0)}</span>'
             f'<button type="button" class="rel-add" onclick="addCart(\'{x["slug"]}\')" '
-            f'aria-label="Adicionar {x["nome"]} ao carrinho">+ 🛒</button></div></div>')
+            f'aria-label="Adicionar {x["nome"]} ao carrinho">+ <svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg></button></div></div>')
 
 
 def pagina(it, todos):
@@ -212,7 +212,7 @@ def pagina(it, todos):
   <section class="galeria">
     <div class="foto" onclick="lightbox(true)">
       <img id="big" src="../{capa}" alt="{nome}">
-      <span class="zoom">🔍 ampliar</span>
+      <span class="zoom"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> ampliar</span>
     </div>
     <div class="mini">{mini}</div>
   </section>
@@ -228,7 +228,7 @@ def pagina(it, todos):
       {carrinho}
       {zap}
     </div>
-    <p class="seguro">🔒 {pagamento} · PDF digital · entrega após a confirmação</p>
+    <p class="seguro"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> {pagamento} · PDF digital · entrega após a confirmação</p>
 
     <ul class="inclui">
       <li>Material em PDF, com gabarito quando aplicável</li>
@@ -271,7 +271,7 @@ def pagina(it, todos):
 </div>
 
 <div class="lb" id="lb" onclick="if(event.target===this)lightbox(false)">
-  <button class="lb-x" type="button" onclick="lightbox(false)" aria-label="Fechar">✕</button>
+  <button class="lb-x" type="button" onclick="lightbox(false)" aria-label="Fechar"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
   <button class="lb-prev" type="button" onclick="passo(-1)" aria-label="Anterior">‹</button>
   <img id="lbimg" src="" alt="">
   <button class="lb-next" type="button" onclick="passo(1)" aria-label="Próxima">›</button>
@@ -383,7 +383,7 @@ h1{font-size:clamp(1.7rem,3.2vw,2.6rem);line-height:1.12;margin-bottom:10px;lett
 .seguro{font-size:.8rem;color:var(--dim);margin-bottom:18px}
 .inclui{list-style:none;display:grid;gap:8px;margin-bottom:20px}
 .inclui li{position:relative;padding-left:24px;font-size:.92rem;color:#dbe2f5;line-height:1.4}
-.inclui li::before{content:"✓";position:absolute;left:0;color:#34d399;font-weight:900}
+.inclui li::before{content:"<svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>";position:absolute;left:0;color:#34d399;font-weight:900}
 .mini-titulo{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;font-weight:800}
 .desc{color:#cdd6ee;line-height:1.6;font-size:.95rem}
 .relacionados{max-width:1120px;margin:40px auto 0}
