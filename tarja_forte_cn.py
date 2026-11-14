@@ -49,25 +49,26 @@ def achar_frac(w, h, angulo, alvo=0.25):
     return (lo + hi) / 2
 
 
-def tarja_forte(img, angulo=35, frac=None):
+def tarja_forte(img, angulo=35, frac=None, offs=(0,)):
     w, h = img.size
     if frac is None:
         frac = achar_frac(w // 4, h // 4, angulo)
     W, H = w * 2, h * 2
-    cy, hb = H // 2, int(h * frac)
-    # camada da faixa (opaca) e mascara das letras (vazadas)
+    hb = int(h * frac)
     faixa = Image.new('RGBA', (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(faixa)
-    d.rectangle((0, cy - hb // 2, W, cy + hb // 2), fill=MARROM + (255,))
-    d.rectangle((0, cy - hb // 2, W, cy - hb // 2 + 8), fill=BORDA + (255,))
-    d.rectangle((0, cy + hb // 2 - 8, W, cy + hb // 2), fill=BORDA + (255,))
+    furo = Image.new('L', (W, H), 255)
     t = 'AMOSTRA'
     f = fonte(int(hb * 0.80))
     while d.textlength(t, font=f) > w * 0.80:
         f = fonte(int(f.size * 0.95))
-    furo = Image.new('L', (W, H), 255)
-    ImageDraw.Draw(furo).text((W // 2, cy), t, font=f, fill=0, anchor='mm')
-    a = ImageChops.multiply(faixa.getchannel('A'), furo)       # letras = alfa 0
+    for o in offs:
+        cy = H // 2 + int(o * h)
+        d.rectangle((0, cy - hb // 2, W, cy + hb // 2), fill=MARROM + (255,))
+        d.rectangle((0, cy - hb // 2, W, cy - hb // 2 + 6), fill=BORDA + (255,))
+        d.rectangle((0, cy + hb // 2 - 6, W, cy + hb // 2), fill=BORDA + (255,))
+        ImageDraw.Draw(furo).text((W // 2, cy), t, font=f, fill=0, anchor='mm')
+    a = ImageChops.multiply(faixa.getchannel('A'), furo)
     faixa.putalpha(a)
     faixa = faixa.rotate(angulo, resample=Image.BICUBIC)
     cx, cyy = faixa.width // 2, faixa.height // 2
@@ -88,12 +89,18 @@ def main():
     os.makedirs(BKP, exist_ok=True)
     for slug, pdf in PDFS.items():
         doc = fitz.open(os.path.join(M, pdf))
-        for k, idx in ((2, 1), (3, 2), (4, 3), (5, 4)):
+        # miniatura 5 = pagina de gabarito (mais rosa) com TRES faixas
+        rosa = []
+        for i, pg in enumerate(doc):
+            pm = pg.get_pixmap(dpi=30); sm = pm.samples; n = pm.n
+            rosa.append(sum(1 for q in range(0, len(sm), n) if sm[q] > 200 and sm[q+2] > 100 and sm[q+1] < 110))
+        gab = max(range(len(doc)), key=lambda i: rosa[i])
+        for k, idx in ((2, 1), (3, 2), (4, 3), (5, gab)):
             dst = os.path.join(IMG, '%s-%d.jpg' % (slug, k))
             bk = os.path.join(BKP, '%s-%d.jpg' % (slug, k))
             if os.path.exists(dst) and not os.path.exists(bk):
                 shutil.copy2(dst, bk)
-            tarja_forte(render(doc, idx)).save(dst, 'JPEG', quality=86, optimize=True)
+            (tarja_forte(render(doc, idx), frac=0.105, offs=(-0.30, 0, 0.30)) if k == 5 else tarja_forte(render(doc, idx))).save(dst, 'JPEG', quality=86, optimize=True)
         print('ok', slug)
         doc.close()
 

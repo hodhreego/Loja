@@ -118,6 +118,8 @@ for slug, nome, g, code, preco, sub in P:
         imgs = [i + '?v=9' for i in imgs]
     elif tipo_de(slug) in ('sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
         imgs = [(i + '?v=6') if i.endswith('-1.jpg') else i for i in imgs]
+    elif slug.startswith('cn-'):   # tarja forte nas miniaturas 2-5, capa limpa (13/11/2026)
+        imgs = [i + '?v=8' for i in imgs]
     else:   # previas novas em alta resolucao com faixa AMOSTRA (08/11/2026)
         imgs = [i + '?v=6' for i in imgs]
     items.append({"slug": slug, "av": ("Av%d" % AV[slug]) if slug in AV else slug, "nome": nome, "grupo": g, "grupoNome": GRUPOS[g], "link": (CHK + code) if code else None,
