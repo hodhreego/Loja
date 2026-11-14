@@ -189,7 +189,7 @@ def pagina(it, todos):
 <meta property="og:url" content="{BASE}/{cod}/">
 <meta property="og:type" content="product">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="../produto.css?v=wn3">
+<link rel="stylesheet" href="../produto.css?v=wn4">
 <script>try{{if(/[?&]embed=1/.test(location.search))document.documentElement.className="emb"}}catch(e){{}}</script>
 <base target="_top">
 <script type="application/ld+json">{ld_json}</script>
@@ -348,7 +348,7 @@ a{color:inherit}
 .wbtns{display:flex;align-items:stretch;height:34px;background:#202020;border:1px solid #3a3a3a;border-radius:10px;overflow:hidden}
 .wb{width:40px;display:flex;align-items:center;justify-content:center;background:transparent;border:0;color:#fff;text-decoration:none;cursor:default;line-height:0}
 .wb:hover{background:rgba(255,255,255,.1)}
-.wx{cursor:pointer;background:#e81123}.wx:hover,.wx:focus-visible{background:#ff2d40;color:#fff;outline:0}
+.wx{cursor:pointer;background:#e81123;color:#000}.wbtns .wx{color:#000}.wx:hover,.wx:focus-visible{background:#ff4d5e;color:#000;outline:0}
 @media(max-width:520px){.wb{width:40px}}
 html.emb .wbar{display:none!important}
 html.emb .topo,html.emb .migalha,html.emb footer{display:none!important}
