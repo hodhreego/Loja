@@ -37,7 +37,16 @@ def codigo(it):
     return it["slug"]
 
 
+def _tema_cn(x):
+    return x["slug"].startswith("cn-") or x["slug"] in ("consciencia-negra",)
+
+
 def rel(it, todos):
+    if _tema_cn(it):
+        ordem = [x for x in todos if x is not it and _tema_cn(x)]
+        resto = [x for x in todos if x is not it and not _tema_cn(x) and x.get("grupo") == it.get("grupo")]
+        out = (ordem + resto)[:6]
+        return out
     mesmo_grupo = [x for x in todos if x is not it and x.get("grupo") == it.get("grupo")]
     mesmo_tipo = [x for x in todos if x is not it and x.get("tipo") == it.get("tipo") and x.get("grupo") != it.get("grupo")]
     out, vistos = [], {it["slug"]}
@@ -67,6 +76,10 @@ def combo(it, todos):
         par = [por["simulado-matematica"]]
     elif s == "simulado-matematica" and "matematica" in por:
         par = [por["matematica"]]
+    elif s.startswith("cn-"):
+        cn = [x for x in todos if x["slug"].startswith("cn-")]
+        i = [x["slug"] for x in cn].index(s)
+        par = [cn[(i + 1) % len(cn)]]
     elif s in ("album-multiplicacao", "consciencia-negra"):
         outro = "consciencia-negra" if s == "album-multiplicacao" else "album-multiplicacao"
         if outro in por:
