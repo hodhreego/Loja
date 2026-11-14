@@ -195,13 +195,13 @@ def pagina(it, todos):
 <script type="application/ld+json">{ld_json}</script>
 </head>
 <body>
-<div class="wbar" role="banner"><span class="wtit">{nome} — Loja de Educação e Matemática</span><span class="wbtns"><span class="wb" aria-hidden="true" title="Minimizar"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 5.5h10" stroke="currentColor" stroke-width="1"/></svg></span><span class="wb" aria-hidden="true" title="Maximizar"><svg width="10" height="10" viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1"/></svg></span><a class="wb wx" href="{volta}" title="Fechar e voltar para a loja" aria-label="Fechar e voltar para a loja"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor" stroke-width="1.1"/></svg></a></span></div>
 <header class="topo">
   <a class="voltar" href="{volta}">← Voltar para a loja</a>
   <div class="topo-dir">
     <span class="grupo">{grupo}</span>
     <a class="cart" href="{volta}">VER CARRINHO <b id="cartn">0</b></a>
     <button class="ico" type="button" onclick="compartilhar()" title="Compartilhar" aria-label="Compartilhar">⤴</button>
+    <span class="wbtns"><a class="wb" href="{volta}" title="Voltar para a loja" aria-label="Voltar para a loja"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 5.5h10" stroke="currentColor" stroke-width="1"/></svg></a><a class="wb" href="{volta}" title="Voltar para a loja" aria-label="Voltar para a loja"><svg width="10" height="10" viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1"/></svg></a><a class="wb wx" href="{volta}" title="Voltar para a loja" aria-label="Voltar para a loja"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor" stroke-width="1.1"/></svg></a></span>
   </div>
 </header>
 
@@ -345,10 +345,10 @@ a{color:inherit}
 .wbar{position:sticky;top:0;z-index:60;display:flex;align-items:stretch;height:34px;margin:0 -16px 10px;padding:0 0 0 12px;background:#202020;border-bottom:1px solid #3a3a3a;user-select:none;font-family:"Segoe UI",system-ui,sans-serif}
 .wic{align-self:center;font-size:14px;margin-right:9px}
 .wtit{flex:1;min-width:0;align-self:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:400;color:#fff}
-.wbtns{display:flex;align-items:stretch}
-.wb{width:46px;display:flex;align-items:center;justify-content:center;background:transparent;border:0;color:#fff;text-decoration:none;cursor:default;line-height:0}
+.wbtns{display:flex;align-items:stretch;height:34px;background:#202020;border:1px solid #3a3a3a;border-radius:10px;overflow:hidden}
+.wb{width:40px;display:flex;align-items:center;justify-content:center;background:transparent;border:0;color:#fff;text-decoration:none;cursor:default;line-height:0}
 .wb:hover{background:rgba(255,255,255,.1)}
-.wx{cursor:pointer}.wx:hover,.wx:focus-visible{background:#c42b1c;color:#fff;outline:0}
+.wx{cursor:pointer;background:#e81123}.wx:hover,.wx:focus-visible{background:#ff2d40;color:#fff;outline:0}
 @media(max-width:520px){.wb{width:40px}}
 html.emb .wbar{display:none!important}
 html.emb .topo,html.emb .migalha,html.emb footer{display:none!important}

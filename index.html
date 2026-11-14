@@ -48,7 +48,7 @@ h1 em{color:var(--gold-light);font-style:normal}
 .hero p{max-width:620px;color:#d6e1f5;font-size:18px}
 .perks{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
 .perk{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:7px 14px;border-radius:99px;font-size:14px;font-weight:600}
-.hero-wa{white-space:nowrap;position:absolute;top:16px;right:16px;z-index:5;background:#1f9d57;color:#fff;border:0;border-radius:99px;padding:10px 18px;font:700 15px 'Source Sans 3';cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);display:inline-flex;align-items:center;gap:8px}
+.hero-acts{position:absolute;top:16px;right:16px;z-index:5;display:flex;gap:8px;align-items:center}.hero-wa{white-space:nowrap;position:static;z-index:5;background:#1f9d57;color:#fff;border:0;border-radius:99px;padding:10px 18px;font:700 15px 'Source Sans 3';cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35);display:inline-flex;align-items:center;gap:8px}
 .hero-wa small{display:none}.hero-wa:hover{background:#188047}
 .tools{margin-top:-30px;position:relative;z-index:2}
 .bar{background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(15,37,71,.15);padding:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
@@ -145,7 +145,9 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .cartfab.on{display:flex}
 .cartfab b{background:#fff;color:var(--navy);border-radius:99px;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:13px}
 .cpanel{position:fixed;right:16px;bottom:132px;z-index:46;width:min(380px,calc(100vw - 32px));max-height:64vh;background:#fff;border-radius:18px;box-shadow:0 18px 44px rgba(10,20,40,.35);display:none;flex-direction:column;overflow:hidden}
-.cpanel.open{display:flex}
+.cpanel.open{display:flex}.cpanel.top{top:62px;bottom:auto}
+.topcart{background:linear-gradient(#22c55e,#15803d)!important;border:2px solid #fff!important;color:#fff;border-radius:99px;font:800 14px 'Source Sans 3';padding:8px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;box-shadow:0 0 0 2px #000}.topcart .cn{background:#fff;color:#14532d;border-radius:99px;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:13px}.hero-cart{padding:10px 16px}
+.wbtns{display:flex;align-items:stretch;height:30px;background:#202020;border-radius:8px;overflow:hidden}.wbtns .wb{width:38px;display:flex;align-items:center;justify-content:center;background:transparent;border:0;color:#fff;font-size:0;cursor:pointer;padding:0}.wbtns .wb:hover{background:rgba(255,255,255,.14)}.wbtns .wx{background:#e81123}.wbtns .wx:hover{background:#ff2d40}
 .cpanel header{background:var(--navy);color:#fff;padding:13px 16px;display:flex;justify-content:space-between;align-items:center}
 .cpanel header b{font-size:16px}.cpanel header button{background:none;border:0;color:#fff;font-size:24px;cursor:pointer;line-height:1}
 .cbody{padding:12px 14px;overflow:auto;display:flex;flex-direction:column;gap:8px}
@@ -266,7 +268,7 @@ section.grupo h2{font-size:22px}
  h1{font-size:25px;margin:6px 0 8px}
  .hero p{font-size:14px;max-width:none}
  .perks{display:none}
- .hero-wa{top:12px;right:12px;padding:8px 14px;font-size:14px}
+ .hero-acts{top:12px;right:12px;gap:6px}.hero-wa{padding:8px 14px;font-size:14px}.hero-cart{padding:8px 12px!important;font-size:14px!important}
  .tools{margin-top:-22px}
  .bar{padding:10px}
  #tipos{margin-top:8px!important}
@@ -285,14 +287,15 @@ section.grupo h2{font-size:22px}
 </style>
 </head>
 <body>
-<div class="minibar" id="minibar" aria-hidden="true"><b>Loja de <em>Educação e Matemática</em></b><button type="button" id="mbb" class="mbb" aria-expanded="false" onclick="mbTog()"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg> <span id="mbn">Todas</span> ▾</button><span class="mbs"></span><div id="mbt" class="mbt" hidden></div><button type="button" onclick="wtoggle(true)">WhatsApp</button></div>
+<div class="minibar" id="minibar" aria-hidden="true"><b>Loja de <em>Educação e Matemática</em></b><button type="button" id="mbb" class="mbb" aria-expanded="false" onclick="mbTog()"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg> <span id="mbn">Todas</span> ▾</button><span class="mbs"></span><div id="mbt" class="mbt" hidden></div><button type="button" class="topcart" onclick="ctoggle(undefined,'top')"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg> Ver carrinho <b class="cn">0</b></button><button type="button" onclick="wtoggle(true)">WhatsApp</button></div>
 <header class="hero"><div class="wrap">
   <div class="eyebrow">Prof. Rodrigo Gonçalves Pereira</div>
   <h1>Loja de <em>Educação e Matemática</em><br>Atividades Educativas para Imprimir</h1>
   <p>Atividades prontas para imprimir, com gabarito, para professores e alunos do 3º ano do Fundamental ao Ensino Médio: Matemática, Educação Financeira, História, Língua Portuguesa e mais. Escolha a disciplina ou a série e confira as páginas antes de comprar.</p>
   <a class="sec-link" href="concursos.html">Estuda para concurso? Veja as apostilas →</a>
   <div class="perks"><span class="perk"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Entrega digital em PDF</span><span class="perk"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Veja as páginas antes de comprar</span><span class="perk"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Versão JUMBO (letra grande)</span><span class="perk"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Pagamento seguro pela Eduzz</span></div>
-  <button class="hero-wa" onclick="wtoggle(true)"><svg class="wai" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Falar no WhatsApp <small>tire dúvidas · peça seu material</small></button>
+  <div class="hero-acts"><button class="hero-cart topcart" onclick="ctoggle(undefined,'top')"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg> Ver carrinho <b class="cn">0</b></button>
+  <button class="hero-wa" onclick="wtoggle(true)"><svg class="wai" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Falar no WhatsApp <small>tire dúvidas · peça seu material</small></button></div>
 </div></header>
 
 <div class="wrap tools"><div class="bar">
@@ -380,7 +383,7 @@ section.grupo h2{font-size:22px}
  </div></div>
 <button class="cartfab" id="cartfab" onclick="ctoggle()"><span><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg> Carrinho</span><b id="cartn">0</b></button>
 <div class="cpanel" id="cp" role="dialog" aria-label="Carrinho">
- <header><b>Seu carrinho</b><button onclick="ctoggle()" aria-label="Fechar">×</button></header>
+ <header><b>Seu carrinho</b><span class="wbtns"><button class="wb" onclick="ctoggle(false)" aria-label="Minimizar"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 5.5h10" stroke="currentColor" stroke-width="1"/></svg></button><button class="wb" onclick="ctoggle(false)" aria-label="Maximizar"><svg width="10" height="10" viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1"/></svg></button><button class="wb wx" onclick="ctoggle(false)" aria-label="Fechar"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor" stroke-width="1.1"/></svg></button></span></header>
  <div class="cbody" id="cbody"></div>
  <div class="cfoot">
   <div class="cup">
@@ -709,10 +712,10 @@ function voaCart(s){try{
  }catch(e){}}
 function rmCart(s){CART=CART.filter(x=>x.slug!==s);cSave();cPaint()}
 function qtyCart(s,d){rmCart(s)}
-function ctoggle(f){const p=$("#cp");if(!p)return;const on=f===undefined?!p.classList.contains("open"):f;p.classList.toggle("open",on)}
+function ctoggle(f,pos){const p=$("#cp");if(!p)return;pos=pos||"bottom";const aberto=p.classList.contains("open"),mesma=p.classList.contains("top")===(pos==="top");const on=f===undefined?!(aberto&&mesma):f;if(on)p.classList.toggle("top",pos==="top");p.classList.toggle("open",on)}
 function cTabela(){const l=[];for(let n=1;n<=10;n++)l.push(`<tr${CART.length>=10?(n===10?' style="font-weight:800;color:#14683d"':''):(n===CART.length?' style="font-weight:800;color:#14683d"':'')}><td>${n}${n===10?" ou mais":n===1?" material":" materiais"}</td><td style="text-align:right">${cBasePct(n)}%</td></tr>`);return `<details style="margin:0 0 8px;font-size:13px"><summary style="cursor:pointer;font-weight:700;color:var(--navy)">Ver tabela de descontos</summary><table style="width:100%;margin-top:4px;border-collapse:collapse">${l.join("")}</table><div style="color:var(--mut);margin-top:4px">Máximo de 35% pela quantidade. O cupom soma +15%, chegando a 50%.</div></details>`}
 function cPaint(){
-  const n=cCount();const fb=$("#cartfab");if(fb){$("#cartn").textContent=n;fb.classList.toggle("on",n>0)}
+  const n=cCount();document.querySelectorAll(".cn").forEach(e=>e.textContent=n);const fb=$("#cartfab");if(fb){$("#cartn").textContent=n;fb.classList.toggle("on",n>0)}
   const pct=cDescPct(),sub=cSubtotal(),desc=cDesconto();
   $("#ctot").innerHTML="R$ "+brl(cTotal())+(pct>0?` <small style="color:#86efac;font-weight:800">−${brl(pct).replace(",00","")}%</small>`:"");
   const ci=$("#cupIn");if(ci&&!ci._on){ci._on=1;ci.addEventListener("keydown",e=>{if(e.key==="Enter")cupAplicar()})}
