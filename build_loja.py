@@ -62,20 +62,20 @@ P = [
  ("sei-3em", "Semanas de Estudos · Matemática — 3ª série EM", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (3ª série EM) · revisão semanal com gabarito e resoluções."),
  ("album-multiplicacao", "Álbum de Multiplicação — Mini Álbuns", "reforco", "qk7mdtp4", 5, "Coleção de mini álbuns de multiplicação com atividades ilustradas e gabarito · entrega pelos links da pasta do Drive."),
  ("consciencia-negra", "Consciência Negra — Álbuns de Matemática", "reforco", "kfyorb7z", 5, "Mini álbuns, equações e bingos afro com gabarito · entrega pelos links da pasta do Drive."),
-("cn-raizes-africanas", "Consciência Negra · Matemática com raízes africanas", "reforco", "7emt4dqe", 5, "Atividade para imprimir: simetria, padrões, Oware e osso de Ishango · 6º ao 9º ano · com gabarito · inclui versão em letra grande."),
+("cn-raizes-africanas", "Consciência Negra · Matemática com raízes africanas", "reforco", "7emt4dqe", 5, "Atividade para imprimir: simetria, padrões, Oware e osso de Ishango · com gabarito · inclui versão em letra grande."),
  ("cn-numeros-historia", "Consciência Negra · Os números contam a história", "reforco", "yi5etofu", 5, "Atividade para imprimir: dados do Censo, porcentagens e gráficos sobre a história afro-brasileira · com gabarito · inclui versão em letra grande."),
  ("cn-quem-sou-eu", "Consciência Negra · Quem sou eu?", "reforco", "cvy7x7tn", 5, "Atividade para imprimir: personalidades negras brasileiras, caça-palavras e pesquisa · com gabarito · inclui versão em letra grande."),
  ("cn-gazeta-quilombos", "Consciência Negra · Gazeta dos Quilombos (inglês)", "reforco", "x6yvavqj", 5, "Atividade para imprimir: leitura em inglês com tradução e compreensão · com gabarito · inclui versão em letra grande."),
  ("cn-palavras-herdadas", "Consciência Negra · Palavras que o Brasil herdou", "reforco", "dmlkmhbj", 5, "Atividade para imprimir: palavras de origem africana, caça-palavras e atividades · com gabarito · inclui versão em letra grande."),
- ("cn-da-africa-ao-brasil", "Consciência Negra · Da África ao Brasil", "reforco", "njr3ztdg", 5, "Atividade de História para imprimir: reinos africanos, travessia, abolição e resistência · 7º ao 9º ano · com gabarito · inclui versão em letra grande."),
- ("cn-portugues-autoria-negra", "Consciência Negra · Português com autoria negra", "reforco", "yye6zyy4", 5, "Atividade de Língua Portuguesa para imprimir: leitura, gramática e escrita criativa com autoras e autores negros brasileiros · 6º ao 9º ano · com gabarito · inclui versão em letra grande."),
- ("cn-cientistas-negras", "Consciência Negra · Cientistas negras brasileiras", "reforco", "tg3r6y62", 5, "Atividade para imprimir: trajetórias de cientistas negras brasileiras, DNA, engenharia e física · 6º ao 9º ano · com gabarito · inclui versão em letra grande."),
- ("cn-negros-mundo", "Consciência Negra · Negros que mudaram o mundo", "reforco", "7z5nslmg", 5, "Atividade de História para imprimir: Mandela, King, Rosa Parks, Obama e Wangari · 7º ao 9º ano · com gabarito · inclui versão em letra grande."),
- ("cn-direitos-civis-eua", "Consciência Negra · Direitos civis nos EUA", "reforco", "woqa2x2l", 5, "Atividade de História para imprimir: segregação, Rosa Parks, Martin Luther King e linha do tempo · 7º ao 9º ano · com gabarito · inclui versão em letra grande."),
- ("cn-apartheid", "Consciência Negra · Apartheid na África do Sul", "reforco", "agxbukav", 5, "Atividade de História e Geografia para imprimir: leis do apartheid, Mandela, Soweto e ubuntu · 7º ao 9º ano · com gabarito · inclui versão em letra grande."),
- ("cn-portugues-3ano", "Consciência Negra · Português 3º ano: O baobá e o leão", "reforco", "diduzy5i", 5, "Atividade bem fácil de Português para o 3º ano do Fundamental: conto africano, sílabas e caça-palavras · com gabarito · inclui versão em letra grande."),
- ("cn-historia-3ano", "Consciência Negra · História 3º ano: Minha família", "reforco", "4q4jvj3h", 5, "Atividade bem fácil de História para o 3º ano do Fundamental: minha família e as raízes africanas · com gabarito · inclui versão em letra grande."),
- ("cn-matematica-3ano", "Consciência Negra · Matemática 3º ano: Tambores", "reforco", "64xi3mxz", 5, "Atividade bem fácil de Matemática para o 3º ano do Fundamental: contagem e contas com tambores e Oware · com gabarito · inclui versão em letra grande."),
+ ("cn-da-africa-ao-brasil", "Consciência Negra · Da África ao Brasil", "reforco", "njr3ztdg", 5, "Atividade de História para imprimir: reinos africanos, travessia, abolição e resistência · com gabarito · inclui versão em letra grande."),
+ ("cn-portugues-autoria-negra", "Consciência Negra · Português com autoria negra", "reforco", "yye6zyy4", 5, "Atividade de Língua Portuguesa para imprimir: leitura, gramática e escrita criativa com autoras e autores negros brasileiros · com gabarito · inclui versão em letra grande."),
+ ("cn-cientistas-negras", "Consciência Negra · Cientistas negras brasileiras", "reforco", "tg3r6y62", 5, "Atividade para imprimir: trajetórias de cientistas negras brasileiras, DNA, engenharia e física · com gabarito · inclui versão em letra grande."),
+ ("cn-negros-mundo", "Consciência Negra · Negros que mudaram o mundo", "reforco", "7z5nslmg", 5, "Atividade de História para imprimir: Mandela, King, Rosa Parks, Obama e Wangari · com gabarito · inclui versão em letra grande."),
+ ("cn-direitos-civis-eua", "Consciência Negra · Direitos civis nos EUA", "reforco", "woqa2x2l", 5, "Atividade de História para imprimir: segregação, Rosa Parks, Martin Luther King e linha do tempo · com gabarito · inclui versão em letra grande."),
+ ("cn-apartheid", "Consciência Negra · Apartheid na África do Sul", "reforco", "agxbukav", 5, "Atividade de História e Geografia para imprimir: leis do apartheid, Mandela, Soweto e ubuntu · com gabarito · inclui versão em letra grande."),
+ ("cn-portugues-3ano", "Consciência Negra · O baobá e o leão (versão fácil)", "reforco", "diduzy5i", 5, "Atividade de leitura bem fácil, de Língua Portuguesa: conto africano, sílabas e caça-palavras · com gabarito · inclui versão em letra grande."),
+ ("cn-historia-3ano", "Consciência Negra · Minha família (versão fácil)", "reforco", "4q4jvj3h", 5, "Atividade bem fácil, de História: minha família e as raízes africanas · com gabarito · inclui versão em letra grande."),
+ ("cn-matematica-3ano", "Consciência Negra · Tambores (versão fácil)", "reforco", "64xi3mxz", 5, "Atividade bem fácil, de Matemática: contagem e contas com tambores e Oware · com gabarito · inclui versão em letra grande."),
 ]
 # ---- descrições melhoradas (sobrescrevem o subtítulo acima) ----
 _VOL = {"cone": "Volume do cone: V = ⅓·π·r²·h. 12 questões com figuras, do cálculo direto a problemas do dia a dia.",
@@ -130,9 +130,16 @@ CAT_DISC = {
  'cn-gazeta-quilombos': ['ingles'], 'cn-cientistas-negras': ['ciencias'],
  'cn-raizes-africanas': ['matematica'], 'cn-numeros-historia': ['matematica'], 'cn-matematica-3ano': ['matematica'],
  'consciencia-negra': ['matematica'], 'album-multiplicacao': ['matematica']}
-SERIE_CN = {'cn-da-africa-ao-brasil': '789', 'cn-negros-mundo': '789', 'cn-direitos-civis-eua': '789', 'cn-apartheid': '789',
- 'cn-portugues-autoria-negra': '6789', 'cn-cientistas-negras': '6789', 'cn-raizes-africanas': '6789', 'cn-numeros-historia': '6789',
- 'cn-quem-sou-eu': '6789', 'cn-gazeta-quilombos': '6789', 'cn-palavras-herdadas': '6789'}
+SERIE_CN = {}
+SUGEST = {
+ 'cn-da-africa-ao-brasil': ['História', 'Geografia', 'Sociologia', 'Língua Portuguesa'], 'cn-negros-mundo': ['História', 'Geografia', 'Filosofia', 'Língua Portuguesa'],
+ 'cn-direitos-civis-eua': ['História', 'Sociologia', 'Inglês', 'Língua Portuguesa'], 'cn-apartheid': ['História', 'Geografia', 'Sociologia', 'Língua Portuguesa'],
+ 'cn-portugues-autoria-negra': ['Língua Portuguesa', 'Literatura', 'Arte'], 'cn-portugues-3ano': ['Língua Portuguesa', 'Arte'],
+ 'cn-palavras-herdadas': ['Língua Portuguesa', 'História', 'Geografia'], 'cn-gazeta-quilombos': ['Inglês', 'História', 'Geografia', 'Língua Portuguesa'],
+ 'cn-cientistas-negras': ['Ciências', 'Química', 'Física', 'História', 'Língua Portuguesa'], 'cn-raizes-africanas': ['Matemática', 'Arte', 'Geografia', 'Língua Portuguesa'],
+ 'cn-numeros-historia': ['Matemática', 'História', 'Educação Financeira', 'Língua Portuguesa'], 'cn-matematica-3ano': ['Matemática', 'Arte', 'Música', 'Língua Portuguesa'],
+ 'cn-quem-sou-eu': ['História', 'Língua Portuguesa', 'Ensino Religioso'], 'cn-historia-3ano': ['História', 'Geografia', 'Arte', 'Língua Portuguesa'],
+ 'consciencia-negra': ['Matemática', 'História', 'Arte', 'Língua Portuguesa']}
 def cats_de(slug):
     c = list(CAT_DISC.get(slug, []))
     if slug.startswith(('volume-', 'se-liga-', 'sei-', 'saeb-')): c = ['matematica']
@@ -140,6 +147,7 @@ def cats_de(slug):
     if slug.startswith('cn-') or slug == 'consciencia-negra': c.append('consciencia')
     return c
 def series_de(slug, nome):
+    if slug.startswith('cn-') or slug=='consciencia-negra': return []
     if slug.endswith('3ano'): return ['3']
     if slug in SERIE_CN: return list(SERIE_CN[slug])
     m = _re.search(r'(\d)º ano', nome)
@@ -160,7 +168,7 @@ for slug, nome, g, code, preco, sub in P:
     else:   # previas novas em alta resolucao com faixa AMOSTRA (08/11/2026)
         imgs = [i + '?v=6' for i in imgs]
     items.append({"slug": slug, "av": ("Av%d" % AV[slug]) if slug in AV else slug, "nome": nome, "grupo": g, "grupoNome": GRUPOS[g], "link": (CHK + code) if code else None,
-                  "preco": preco, "sub": sub, "imgs": imgs, "tipo": tipo_de(slug), "cat": cats_de(slug), "serie": series_de(slug, nome),
+                  "preco": preco, "sub": sub, "imgs": imgs, "tipo": tipo_de(slug), "cat": cats_de(slug), "sug": SUGEST.get(slug, []), "serie": series_de(slug, nome),
                   "pag": (("Av%d" % AV[slug]) if slug in AV else slug),
                   "de": 15 if slug in ('saeb-5', 'saeb-9', 'saeb-3em') else None,
                   "paginas": pag.get(slug, {}).get("paginas")})
@@ -255,7 +263,8 @@ section.grupo h2:after{content:"";flex:1;height:2px;background:linear-gradient(9
 .price{font-family:'Playfair Display',serif;font-weight:700;font-size:24px;color:var(--navy)}
 .price span{font-size:14px;margin-right:2px}
 .btn{display:inline-block;text-decoration:none;font:700 14px 'Source Sans 3';padding:10px 16px;border-radius:10px;border:0;cursor:pointer;transition:.15s}
-.btn.buy{background:var(--navy-deep);color:#fff;box-shadow:0 0 0 2px var(--gold) inset}.btn.buy:hover{background:#000;color:#fff}
+.btn.buy{background:#1250d6;color:#fff;box-shadow:0 0 0 2px var(--gold) inset}.btn.buy:hover{background:#0b3aa8;color:#fff}
+.sug{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:8px 0 2px}.sug span{font:700 11px 'Source Sans 3';text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}.sug b{font:700 12px 'Source Sans 3';background:#e3edff;color:#0f3fb5;border:1px solid #b9cffc;border-radius:99px;padding:2px 9px}
 .btn.wa{background:#1f9d57;color:#fff}.btn.wa:hover{background:#188047}
 .btn.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--line)}
 .empty{display:none;text-align:center;padding:50px 0;color:#cbd5e1}
@@ -542,7 +551,7 @@ function card(it){
   const strip=it.imgs.map((u,k)=>leaf(u,k)).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt=""></div>`;
   const dots="";
   return `<article class="card" data-s="${it.slug}"><div class="cover${it.tipo==='saeb'?' neon':''}" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><div class="pills"><button type="button" class="peek cartpeek" onclick="event.stopPropagation();addCart('${it.slug}')" aria-label="Adicionar ao carrinho"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg> +</button><span class="peek"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg> ver</span></div></div>
-  <div class="info" onmouseenter="const cv=this.parentElement.querySelector('.cover');if(cv&&cv._reset)cv._reset()"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>
+  <div class="info" onmouseenter="const cv=this.parentElement.querySelector('.cover');if(cv&&cv._reset)cv._reset()"><small>${it.grupoNome}</small><h3>${it.nome}</h3><p>${dt(it.sub)}${it.paginas?` · ${it.paginas} págs.`:''}</p>${(it.sug&&it.sug.length)?`<div class="sug"><span>Sugestão:</span>${it.sug.map(x=>`<b>${x}</b>`).join('')}</div>`:''}
   <div class="price"><span>R$</span>${brl(it.preco)}</div>
   <div class="actions">${add}${act}</div></div></article>`;
 }

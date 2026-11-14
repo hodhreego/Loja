@@ -114,6 +114,7 @@ def pagina(it, todos):
     link = it.get("link") or ""
     nome = it["nome"]
     sub = it.get("sub") or ""
+    sug_html = ("<div class=\"sug\"><span>Sugestão de disciplinas:</span>" + "".join("<b>%s</b>" % x for x in it.get("sug", [])) + "</div>") if it.get("sug") else ""
     grupo = it.get("grupoNome") or ""
     cod_wa = f"{cod} - {nome}"
     volta = "../concursos.html" if it.get("grupo") != "reforco" else "../index.html"
@@ -221,6 +222,7 @@ def pagina(it, todos):
     <p class="cod">{cod}</p>
     <h1>{nome}</h1>
     <p class="sub">{sub}</p>
+    {sug_html}
 
     <p class="preco">{preco_html}</p>
     <div class="acoes">
@@ -377,6 +379,7 @@ h1{font-size:clamp(1.7rem,3.2vw,2.6rem);line-height:1.12;margin-bottom:10px;lett
 .acoes{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
 .btn{display:block;text-align:center;text-decoration:none;font-weight:900;border-radius:12px;padding:15px 16px;font-size:1rem;transition:transform .15s,filter .15s}
 .btn:active{transform:scale(.98)}
+.sug{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0}.sug span{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--dim)}.sug b{font-size:.8rem;background:#1250d6;color:#fff;border-radius:99px;padding:3px 11px}
 .comprar{background:#ffbc00;color:#3a2500}
 .comprar:hover{filter:brightness(1.06)}
 .zap{background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.5);color:#bbf7d0}
