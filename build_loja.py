@@ -67,6 +67,15 @@ P = [
  ("cn-quem-sou-eu", "Consciência Negra · Quem sou eu?", "reforco", "cvy7x7tn", 5, "Atividade para imprimir: personalidades negras brasileiras, caça-palavras e pesquisa · com gabarito · inclui versão em letra grande."),
  ("cn-gazeta-quilombos", "Consciência Negra · Gazeta dos Quilombos (inglês)", "reforco", "x6yvavqj", 5, "Atividade para imprimir: leitura em inglês com tradução e compreensão · com gabarito · inclui versão em letra grande."),
  ("cn-palavras-herdadas", "Consciência Negra · Palavras que o Brasil herdou", "reforco", "dmlkmhbj", 5, "Atividade para imprimir: palavras de origem africana, caça-palavras e atividades · com gabarito · inclui versão em letra grande."),
+ ("cn-da-africa-ao-brasil", "Consciência Negra · Da África ao Brasil", "reforco", "njr3ztdg", 5, "Atividade de História para imprimir: reinos africanos, travessia, abolição e resistência · 7º ao 9º ano · com gabarito · inclui versão em letra grande."),
+ ("cn-portugues-autoria-negra", "Consciência Negra · Português com autoria negra", "reforco", "yye6zyy4", 5, "Atividade de Língua Portuguesa para imprimir: leitura, gramática e escrita criativa com autoras e autores negros brasileiros · 6º ao 9º ano · com gabarito · inclui versão em letra grande."),
+ ("cn-cientistas-negras", "Consciência Negra · Cientistas negras brasileiras", "reforco", "tg3r6y62", 5, "Atividade para imprimir: trajetórias de cientistas negras brasileiras, DNA, engenharia e física · 6º ao 9º ano · com gabarito · inclui versão em letra grande."),
+ ("cn-negros-mundo", "Consciência Negra · Negros que mudaram o mundo", "reforco", "7z5nslmg", 5, "Atividade de História para imprimir: Mandela, King, Rosa Parks, Obama e Wangari · 7º ao 9º ano · com gabarito · inclui versão em letra grande."),
+ ("cn-direitos-civis-eua", "Consciência Negra · Direitos civis nos EUA", "reforco", "woqa2x2l", 5, "Atividade de História para imprimir: segregação, Rosa Parks, Martin Luther King e linha do tempo · 7º ao 9º ano · com gabarito · inclui versão em letra grande."),
+ ("cn-apartheid", "Consciência Negra · Apartheid na África do Sul", "reforco", "agxbukav", 5, "Atividade de História e Geografia para imprimir: leis do apartheid, Mandela, Soweto e ubuntu · 7º ao 9º ano · com gabarito · inclui versão em letra grande."),
+ ("cn-portugues-3ano", "Consciência Negra · Português 3º ano: O baobá e o leão", "reforco", "diduzy5i", 5, "Atividade bem fácil de Português para o 3º ano do Fundamental: conto africano, sílabas e caça-palavras · com gabarito · inclui versão em letra grande."),
+ ("cn-historia-3ano", "Consciência Negra · História 3º ano: Minha família", "reforco", "4q4jvj3h", 5, "Atividade bem fácil de História para o 3º ano do Fundamental: minha família e as raízes africanas · com gabarito · inclui versão em letra grande."),
+ ("cn-matematica-3ano", "Consciência Negra · Matemática 3º ano: Tambores", "reforco", "64xi3mxz", 5, "Atividade bem fácil de Matemática para o 3º ano do Fundamental: contagem e contas com tambores e Oware · com gabarito · inclui versão em letra grande."),
 ]
 # ---- descrições melhoradas (sobrescrevem o subtítulo acima) ----
 _VOL = {"cone": "Volume do cone: V = ⅓·π·r²·h. 12 questões com figuras, do cálculo direto a problemas do dia a dia.",
@@ -97,7 +106,7 @@ def _desc(slug, nome, sub):
     return sub
 P = [(a, b, c, d, e, _desc(a, b, f)) for a, b, c, d, e, f in P]
 GRUPOS = {"pss": "PSS SEED-PR 2027", "cisop": "CISOP Cascavel 2026", "prefeitura": "Prefeitura de Cascavel 2026", "simulado": "Simulados", "reforco": "Reforço e recomposição", "outros": "Outros concursos"}
-AV = {"consciencia-negra":158,"cn-raizes-africanas":153,"cn-numeros-historia":154,"cn-quem-sou-eu":155,"cn-gazeta-quilombos":156,"cn-palavras-herdadas":157,"matematica":80,"conhecimentos-basicos":81,"pedagogo":82,"educacao-especial":83,"historia":84,"geografia":85,"artes":86,"lingua-inglesa":87,"educacao-fisica":88,"gestao-negocios":89,"pedagogo-abaetetuba":90,"quimica":91,"simulado-matematica":79,
+AV = {"cn-da-africa-ao-brasil":159,"cn-portugues-autoria-negra":160,"cn-cientistas-negras":161,"cn-negros-mundo":162,"cn-direitos-civis-eua":163,"cn-apartheid":164,"cn-portugues-3ano":165,"cn-historia-3ano":166,"cn-matematica-3ano":167,"consciencia-negra":158,"cn-raizes-africanas":153,"cn-numeros-historia":154,"cn-quem-sou-eu":155,"cn-gazeta-quilombos":156,"cn-palavras-herdadas":157,"matematica":80,"conhecimentos-basicos":81,"pedagogo":82,"educacao-especial":83,"historia":84,"geografia":85,"artes":86,"lingua-inglesa":87,"educacao-fisica":88,"gestao-negocios":89,"pedagogo-abaetetuba":90,"quimica":91,"simulado-matematica":79,
  "volume-cilindro":136,"volume-cone":137,"volume-cubo":138,"volume-cubo-bloco-prisma":139,"volume-esfera":140,"volume-paralelepipedo":141,"volume-piramide":142,"volume-prisma":143,
  "se-liga-1em":122,"se-liga-2em":123,"se-liga-3em":124,"se-liga-6":125,"se-liga-7":126,"se-liga-8":127,"se-liga-9":128,
  "sei-1em":129,"sei-2em":130,"sei-3em":131,"sei-6":132,"sei-7":133,"sei-8":134,"sei-9":135,"saeb-5":112,"saeb-9":113,"saeb-3em":114}
@@ -119,7 +128,7 @@ for slug, nome, g, code, preco, sub in P:
     elif tipo_de(slug) in ('sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
         imgs = [(i + '?v=6') if i.endswith('-1.jpg') else i for i in imgs]
     elif slug.startswith('cn-'):   # tarja forte nas miniaturas 2-5, capa limpa (13/11/2026)
-        imgs = [i + '?v=8' for i in imgs]
+        imgs = [i + '?v=9' for i in imgs]
     else:   # previas novas em alta resolucao com faixa AMOSTRA (08/11/2026)
         imgs = [i + '?v=6' for i in imgs]
     items.append({"slug": slug, "av": ("Av%d" % AV[slug]) if slug in AV else slug, "nome": nome, "grupo": g, "grupoNome": GRUPOS[g], "link": (CHK + code) if code else None,

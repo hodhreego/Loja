@@ -25,6 +25,15 @@ PDFS = {
     'cn-quem-sou-eu': 'Atividade3-Quem-sou-eu.pdf',
     'cn-gazeta-quilombos': 'Atividade4-Gazeta-dos-Quilombos.pdf',
     'cn-palavras-herdadas': 'Atividade5-Palavras-que-o-Brasil-herdou.pdf',
+    'cn-da-africa-ao-brasil': 'Atividade6-Da-Africa-ao-Brasil.pdf',
+    'cn-portugues-autoria-negra': 'Atividade7-Portugues-autoria-negra.pdf',
+    'cn-cientistas-negras': 'Atividade8-Cientistas-negras-brasileiras.pdf',
+    'cn-negros-mundo': 'Atividade9-Negros-que-mudaram-o-mundo.pdf',
+    'cn-direitos-civis-eua': 'Atividade10-Direitos-civis-nos-EUA.pdf',
+    'cn-apartheid': 'Atividade11-Apartheid-Africa-do-Sul.pdf',
+    'cn-portugues-3ano': 'Atividade12-Portugues-3ano-O-baoba-e-o-leao.pdf',
+    'cn-historia-3ano': 'Atividade13-Historia-3ano-Minha-familia.pdf',
+    'cn-matematica-3ano': 'Atividade14-Matematica-3ano-Tambores.pdf',
 }
 
 
@@ -87,7 +96,9 @@ def render(doc, idx):
 
 def main():
     os.makedirs(BKP, exist_ok=True)
+    import sys
     for slug, pdf in PDFS.items():
+        if len(sys.argv) > 1 and slug not in sys.argv[1:]: continue
         doc = fitz.open(os.path.join(M, pdf))
         # miniatura 5 = pagina de gabarito (mais rosa) com TRES faixas
         rosa = []
