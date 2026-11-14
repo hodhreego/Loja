@@ -186,7 +186,7 @@ HTML = r'''<!DOCTYPE html>
 <meta name="description" content="__DESC__">
 <meta property="og:title" content="__TITLE__">
 <meta property="og:description" content="__DESC__">
-<meta property="og:image" content="https://eduloja.com/og.jpg?v=6">
+<meta property="og:image" content="https://eduloja.com/og.jpg?v=7">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:type" content="website">
