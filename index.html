@@ -308,8 +308,9 @@ section.grupo h2{font-size:22px}
 <div class="wrap"><div class="info-cert" id="infoc"></div></div>
 <div class="conteudo wrap">
   <aside class="indice">
-    <b>Dia da Consciência Negra</b>
+    <b id="cnTog" role="button" tabindex="0" aria-expanded="true" title="Recolher/expandir" style="cursor:pointer;display:flex;justify-content:space-between;gap:6px">Dia da Consciência Negra <span id="cnSeta">▾</span></b>
     <a data-cat="consciencia" href="#cat-consciencia">Ver todas as atividades</a>
+    <div id="cnSubs">
     <a class="sub" href="Av153/">Matemática com raízes africanas</a>
     <a class="sub" href="Av154/">Os números contam a história</a>
     <a class="sub" href="Av155/">Quem sou eu?</a>
@@ -325,6 +326,7 @@ section.grupo h2{font-size:22px}
     <a class="sub" href="Av165/">O baobá e o leão (versão fácil)</a>
     <a class="sub" href="Av166/">Minha família (versão fácil)</a>
     <a class="sub" href="Av167/">Tambores (versão fácil)</a>
+    </div>
     <hr>
     <b>Por disciplina</b>
     <a data-cat="todos" href="#">Todas as atividades</a>
@@ -778,5 +780,9 @@ tornaArrastavel(document.getElementById("cp"));
 winit();
 (function(){var mb=document.getElementById("minibar"),h=document.querySelector("header.hero");if(!mb||!h)return;var on=false;function t(){var lim=h.offsetHeight-40,y=window.scrollY||document.documentElement.scrollTop;var n=on?y>lim-60:y>lim;if(n!==on){on=n;mb.classList.toggle("on",on);mb.setAttribute("aria-hidden",on?"false":"true")}}addEventListener("scroll",t,{passive:true});addEventListener("resize",t);t()})();
 </script>
+<script>(function(){var t=document.getElementById("cnTog"),d=document.getElementById("cnSubs"),s=document.getElementById("cnSeta");if(!t||!d)return;
+function set(c){d.style.display=c?"none":"";t.setAttribute("aria-expanded",c?"false":"true");s.textContent=c?"▸":"▾"}
+set(false);
+t.onclick=function(){set(d.style.display!=="none")};t.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();t.onclick()}}})()</script>
 </body>
 </html>
