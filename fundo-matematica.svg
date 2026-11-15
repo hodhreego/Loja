@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+  <rect width="600" height="600" fill="#0e3b2a"/>
   <defs>
     <filter id="giz" x="-10%" y="-10%" width="120%" height="120%">
       <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="n"/>
@@ -6,47 +7,52 @@
       <feGaussianBlur stdDeviation="0.2"/>
     </filter>
   </defs>
-
   <g filter="url(#giz)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="7">
-    <!-- giz branco -->
-    <g stroke="#ffffff" stroke-opacity="0.27">
-      <path d="M40 70h44M62 48v44"/>
-      <path d="M140 66h40M140 88h40"/>
-      <path d="M240 62h22M240 74h22"/>
-      <path d="M300 54h50M310 54v46M338 54v46"/>
-      <path d="M60 190l12 0 10 42 22-74h40"/>
-      <path d="M180 214c14-26 44-26 52 0 8 26-36 30-52 0-16-30-44-26-52 0-8 26 36 30 52 0z"/>
-      <path d="M70 360l34-56 34 56z"/>
-      <path d="M168 344c-10 18 6 26 0 38-4 8-12 6-14 16"/>
-      <circle cx="430" cy="150" r="34"/>
-      <ellipse cx="430" cy="150" rx="74" ry="20" transform="rotate(-20 430 150)"/>
-      <circle cx="512" cy="368" r="4" fill="#ffffff" fill-opacity="0.2" stroke="none"/>
+    <!-- grade 4x4, um desenho por célula (150px), sem encostar nas bordas -->
+    <g stroke="#ffffff" stroke-opacity="0.85">
+      <path d="M50 60h44M72 38v44"/>
+      <path d="M270 52h40M270 74h40"/>
+      <path d="M60 255l12 0 10 38 22-66h36"/>
+      <circle cx="330" cy="215" r="26"/><ellipse cx="330" cy="215" rx="56" ry="15" transform="rotate(-20 330 215)"/>
+      <path d="M60 430l34-52 34 52z"/>
+      <path d="M270 405h50M280 405v42M308 405v42"/>
+      <path d="M520 285h34M520 305h34"/>
+      <path d="M470 510c14-24 40-24 48 0 8 24-32 28-48 0-14-26-40-22-48 0z"/>
     </g>
-
-    <!-- giz verde -->
-    <g stroke="#86efac" stroke-opacity="0.30">
-      <path d="M486 58l16 34 36 5-27 25 7 36-32-19-32 19 7-36-27-25 36-5z"/>
-      <ellipse cx="392" cy="286" rx="72" ry="26" transform="rotate(-24 392 286)"/>
-      <circle cx="392" cy="286" r="9"/>
-      <path d="M60 470c18-18 40-18 58 0"/>
-      <circle cx="128" cy="464" r="8"/>
-      <path d="M300 430l26 46-52 0z"/>
-      <path d="M226 520c-16 14-16 32 0 46 16 14 34 6 34-10"/>
+    <g stroke="#ff5fa8" stroke-opacity="0.9">
+      <path d="M180 60l14 30 32 4-24 22 6 32-28-16-28 16 6-32-24-22 32-4z" transform="translate(0 -20)"/>
+      <ellipse cx="500" cy="190" rx="62" ry="22" transform="rotate(-24 500 190)"/><circle cx="500" cy="190" r="8"/>
+      <path d="M170 300c18-18 40-18 58 0"/><circle cx="238" cy="294" r="8"/>
+      <path d="M180 440l26 44-52 0z"/>
+      <path d="M390 430c-16 14-16 32 0 46 16 14 34 6 34-10"/>
     </g>
-
-    <!-- giz amarelo -->
-    <g stroke="#fde68a" stroke-opacity="0.30">
-      <path d="M270 296a44 44 0 1 0 0-88 50 50 0 0 1 0 88z"/>
-      <path d="M470 470h28M484 456v28"/>
-      <path d="M534 470h28M548 456v28M534 484h28"/>
-      <path d="M180 150l18 18M198 150l-18 18"/>
-      <ellipse cx="330" cy="480" rx="58" ry="20"/>
-      <ellipse cx="330" cy="480" rx="20" ry="58"/>
-      <circle cx="330" cy="480" r="6" fill="#fde68a" fill-opacity="0.25" stroke="none"/>
-      <path d="M520 210l10 22 24 3-18 17 5 24-21-12-21 12 5-24-18-17 24-3z"/>
-      <circle cx="96" cy="300" r="3.5" fill="#fde68a" fill-opacity="0.3" stroke="none"/>
-      <circle cx="248" cy="400" r="3" fill="#fde68a" fill-opacity="0.3" stroke="none"/>
-      <circle cx="566" cy="300" r="3" fill="#fde68a" fill-opacity="0.3" stroke="none"/>
+    <g stroke="#ffe135" stroke-opacity="0.9">
+      <path d="M400 80a40 40 0 1 0 0-80 46 46 0 0 1 0 80z" transform="translate(0 20)"/>
+      <path d="M530 70h28M544 56v28"/>
+      <path d="M40 160l18 18M58 160l-18 18"/>
+      <ellipse cx="180" cy="200" rx="40" ry="14"/><ellipse cx="180" cy="200" rx="14" ry="40"/>
+      <path d="M440 330h28M454 316v28"/>
+      <path d="M40 330h28M54 316v28M40 344h28"/>
+      <path d="M570 430l8 18 20 2-15 14 4 20-17-10-17 10 4-20-15-14 20-2z" transform="translate(-170 96)"/>
+    </g>
+    <g stroke="#ff8a1f" stroke-opacity="0.92">
+      <path d="M130 560h40M150 540v40"/>
+      <path d="M350 330h36M350 352h36"/>
+      <circle cx="40" cy="520" r="14"/>
+      <path d="M260 530l26-42 26 42z"/>
+      <path d="M560 380l-14 24 14 24"/>
+    </g>
+    <g fill="#ffffff" fill-opacity="0.85" stroke="none" font-family="'Segoe Print','Bradley Hand','Comic Sans MS',cursive" font-size="34">
+      <text x="125" y="358">E=mc²</text>
+    </g>
+    <g fill="#ff5fa8" fill-opacity="0.9" stroke="none" font-family="'Segoe Print','Bradley Hand','Comic Sans MS',cursive" font-size="34">
+      <text x="425" y="396">A=πr²</text>
+    </g>
+    <g fill="#ffe135" fill-opacity="0.9" stroke="none" font-family="'Segoe Print','Bradley Hand','Comic Sans MS',cursive" font-size="32">
+      <text x="195" y="592">a²+b²=c²</text>
+    </g>
+    <g fill="#ff8a1f" fill-opacity="0.92" stroke="none" font-family="'Segoe Print','Bradley Hand','Comic Sans MS',cursive" font-size="25">
+      <text x="440" y="592">Δ=b²−4ac</text>
     </g>
   </g>
 </svg>

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+  <defs>
+    <filter id="giz" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="0.2"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#giz)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="7">
+    <!-- giz branco -->
+    <g stroke="#ffffff" stroke-opacity="0.27">
+      <path d="M40 70h44M62 48v44"/>
+      <path d="M140 66h40M140 88h40"/>
+      <path d="M240 62h22M240 74h22"/>
+      <path d="M300 54h50M310 54v46M338 54v46"/>
+      <path d="M60 190l12 0 10 42 22-74h40"/>
+      <path d="M180 214c14-26 44-26 52 0 8 26-36 30-52 0-16-30-44-26-52 0-8 26 36 30 52 0z"/>
+      <path d="M70 360l34-56 34 56z"/>
+      <path d="M168 344c-10 18 6 26 0 38-4 8-12 6-14 16"/>
+      <circle cx="430" cy="150" r="34"/>
+      <ellipse cx="430" cy="150" rx="74" ry="20" transform="rotate(-20 430 150)"/>
+      <circle cx="512" cy="368" r="4" fill="#ffffff" fill-opacity="0.2" stroke="none"/>
+    </g>
+
+    <!-- giz verde -->
+    <g stroke="#86efac" stroke-opacity="0.30">
+      <path d="M486 58l16 34 36 5-27 25 7 36-32-19-32 19 7-36-27-25 36-5z"/>
+      <ellipse cx="392" cy="286" rx="72" ry="26" transform="rotate(-24 392 286)"/>
+      <circle cx="392" cy="286" r="9"/>
+      <path d="M60 470c18-18 40-18 58 0"/>
+      <circle cx="128" cy="464" r="8"/>
+      <path d="M300 430l26 46-52 0z"/>
+      <path d="M226 520c-16 14-16 32 0 46 16 14 34 6 34-10"/>
+    </g>
+
+    <!-- giz amarelo -->
+    <g stroke="#fde68a" stroke-opacity="0.30">
+      <path d="M270 296a44 44 0 1 0 0-88 50 50 0 0 1 0 88z"/>
+      <path d="M470 470h28M484 456v28"/>
+      <path d="M534 470h28M548 456v28M534 484h28"/>
+      <path d="M180 150l18 18M198 150l-18 18"/>
+      <ellipse cx="330" cy="480" rx="58" ry="20"/>
+      <ellipse cx="330" cy="480" rx="20" ry="58"/>
+      <circle cx="330" cy="480" r="6" fill="#fde68a" fill-opacity="0.25" stroke="none"/>
+      <path d="M520 210l10 22 24 3-18 17 5 24-21-12-21 12 5-24-18-17 24-3z"/>
+      <circle cx="96" cy="300" r="3.5" fill="#fde68a" fill-opacity="0.3" stroke="none"/>
+      <circle cx="248" cy="400" r="3" fill="#fde68a" fill-opacity="0.3" stroke="none"/>
+      <circle cx="566" cy="300" r="3" fill="#fde68a" fill-opacity="0.3" stroke="none"/>
+    </g>
+  </g>
+</svg>

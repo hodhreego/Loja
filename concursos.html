@@ -670,8 +670,8 @@ function voaCart(s){try{
   const f=document.createElement("img");f.src=url;f.className="flyimg";f.style.width=w+"px";f.style.left=(sx-w/2)+"px";f.style.top=(sy-w*0.7)+"px";document.body.appendChild(f);
   const dx=tx-sx,dy=ty-sy,alto=Math.min(160,Math.abs(dy)*.5+70);
   const a=f.animate([{transform:"translate(0,0) scale(1) rotate(0)",opacity:1},
-    {transform:`translate(${dx*.35}px,${dy*.35-alto}px) scale(.8) rotate(-9deg)`,opacity:1,offset:.4},
-    {transform:`translate(${dx}px,${dy}px) scale(.14) rotate(16deg)`,opacity:.7}],{duration:820,easing:"cubic-bezier(.45,.05,.55,.95)"});
+    {transform:`translate(${dx*.5}px,${dy*.5-alto*.6}px) scale(1) rotate(0)`,opacity:1,offset:.5},
+    {transform:`translate(${dx}px,${dy}px) scale(.14) rotate(8deg)`,opacity:.7}],{duration:1640,easing:"linear"});
   a.onfinish=()=>{f.remove();bump()};a.oncancel=()=>f.remove();
  }catch(e){}}
 function rmCart(s){CART=CART.filter(x=>x.slug!==s);cSave();cPaint()}
