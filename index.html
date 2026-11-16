@@ -723,7 +723,7 @@ function cPaint(){
   const n=cCount();document.querySelectorAll(".cn").forEach(e=>e.textContent=n);const fb=$("#cartfab");if(fb){$("#cartn").textContent=n;fb.classList.toggle("on",n>0)}
   const pct=cDescPct(),sub=cSubtotal(),desc=cDesconto();
   $("#ctot").innerHTML="R$ "+brl(cTotal())+(pct>0?` <small style="color:#14532d;font-weight:800">−${brl(pct).replace(",00","")}%</small>`:"");
-  const ci=$("#cupIn");if(ci&&!ci._on){ci._on=1;ci.addEventListener("keydown",e=>{if(e.key==="Enter")cupAplicar()});ci.addEventListener("input",()=>{if(!cupomOk()&&cupDigits(ci.value)===CUPOM_COD)cupAplicar()})}
+  const ci=$("#cupIn");if(ci&&!ci._on){ci._on=1;ci.addEventListener("keydown",e=>{if(e.key==="Enter")cupAplicar()})}
   const cs=$("#cupSt");if(cs)cs.innerHTML=cupomOk()?`<svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Cupom aplicado (+${CUPOM_PCT}%) <button type="button" class="cupx" onclick="cupRemover()">remover</button>`:"";
   const linhaDesc=(pct>0?`<div style="font-size:13px;color:var(--mut);margin:0 0 4px">Subtotal R$ ${brl(sub)} · desconto de ${brl(pct).replace(',00','')}% (−R$ ${brl(desc)})</div>`:"")+(CART.length?`<div style="font-size:13px;font-weight:700;color:#14683d;background:#eaf7f0;border-radius:8px;padding:6px 9px;margin:0 0 8px">${cDica()}</div>`:"")+cTabela();
   $("#cbody").innerHTML=linhaDesc+(CART.length?CART.map(x=>{const i=cFind(x.slug);if(!i)return"";
@@ -743,7 +743,6 @@ function cTexto(p){
 }
 async function cfinal(){
   if(!CART.length){toast("Carrinho vazio");return}
-  const ci=$("#cupIn");if(ci&&!cupomOk()&&cupDigits(ci.value)===CUPOM_COD){CUPOM=CUPOM_COD;try{localStorage.setItem(CUPOM_KEY,CUPOM)}catch(e){}cPaint()}
   const p=cPedido();
   window.open("https://wa.me/"+WNUM+"?text="+encodeURIComponent(cTexto(p)),"_blank");
   toast("Pedido enviado");
