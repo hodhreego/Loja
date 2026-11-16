@@ -108,16 +108,16 @@ def main():
             pm = pg.get_pixmap(dpi=30); sm = pm.samples; n = pm.n
             rosa.append(sum(1 for q in range(0, len(sm), n) if sm[q] > 200 and sm[q+2] > 100 and sm[q+1] < 110))
         gab = max(range(len(doc)), key=lambda i: rosa[i])
-        # miniaturas 2..6 MISTURAM letra normal e letra grande, para ninguem achar que e tudo letra grande:
-        # 2 = normal p.2 · 3 = grande p.2 · 4 = normal p.3 · 5 = grande p.3 · 6 = gabarito (normal) com 3 faixas
+        # miniaturas 2..5 (a 1 = capa principal nao muda): MISTURAM letra normal e letra grande
+        # 2 = normal p.2 (teoria) · 3 = grande p.3 · 4 = normal p.4 · 5 = gabarito (normal) com 3 faixas
         gdoc = fitz.open(os.path.join(M, pdf.replace('.pdf', '-LETRA-GRANDE.pdf')))
-        plano = ((2, doc, 1), (3, gdoc, 1), (4, doc, 2), (5, gdoc, 2), (6, doc, gab))
+        plano = ((2, doc, 1), (3, gdoc, 2), (4, doc, 3), (5, doc, gab))
         for k, d_, idx in plano:
             dst = os.path.join(IMG, '%s-%d.jpg' % (slug, k))
             bk = os.path.join(BKP, '%s-%d.jpg' % (slug, k))
             if os.path.exists(dst) and not os.path.exists(bk):
                 shutil.copy2(dst, bk)
-            (tarja_forte(render(d_, idx), frac=0.105, offs=(-0.30, 0, 0.30)) if k == 6 else tarja_forte(render(d_, idx))).save(dst, 'JPEG', quality=86, optimize=True)
+            (tarja_forte(render(d_, idx), frac=0.105, offs=(-0.30, 0, 0.30)) if k == 5 else tarja_forte(render(d_, idx))).save(dst, 'JPEG', quality=86, optimize=True)
         gdoc.close()
         print('ok', slug)
         doc.close()

@@ -1,15 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
-  <rect width="600" height="600" fill="#0e3b2a"/>
+  <rect width="600" height="600" fill="#082a1c"/>
   <defs>
     <filter id="giz" x="-10%" y="-10%" width="120%" height="120%">
       <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/>
-      <feGaussianBlur stdDeviation="0.2"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.5" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="3" seed="11" result="g"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  2.4 0 0 0 -0.25" result="ga"/>
+      <feComposite in="d" in2="ga" operator="in" result="t"/>
+      <feGaussianBlur in="t" stdDeviation="0.25"/>
     </filter>
   </defs>
   <g filter="url(#giz)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="7">
     <!-- grade 4x4, um desenho por célula (150px), sem encostar nas bordas -->
-    <g stroke="#ffffff" stroke-opacity="0.85">
+    <g stroke="#ffffff" stroke-opacity="0.68">
       <path d="M50 60h44M72 38v44"/>
       <path d="M270 52h40M270 74h40"/>
       <path d="M60 255l12 0 10 38 22-66h36"/>
@@ -19,14 +22,14 @@
       <path d="M520 285h34M520 305h34"/>
       <path d="M470 510c14-24 40-24 48 0 8 24-32 28-48 0-14-26-40-22-48 0z"/>
     </g>
-    <g stroke="#ff5fa8" stroke-opacity="0.9">
+    <g stroke="#ff5fa8" stroke-opacity="0.72">
       <path d="M180 60l14 30 32 4-24 22 6 32-28-16-28 16 6-32-24-22 32-4z" transform="translate(0 -20)"/>
       <ellipse cx="500" cy="190" rx="62" ry="22" transform="rotate(-24 500 190)"/><circle cx="500" cy="190" r="8"/>
       <path d="M170 300c18-18 40-18 58 0"/><circle cx="238" cy="294" r="8"/>
       <path d="M180 440l26 44-52 0z"/>
       <path d="M390 430c-16 14-16 32 0 46 16 14 34 6 34-10"/>
     </g>
-    <g stroke="#ffe135" stroke-opacity="0.9">
+    <g stroke="#ffe135" stroke-opacity="0.72">
       <path d="M400 80a40 40 0 1 0 0-80 46 46 0 0 1 0 80z" transform="translate(0 20)"/>
       <path d="M530 70h28M544 56v28"/>
       <path d="M40 160l18 18M58 160l-18 18"/>
@@ -35,23 +38,23 @@
       <path d="M40 330h28M54 316v28M40 344h28"/>
       <path d="M570 430l8 18 20 2-15 14 4 20-17-10-17 10 4-20-15-14 20-2z" transform="translate(-170 96)"/>
     </g>
-    <g stroke="#ff8a1f" stroke-opacity="0.92">
+    <g stroke="#ff8a1f" stroke-opacity="0.74">
       <path d="M130 560h40M150 540v40"/>
       <path d="M350 330h36M350 352h36"/>
       <circle cx="40" cy="520" r="14"/>
       <path d="M260 530l26-42 26 42z"/>
       <path d="M560 380l-14 24 14 24"/>
     </g>
-    <g fill="#ffffff" fill-opacity="0.85" stroke="none" font-family="'Segoe Print','Bradley Hand','Comic Sans MS',cursive" font-size="34">
+    <g fill="#ffffff" fill-opacity="0.68" stroke="none" font-family="'Segoe Print','Bradley Hand','Comic Sans MS',cursive" font-size="34">
       <text x="125" y="358">E=mc²</text>
     </g>
-    <g fill="#ff5fa8" fill-opacity="0.9" stroke="none" font-family="'Segoe Print','Bradley Hand','Comic Sans MS',cursive" font-size="34">
+    <g fill="#ff5fa8" fill-opacity="0.72" stroke="none" font-family="'Segoe Print','Bradley Hand','Comic Sans MS',cursive" font-size="34">
       <text x="425" y="396">A=πr²</text>
     </g>
-    <g fill="#ffe135" fill-opacity="0.9" stroke="none" font-family="'Segoe Print','Bradley Hand','Comic Sans MS',cursive" font-size="32">
+    <g fill="#ffe135" fill-opacity="0.72" stroke="none" font-family="'Segoe Print','Bradley Hand','Comic Sans MS',cursive" font-size="32">
       <text x="195" y="592">a²+b²=c²</text>
     </g>
-    <g fill="#ff8a1f" fill-opacity="0.92" stroke="none" font-family="'Segoe Print','Bradley Hand','Comic Sans MS',cursive" font-size="25">
+    <g fill="#ff8a1f" fill-opacity="0.74" stroke="none" font-family="'Segoe Print','Bradley Hand','Comic Sans MS',cursive" font-size="25">
       <text x="440" y="592">Δ=b²−4ac</text>
     </g>
   </g>

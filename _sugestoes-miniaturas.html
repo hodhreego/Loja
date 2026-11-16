@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sugestões de animação das miniaturas</title>
+<style>
+:root{--bg:#0b1226;--cd:#121a33;--tx:#f4f6ff;--mut:#a9b4d6;--ac:#fbbf24}
+*{box-sizing:border-box;margin:0}
+body{font:16px/1.4 system-ui,Segoe UI,Arial;background:var(--bg);color:var(--tx);padding:20px 16px 60px;max-width:1180px;margin:0 auto}
+h1{font-size:26px;margin-bottom:6px}p.s{color:var(--mut);margin-bottom:18px}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.c{background:var(--cd);border:1px solid #ffffff22;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.c h2{font-size:17px}.c h2 span{color:var(--ac)}.c small{color:var(--mut)}
+.st{position:relative;height:330px;perspective:900px;overflow:hidden;border-radius:12px;background:#0003}
+.st img{position:absolute;left:50%;top:50%;width:215px;height:auto;aspect-ratio:1/1.3;object-fit:cover;border-radius:8px;border:3px solid #fff;box-shadow:0 8px 22px #0007;transform:translate(-50%,-50%);transition:all .8s cubic-bezier(.4,.1,.2,1)}
+.sel{background:var(--ac);color:#1a1a1a;border:0;border-radius:10px;padding:9px 12px;font-weight:800;cursor:pointer}
+.sel.on{background:#22c55e;color:#fff}
+.alea{margin-top:22px;background:var(--cd);border-radius:16px;padding:14px;border:1px solid #ffffff22}
+.alea .g{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}.alea .st{height:240px}.alea .st img{width:150px}
+a{color:var(--ac)}
+</style></head><body>
+<h1>6 jeitos de "tocar" as miniaturas</h1>
+<p class="s">Cada cartão abaixo usa as miniaturas reais do Se Liga. Veja todos rodando, toque em <b>Escolher</b> no que mais gostar (marca em verde) e me diga o número. No fim há a versão <b>aleatória</b>: cada produto da vitrine sorteia um jeito e um ritmo diferentes.</p>
+<div class="g" id="g"></div>
+<div class="alea"><h2>Versão aleatória (cada cartão sorteia o jeito e o ritmo)</h2><small id="ali">Recarregue a página para sortear de novo.</small><div class="g" id="ga" style="margin-top:12px"></div></div>
+<script>
+const IM=[1,2,3,4,5].map(k=>"img/se-liga-6-"+k+".jpg");
+const MODOS=[
+ {n:"1 · Folhear (página virando)",d:"A capa vira como página de caderno e mostra a próxima.",
+  set(els,i){els.forEach((e,k)=>{const p=(k-i+els.length)%els.length;e.style.transformOrigin="0% 50%";e.style.zIndex=els.length-p;
+    e.style.transform=p===0?"translate(-50%,-50%) rotateY(0)":(p===els.length-1?"translate(-50%,-50%) rotateY(-165deg)":"translate(-50%,-50%) rotateY(0) scale("+(1-p*.03)+")");
+    e.style.opacity=p<2||p===els.length-1?1:0;e.style.left="50%"})}},
+ {n:"2 · Baralho (carta sai e vai pro fundo)",d:"A carta do topo desliza pro lado e volta atrás do monte.",
+  set(els,i){els.forEach((e,k)=>{const p=(k-i+els.length)%els.length;e.style.zIndex=els.length-p;
+    const off=p===els.length-1?"translate(-170%,-50%) rotate(-14deg)":"translate(calc(-50% + "+p*7+"px),calc(-50% + "+p*5+"px)) rotate("+(p%2?3:-3)*(p?1:0)+"deg)";e.style.transform=off;e.style.opacity=p>3&&p!==els.length-1?0:1})}},
+ {n:"3 · Zoom lento + fusão (cinema)",d:"Uma imagem de cada vez, com zoom suave e transição de fusão.",
+  set(els,i){els.forEach((e,k)=>{const on=k===i;e.style.zIndex=on?2:1;e.style.opacity=on?1:0;e.style.width="260px";
+    e.style.transform=on?"translate(-50%,-50%) scale(1.12)":"translate(-50%,-50%) scale(.95)";e.style.transitionDuration="1.4s"})}},
+ {n:"4 · Carrossel lateral (com profundidade)",d:"A imagem central em destaque e as vizinhas menores nas laterais.",
+  set(els,i){els.forEach((e,k)=>{let p=(k-i+els.length)%els.length;if(p>els.length/2)p-=els.length;
+    const a=Math.abs(p);e.style.zIndex=10-a;e.style.opacity=a>1?0:1;
+    e.style.transform="translate(calc(-50% + "+p*105+"px),-50%) scale("+(1-a*.28)+") rotateY("+(-p*28)+"deg)";e.style.filter=a?"brightness(.65)":"none"})}},
+ {n:"5 · Cubo 3D giratório",d:"As imagens ficam nas faces de um cubo que gira.",cubo:true},
+ {n:"6 · Persianas (cortina de tiras)",d:"A próxima imagem aparece em tiras, como persiana abrindo.",persiana:true}
+];
+function montar(host,modo,ritmo){
+  const st=document.createElement("div");st.className="st";host.appendChild(st);
+  if(modo.cubo){st.innerHTML='<div class="cub" style="position:absolute;left:50%;top:50%;width:200px;height:260px;margin:-130px 0 0 -100px;transform-style:preserve-3d;transition:transform 1s cubic-bezier(.4,.1,.2,1)"></div>';
+    const c=st.firstChild;[0,1,2,3].forEach(k=>{const i=document.createElement("img");i.src=IM[k];i.style.cssText="position:absolute;left:0;top:0;width:200px;height:260px;transform:rotateY("+k*90+"deg) translateZ(100px);border-radius:6px;border:3px solid #fff;aspect-ratio:auto";c.appendChild(i)});
+    let a=0;setInterval(()=>{a-=90;c.style.transform="rotateY("+a+"deg)"},ritmo);return}
+  if(modo.persiana){const N=8,imgs=IM.slice(0,5);let cur=0;
+    const base=document.createElement("div");base.style.cssText="position:absolute;inset:0;background:center/contain no-repeat url("+imgs[0]+")";st.appendChild(base);
+    function trocar(){const nx=(cur+1)%imgs.length;const w=st.clientWidth/N;
+      for(let k=0;k<N;k++){const s=document.createElement("div");s.style.cssText="position:absolute;top:0;bottom:0;left:"+k*w+"px;width:"+w+"px;background:url("+imgs[nx]+") center/contain no-repeat;background-size:auto 100%;background-position:50% 50%;transform:scaleX(0);transition:transform .45s "+k*.06+"s;transform-origin:left";
+        s.style.backgroundAttachment="";st.appendChild(s);requestAnimationFrame(()=>requestAnimationFrame(()=>s.style.transform="scaleX(1)"));setTimeout(()=>s.remove(),1200)}
+      setTimeout(()=>base.style.backgroundImage="url("+imgs[nx]+")",900);cur=nx}
+    setInterval(trocar,ritmo);return}
+  const els=IM.map(u=>{const i=document.createElement("img");i.src=u;st.appendChild(i);return i});let i=0;modo.set(els,0);
+  setInterval(()=>{i=(i+1)%els.length;modo.set(els,i)},ritmo)}
+const g=document.getElementById("g");
+MODOS.forEach((m,k)=>{const c=document.createElement("div");c.className="c";c.innerHTML='<h2><span>'+m.n.split(" · ")[0]+'</span> · '+m.n.split(" · ")[1]+'</h2><small>'+m.d+'</small>';g.appendChild(c);montar(c,m,2400);
+  const b=document.createElement("button");b.className="sel";b.textContent="Escolher este";b.onclick=()=>{b.classList.toggle("on");b.textContent=b.classList.contains("on")?"✓ Escolhido":"Escolher este"};c.appendChild(b)});
+const ga=document.getElementById("ga");
+for(let k=0;k<6;k++){const m=MODOS[Math.floor(Math.random()*MODOS.length)],r=1800+Math.floor(Math.random()*2400);const c=document.createElement("div");c.className="c";c.innerHTML="<small>"+m.n.split(" · ")[1]+" · "+(r/1000).toFixed(1)+" s</small>";ga.appendChild(c);montar(c,m,r)}
+</script></body></html>
