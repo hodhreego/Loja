@@ -455,7 +455,7 @@ function chipsC(){
     reforco:svg('<path d="M4 19V5a2 2 0 0 1 2-2h3v16H6a2 2 0 0 0-2 2Z"/><path d="M9 3h4v16H9z"/><path d="m13 5 3-1 4 15-3 1z"/>'),
     outros:svg('<circle cx="12" cy="12" r="9"/><path d="m16 8-2.5 5.5L8 16l2.5-5.5L16 8Z"/>')
   };
-  $("#chips").innerHTML=[["todos","Todos os certames"],...GR].map(([k,n])=>`<button class="cert ${filtro===k?'on':''}" onclick="filtro='${k}';chips();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'nearest'})"><span class="ic">${IC[k]||IC.outros}</span><span class="ct"><b>${n}</b><small>${c(k)} ${c(k)===1?'material':'materiais'}</small></span></button>`).join("");
+  $("#chips").innerHTML=[["todos","Todos os certames"],...GR].map(([k,n])=>`<button class="cert ${filtro===k?'on':''}" onclick="filtro='${k}';chips();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'start'})"><span class="ic">${IC[k]||IC.outros}</span><span class="ct"><b>${n}</b><small>${c(k)} ${c(k)===1?'material':'materiais'}</small></span></button>`).join("");
 }
 function tiposC(){
   const svg=(p)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
@@ -474,7 +474,7 @@ function tiposC(){
 }
 function mbTog(v){var t=document.getElementById("mbt"),b=document.getElementById("mbb");if(!t)return;var o=(v===undefined)?t.hidden:v;t.hidden=!o;b.setAttribute("aria-expanded",o?"true":"false")}
 document.addEventListener("click",function(e){if(!e.target.closest(".minibar"))mbTog(false)});
-function setGrupo(g){filtro=g;filtroTipo="todos";chips();tipos();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function setGrupo(g){filtro=g;filtroTipo="todos";chips();tipos();render();document.getElementById('infoc').scrollIntoView({behavior:'smooth',block:'start'})}
 
 /* ===== atividades (loja principal) x concursos (seção secundária) ===== */
 const SVG=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
@@ -523,7 +523,7 @@ function chipsM(){chipsC();const mt=document.getElementById("mbt");if(mt){mt.inn
 function render(){if(MODO==="concursos")renderC();else renderA()}
 function chips(){if(MODO==="concursos")chipsM();else chipsA()}
 function tipos(){if(MODO==="concursos"){const t=$("#tipos"),s=$("#series");if(t)t.style.display="none";if(s)s.style.display="none"}else tiposA()}
-function rola(id){const e=document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth',block:'nearest'})}
+function rola(id){const e=document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth',block:'start'})}
 function limpa(){filtro="todos";filtroSerie="todas";filtroTipo="todos"}
 function setCat(k){limpa();filtro=k;chips();tipos();render();rola('main')}
 function setSerie(k){limpa();filtroSerie=k;chips();tipos();render();rola('main')}
