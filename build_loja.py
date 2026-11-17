@@ -50,7 +50,7 @@ P = [
  ("ef-1em", "Se Liga 2026 · Educação Financeira — 1ª série EM", "reforco", "Q9N216B101", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
  ("ef-2em", "Se Liga 2026 · Educação Financeira — 2ª série EM", "reforco", "D0R8G3769Y", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
  ("ef-3em", "Se Liga 2026 · Educação Financeira — 3ª série EM", "reforco", "89AX8BEG0D", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
- ("saeb-5", "Simulado SAEB de Matemática — 5º ano", "reforco", "", 10, "50 questões de Matemática com gabarito e resoluções."),
+ ("saeb-5", "Simulado SAEB de Matemática — 5º ano", "reforco", "8WPN14QP0P", 10, "50 questões de Matemática com gabarito e resoluções."),
  ("saeb-9", "Simulado SAEB de Matemática — 9º ano", "reforco", "69K16VV8WO", 10, "50 questões de Matemática com gabarito e resoluções."),
  ("saeb-3em", "Simulado SAEB de Matemática — 3ª série EM", "reforco", "8WPNKOEN0P", 10, "50 questões de Matemática com gabarito e resoluções."),
  ("sei-6", "Semanas de Estudos · Matemática — 6º ano", "reforco", "", 10, "Semanas de Estudos Intensivos de Matemática (6º ano) · revisão semanal com gabarito e resoluções."),
