@@ -29,7 +29,7 @@ def main(alvos):
             if memo is None and 'MEMOREX' in t[:120].upper(): memo = i
         top = sorted(sorted(cand, key=lambda i: -cor_score(doc[i]))[:3])
         if len(top) < 3: print('POUCAS', slug, cand); continue
-        for k, idx in zip((2, 3, 4), top): salva(tarja_forte(render(doc, idx), cor=C[0], borda=C[1]), slug, k)
-        if memo is not None: salva(tarja_forte(render(doc, memo), cor=C[0], borda=C[1]), slug, 5)
+        for k, idx in zip((2, 3, 4), top): salva(tarja_forte(render(doc, idx), cor=C[0], borda=C[1], negrito=True), slug, k)
+        if memo is not None: salva(tarja_forte(render(doc, memo), cor=C[0], borda=C[1], negrito=True), slug, 5)
         print('ok', slug, 'questoes', top, 'memorex', memo)
 if __name__ == '__main__': main(sys.argv[1:])

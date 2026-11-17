@@ -60,7 +60,7 @@ def achar_frac(w, h, angulo, alvo=0.25):
     return (lo + hi) / 2
 
 
-def tarja_forte(img, angulo=35, frac=None, offs=(0,), cor=None, borda=None):
+def tarja_forte(img, angulo=35, frac=None, offs=(0,), cor=None, borda=None, negrito=False):
     MARROM_, BORDA_ = (cor or MARROM), (borda or BORDA)
     w, h = img.size
     if frac is None:
@@ -71,9 +71,10 @@ def tarja_forte(img, angulo=35, frac=None, offs=(0,), cor=None, borda=None):
     d = ImageDraw.Draw(faixa)
     furo = Image.new('L', (W, H), 255)
     t = 'AMOSTRA'
-    f = fonte(int(hb * 0.80))
-    while d.textlength(t, font=f) > w * 0.80:
-        f = fonte(int(f.size * 0.95))
+    FP = 'C:/Windows/Fonts/ariblk.ttf' if negrito else FONT
+    f = ImageFont.truetype(FP, int(hb * 0.86))
+    while d.textlength(t, font=f) > w * (0.88 if negrito else 0.80):
+        f = ImageFont.truetype(FP, int(f.size * 0.95))
     for o in offs:
         cy = H // 2 + int(o * h)
         d.rectangle((0, cy - hb // 2, W, cy + hb // 2), fill=MARROM_ + (255,))
