@@ -585,7 +585,7 @@ function anima(){
     es.forEach(e=>{const cv=e.target;
       if(e.isIntersecting){cv._vis=1;if(!cv._hov&&!rolando)cv._play&&cv._play(Math.random()*55)}
       else{cv._vis=0;cv._pause&&cv._pause()}});
-  },{threshold:.18});
+  },{threshold:0});
   todas().forEach(cv=>{const n=+cv.dataset.n;if(n<2)return;let k=0;
     /* cada card tem seu proprio ritmo: nada de animacoes sincronizadas */
     const CAPA=1800+Math.random()*2200, PAG=1250+Math.random()*1100;
