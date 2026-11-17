@@ -60,7 +60,8 @@ def achar_frac(w, h, angulo, alvo=0.25):
     return (lo + hi) / 2
 
 
-def tarja_forte(img, angulo=35, frac=None, offs=(0,)):
+def tarja_forte(img, angulo=35, frac=None, offs=(0,), cor=None, borda=None):
+    MARROM_, BORDA_ = (cor or MARROM), (borda or BORDA)
     w, h = img.size
     if frac is None:
         frac = achar_frac(w // 4, h // 4, angulo)
@@ -75,9 +76,9 @@ def tarja_forte(img, angulo=35, frac=None, offs=(0,)):
         f = fonte(int(f.size * 0.95))
     for o in offs:
         cy = H // 2 + int(o * h)
-        d.rectangle((0, cy - hb // 2, W, cy + hb // 2), fill=MARROM + (255,))
-        d.rectangle((0, cy - hb // 2, W, cy - hb // 2 + 6), fill=BORDA + (255,))
-        d.rectangle((0, cy + hb // 2 - 6, W, cy + hb // 2), fill=BORDA + (255,))
+        d.rectangle((0, cy - hb // 2, W, cy + hb // 2), fill=MARROM_ + (255,))
+        d.rectangle((0, cy - hb // 2, W, cy - hb // 2 + 6), fill=BORDA_ + (255,))
+        d.rectangle((0, cy + hb // 2 - 6, W, cy + hb // 2), fill=BORDA_ + (255,))
         ImageDraw.Draw(furo).text((W // 2, cy), t, font=f, fill=0, anchor='mm')
     a = ImageChops.multiply(faixa.getchannel('A'), furo)
     faixa.putalpha(a)
