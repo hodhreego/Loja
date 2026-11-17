@@ -76,6 +76,12 @@ P = [
  ("cn-portugues-3ano", "Consciência Negra · O baobá e o leão (versão fácil)", "reforco", "diduzy5i", 5, "Atividade de leitura bem fácil, de Língua Portuguesa: conto africano, sílabas e caça-palavras · com gabarito · inclui versão em letra grande."),
  ("cn-historia-3ano", "Consciência Negra · Minha família (versão fácil)", "reforco", "4q4jvj3h", 5, "Atividade bem fácil, de História: minha família e as raízes africanas · com gabarito · inclui versão em letra grande."),
  ("cn-matematica-3ano", "Consciência Negra · Tambores (versão fácil)", "reforco", "64xi3mxz", 5, "Atividade bem fácil, de Matemática: contagem e contas com tambores e Oware · com gabarito · inclui versão em letra grande."),
+ ("cn-caca-av168", "Caça-palavras Consciência Negra - Pacote Misto 1", "reforco", "arxophki", 5, "Caça-palavras sobre a Consciência Negra, para História e educação étnico-racial · sugerido do 6º ano do Ensino Fundamental ao 3º ano do Ensino Médio · com gabarito."),
+ ("cn-caca-av169", "Caça-palavras Consciência Negra - Pacote Misto 2", "reforco", "66y5c2cc", 5, "Caça-palavras sobre a Consciência Negra, para História e educação étnico-racial · sugerido do 6º ano do Ensino Fundamental ao 3º ano do Ensino Médio · com gabarito."),
+ ("cn-caca-av170", "Caça-palavras Consciência Negra - Pacote Misto 3", "reforco", "dwumzpwu", 5, "Caça-palavras sobre a Consciência Negra, para História e educação étnico-racial · sugerido do 6º ano do Ensino Fundamental ao 3º ano do Ensino Médio · com gabarito."),
+ ("cn-caca-av171", "Caça-palavras Consciência Negra - Pacote Colmeia", "reforco", "jevfoweh", 5, "Caça-palavras sobre a Consciência Negra, para História e educação étnico-racial · sugerido do 6º ano do Ensino Fundamental ao 3º ano do Ensino Médio · com gabarito."),
+ ("cn-caca-av172", "Caça-palavras Consciência Negra - Pacote Triângulos", "reforco", "mumirlkk", 5, "Caça-palavras sobre a Consciência Negra, para História e educação étnico-racial · sugerido do 6º ano do Ensino Fundamental ao 3º ano do Ensino Médio · com gabarito."),
+ ("cn-caca-av173", "Caça-palavras Consciência Negra - Pacote Quadrados", "reforco", "cw6srm7q", 5, "Caça-palavras sobre a Consciência Negra, para História e educação étnico-racial · sugerido do 6º ano do Ensino Fundamental ao 3º ano do Ensino Médio · com gabarito."),
 ]
 # ---- descrições melhoradas (sobrescrevem o subtítulo acima) ----
 _VOL = {"cone": "Volume do cone: V = ⅓·π·r²·h. 12 questões com figuras, do cálculo direto a problemas do dia a dia.",
@@ -106,7 +112,7 @@ def _desc(slug, nome, sub):
     return sub
 P = [(a, b, c, d, e, _desc(a, b, f)) for a, b, c, d, e, f in P]
 GRUPOS = {"pss": "PSS SEED-PR 2027", "cisop": "CISOP Cascavel 2026", "prefeitura": "Prefeitura de Cascavel 2026", "simulado": "Simulados", "reforco": "Reforço e recomposição", "outros": "Outros concursos"}
-AV = {"cn-da-africa-ao-brasil":159,"cn-portugues-autoria-negra":160,"cn-cientistas-negras":161,"cn-negros-mundo":162,"cn-direitos-civis-eua":163,"cn-apartheid":164,"cn-portugues-3ano":165,"cn-historia-3ano":166,"cn-matematica-3ano":167,"consciencia-negra":158,"cn-raizes-africanas":153,"cn-numeros-historia":154,"cn-quem-sou-eu":155,"cn-gazeta-quilombos":156,"cn-palavras-herdadas":157,"matematica":80,"conhecimentos-basicos":81,"pedagogo":82,"educacao-especial":83,"historia":84,"geografia":85,"artes":86,"lingua-inglesa":87,"educacao-fisica":88,"gestao-negocios":89,"pedagogo-abaetetuba":90,"quimica":91,"simulado-matematica":79,
+AV = {"cn-caca-av168":168,"cn-caca-av169":169,"cn-caca-av170":170,"cn-caca-av171":171,"cn-caca-av172":172,"cn-caca-av173":173,"cn-da-africa-ao-brasil":159,"cn-portugues-autoria-negra":160,"cn-cientistas-negras":161,"cn-negros-mundo":162,"cn-direitos-civis-eua":163,"cn-apartheid":164,"cn-portugues-3ano":165,"cn-historia-3ano":166,"cn-matematica-3ano":167,"consciencia-negra":158,"cn-raizes-africanas":153,"cn-numeros-historia":154,"cn-quem-sou-eu":155,"cn-gazeta-quilombos":156,"cn-palavras-herdadas":157,"matematica":80,"conhecimentos-basicos":81,"pedagogo":82,"educacao-especial":83,"historia":84,"geografia":85,"artes":86,"lingua-inglesa":87,"educacao-fisica":88,"gestao-negocios":89,"pedagogo-abaetetuba":90,"quimica":91,"simulado-matematica":79,
  "volume-cilindro":136,"volume-cone":137,"volume-cubo":138,"volume-cubo-bloco-prisma":139,"volume-esfera":140,"volume-paralelepipedo":141,"volume-piramide":142,"volume-prisma":143,
  "se-liga-1em":122,"se-liga-2em":123,"se-liga-3em":124,"se-liga-6":125,"se-liga-7":126,"se-liga-8":127,"se-liga-9":128,
  "sei-1em":129,"sei-2em":130,"sei-3em":131,"sei-6":132,"sei-7":133,"sei-8":134,"sei-9":135,"saeb-5":112,"ef-6":146,"ef-7":147,"ef-8":148,"ef-9":149,"ef-1em":150,"ef-2em":151,"ef-3em":152,"saeb-9":113,"saeb-3em":114}
@@ -124,6 +130,7 @@ def tipo_de(slug):
 
 import re as _re
 CAT_DISC = {
+ 'cn-caca-av168': ['historia'],'cn-caca-av169': ['historia'],'cn-caca-av170': ['historia'],'cn-caca-av171': ['historia'],'cn-caca-av172': ['historia'],'cn-caca-av173': ['historia'],
  'cn-da-africa-ao-brasil': ['historia'], 'cn-negros-mundo': ['historia'], 'cn-direitos-civis-eua': ['historia'],
  'cn-apartheid': ['historia'], 'cn-historia-3ano': ['historia'], 'cn-quem-sou-eu': ['historia'],
  'cn-portugues-autoria-negra': ['portugues'], 'cn-portugues-3ano': ['portugues'], 'cn-palavras-herdadas': ['portugues'],
