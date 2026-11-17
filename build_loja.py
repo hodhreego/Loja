@@ -160,9 +160,9 @@ for slug, nome, g, code, preco, sub in P:
     if slug.startswith('ef-'):   # capa Se Liga EF no mesmo molde do Se Liga Matematica (12/11/2026)
         imgs = [i + '?v=10' for i in imgs]
     elif tipo_de(slug) == 'se-liga':   # prévias novas: páginas internas de questões, sem tarja (12/11/2026)
-        imgs = [i + '?v=9' for i in imgs]
+        imgs = [i + '?v=11' for i in imgs]
     elif tipo_de(slug) in ('sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
-        imgs = [(i + '?v=6') if i.endswith('-1.jpg') else i for i in imgs]
+        imgs = [(i + '?v=11') if (tipo_de(slug) in ('sei','saeb') or i.endswith('-1.jpg')) else i for i in imgs]
     elif slug.startswith('cn-'):   # tarja forte nas miniaturas 2-5, capa limpa (13/11/2026)
         imgs = [i + '?v=9' for i in imgs]
     else:   # previas novas em alta resolucao com faixa AMOSTRA (08/11/2026)
@@ -704,17 +704,17 @@ addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(/^(cat|seri
 /* miniaturas animadas: as páginas sobem (scroll vertical) enquanto o card está visível */
 let io=null,rolando=false,tRol=null;
 const todas=()=>[...document.querySelectorAll(".cover")];
-function rolandoAgora(ms){if(!rolando)todas().forEach(cv=>{if(cv._reset){clearTimeout(cv._t);cv._t=null;cv._reset()}});rolando=true;clearTimeout(tRol);tRol=setTimeout(()=>{rolando=false;todas().forEach(cv=>{if(cv._play&&cv._vis&&!cv._p)cv._play(250+Math.random()*3200)})},ms)}
-addEventListener("scroll",()=>rolandoAgora(260),{passive:true});
-addEventListener("touchmove",()=>rolandoAgora(340),{passive:true});
+function rolandoAgora(ms){if(!rolando)todas().forEach(cv=>{if(cv._reset){clearTimeout(cv._t);cv._t=null;cv._reset()}});rolando=true;clearTimeout(tRol);tRol=setTimeout(()=>{rolando=false;todas().forEach(cv=>{if(cv._play&&cv._vis&&!cv._hov)cv._play(Math.random()*55)})},ms)}
+addEventListener("scroll",()=>rolandoAgora(40),{passive:true});
+addEventListener("touchmove",()=>rolandoAgora(40),{passive:true});
 function anima(){
   if(io)io.disconnect();
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   io=new IntersectionObserver(es=>{
     es.forEach(e=>{const cv=e.target;
-      if(e.isIntersecting){cv._vis=1;if(!cv._p&&!rolando)cv._play&&cv._play(250+Math.random()*3200)}
+      if(e.isIntersecting){cv._vis=1;if(!cv._hov&&!rolando)cv._play&&cv._play(Math.random()*55)}
       else{cv._vis=0;cv._pause&&cv._pause()}});
-  },{threshold:.18});
+  },{threshold:0});
   todas().forEach(cv=>{const n=+cv.dataset.n;if(n<2)return;let k=0;
     /* cada card tem seu proprio ritmo: nada de animacoes sincronizadas */
     const CAPA=1800+Math.random()*2200, PAG=1250+Math.random()*1100;
@@ -722,7 +722,7 @@ function anima(){
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
     cv._reset=()=>{clearTimeout(cv._t);cv._t=null;if(k||bk.querySelector(".flip")){bk.classList.add("nt");pgs.forEach(p=>p.classList.remove("flip"));void bk.offsetHeight;bk.classList.remove("nt")}k=0;dot(0)};
     cv._pause=()=>{cv._p=1;cv._reset();cv._vis=cv._vis};
-    cv._play=d=>{cv._p=0;clearTimeout(cv._t);cv._t=setTimeout(passo,d===undefined?400:d)};
+    cv._play=d=>{cv._p=0;clearTimeout(cv._t);cv._t=setTimeout(passo,d===undefined?30:d)};
     const passo=()=>{cv._t=null;
       if(rolando||cv._p||!cv._vis)return;
       if(k<n){pgs[k].classList.add("flip");k++;dot(k);
@@ -730,8 +730,8 @@ function anima(){
       cv._t=setTimeout(passo,PAG)};
     /* mouse em cima (card inteiro): congela a animacao */
     const cardEl=cv.closest(".card")||cv;
-    cardEl.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse")cv._pause()},{passive:true});
-    cardEl.addEventListener("pointerleave",e=>{if(e.pointerType==="mouse"&&cv._vis)cv._play(400)},{passive:true});
+    cardEl.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse"){cv._hov=1;cv._pause()}},{passive:true});
+    cardEl.addEventListener("pointerleave",e=>{if(e.pointerType==="mouse"){cv._hov=0;if(cv._vis)cv._play(Math.random()*55)}},{passive:true});
     cv._reset();
     io.observe(cv);
   });
