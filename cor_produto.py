@@ -15,7 +15,7 @@ def cor_produto(slug):
     px = cont[k]; r = sum(p[0] for p in px) // len(px); g = sum(p[1] for p in px) // len(px); b = sum(p[2] for p in px) // len(px)
     h, s, v = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
     def rgb(vv): return tuple(int(c * 255) for c in colorsys.hsv_to_rgb(h, min(1, s * 1.05), vv))
-    return rgb(min(v, 0.62)), rgb(min(v, 0.62) * 0.55)
+    return rgb(min(v, 0.88)), rgb(min(v, 0.88) * 0.6)
 if __name__ == '__main__':
     import sys
     for s in sys.argv[1:]: print(s, cor_produto(s))
