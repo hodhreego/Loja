@@ -158,7 +158,7 @@ def series_de(slug, nome):
 for slug, nome, g, code, preco, sub in P:
     imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 9) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
     if slug.startswith('ef-'):   # capa Se Liga EF no mesmo molde do Se Liga Matematica (12/11/2026)
-        imgs = [i + '?v=10' for i in imgs]
+        imgs = [i + '?v=11' for i in imgs]
     elif tipo_de(slug) == 'se-liga':   # prévias novas: páginas internas de questões, sem tarja (12/11/2026)
         imgs = [i + '?v=11' for i in imgs]
     elif tipo_de(slug) in ('sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
