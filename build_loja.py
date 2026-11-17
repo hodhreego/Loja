@@ -36,20 +36,20 @@ P = [
  ("volume-piramide", "Matemática · Volume da Pirâmide · 9º ano", "reforco", "KW8Z557B01", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
  ("volume-cilindro", "Matemática · Volume do Cilindro (com π) · 9º ano", "reforco", "G92KQR5KWE", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
  ("volume-cubo-bloco-prisma", "Matemática · Volume — Cubo, Bloco e Prisma · 9º ano", "reforco", "G96RY725W1", 5, "Atividade de volume com figuras, fórmulas e gabarito. A4 pronto para imprimir."),
- ("se-liga-6", "Se Liga 2026 · Matemática — 6º ano + Extraordinário", "reforco", "797Z4NGV0E", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("se-liga-7", "Se Liga 2026 · Matemática — 7º ano + Extraordinário", "reforco", "8WPNKR3Y0P", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("se-liga-8", "Se Liga 2026 · Matemática — 8º ano + Extraordinário", "reforco", "89AX8YDG0D", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("se-liga-9", "Se Liga 2026 · Matemática — 9º ano + Extraordinário", "reforco", "60E2KY73W3", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("se-liga-1em", "Se Liga 2026 · Matemática — 1ª série EM + Extraordinário", "reforco", "Z0B1XY879A", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("se-liga-2em", "Se Liga 2026 · Matemática — 2ª série EM + Extraordinário", "reforco", "E9OG7N4KWB", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("se-liga-3em", "Se Liga 2026 · Matemática — 3ª série EM + Extraordinário", "reforco", "KW8Z5RAO01", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito."),
- ("ef-6", "Se Liga 2026 · Educação Financeira — 6º ano", "reforco", "E0DK782N91", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
- ("ef-7", "Se Liga 2026 · Educação Financeira — 7º ano", "reforco", "E9OG7ADAWB", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
- ("ef-8", "Se Liga 2026 · Educação Financeira — 8º ano", "reforco", "7WXGXYE40A", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
- ("ef-9", "Se Liga 2026 · Educação Financeira — 9º ano", "reforco", "8017J1G607", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
- ("ef-1em", "Se Liga 2026 · Educação Financeira — 1ª série EM", "reforco", "Q9N216B101", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
- ("ef-2em", "Se Liga 2026 · Educação Financeira — 2ª série EM", "reforco", "D0R8G3769Y", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
- ("ef-3em", "Se Liga 2026 · Educação Financeira — 3ª série EM", "reforco", "89AX8BEG0D", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir."),
+ ("se-liga-6", "Se Liga 2026 · Matemática — 6º ano + Extraordinário", "reforco", "797Z4NGV0E", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões de múltipla escolha cada."),
+ ("se-liga-7", "Se Liga 2026 · Matemática — 7º ano + Extraordinário", "reforco", "8WPNKR3Y0P", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões de múltipla escolha cada."),
+ ("se-liga-8", "Se Liga 2026 · Matemática — 8º ano + Extraordinário", "reforco", "89AX8YDG0D", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões de múltipla escolha cada."),
+ ("se-liga-9", "Se Liga 2026 · Matemática — 9º ano + Extraordinário", "reforco", "60E2KY73W3", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões de múltipla escolha cada."),
+ ("se-liga-1em", "Se Liga 2026 · Matemática — 1ª série EM + Extraordinário", "reforco", "Z0B1XY879A", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões de múltipla escolha cada."),
+ ("se-liga-2em", "Se Liga 2026 · Matemática — 2ª série EM + Extraordinário", "reforco", "E9OG7N4KWB", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões de múltipla escolha cada."),
+ ("se-liga-3em", "Se Liga 2026 · Matemática — 3ª série EM + Extraordinário", "reforco", "KW8Z5RAO01", 10, "Revisão para as avaliações finais + versão extraordinária, com gabarito. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões de múltipla escolha cada."),
+ ("ef-6", "Se Liga 2026 · Educação Financeira — 6º ano", "reforco", "E0DK782N91", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões cada."),
+ ("ef-7", "Se Liga 2026 · Educação Financeira — 7º ano", "reforco", "E9OG7ADAWB", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões cada."),
+ ("ef-8", "Se Liga 2026 · Educação Financeira — 8º ano", "reforco", "7WXGXYE40A", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões cada."),
+ ("ef-9", "Se Liga 2026 · Educação Financeira — 9º ano", "reforco", "8017J1G607", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões cada."),
+ ("ef-1em", "Se Liga 2026 · Educação Financeira — 1ª série EM", "reforco", "Q9N216B101", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões cada."),
+ ("ef-2em", "Se Liga 2026 · Educação Financeira — 2ª série EM", "reforco", "D0R8G3769Y", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões cada."),
+ ("ef-3em", "Se Liga 2026 · Educação Financeira — 3ª série EM", "reforco", "89AX8BEG0D", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões cada."),
  ("saeb-5", "Simulado SAEB de Matemática — 5º ano", "reforco", "8WPN14QP0P", 10, "50 questões de Matemática com gabarito e resoluções."),
  ("saeb-9", "Simulado SAEB de Matemática — 9º ano", "reforco", "69K16VV8WO", 10, "50 questões de Matemática com gabarito e resoluções."),
  ("saeb-3em", "Simulado SAEB de Matemática — 3ª série EM", "reforco", "8WPNKOEN0P", 10, "50 questões de Matemática com gabarito e resoluções."),
@@ -118,6 +118,7 @@ AV = {"cn-caca-av168":168,"cn-caca-av169":169,"cn-caca-av170":170,"cn-caca-av171
  "sei-1em":129,"sei-2em":130,"sei-3em":131,"sei-6":132,"sei-7":133,"sei-8":134,"sei-9":135,"saeb-5":112,"ef-6":146,"ef-7":147,"ef-8":148,"ef-9":149,"ef-1em":150,"ef-2em":151,"ef-3em":152,"saeb-9":113,"saeb-3em":114}
 items = []
 def tipo_de(slug):
+    if '-caca-' in slug or slug.startswith('caca-'): return 'caca'
     if slug.startswith('cn-') or slug == 'consciencia-negra': return 'cn'
     if slug == 'album-multiplicacao': return 'album'
     if slug.startswith('volume-'): return 'volumes'
@@ -662,9 +663,9 @@ const ICA={todos:SVG('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="
  ciencias:SVG('<path d="M9 3h6M10 3v6L4.5 19a1.6 1.6 0 0 0 1.4 2.4h12.2a1.6 1.6 0 0 0 1.4-2.4L14 9V3"/><path d="M7.5 15h9"/>')};
 const CATS=[["todos","Todas as atividades"],["consciencia","Dia da Consciência Negra"],["matematica","Matemática"],["financeira","Educação Financeira"],["historia","História"],["portugues","Língua Portuguesa"],["ingles","Inglês"],["ciencias","Ciências"]];
 const SERIES=[["todas","Todas as séries"],["3","3º ano"],["5","5º ano"],["6","6º ano"],["7","7º ano"],["8","8º ano"],["9","9º ano"],["em","Ensino Médio"]];
-const COLEC=[["todos","Todas as coleções"],["cn","Dia da Consciência Negra"],["se-liga","Se Liga de Matemática"],["se-liga-ef","Se Liga de Educação Financeira"],["sei","Semanas de Estudos"],["saeb","Simulados SAEB"],["volumes","Volumes"],["album","Álbuns"]];
-const NOMEST={"cn":"Dia da Consciência Negra","se-liga":"Se Liga de Matemática","se-liga-ef":"Se Liga de Educação Financeira","se-liga-ing":"Se Liga de Inglês","sei":"Semanas de Estudos Intensivos","saeb":"Simulados SAEB","volumes":"Volumes","album":"Álbuns de multiplicação"};
-const ORD={"cn":0,"se-liga":1,"se-liga-ef":2,"se-liga-ing":3,"sei":4,"saeb":5,"volumes":6,"album":7};
+const COLEC=[["todos","Todas as coleções"],["cn","Dia da Consciência Negra"],["caca","Caça-palavras"],["se-liga","Se Liga de Matemática"],["se-liga-ef","Se Liga de Educação Financeira"],["sei","Semanas de Estudos"],["saeb","Simulados SAEB"],["volumes","Volumes"],["album","Álbuns"]];
+const NOMEST={"cn":"Dia da Consciência Negra","caca":"Caça-palavras","se-liga":"Se Liga de Matemática","se-liga-ef":"Se Liga de Educação Financeira","se-liga-ing":"Se Liga de Inglês","sei":"Semanas de Estudos Intensivos","saeb":"Simulados SAEB","volumes":"Volumes","album":"Álbuns de multiplicação"};
+const ORD={"cn":0,"caca":1,"se-liga":2,"se-liga-ef":3,"se-liga-ing":4,"sei":5,"saeb":6,"volumes":7,"album":8};
 let filtroSerie="todas";
 function renderA(){
   const q=busca.toLowerCase();
@@ -920,7 +921,7 @@ winit();
 </body>
 </html>'''
 def _indice_atividades():
-    cn = sorted([x for x in items if x["tipo"] in ("cn",)], key=lambda x: int(x["av"][2:]) if x["av"].startswith("Av") else 0)
+    cn = sorted([x for x in items if x["tipo"] in ("cn","caca")], key=lambda x: int(x["av"][2:]) if x["av"].startswith("Av") else 0)
     r = ['    <b>Dia da Consciência Negra</b>', '    <a data-cat="consciencia" href="#cat-consciencia">Ver todas as atividades</a>']
     for x in cn:
         nm = x["nome"].replace("Consciência Negra · ", "").replace("Consciência Negra — ", "")
@@ -932,7 +933,7 @@ def _indice_atividades():
     for k, n in [("3", "3º ano"), ("5", "5º ano"), ("6", "6º ano"), ("7", "7º ano"), ("8", "8º ano"), ("9", "9º ano"), ("em", "Ensino Médio")]:
         r.append('    <a data-serie="%s" href="#serie-%s">%s</a>' % (k, k, n))
     r.append('    <hr>\n    <b>Coleções</b>')
-    for k, n in [("se-liga", "Se Liga de Matemática"), ("se-liga-ef", "Se Liga de Educação Financeira"), ("sei", "Semanas de Estudos"), ("saeb", "Simulados SAEB"), ("volumes", "Volumes"), ("album", "Álbuns")]:
+    for k, n in [("caca", "Caça-palavras"), ("se-liga", "Se Liga de Matemática"), ("se-liga-ef", "Se Liga de Educação Financeira"), ("sei", "Semanas de Estudos"), ("saeb", "Simulados SAEB"), ("volumes", "Volumes"), ("album", "Álbuns")]:
         r.append('    <a data-tipo="%s" href="#col-%s">%s</a>' % (k, k, n))
     r.append('    <hr>\n    <a class="sec-link" style="font-size:12.5px;color:var(--mut);opacity:1" href="concursos.html">Apostilas para concursos →</a>')
     return "\n".join(r)
