@@ -17,7 +17,7 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Playwrite+BR:wght@100..400&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#1B3A6B;--navy-deep:#0F2547;--gold:#C9A227;--gold-light:#E9D48E;--bg:#000;--ink:#1B2733;--mut:#5b6b80;--card:#fff;--ok:#1f7a4d;--line:#d9e2f1}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -285,15 +285,33 @@ section.grupo h2{font-size:22px}
 .indice{max-height:calc(100vh - 36px);overflow:auto}.indice a.sub{font-weight:500;font-size:12.5px;padding:4px 9px 4px 16px;color:var(--mut)}.ic16{vertical-align:-3px}.ck{vertical-align:-2px}
 .foot-sec{margin:0 0 8px}.foot-sec a{color:var(--gold-light);font-weight:700}
 @media(max-width:720px){.rot{display:none}#series .chip,#tipos .chip{flex:none}}
+.ledw{display:block;position:relative;overflow:hidden;background:#082A1C url(img/giz-fundo.png);border:3px solid #6b4a2b;border-radius:12px;padding:14px 0;box-shadow:inset 0 0 18px rgba(0,0,0,.35)}
+.led{display:inline-flex;white-space:nowrap;padding-left:0;font:400 56px 'Playwrite BR','Comic Sans MS',cursive;letter-spacing:0;line-height:1.2;color:#f6f4ea;text-shadow:0 0 2px rgba(255,255,255,.7),1px 1px 0 rgba(255,255,255,.35),-1px 0 0 rgba(255,255,255,.25);filter:url(#giz);animation:ledmv 7s linear infinite}
+.ledw:hover .led{animation-play-state:paused}
+.ledg{flex:none;padding-right:3em}
+.ledg .gb{color:#f6f4ea;text-shadow:0 0 2px rgba(255,255,255,.7),1px 1px 0 rgba(255,255,255,.35)}
+.ledg .gy{color:#ffe14d;text-shadow:0 0 2px rgba(255,225,77,.75),1px 1px 0 rgba(255,225,77,.35)}
+@keyframes ledmv{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(max-width:900px){.led{font-size:40px}}
+#chips,#tipos,#series,.certs{scrollbar-width:none;-ms-overflow-style:none}
+#chips::-webkit-scrollbar,#tipos::-webkit-scrollbar,#series::-webkit-scrollbar,.certs::-webkit-scrollbar{display:none;width:0;height:0}
+#chips,#tipos,#series{padding-top:0!important;padding-bottom:0!important;gap:6px!important}
+#tipos,#series{margin-top:-2px!important}
+#tipos .chip,#series .chip{padding-top:4px!important;padding-bottom:4px!important}
+#chips .cert{min-height:0!important;padding-top:6px!important;padding-bottom:6px!important}
+.buscarow{display:flex;align-items:center;gap:12px;width:100%;flex:1 1 100%}
+.buscarow #q{flex:1 1 50%;min-width:0;margin:0}
+.buscarow .sec-link{flex:1 1 50%;margin:0;text-align:center;color:var(--navy);opacity:1;font:700 14px 'Source Sans 3';line-height:1.2}
+@media(max-width:420px){.buscarow .sec-link{font-size:12.5px}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="giz" x="-2%" y="-10%" width="104%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" result="d"/><feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="9" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 -2.2 1.55" result="m"/><feComposite in="d" in2="m" operator="in"/></filter></svg>
 <div class="minibar" id="minibar" aria-hidden="true"><b><a class="mbhome" href="/" title="Ir para a página inicial">Loja de <em>Educação e Matemática</em></a></b><button type="button" id="mbb" class="mbb" aria-expanded="false" onclick="mbTog()"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg> <span id="mbn">Todas</span> ▾</button><span class="mbs"></span><div id="mbt" class="mbt" hidden></div><button type="button" class="topcart" onclick="ctoggle(undefined,'top')"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg> Ver carrinho <b class="cn">0</b></button><button type="button" onclick="wtoggle(true)">WhatsApp</button></div>
 <header class="hero"><div class="wrap">
   <div class="eyebrow">Prof. Rodrigo Gonçalves Pereira</div>
   <h1><em>Apostilas para Concursos</em><br>PSS SEED-PR, CISOP e Prefeituras</h1>
   <p>Apostilas atualizadas com os editais, para professores e candidatos: PSS SEED-PR 2027, CISOP Cascavel, Prefeitura de Cascavel e outros certames. Confira as páginas antes de comprar.</p>
-  <a class="sec-link" href="index.html">← Atividades educativas para imprimir</a>
   <div class="perks"><span class="perk"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Entrega digital em PDF</span><span class="perk"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Veja as páginas antes de comprar</span><span class="perk"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Versão JUMBO (letra grande)</span><span class="perk"><svg class="ic16" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Pagamento seguro pela Eduzz</span></div>
   <div class="hero-acts"><button class="hero-cart topcart" onclick="ctoggle(undefined,'top')"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg> Ver carrinho <b class="cn">0</b></button>
   <button class="hero-wa" onclick="wtoggle(true)"><svg class="wai" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Falar no WhatsApp <small>tire dúvidas · peça seu material</small></button></div>
@@ -303,7 +321,7 @@ section.grupo h2{font-size:22px}
   <div class="certs" id="chips"></div>
   <div class="certs" id="tipos" style="margin-top:10px"></div>
   <div class="certs" id="series" style="margin-top:6px"></div>
-  <input id="q" type="search" placeholder="Buscar apostila…">
+  <div class="buscarow"><input id="q" type="search" placeholder="Buscar apostila…"><a class="sec-link" href="index.html">← Atividades educativas para imprimir</a></div>
 </div></div>
 
 <div class="wrap"><div class="info-cert" id="infoc"></div></div>
@@ -741,6 +759,53 @@ tornaArrastavel(document.getElementById("wp"));
 tornaArrastavel(document.getElementById("cp"));
 winit();
 (function(){var mb=document.getElementById("minibar"),h=document.querySelector("header.hero");if(!mb||!h)return;var on=false;function t(){var lim=h.offsetHeight-40,y=window.scrollY||document.documentElement.scrollTop;var n=on?y>lim-60:y>lim;if(n!==on){on=n;mb.classList.toggle("on",on);mb.setAttribute("aria-hidden",on?"false":"true")}}addEventListener("scroll",t,{passive:true});addEventListener("resize",t);t()})();
+</script>
+<script>
+(function(){
+  var ids=["chips","tipos","series"],VEL=45,PAUSA=4000,st=[];
+  function vis(n){return n.offsetParent!==null}
+  function larg(o){
+    var el=o.el,f=null,c=null,k;
+    for(k=0;k<el.children.length;k++){var n=el.children[k];if(!vis(n))continue;if(n.getAttribute("data-clone")){if(!c)c=n}else if(!f)f=n}
+    return (f&&c)?c.offsetLeft-f.offsetLeft:0;
+  }
+  function clonar(o){
+    var el=o.el;if(o.mexendo)return;o.mexendo=true;
+    Array.prototype.slice.call(el.querySelectorAll("[data-clone]")).forEach(function(n){n.remove()});
+    if(el.scrollWidth>el.clientWidth+4){
+      var orig=Array.prototype.slice.call(el.children);
+      orig.forEach(function(n){var c=n.cloneNode(true);c.setAttribute("data-clone","1");c.setAttribute("aria-hidden","true");c.tabIndex=-1;el.appendChild(c)});
+    }
+    o.W=larg(o);o.mexendo=false;
+  }
+  ids.forEach(function(id){
+    var el=document.getElementById(id);if(!el)return;
+    var o={el:el,pos:0,ate:0,down:false,W:0,mexendo:false};st.push(o);
+    function toca(){o.ate=Date.now()+PAUSA}
+    ["pointerdown","touchstart","mousedown"].forEach(function(ev){el.addEventListener(ev,function(){o.down=true;toca()},{passive:true})});
+    ["pointerup","pointercancel","touchend","touchcancel","mouseup","mouseleave"].forEach(function(ev){el.addEventListener(ev,function(){o.down=false;toca()},{passive:true})});
+    ["wheel","keydown","focusin"].forEach(function(ev){el.addEventListener(ev,toca,{passive:true})});
+    new MutationObserver(function(){if(!o.mexendo)setTimeout(function(){if(!el.querySelector("[data-clone]"))clonar(o)},0)}).observe(el,{childList:true});
+    window.addEventListener("resize",function(){clonar(o)});
+    setTimeout(function(){clonar(o)},300);setTimeout(function(){clonar(o)},1500);
+  });
+  var ult=performance.now();
+  function tick(t){
+    var dt=Math.min(.1,(t-ult)/1000);ult=t;var agora=Date.now();
+    st.forEach(function(o){
+      var el=o.el;if(!o.W||o.mexendo)return;
+      if(el.style.scrollSnapType!=="none")el.style.scrollSnapType="none";
+      var sl=el.scrollLeft;
+      if(sl>=o.W){sl-=o.W;el.scrollLeft=sl}else if(sl<=0&&(o.down||agora<o.ate)){sl=o.W;el.scrollLeft=sl}
+      if(o.down||agora<o.ate){o.pos=sl;return}
+      o.pos=sl+VEL*dt;
+      if(o.pos>=o.W)o.pos-=o.W;
+      el.scrollLeft=o.pos;
+    });
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
 </script>
 </body>
 </html>
