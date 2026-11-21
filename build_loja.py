@@ -983,13 +983,35 @@ winit();
     ["pointerdown","touchstart","mousedown"].forEach(function(ev){el.addEventListener(ev,function(){o.down=true;toca()},{passive:true})});
     ["pointerup","pointercancel","touchend","touchcancel","mouseup","mouseleave"].forEach(function(ev){el.addEventListener(ev,function(){o.down=false;toca()},{passive:true})});
     ["wheel","keydown","focusin"].forEach(function(ev){el.addEventListener(ev,toca,{passive:true})});
+    el.addEventListener("wheel",function(ev){
+      if(!o.W)return;ev.preventDefault();toca();
+      var d=Math.abs(ev.deltaX)>Math.abs(ev.deltaY)?ev.deltaX:ev.deltaY;
+      if(ev.deltaMode===1)d*=32;
+      el.scrollLeft+=d;
+    },{passive:false});
     new MutationObserver(function(){if(!o.mexendo)setTimeout(function(){if(!el.querySelector("[data-clone]"))clonar(o)},0)}).observe(el,{childList:true});
     window.addEventListener("resize",function(){clonar(o)});
     setTimeout(function(){clonar(o)},300);setTimeout(function(){clonar(o)},1500);
   });
+  var gz=document.querySelector(".led"),gw=document.querySelector(".ledw"),G={pos:0,ate:0,down:false,x:0,g:0};
+  if(gz&&gw){
+    gz.style.animation="none";gw.style.touchAction="pan-y";gw.style.cursor="grab";
+    var medir=function(){var c=gz.children[0];G.g=c?c.getBoundingClientRect().width:0};
+    medir();window.addEventListener("resize",medir);
+    var pausa=function(){G.ate=Date.now()+PAUSA};
+    gw.addEventListener("pointerdown",function(ev){G.down=true;G.x=ev.clientX;pausa();try{gw.setPointerCapture(ev.pointerId)}catch(e){}});
+    gw.addEventListener("pointermove",function(ev){if(!G.down)return;G.pos-=ev.clientX-G.x;G.x=ev.clientX;pausa()});
+    ["pointerup","pointercancel"].forEach(function(e){gw.addEventListener(e,function(){G.down=false;pausa()})});
+    gw.addEventListener("wheel",function(ev){ev.preventDefault();pausa();var d=Math.abs(ev.deltaX)>Math.abs(ev.deltaY)?ev.deltaX:ev.deltaY;if(ev.deltaMode===1)d*=32;G.pos+=d},{passive:false});
+  }
   var ult=performance.now();
   function tick(t){
     var dt=Math.min(.1,(t-ult)/1000);ult=t;var agora=Date.now();
+    if(gz&&G.g){
+      if(!G.down&&agora>=G.ate)G.pos+=(G.g/3.5)*dt;
+      G.pos=((G.pos%G.g)+G.g)%G.g;
+      gz.style.transform="translateX("+(-G.pos)+"px)";
+    }
     st.forEach(function(o){
       var el=o.el;if(!o.W||o.mexendo)return;
       if(el.style.scrollSnapType!=="none")el.style.scrollSnapType="none";
