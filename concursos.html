@@ -485,11 +485,11 @@ const ICA={todos:SVG('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="
  portugues:SVG('<path d="M12 6c-2-2-5-2-8-1v13c3-1 6-1 8 1 2-2 5-2 8-1V5c-3-1-6-1-8 1Z"/><path d="M12 6v13"/>'),
  ingles:SVG('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>'),
  ciencias:SVG('<path d="M9 3h6M10 3v6L4.5 19a1.6 1.6 0 0 0 1.4 2.4h12.2a1.6 1.6 0 0 0 1.4-2.4L14 9V3"/><path d="M7.5 15h9"/>')};
-const CATS=[["todos","Todas as atividades"],["consciencia","Dia da Consciência Negra"],["matematica","Matemática"],["financeira","Educação Financeira"],["historia","História"],["portugues","Língua Portuguesa"],["ingles","Inglês"],["ciencias","Ciências"]];
+const CATS=[["todos","Todas as atividades"],["matematica","Matemática"],["financeira","Educação Financeira"],["historia","História"],["portugues","Língua Portuguesa"],["ingles","Inglês"],["ciencias","Ciências"],["consciencia","Dia da Consciência Negra"]];
 const SERIES=[["todas","Todas as séries"],["3","3º ano"],["5","5º ano"],["6","6º ano"],["7","7º ano"],["8","8º ano"],["9","9º ano"],["em","Ensino Médio"]];
-const COLEC=[["todos","Todas as coleções"],["cn","Dia da Consciência Negra"],["caca","Caça-palavras"],["se-liga","Se Liga de Matemática"],["se-liga-ef","Se Liga de Educação Financeira"],["sei","Semanas de Estudos"],["saeb","Simulados SAEB"],["volumes","Volumes"],["album","Álbuns"]];
+const COLEC=[["todos","Todas as coleções"],["se-liga","Se Liga de Matemática"],["se-liga-ef","Se Liga de Educação Financeira"],["sei","Semanas de Estudos"],["saeb","Simulados SAEB"],["volumes","Volumes"],["album","Álbuns"],["cn","Dia da Consciência Negra"],["caca","Caça-palavras"]];
 const NOMEST={"cn":"Dia da Consciência Negra","caca":"Caça-palavras","se-liga":"Se Liga de Matemática","se-liga-ef":"Se Liga de Educação Financeira","se-liga-ing":"Se Liga de Inglês","sei":"Semanas de Estudos Intensivos","saeb":"Simulados SAEB","volumes":"Volumes","album":"Álbuns de multiplicação"};
-const ORD={"cn":0,"caca":1,"se-liga":2,"se-liga-ef":3,"se-liga-ing":4,"sei":5,"saeb":6,"volumes":7,"album":8};
+const ORD={"se-liga":0,"se-liga-ef":1,"se-liga-ing":2,"sei":3,"saeb":4,"volumes":5,"album":6,"cn":7,"caca":8};
 let filtroSerie="todas";
 function renderA(){
   const q=busca.toLowerCase();
