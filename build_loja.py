@@ -172,11 +172,11 @@ def series_de(slug, nome):
 for slug, nome, g, code, preco, sub in P:
     imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 9) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
     if slug.startswith('ef-'):   # capa Se Liga EF no mesmo molde do Se Liga Matematica (12/11/2026)
-        imgs = [i + '?v=14' for i in imgs]
+        imgs = [i + '?v=15' for i in imgs]
     elif tipo_de(slug) in ('se-liga', 'se-liga-ing'):   # prévias novas: páginas internas de questões, sem tarja (12/11/2026)
-        imgs = [i + '?v=14' for i in imgs]
+        imgs = [i + '?v=15' for i in imgs]
     elif tipo_de(slug) in ('sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
-        imgs = [(i + '?v=14') if (tipo_de(slug) in ('sei','saeb') or i.endswith('-1.jpg')) else i for i in imgs]
+        imgs = [(i + '?v=15') if (tipo_de(slug) in ('sei','saeb') or i.endswith('-1.jpg')) else i for i in imgs]
     elif slug.startswith('cn-'):   # tarja forte nas miniaturas 2-5, capa limpa (13/11/2026)
         imgs = [i + '?v=9' for i in imgs]
     else:   # previas novas em alta resolucao com faixa AMOSTRA (08/11/2026)
@@ -963,7 +963,7 @@ winit();
     var el=o.el,k,pad=parseFloat(getComputedStyle(el).paddingLeft)||0;o.pin=-1;
     for(k=0;k<el.children.length;k++){if(el.children[k].tagName==="BUTTON"){o.pin=k;break}}
     var sl=el.scrollLeft;el.scrollLeft=0;
-    for(k=0;k<=o.pin;k++){var n=el.children[k];if(!vis(n))continue;n.style.position="sticky";n.style.left=Math.round(n.getBoundingClientRect().left-el.getBoundingClientRect().left-el.clientLeft)+"px";n.style.zIndex="3";n.style.boxShadow="10px 0 0 #fff"}
+    for(k=0;k<=o.pin;k++){var n=el.children[k];if(!vis(n))continue;n.style.position="sticky";n.style.left=Math.round(n.getBoundingClientRect().left-el.getBoundingClientRect().left-el.clientLeft)+"px";n.style.zIndex="3";if(n.tagName!=="BUTTON")n.style.background="#fff";n.style.boxShadow="0 0 0 6px #fff,10px 0 0 6px #fff"}
     el.scrollLeft=sl;
   }
   function clonar(o){
