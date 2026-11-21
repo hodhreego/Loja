@@ -286,7 +286,7 @@ section.grupo h2{font-size:22px}
 .foot-sec{margin:0 0 8px}.foot-sec a{color:var(--gold-light);font-weight:700}
 @media(max-width:720px){.rot{display:none}#series .chip,#tipos .chip{flex:none}}
 .ledw{display:block;position:relative;overflow:hidden;background:#082A1C url(img/giz-fundo.png);border:3px solid #6b4a2b;border-radius:10px;padding:7px 0;box-shadow:inset 0 0 18px rgba(0,0,0,.35)}
-.led{display:inline-flex;white-space:nowrap;padding-left:0;font:400 28px 'Playwrite BR','Comic Sans MS',cursive;letter-spacing:0;line-height:1.2;color:#ffffff;text-shadow:0 0 1px #fff,0 0 3px rgba(255,255,255,.9),1px 1px 0 rgba(255,255,255,.8),-1px 0 0 rgba(255,255,255,.6),-1px 0 0 rgba(255,255,255,.25);filter:url(#giz);animation:ledmv 5s linear infinite}
+.led{display:inline-flex;white-space:nowrap;padding-left:0;font:400 28px 'Playwrite BR','Comic Sans MS',cursive;letter-spacing:0;line-height:1.2;color:#ffffff;text-shadow:0 0 1px #fff,0 0 3px rgba(255,255,255,.9),1px 1px 0 rgba(255,255,255,.8),-1px 0 0 rgba(255,255,255,.6),-1px 0 0 rgba(255,255,255,.25);filter:url(#giz);animation:ledmv 7s linear infinite}
 .ledw:hover .led{animation-play-state:paused}
 .ledg{flex:none;padding-right:3em}
 .ledg .gb{color:#f6f4ea;text-shadow:0 0 2px rgba(255,255,255,.7),1px 1px 0 rgba(255,255,255,.35)}
@@ -575,12 +575,12 @@ function anima(){
   },{threshold:0});
   todas().forEach(cv=>{const n=+cv.dataset.n;if(n<2)return;let k=0;
     /* cada card tem seu proprio ritmo: nada de animacoes sincronizadas */
-    const CAPA=1800+Math.random()*2200, PAG=1250+Math.random()*1100;
+    const CAPA=2800+Math.random()*2200, PAG=1250+Math.random()*1100;
     const bk=cv.querySelector(".book"),pgs=[...bk.querySelectorAll(".pg:not(.base)")],ds=cv.querySelectorAll(".dots i");
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
     cv._reset=()=>{clearTimeout(cv._t);cv._t=null;if(k||bk.querySelector(".flip")){bk.classList.add("nt");pgs.forEach(p=>p.classList.remove("flip"));void bk.offsetHeight;bk.classList.remove("nt")}k=0;dot(0)};
     cv._pause=()=>{cv._p=1;cv._reset();cv._vis=cv._vis};
-    cv._play=d=>{cv._p=0;clearTimeout(cv._t);cv._t=setTimeout(passo,d===undefined?30:d)};
+    cv._play=d=>{cv._p=0;clearTimeout(cv._t);cv._t=setTimeout(passo,(d===undefined?30:d)+1000)};
     const passo=()=>{cv._t=null;
       if(rolando||cv._p||!cv._vis)return;
       if(k<n){pgs[k].classList.add("flip");k++;dot(k);
@@ -770,7 +770,7 @@ winit();
 </script>
 <script>
 (function(){
-  var ids=["chips","tipos","series"],VEL=31.5,PAUSA=4000,st=[];
+  var ids=["chips","tipos","series"],VEL=22,PAUSA=4000,st=[];
   function vis(n){return n.offsetParent!==null}
   function larg(o){
     var el=o.el,f=null,c=null,k;
@@ -826,7 +826,7 @@ winit();
   function tick(t){
     var dt=Math.min(.1,(t-ult)/1000);ult=t;var agora=Date.now();
     if(gz&&G.g){
-      if(!G.down&&agora>=G.ate)G.pos+=(G.g/5)*dt;
+      if(!G.down&&agora>=G.ate)G.pos+=(G.g/7)*dt;
       G.pos=((G.pos%G.g)+G.g)%G.g;
       gz.style.transform="translateX("+(-G.pos)+"px)";
     }
