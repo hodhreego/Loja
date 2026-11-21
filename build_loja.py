@@ -172,11 +172,11 @@ def series_de(slug, nome):
 for slug, nome, g, code, preco, sub in P:
     imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 9) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
     if slug.startswith('ef-'):   # capa Se Liga EF no mesmo molde do Se Liga Matematica (12/11/2026)
-        imgs = [i + '?v=15' for i in imgs]
+        imgs = [i + '?v=16' for i in imgs]
     elif tipo_de(slug) in ('se-liga', 'se-liga-ing'):   # prévias novas: páginas internas de questões, sem tarja (12/11/2026)
-        imgs = [i + '?v=15' for i in imgs]
+        imgs = [i + '?v=16' for i in imgs]
     elif tipo_de(slug) in ('sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
-        imgs = [(i + '?v=15') if (tipo_de(slug) in ('sei','saeb') or i.endswith('-1.jpg')) else i for i in imgs]
+        imgs = [(i + '?v=16') if (tipo_de(slug) in ('sei','saeb') or i.endswith('-1.jpg')) else i for i in imgs]
     elif slug.startswith('cn-'):   # tarja forte nas miniaturas 2-5, capa limpa (13/11/2026)
         imgs = [i + '?v=9' for i in imgs]
     else:   # previas novas em alta resolucao com faixa AMOSTRA (08/11/2026)
@@ -475,11 +475,11 @@ section.grupo h2{font-size:22px}
 .foot-sec{margin:0 0 8px}.foot-sec a{color:var(--gold-light);font-weight:700}
 @media(max-width:720px){.rot{display:none}#series .chip,#tipos .chip{flex:none}}
 .ledw{display:block;position:relative;overflow:hidden;background:#082A1C url(img/giz-fundo.png);border:3px solid #6b4a2b;border-radius:10px;padding:7px 0;box-shadow:inset 0 0 18px rgba(0,0,0,.35)}
-.led{display:inline-flex;white-space:nowrap;padding-left:0;font:400 28px 'Playwrite BR','Comic Sans MS',cursive;letter-spacing:0;line-height:1.2;color:#ffffff;text-shadow:0 0 1px #fff,0 0 3px rgba(255,255,255,.9),1px 1px 0 rgba(255,255,255,.8),-1px 0 0 rgba(255,255,255,.6),-1px 0 0 rgba(255,255,255,.25);filter:url(#giz);animation:ledmv 7s linear infinite}
+.led{display:inline-flex;white-space:nowrap;padding-left:0;font:300 28px 'Playwrite BR','Comic Sans MS',cursive;letter-spacing:0;line-height:1.2;color:#ffffff;text-shadow:0 0 1px rgba(255,255,255,.7),-1px 0 0 rgba(255,255,255,.25);filter:url(#giz);animation:ledmv 7s linear infinite}
 .ledw:hover .led{animation-play-state:paused}
 .ledg{flex:none;padding-right:3em}
 .ledg .gb{color:#f6f4ea;text-shadow:0 0 2px rgba(255,255,255,.7),1px 1px 0 rgba(255,255,255,.35)}
-.ledg .gy{color:#ffd400;text-shadow:0 0 1px #ffd400,0 0 3px rgba(255,212,0,.9),1px 1px 0 rgba(255,212,0,.8),-1px 0 0 rgba(255,212,0,.6)}
+.ledg .gy{color:#ffd400;text-shadow:0 0 1px rgba(255,212,0,.7)}
 @keyframes ledmv{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(max-width:900px){.led{font-size:20px}}
 #chips,#tipos,#series,.certs{scrollbar-width:none;-ms-overflow-style:none}
@@ -503,7 +503,7 @@ section.grupo h2{font-size:22px}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="giz" x="-2%" y="-10%" width="104%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" result="d"/><feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="9" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 -1.1 1.5" result="m"/><feComposite in="d" in2="m" operator="in"/></filter></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="giz" x="-2%" y="-10%" width="104%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" result="d"/><feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="9" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 -1.1 1.5" result="m"/><feComposite in="d" in2="m" operator="in"/></filter></svg>
 <div class="minibar" id="minibar" aria-hidden="true"><b><a class="mbhome" href="/" title="Ir para a página inicial">Loja de <em>Educação e Matemática</em></a></b><button type="button" id="mbb" class="mbb" aria-expanded="false" onclick="mbTog()"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg> <span id="mbn">Todas</span> ▾</button><span class="mbs"></span><div id="mbt" class="mbt" hidden></div><button type="button" class="topcart" onclick="ctoggle(undefined,'top')"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg> Ver carrinho <b class="cn">0</b></button><button type="button" onclick="wtoggle(true)">WhatsApp</button></div>
 <header class="hero"><div class="wrap">
   <div class="eyebrow">Prof. Rodrigo Gonçalves Pereira</div>
