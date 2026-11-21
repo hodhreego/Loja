@@ -172,11 +172,11 @@ def series_de(slug, nome):
 for slug, nome, g, code, preco, sub in P:
     imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 9) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
     if slug.startswith('ef-'):   # capa Se Liga EF no mesmo molde do Se Liga Matematica (12/11/2026)
-        imgs = [i + '?v=16' for i in imgs]
+        imgs = [i + '?v=17' for i in imgs]
     elif tipo_de(slug) in ('se-liga', 'se-liga-ing'):   # prévias novas: páginas internas de questões, sem tarja (12/11/2026)
-        imgs = [i + '?v=16' for i in imgs]
+        imgs = [i + '?v=17' for i in imgs]
     elif tipo_de(slug) in ('sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
-        imgs = [(i + '?v=16') if (tipo_de(slug) in ('sei','saeb') or i.endswith('-1.jpg')) else i for i in imgs]
+        imgs = [(i + '?v=17') if (tipo_de(slug) in ('sei','saeb') or i.endswith('-1.jpg')) else i for i in imgs]
     elif slug.startswith('cn-'):   # tarja forte nas miniaturas 2-5, capa limpa (13/11/2026)
         imgs = [i + '?v=9' for i in imgs]
     else:   # previas novas em alta resolucao com faixa AMOSTRA (08/11/2026)
@@ -419,16 +419,11 @@ footer b{color:#fff}.warn{margin-top:12px;background:#a1262a;color:#fff;border-r
 .pg>.b{transform:rotateY(180deg);background:linear-gradient(90deg,#d9d2c2,#f6f1e6 18%,#fbf8f0)}
 .pg .sh{position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.05) 70%)}
 .pg>.f::after{content:none}
-.pg.flip{animation:turn 1.2s cubic-bezier(.45,.05,.3,1) forwards}
-.pg.flip .f+.sh{animation:shf 1.2s ease-in forwards}
+.pg.flip{will-change:transform;animation:turn .9s cubic-bezier(.4,0,.25,1) forwards}
+.pg.flip .f+.sh{animation:shf .9s linear forwards}
 .rol .pg.flip,.rol .pg.flip .f+.sh{animation-play-state:paused}
-@keyframes turn{
- 0%{transform:rotateY(0) skewY(0);box-shadow:0 0 0 rgba(0,0,0,0)}
- 25%{transform:rotateY(-40deg) skewY(-1.2deg);box-shadow:14px 0 26px rgba(0,0,0,.28)}
- 50%{transform:rotateY(-92deg) skewY(-2.5deg);box-shadow:26px 0 38px rgba(0,0,0,.36)}
- 75%{transform:rotateY(-142deg) skewY(-1.2deg);box-shadow:18px 0 28px rgba(0,0,0,.26)}
- 100%{transform:rotateY(-180deg) skewY(0);box-shadow:0 0 0 rgba(0,0,0,0)}}
-@keyframes shf{0%{opacity:0}60%{opacity:.8}100%{opacity:.9}}
+@keyframes turn{0%{transform:rotateY(0)}100%{transform:rotateY(-180deg)}}
+@keyframes shf{0%{opacity:0}50%{opacity:.55}100%{opacity:.7}}
 .book.nt .pg{animation:none!important}
 .book:after{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:linear-gradient(90deg,rgba(0,0,0,.35),transparent);z-index:99;pointer-events:none}
 .dots{position:absolute;left:0;right:0;bottom:10px;display:flex;gap:5px;justify-content:center;pointer-events:none;z-index:2}
@@ -591,7 +586,7 @@ function card(it){
                  :`<a class="btn buy" target="_blank" rel="noopener" href="${it.link}">Comprar agora</a>`;
   const add=`<button class="btn add" onclick="addCart('${it.slug}')" title="Adicionar ao carrinho" aria-label="Adicionar ${it.nome} ao carrinho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg><span>Adicionar ao carrinho</span></button>`;
   const n=it.imgs.length;
-  const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i></div>`;
+  const leaf=(u,k)=>`<div class="pg" style="z-index:${n-k+1}"><img class="f" decoding="async" ${k?'loading="lazy"':''} src="${u}" alt="${k?'Página '+(k+1)+' da':'Capa da'} apostila ${it.nome}"><i class="sh"></i><i class="b"></i></div>`;
   const strip=it.imgs.map((u,k)=>leaf(u,k)).join("")+`<div class="pg base" style="z-index:0"><img class="f" src="${it.imgs[0]}" alt=""></div>`;
   const dots="";
   return `<article class="card" data-s="${it.slug}"><div class="cover${it.tipo==='saeb'?' neon':''}" data-n="${it.imgs.length}" onclick="abre('${it.slug}')"><div class="book">${strip}</div>${dots}<span class="badge ${soon?'soon':''}">${soon?'Em breve':'Disponível'}</span><div class="pills"><button type="button" class="peek cartpeek" onclick="event.stopPropagation();addCart('${it.slug}')" aria-label="Adicionar ao carrinho"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg> +</button><span class="peek"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg> ver</span></div></div>
@@ -762,7 +757,7 @@ function anima(){
     const dot=i=>ds.forEach((d,j)=>d.classList.toggle("on",j===i%n));
     cv._reset=()=>{clearTimeout(cv._t);cv._t=null;if(k||bk.querySelector(".flip")){bk.classList.add("nt");pgs.forEach(p=>p.classList.remove("flip"));void bk.offsetHeight;bk.classList.remove("nt")}k=0;dot(0)};
     cv._pause=()=>{cv._p=1;cv._reset();cv._vis=cv._vis};
-    cv._play=d=>{cv._p=0;clearTimeout(cv._t);cv._t=setTimeout(passo,(d===undefined?30:d)+1000)};
+    cv._play=d=>{cv._p=0;clearTimeout(cv._t);cv._t=setTimeout(passo,(d===undefined?30:d)+1500)};
     const passo=()=>{cv._t=null;
       if(rolando||cv._p||!cv._vis)return;
       if(k<n){pgs[k].classList.add("flip");k++;dot(k);
