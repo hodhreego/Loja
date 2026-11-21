@@ -474,14 +474,14 @@ section.grupo h2{font-size:22px}
 .indice{max-height:calc(100vh - 36px);overflow:auto}.indice a.sub{font-weight:500;font-size:12.5px;padding:4px 9px 4px 16px;color:var(--mut)}.ic16{vertical-align:-3px}.ck{vertical-align:-2px}
 .foot-sec{margin:0 0 8px}.foot-sec a{color:var(--gold-light);font-weight:700}
 @media(max-width:720px){.rot{display:none}#series .chip,#tipos .chip{flex:none}}
-.ledw{display:block;position:relative;overflow:hidden;background:#082A1C url(img/giz-fundo.png);border:3px solid #6b4a2b;border-radius:12px;padding:14px 0;box-shadow:inset 0 0 18px rgba(0,0,0,.35)}
-.led{display:inline-flex;white-space:nowrap;padding-left:0;font:400 56px 'Playwrite BR','Comic Sans MS',cursive;letter-spacing:0;line-height:1.2;color:#f6f4ea;text-shadow:0 0 2px rgba(255,255,255,.7),1px 1px 0 rgba(255,255,255,.35),-1px 0 0 rgba(255,255,255,.25);filter:url(#giz);animation:ledmv 7s linear infinite}
+.ledw{display:block;position:relative;overflow:hidden;background:#082A1C url(img/giz-fundo.png);border:3px solid #6b4a2b;border-radius:10px;padding:7px 0;box-shadow:inset 0 0 18px rgba(0,0,0,.35)}
+.led{display:inline-flex;white-space:nowrap;padding-left:0;font:400 28px 'Playwrite BR','Comic Sans MS',cursive;letter-spacing:0;line-height:1.2;color:#f6f4ea;text-shadow:0 0 2px rgba(255,255,255,.7),1px 1px 0 rgba(255,255,255,.35),-1px 0 0 rgba(255,255,255,.25);filter:url(#giz);animation:ledmv 3.5s linear infinite}
 .ledw:hover .led{animation-play-state:paused}
 .ledg{flex:none;padding-right:3em}
 .ledg .gb{color:#f6f4ea;text-shadow:0 0 2px rgba(255,255,255,.7),1px 1px 0 rgba(255,255,255,.35)}
 .ledg .gy{color:#ffe14d;text-shadow:0 0 2px rgba(255,225,77,.75),1px 1px 0 rgba(255,225,77,.35)}
 @keyframes ledmv{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media(max-width:900px){.led{font-size:40px}}
+@media(max-width:900px){.led{font-size:20px}}
 #chips,#tipos,#series,.certs{scrollbar-width:none;-ms-overflow-style:none}
 #chips::-webkit-scrollbar,#tipos::-webkit-scrollbar,#series::-webkit-scrollbar,.certs::-webkit-scrollbar{display:none;width:0;height:0}
 #chips,#tipos,#series{padding-top:0!important;padding-bottom:0!important;gap:6px!important}
