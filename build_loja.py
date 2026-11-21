@@ -475,11 +475,11 @@ section.grupo h2{font-size:22px}
 .foot-sec{margin:0 0 8px}.foot-sec a{color:var(--gold-light);font-weight:700}
 @media(max-width:720px){.rot{display:none}#series .chip,#tipos .chip{flex:none}}
 .ledw{display:block;position:relative;overflow:hidden;background:#082A1C url(img/giz-fundo.png);border:3px solid #6b4a2b;border-radius:10px;padding:7px 0;box-shadow:inset 0 0 18px rgba(0,0,0,.35)}
-.led{display:inline-flex;white-space:nowrap;padding-left:0;font:400 28px 'Playwrite BR','Comic Sans MS',cursive;letter-spacing:0;line-height:1.2;color:#f6f4ea;text-shadow:0 0 2px rgba(255,255,255,.7),1px 1px 0 rgba(255,255,255,.35),-1px 0 0 rgba(255,255,255,.25);filter:url(#giz);animation:ledmv 3.5s linear infinite}
+.led{display:inline-flex;white-space:nowrap;padding-left:0;font:400 28px 'Playwrite BR','Comic Sans MS',cursive;letter-spacing:0;line-height:1.2;color:#ffffff;text-shadow:0 0 1px #fff,0 0 3px rgba(255,255,255,.9),1px 1px 0 rgba(255,255,255,.8),-1px 0 0 rgba(255,255,255,.6),-1px 0 0 rgba(255,255,255,.25);filter:url(#giz);animation:ledmv 5s linear infinite}
 .ledw:hover .led{animation-play-state:paused}
 .ledg{flex:none;padding-right:3em}
 .ledg .gb{color:#f6f4ea;text-shadow:0 0 2px rgba(255,255,255,.7),1px 1px 0 rgba(255,255,255,.35)}
-.ledg .gy{color:#ffe14d;text-shadow:0 0 2px rgba(255,225,77,.75),1px 1px 0 rgba(255,225,77,.35)}
+.ledg .gy{color:#ffd400;text-shadow:0 0 1px #ffd400,0 0 3px rgba(255,212,0,.9),1px 1px 0 rgba(255,212,0,.8),-1px 0 0 rgba(255,212,0,.6)}
 @keyframes ledmv{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(max-width:900px){.led{font-size:20px}}
 #chips,#tipos,#series,.certs{scrollbar-width:none;-ms-overflow-style:none}
@@ -503,7 +503,7 @@ section.grupo h2{font-size:22px}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="giz" x="-2%" y="-10%" width="104%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" result="d"/><feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="9" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 -2.2 1.55" result="m"/><feComposite in="d" in2="m" operator="in"/></filter></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="giz" x="-2%" y="-10%" width="104%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" result="d"/><feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="9" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 -1.1 1.5" result="m"/><feComposite in="d" in2="m" operator="in"/></filter></svg>
 <div class="minibar" id="minibar" aria-hidden="true"><b><a class="mbhome" href="/" title="Ir para a página inicial">Loja de <em>Educação e Matemática</em></a></b><button type="button" id="mbb" class="mbb" aria-expanded="false" onclick="mbTog()"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg> <span id="mbn">Todas</span> ▾</button><span class="mbs"></span><div id="mbt" class="mbt" hidden></div><button type="button" class="topcart" onclick="ctoggle(undefined,'top')"><svg class="ic16" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg> Ver carrinho <b class="cn">0</b></button><button type="button" onclick="wtoggle(true)">WhatsApp</button></div>
 <header class="hero"><div class="wrap">
   <div class="eyebrow">Prof. Rodrigo Gonçalves Pereira</div>
@@ -952,7 +952,7 @@ winit();
 </script>
 <script>
 (function(){
-  var ids=["chips","tipos","series"],VEL=45,PAUSA=4000,st=[];
+  var ids=["chips","tipos","series"],VEL=31.5,PAUSA=4000,st=[];
   function vis(n){return n.offsetParent!==null}
   function larg(o){
     var el=o.el,f=null,c=null,k;
@@ -1008,7 +1008,7 @@ winit();
   function tick(t){
     var dt=Math.min(.1,(t-ult)/1000);ult=t;var agora=Date.now();
     if(gz&&G.g){
-      if(!G.down&&agora>=G.ate)G.pos+=(G.g/3.5)*dt;
+      if(!G.down&&agora>=G.ate)G.pos+=(G.g/5)*dt;
       G.pos=((G.pos%G.g)+G.g)%G.g;
       gz.style.transform="translateX("+(-G.pos)+"px)";
     }
