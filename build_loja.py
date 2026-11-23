@@ -47,6 +47,8 @@ P = [
  ("se-liga-rec-9", "Se Liga 2026 · Matemática — 9º ano — Recomposição + Extraordinário", "reforco", "76y5bn6u", 10, "Recomposição de aprendizagem + versão extraordinária, com gabarito e resoluções. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), resumos por conteúdo e versões letra grande, letra gigante e alto contraste."),
  ("ing-6", "Se Liga 2026 · Inglês — 6º ano + Extraordinário", "reforco", "wynaexwc", 10, "Revisão para as avaliações finais de Inglês + versão extraordinária, com gabarito. Inclui também 3 cadernos por trimestre (1º, 2º e 3º) e resumos por conteúdo."),
  ("ing-8", "Se Liga 2026 · Inglês — 8º ano + Extraordinário", "reforco", "atbwmskj", 10, "Revisão para as avaliações finais de Inglês + versão extraordinária, com gabarito. Inclui também 3 cadernos por trimestre (1º, 2º e 3º) e resumos por conteúdo."),
+ ("ing-7", "Se Liga 2026 · Inglês — 7º ano + Extraordinário", "reforco", None, 10, "Revisão para as avaliações finais de Inglês + versão extraordinária, com gabarito. Inclui também 3 cadernos por trimestre (1º, 2º e 3º) e resumos por conteúdo."),
+ ("ing-9", "Se Liga 2026 · Inglês — 9º ano + Extraordinário", "reforco", None, 10, "Revisão para as avaliações finais de Inglês + versão extraordinária, com gabarito. Inclui também 3 cadernos por trimestre (1º, 2º e 3º) e resumos por conteúdo."),
  ("ef-6", "Se Liga 2026 · Educação Financeira — 6º ano", "reforco", "E0DK782N91", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões cada."),
  ("ef-7", "Se Liga 2026 · Educação Financeira — 7º ano", "reforco", "E9OG7ADAWB", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões cada."),
  ("ef-8", "Se Liga 2026 · Educação Financeira — 8º ano", "reforco", "7WXGXYE40A", 10, "25 questões (20 objetivas + 5 discursivas) com gabarito oficial e resoluções. A4 pronto para imprimir. Inclui também 3 cadernos por trimestre (1º, 2º e 3º), com 20 questões cada."),
@@ -122,7 +124,7 @@ GRUPOS = {"pss": "PSS SEED-PR 2027", "cisop": "CISOP Cascavel 2026", "prefeitura
 AV = {"cn-caca-av168":168,"cn-caca-av169":169,"cn-caca-av170":170,"cn-caca-av171":171,"cn-caca-av172":172,"cn-caca-av173":173,"cn-da-africa-ao-brasil":159,"cn-portugues-autoria-negra":160,"cn-cientistas-negras":161,"cn-negros-mundo":162,"cn-direitos-civis-eua":163,"cn-apartheid":164,"cn-portugues-3ano":165,"cn-historia-3ano":166,"cn-matematica-3ano":167,"consciencia-negra":158,"cn-raizes-africanas":153,"cn-numeros-historia":154,"cn-quem-sou-eu":155,"cn-gazeta-quilombos":156,"cn-palavras-herdadas":157,"matematica":80,"conhecimentos-basicos":81,"pedagogo":82,"educacao-especial":83,"historia":84,"geografia":85,"artes":86,"lingua-inglesa":87,"educacao-fisica":88,"gestao-negocios":89,"pedagogo-abaetetuba":90,"quimica":91,"simulado-matematica":79,
  "volume-cilindro":136,"volume-cone":137,"volume-cubo":138,"volume-cubo-bloco-prisma":139,"volume-esfera":140,"volume-paralelepipedo":141,"volume-piramide":142,"volume-prisma":143,
  "se-liga-1em":122,"se-liga-2em":123,"se-liga-3em":124,"se-liga-6":125,"se-liga-7":126,"se-liga-8":127,"se-liga-9":128,
- "sei-1em":129,"sei-2em":130,"sei-3em":131,"sei-6":132,"sei-7":133,"sei-8":134,"sei-9":135,"saeb-5":112,"ef-6":146,"ef-7":147,"ef-8":148,"ef-9":149,"ef-1em":150,"se-liga-rec-6":144,"se-liga-rec-9":145,"ing-6":174,"ing-8":175,"ef-2em":151,"ef-3em":152,"saeb-9":113,"saeb-3em":114}
+ "sei-1em":129,"sei-2em":130,"sei-3em":131,"sei-6":132,"sei-7":133,"sei-8":134,"sei-9":135,"saeb-5":112,"ef-6":146,"ef-7":147,"ef-8":148,"ef-9":149,"ef-1em":150,"se-liga-rec-6":144,"se-liga-rec-9":145,"ing-6":174,"ing-8":175,"ing-7":179,"ing-9":180,"ef-2em":151,"ef-3em":152,"saeb-9":113,"saeb-3em":114}
 items = []
 def tipo_de(slug):
     if slug.startswith('res-'): return 'resumos'
@@ -181,16 +183,16 @@ for slug, nome, g, code, preco, sub in P:
     if slug.startswith('res-'):
         imgs = [i + '?v=1' for i in imgs]
     elif slug.startswith('ef-'):   # capa Se Liga EF no mesmo molde do Se Liga Matematica (12/11/2026)
-        imgs = [i + '?v=20' for i in imgs]
+        imgs = [i + '?v=21' for i in imgs]
     elif tipo_de(slug) in ('se-liga', 'se-liga-ing'):   # prévias novas: páginas internas de questões, sem tarja (12/11/2026)
-        imgs = [i + '?v=20' for i in imgs]
+        imgs = [i + '?v=21' for i in imgs]
     elif tipo_de(slug) in ('sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
-        imgs = [(i + '?v=20') if (tipo_de(slug) in ('sei','saeb') or i.endswith('-1.jpg')) else i for i in imgs]
+        imgs = [(i + '?v=21') if (tipo_de(slug) in ('sei','saeb') or i.endswith('-1.jpg')) else i for i in imgs]
     elif slug.startswith('cn-'):   # tarja forte nas miniaturas 2-5, capa limpa (13/11/2026)
         imgs = [i + '?v=9' for i in imgs]
     else:   # previas novas em alta resolucao com faixa AMOSTRA (08/11/2026)
         imgs = [i + '?v=6' for i in imgs]
-    items.append({"slug": slug, "av": ("Av%d" % AV[slug]) if slug in AV else ("Resumo" if slug.startswith("res-") else slug), "nome": nome, "grupo": g, "grupoNome": GRUPOS[g], "link": (CHK + code) if code else None, "wa": slug.startswith("res-"),
+    items.append({"slug": slug, "av": ("Av%d" % AV[slug]) if slug in AV else ("Resumo" if slug.startswith("res-") else slug), "nome": nome, "grupo": g, "grupoNome": GRUPOS[g], "link": (CHK + code) if code else None, "wa": slug.startswith("res-") or slug in ("ing-7", "ing-9"),
                   "preco": preco, "sub": sub, "imgs": imgs, "tipo": tipo_de(slug), "cat": cats_de(slug), "sug": SUGEST.get(slug, []), "serie": series_de(slug, nome),
                   "pag": (("Av%d" % AV[slug]) if slug in AV else slug),
                   "de": 15 if slug in ('saeb-5', 'saeb-9', 'saeb-3em') else None,
