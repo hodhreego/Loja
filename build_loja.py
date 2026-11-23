@@ -172,11 +172,11 @@ def series_de(slug, nome):
 for slug, nome, g, code, preco, sub in P:
     imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 9) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
     if slug.startswith('ef-'):   # capa Se Liga EF no mesmo molde do Se Liga Matematica (12/11/2026)
-        imgs = [i + '?v=19' for i in imgs]
+        imgs = [i + '?v=20' for i in imgs]
     elif tipo_de(slug) in ('se-liga', 'se-liga-ing'):   # prévias novas: páginas internas de questões, sem tarja (12/11/2026)
-        imgs = [i + '?v=19' for i in imgs]
+        imgs = [i + '?v=20' for i in imgs]
     elif tipo_de(slug) in ('sei', 'saeb') or slug == 'volume-cubo-bloco-prisma':   # capas restauradas do catalogo WhatsApp (06/11/2026)
-        imgs = [(i + '?v=19') if (tipo_de(slug) in ('sei','saeb') or i.endswith('-1.jpg')) else i for i in imgs]
+        imgs = [(i + '?v=20') if (tipo_de(slug) in ('sei','saeb') or i.endswith('-1.jpg')) else i for i in imgs]
     elif slug.startswith('cn-'):   # tarja forte nas miniaturas 2-5, capa limpa (13/11/2026)
         imgs = [i + '?v=9' for i in imgs]
     else:   # previas novas em alta resolucao com faixa AMOSTRA (08/11/2026)
@@ -252,7 +252,7 @@ h1 em{color:var(--gold-light);font-style:normal}
 section.grupo{margin-top:34px}
 section.grupo h2{font-family:'Playfair Display',serif;color:var(--gold-light);font-size:26px;display:flex;align-items:center;gap:12px}
 section.grupo h2:after{content:"";flex:1;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px;margin-top:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(max(200px,calc((100% - 60px)/4)),1fr));gap:20px;margin-top:16px}
 .card{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(15,37,71,.09);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
 .card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(15,37,71,.18)}
 .cover{position:relative;aspect-ratio:3/4;background:#dfe7f5;cursor:pointer;overflow:hidden}
