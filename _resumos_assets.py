@@ -12,8 +12,8 @@ M = r'A:\Claude.ai\Materiais'
 ITENS = []   # (slug, nome, pdf)
 for p, rot, ser in [('1-serie-em-matematica', 'Matemática', '1ª série EM'), ('2-serie-em-matematica', 'Matemática', '2ª série EM'), ('3-serie-em-matematica', 'Matemática', '3ª série EM'),
                     ('6-ano-matematica', 'Matemática', '6º ano'), ('7-ano-matematica', 'Matemática', '7º ano'), ('8-ano-matematica', 'Matemática', '8º ano'),
-                    ('9-ano-matematica', 'Matemática', '9º ano'), ('6-ano-recomposicao', 'Recomposição', '6º ano'), ('9-ano-recomposicao', 'Recomposição', '9º ano')]:
-    pref = {'Matemática': 'res-', 'Recomposição': 'res-rec-'}[rot]
+                    ('9-ano-matematica', 'Matemática', '9º ano'), ('6-ano-recomposicao', 'Recomposição da Aprendizagem Matemática', '6º ano'), ('9-ano-recomposicao', 'Recomposição da Aprendizagem Matemática', '9º ano')]:
+    pref = {'Matemática': 'res-', 'Recomposição da Aprendizagem Matemática': 'res-rec-'}[rot]
     slug = pref + {'1ª série EM': '1em', '2ª série EM': '2em', '3ª série EM': '3em'}.get(ser, ser[0])
     ITENS.append((slug, 'Resumos por conteúdo · %s — %s' % (rot, ser), os.path.join(M, 'Matematica', 'Avaliacoes-Finais', p, 'resumos-se-liga-2026.pdf')))
 for p, ser in [('6-ano', '6º ano'), ('7-ano', '7º ano'), ('8-ano', '8º ano'), ('9-ano', '9º ano'), ('1-serie-em', '1ª série EM'), ('2-serie-em', '2ª série EM'), ('3-serie-em', '3ª série EM')]:
