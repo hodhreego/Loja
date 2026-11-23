@@ -100,6 +100,7 @@ _VOLFIM = " Gabarito resolvido incluso. PDF em A4, pronto para imprimir."
 _SERIE = lambda n: n.split("— ")[-1].replace(" + Extraordinário", "")
 def _desc(slug, nome, sub):
     if slug.startswith("volume-"): return _VOL.get(slug[7:], sub) + _VOLFIM
+    if slug.startswith("res-"): return sub
     if slug.startswith("se-liga-"):
         return ("Revisão completa para as avaliações finais de Matemática do %s. "
                 "Inclui a versão extraordinária (recuperação) e gabarito. A4 pronto para imprimir.") % _SERIE(nome)
@@ -114,6 +115,8 @@ def _desc(slug, nome, sub):
     if slug.startswith("cisop-"):
         return sub.rstrip(".") + ". Apostila focada no edital: conteúdo organizado por disciplina, com resumos objetivos e questões para treinar."
     return sub
+from produtos_resumos import RESUMOS   # Resumos por conteúdo: R$ 3,00, venda pelo WhatsApp (Eduzz tem mínimo de R$ 5)
+P = P + list(RESUMOS)
 P = [(a, b, c, d, e, _desc(a, b, f)) for a, b, c, d, e, f in P]
 GRUPOS = {"pss": "PSS SEED-PR 2027", "cisop": "CISOP Cascavel 2026", "prefeitura": "Prefeitura de Cascavel 2026", "simulado": "Simulados", "reforco": "Reforço e recomposição", "outros": "Outros concursos"}
 AV = {"cn-caca-av168":168,"cn-caca-av169":169,"cn-caca-av170":170,"cn-caca-av171":171,"cn-caca-av172":172,"cn-caca-av173":173,"cn-da-africa-ao-brasil":159,"cn-portugues-autoria-negra":160,"cn-cientistas-negras":161,"cn-negros-mundo":162,"cn-direitos-civis-eua":163,"cn-apartheid":164,"cn-portugues-3ano":165,"cn-historia-3ano":166,"cn-matematica-3ano":167,"consciencia-negra":158,"cn-raizes-africanas":153,"cn-numeros-historia":154,"cn-quem-sou-eu":155,"cn-gazeta-quilombos":156,"cn-palavras-herdadas":157,"matematica":80,"conhecimentos-basicos":81,"pedagogo":82,"educacao-especial":83,"historia":84,"geografia":85,"artes":86,"lingua-inglesa":87,"educacao-fisica":88,"gestao-negocios":89,"pedagogo-abaetetuba":90,"quimica":91,"simulado-matematica":79,
@@ -122,6 +125,7 @@ AV = {"cn-caca-av168":168,"cn-caca-av169":169,"cn-caca-av170":170,"cn-caca-av171
  "sei-1em":129,"sei-2em":130,"sei-3em":131,"sei-6":132,"sei-7":133,"sei-8":134,"sei-9":135,"saeb-5":112,"ef-6":146,"ef-7":147,"ef-8":148,"ef-9":149,"ef-1em":150,"se-liga-rec-6":144,"se-liga-rec-9":145,"ing-6":174,"ing-8":175,"ef-2em":151,"ef-3em":152,"saeb-9":113,"saeb-3em":114}
 items = []
 def tipo_de(slug):
+    if slug.startswith('res-'): return 'resumos'
     if '-caca-' in slug or slug.startswith('caca-'): return 'caca'
     if slug.startswith('cn-') or slug == 'consciencia-negra': return 'cn'
     if slug == 'album-multiplicacao': return 'album'
@@ -155,6 +159,9 @@ SUGEST = {
  'consciencia-negra': ['Matemática', 'História', 'Arte', 'Língua Portuguesa']}
 def cats_de(slug):
     c = list(CAT_DISC.get(slug, []))
+    if slug.startswith('res-ef-'): return ['financeira']
+    if slug.startswith('res-ing-'): return ['ingles']
+    if slug.startswith('res-'): return ['matematica']
     if slug.startswith(('volume-', 'se-liga-', 'sei-', 'saeb-')): c = ['matematica']
     if slug.startswith('ef-'): c = ['financeira']
     if slug.startswith('ing-'): c = ['ingles']
@@ -171,7 +178,9 @@ def series_de(slug, nome):
 
 for slug, nome, g, code, preco, sub in P:
     imgs = [f"img/{slug}-{k}.jpg" for k in range(1, 9) if os.path.exists(os.path.join(HERE, "img", f"{slug}-{k}.jpg"))]
-    if slug.startswith('ef-'):   # capa Se Liga EF no mesmo molde do Se Liga Matematica (12/11/2026)
+    if slug.startswith('res-'):
+        imgs = [i + '?v=1' for i in imgs]
+    elif slug.startswith('ef-'):   # capa Se Liga EF no mesmo molde do Se Liga Matematica (12/11/2026)
         imgs = [i + '?v=20' for i in imgs]
     elif tipo_de(slug) in ('se-liga', 'se-liga-ing'):   # prévias novas: páginas internas de questões, sem tarja (12/11/2026)
         imgs = [i + '?v=20' for i in imgs]
@@ -181,7 +190,7 @@ for slug, nome, g, code, preco, sub in P:
         imgs = [i + '?v=9' for i in imgs]
     else:   # previas novas em alta resolucao com faixa AMOSTRA (08/11/2026)
         imgs = [i + '?v=6' for i in imgs]
-    items.append({"slug": slug, "av": ("Av%d" % AV[slug]) if slug in AV else slug, "nome": nome, "grupo": g, "grupoNome": GRUPOS[g], "link": (CHK + code) if code else None,
+    items.append({"slug": slug, "av": ("Av%d" % AV[slug]) if slug in AV else ("Resumo" if slug.startswith("res-") else slug), "nome": nome, "grupo": g, "grupoNome": GRUPOS[g], "link": (CHK + code) if code else None, "wa": slug.startswith("res-"),
                   "preco": preco, "sub": sub, "imgs": imgs, "tipo": tipo_de(slug), "cat": cats_de(slug), "sug": SUGEST.get(slug, []), "serie": series_de(slug, nome),
                   "pag": (("Av%d" % AV[slug]) if slug in AV else slug),
                   "de": 15 if slug in ('saeb-5', 'saeb-9', 'saeb-3em') else None,
@@ -576,13 +585,13 @@ const MODO="__MODO__";
 const VIS=ITENS.filter(i=>MODO==="concursos"?i.grupo!=="reforco":i.grupo==="reforco");
 const WA="__WA__";
 const GR=(MODO==="concursos"?[]:[["reforco","Atividades"]]).concat([["pss","PSS SEED-PR 2027"],["cisop","CISOP Cascavel 2026"],["prefeitura","Prefeitura de Cascavel 2026"],["outros","Outros concursos"]]);
-const TIPOS=[["todos","Todas as atividades"],["se-liga","Se Liga de Matemática"],["se-liga-ef","Se Liga de Educação Financeira"],["se-liga-ing","Se Liga de Inglês"],["sei","Semanas de Estudos"],["saeb","Simulados SAEB"],["volumes","Volumes"],["apostilas","Apostilas"]];
+const TIPOS=[["todos","Todas as atividades"],["se-liga","Se Liga de Matemática"],["se-liga-ef","Se Liga de Educação Financeira"],["se-liga-ing","Se Liga de Inglês"],["resumos","Resumos por conteúdo"],["sei","Semanas de Estudos"],["saeb","Simulados SAEB"],["volumes","Volumes"],["apostilas","Apostilas"]];
 let filtro="todos",busca="",filtroTipo="todos";{const h=location.hash.slice(1);if(["pss","cisop","prefeitura","simulado","outros"].includes(h))filtro=h}
 const $=s=>document.querySelector(s);
 const brl=n=>n.toFixed(2).replace(".",",");
 function card(it){
-  const soon=!it.link;
-  const act=soon?`<button class="btn wa" onclick="wabre('${it.slug}',5)">Avisar-me</button>`
+  const soon=!it.link&&!it.wa;
+  const act=it.wa?`<button class="btn buy" onclick="wabre('${it.slug}')">Comprar no WhatsApp</button>`:soon?`<button class="btn wa" onclick="wabre('${it.slug}',5)">Avisar-me</button>`
                  :`<a class="btn buy" target="_blank" rel="noopener" href="${it.link}">Comprar agora</a>`;
   const add=`<button class="btn add" onclick="addCart('${it.slug}')" title="Adicionar ao carrinho" aria-label="Adicionar ${it.nome} ao carrinho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9.5" cy="20.5" r="1.6"/><circle cx="18.5" cy="20.5" r="1.6"/><path d="M2.5 3.5h2.3l2.6 11.8a1.9 1.9 0 0 0 1.9 1.5h8.7a1.9 1.9 0 0 0 1.9-1.5L21.5 7H6.2"/></svg><span>Adicionar ao carrinho</span></button>`;
   const n=it.imgs.length;
@@ -629,15 +638,15 @@ function renderC(){
   const q=busca.toLowerCase();let total=0;
   $("#main").innerHTML=GR.map(([g,nome])=>{
     if(filtro!=="todos"&&filtro!==g)return "";
-    const ORDEM={"se-liga":0,"se-liga-ef":1,"se-liga-ing":2,"sei":3,"saeb":4,"volumes":5,"apostilas":6};const l=ITENS.filter(i=>(filtroTipo==="todos"||i.tipo===filtroTipo)&&i.grupo===g&&(i.nome+" "+i.grupoNome).toLowerCase().includes(q)).map((x,n)=>[x,n]).sort((a,b)=>((ORDEM[a[0].tipo]??9)-(ORDEM[b[0].tipo]??9))||a[1]-b[1]).map(x=>x[0]);
+    const ORDEM={"se-liga":0,"se-liga-ef":1,"se-liga-ing":2,"resumos":2.5,"sei":3,"saeb":4,"volumes":5,"apostilas":6};const l=ITENS.filter(i=>(filtroTipo==="todos"||i.tipo===filtroTipo)&&i.grupo===g&&(i.nome+" "+i.grupoNome).toLowerCase().includes(q)).map((x,n)=>[x,n]).sort((a,b)=>((ORDEM[a[0].tipo]??9)-(ORDEM[b[0].tipo]??9))||a[1]-b[1]).map(x=>x[0]);
     total+=l.length;if(!l.length)return "";
-    const NOMES={"se-liga":"Se Liga de Matemática","se-liga-ef":"Se Liga de Educação Financeira","se-liga-ing":"Se Liga de Inglês","sei":"Semanas de Estudos Intensivos","saeb":"Simulados SAEB","volumes":"Volumes","apostilas":"Apostilas"};
+    const NOMES={"se-liga":"Se Liga de Matemática","se-liga-ef":"Se Liga de Educação Financeira","se-liga-ing":"Se Liga de Inglês","resumos":"Resumos por conteúdo","sei":"Semanas de Estudos Intensivos","saeb":"Simulados SAEB","volumes":"Volumes","apostilas":"Apostilas"};
     const porTipo={};l.forEach(i=>{(porTipo[i.tipo]=porTipo[i.tipo]||[]).push(i)});
     const dentro=Object.keys(porTipo).map(tp=>`<h3 class="subtipo">${NOMES[tp]||tp} <small>${porTipo[tp].length}</small></h3><div class="grid">${porTipo[tp].map(card).join("")}</div>`).join("");
     return `<section class="grupo"><h2>${nome}</h2>${dentro}</section>`;}).join("");
   $("#empty").style.display=total?"none":"block";
   const rot={
-    todos:"Todos os materiais",volumes:"Volumes",'se-liga':"Se Liga de Matemática",'se-liga-ef':"Se Liga de Educação Financeira",'se-liga-ing':"Se Liga de Inglês",sei:"Semanas de Estudos Intensivos",saeb:"Simulados SAEB",apostilas:"Apostilas"
+    todos:"Todos os materiais",volumes:"Volumes",'se-liga':"Se Liga de Matemática",'se-liga-ef':"Se Liga de Educação Financeira",'se-liga-ing':"Se Liga de Inglês",resumos:"Resumos por conteúdo",sei:"Semanas de Estudos Intensivos",saeb:"Simulados SAEB",apostilas:"Apostilas"
   };
   const nomeFiltro=filtroTipo!=="todos"?rot[filtroTipo]:(filtro!=="todos"?(GR.find(g=>g[0]===filtro)||["","Todos os materiais"])[1]:"Todos os materiais");
   const rs=$("#resumo");if(rs)rs.innerHTML=`<b>${total}</b> ${total===1?"material":"materiais"} em <b>${nomeFiltro}</b>${busca?" para “"+busca+"”":""}`;
@@ -665,6 +674,7 @@ function tiposC(){
     todos:svg('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
     volumes:svg('<path d="M21 8 12 3 3 8v8l9 5 9-5V8Z"/><path d="m3 8 9 5 9-5"/><path d="M12 13v8"/>'),
     'se-liga-ef':svg('<circle cx="12" cy="12" r="9"/><path d="M14.5 8.5c-.6-.8-1.5-1.2-2.6-1.2-1.6 0-2.7.8-2.7 2s1 1.7 2.8 2.1c1.8.4 2.8.9 2.8 2.1 0 1.2-1.1 2-2.8 2-1.2 0-2.2-.5-2.9-1.3M12 5.8v1.5M12 16.7v1.5"/>'),
+    resumos:svg('<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h7"/>'),
     'se-liga-ing':svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>'),
     'se-liga':svg('<path d="M12 6c-2-2-5-2-8-1v13c3-1 6-1 8 1 2-2 5-2 8-1V5c-3-1-6-1-8 1Z"/><path d="M12 6v13"/>'),
     saeb:svg('<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 11h6M9 15h6"/>'),
@@ -691,8 +701,8 @@ const ICA={todos:SVG('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="
 const CATS=[["todos","Todas as atividades"],["matematica","Matemática"],["financeira","Educação Financeira"],["historia","História"],["portugues","Língua Portuguesa"],["ingles","Inglês"],["ciencias","Ciências"],["consciencia","Dia da Consciência Negra"]];
 const SERIES=[["todas","Todas as séries"],["3","3º ano"],["5","5º ano"],["6","6º ano"],["7","7º ano"],["8","8º ano"],["9","9º ano"],["em","Ensino Médio"]];
 const COLEC=[["todos","Todas as coleções"],["se-liga","Se Liga de Matemática"],["se-liga-ef","Se Liga de Educação Financeira"],["sei","Semanas de Estudos"],["saeb","Simulados SAEB"],["volumes","Volumes"],["album","Álbuns"],["cn","Dia da Consciência Negra"],["caca","Caça-palavras"]];
-const NOMEST={"cn":"Dia da Consciência Negra","caca":"Caça-palavras","se-liga":"Se Liga de Matemática","se-liga-ef":"Se Liga de Educação Financeira","se-liga-ing":"Se Liga de Inglês","sei":"Semanas de Estudos Intensivos","saeb":"Simulados SAEB","volumes":"Volumes","album":"Álbuns de multiplicação"};
-const ORD={"se-liga":0,"se-liga-ef":1,"se-liga-ing":2,"sei":3,"saeb":4,"volumes":5,"album":6,"cn":7,"caca":8};
+const NOMEST={"cn":"Dia da Consciência Negra","caca":"Caça-palavras","se-liga":"Se Liga de Matemática","se-liga-ef":"Se Liga de Educação Financeira","se-liga-ing":"Se Liga de Inglês","resumos":"Resumos por conteúdo","sei":"Semanas de Estudos Intensivos","saeb":"Simulados SAEB","volumes":"Volumes","album":"Álbuns de multiplicação"};
+const ORD={"se-liga":0,"se-liga-ef":1,"se-liga-ing":2,"resumos":2.5,"sei":3,"saeb":4,"volumes":5,"album":6,"cn":7,"caca":8};
 let filtroSerie="todas";
 function renderA(){
   const q=busca.toLowerCase();
@@ -785,11 +795,11 @@ function pmCopia(){const u=$("#pmUrl").value,b=$("#pmCp"),ok=()=>{b.innerHTML='L
 {const h=location.hash.slice(1),it=ITENS.find(i=>(i.pag||i.slug)===h);if(it)setTimeout(()=>abre(it.slug),50)}
 function abreAntigo(s){cur=ITENS.find(i=>i.slug===s);
   $("#th").innerHTML=cur.imgs.map((u,k)=>`<img src="${u}" onclick="foto(${k})" alt="">`).join("");
-  const soon=!cur.link;
+  const soon=!cur.link&&!cur.wa;
   $("#side").innerHTML=`<small style="color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.06em">${cur.grupoNome}</small><h3>${cur.nome}</h3><p>${cur.sub}</p>
    <p style="font-size:14px;color:var(--mut)">${cur.paginas?cur.paginas+' páginas · ':''}PDF digital${cur.slug.startsWith('cisop')||cur.grupo==='pss'||cur.grupo==='prefeitura'?' · inclui versão JUMBO (letra grande) quando disponível':''}</p>
-   <div class="row"><div class="price"><span>R$</span>${brl(cur.preco)}</div>${soon?`<button class="btn wa" onclick="fecha();wabre('${cur.slug}')">Falar no WhatsApp</button>`:`<a class="btn buy" target="_blank" rel="noopener" href="${cur.link}">Comprar agora</a>`}</div>
-   <p style="margin-top:10px;font-size:14px"><a href="${cur.pag||cur.slug}/" style="color:var(--mut);font-weight:700;text-decoration:none">Abrir página do produto &rarr;</a></p>`;
+   <div class="row"><div class="price"><span>R$</span>${brl(cur.preco)}</div>${cur.wa?`<button class="btn buy" onclick="fecha();wabre('${cur.slug}')">Comprar no WhatsApp</button>`:soon?`<button class="btn wa" onclick="fecha();wabre('${cur.slug}')">Falar no WhatsApp</button>`:`<a class="btn buy" target="_blank" rel="noopener" href="${cur.link}">Comprar agora</a>`}</div>
+   ${cur.wa?'':`<p style="margin-top:10px;font-size:14px"><a href="${cur.pag||cur.slug}/" style="color:var(--mut);font-weight:700;text-decoration:none">Abrir página do produto &rarr;</a></p>`}`;
   foto(0);$("#modal").classList.add("open");document.body.style.overflow="hidden";}
 function foto(k){$("#big").src=cur.imgs[k];$("#lab").textContent=(cur.imgs.length>2?NOMES[k]:(k?"Índice":"Capa"))+" · "+(k+1)+"/"+cur.imgs.length;
   [...$("#th").children].forEach((e,i)=>e.classList.toggle("on",i===k));}
