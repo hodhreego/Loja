@@ -1045,7 +1045,7 @@ def _indice_atividades():
     for k, n in [("3", "3º ano"), ("5", "5º ano"), ("6", "6º ano"), ("7", "7º ano"), ("8", "8º ano"), ("9", "9º ano"), ("em", "Ensino Médio")]:
         r.append('    <a data-serie="%s" href="#serie-%s">%s</a>' % (k, k, n))
     r.append('    <hr>\n    <b>Coleções</b>')
-    for k, n in [("caca", "Caça-palavras"), ("se-liga", "Se Liga de Matemática"), ("se-liga-ef", "Se Liga de Educação Financeira"), ("sei", "Semanas de Estudos"), ("saeb", "Simulados SAEB"), ("volumes", "Volumes"), ("album", "Álbuns")]:
+    for k, n in [("caca", "Caça-palavras"), ("se-liga", "Se Liga de Matemática"), ("se-liga-ef", "Se Liga de Educação Financeira"), ("se-liga-ing", "Se Liga de Inglês"), ("resumos", "Resumos por conteúdo · R$ 3"), ("sei", "Semanas de Estudos"), ("saeb", "Simulados SAEB"), ("volumes", "Volumes"), ("album", "Álbuns")]:
         r.append('    <a data-tipo="%s" href="#col-%s">%s</a>' % (k, k, n))
     r.append('    <hr>')
     r += ['    <b>Dia da Consciência Negra</b>', '    <a data-cat="consciencia" href="#cat-consciencia">Ver todas as atividades</a>']
