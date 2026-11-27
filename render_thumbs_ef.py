@@ -66,7 +66,7 @@ def gera(slug, pasta):
     # fim das questoes = primeira pagina com GABARITO
     fim = n - 1
     for i, t in enumerate(texto):
-        if 'GABARITO' in t.upper():
+        if i >= 1 and 'GABARITO OFICIAL' in t:
             fim = i
             break
     ini_q = 1                      # pagina 0 e a capa
